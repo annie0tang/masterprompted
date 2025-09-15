@@ -1,4 +1,4 @@
-import { Check, ChevronDown } from "lucide-react";
+import { CheckCircle, Target, Mic, Scale, Copy, ChevronDown } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
@@ -12,31 +12,31 @@ const evaluationCriteria = [
   {
     id: "factual-accuracy",
     label: "Factual Accuracy",
-    icon: Check,
+    icon: CheckCircle,
     options: ["Excellent", "Good", "Fair", "Poor"]
   },
   {
     id: "relevance", 
     label: "Relevance",
-    icon: Check,
+    icon: Target,
     options: ["Highly Relevant", "Relevant", "Somewhat Relevant", "Not Relevant"]
   },
   {
     id: "voice",
     label: "Voice", 
-    icon: Check,
+    icon: Mic,
     options: ["Professional", "Casual", "Academic", "Journalistic"]
   },
   {
     id: "bias",
     label: "Bias",
-    icon: Check, 
+    icon: Scale, 
     options: ["Unbiased", "Slightly Biased", "Moderately Biased", "Highly Biased"]
   },
   {
     id: "plagiarism",
     label: "Plagiarism",
-    icon: Check,
+    icon: Copy,
     options: ["Original", "Mostly Original", "Some Similarities", "Potential Issues"]
   }
 ];
