@@ -1,47 +1,52 @@
 import { CheckCircle, Target, Mic, Scale, Copy, ChevronDown } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { useState } from "react";
 
 const evaluationCriteria = [
   {
     id: "factual-accuracy",
     label: "Factual Accuracy",
     icon: CheckCircle,
-    options: ["Excellent", "Good", "Fair", "Poor"]
+    description: "Evaluates whether the information presented is correct, verifiable, and based on reliable sources. This includes checking facts, statistics, quotes, and claims against credible references."
   },
   {
     id: "relevance", 
     label: "Relevance",
     icon: Target,
-    options: ["Highly Relevant", "Relevant", "Somewhat Relevant", "Not Relevant"]
+    description: "Assesses how well the content addresses the topic at hand and meets the intended purpose. Content should be directly related to the subject matter and provide value to the target audience."
   },
   {
     id: "voice",
     label: "Voice", 
     icon: Mic,
-    options: ["Professional", "Casual", "Academic", "Journalistic"]
+    description: "Examines the tone, style, and personality conveyed through the writing. This includes consistency in language choice, formality level, and overall communication approach."
   },
   {
     id: "bias",
     label: "Bias",
     icon: Scale, 
-    options: ["Unbiased", "Slightly Biased", "Moderately Biased", "Highly Biased"]
+    description: "Identifies potential prejudice, unfair representation, or one-sided perspectives in the content. Evaluates balance, objectivity, and fair presentation of different viewpoints."
   },
   {
     id: "plagiarism",
     label: "Plagiarism",
     icon: Copy,
-    options: ["Original", "Mostly Original", "Some Similarities", "Potential Issues"]
+    description: "Checks for originality and proper attribution of sources. Identifies any instances of copied content, inadequate citations, or failure to credit original authors and publications."
   }
 ];
 
 export default function EvaluationPanel() {
+  const [openItems, setOpenItems] = useState<string[]>([]);
+
+  const toggleItem = (id: string) => {
+    setOpenItems(prev => 
+      prev.includes(id) 
+        ? prev.filter(item => item !== id)
+        : [...prev, id]
+    );
+  };
+
   return (
     <Card className="bg-white border border-gray-200 rounded-2xl shadow-sm">
       <CardHeader className="pb-4">
@@ -49,31 +54,32 @@ export default function EvaluationPanel() {
           Journalistic Evaluation
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3">
         {evaluationCriteria.map((criterion) => (
-          <div key={criterion.id} className="space-y-2">
-            <div className="flex items-center gap-2 text-gray-700">
-              <criterion.icon className="h-4 w-4 text-gray-500" />
-              <label className="text-sm font-medium">{criterion.label}</label>
-            </div>
-            <Select>
-              <SelectTrigger className="w-full bg-white border-gray-300 rounded-lg hover:border-gray-400 focus:border-primary focus:ring-1 focus:ring-primary">
-                <SelectValue placeholder="Select rating" />
-                <ChevronDown className="h-4 w-4 opacity-50" />
-              </SelectTrigger>
-              <SelectContent className="bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-                {criterion.options.map((option) => (
-                  <SelectItem 
-                    key={option} 
-                    value={option.toLowerCase().replace(/\s+/g, '-')}
-                    className="hover:bg-gray-50 focus:bg-gray-50"
-                  >
-                    {option}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <Collapsible 
+            key={criterion.id} 
+            open={openItems.includes(criterion.id)}
+            onOpenChange={() => toggleItem(criterion.id)}
+          >
+            <CollapsibleTrigger className="w-full">
+              <div className="flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <criterion.icon className="h-4 w-4 text-gray-600" />
+                  <span className="text-sm font-medium text-gray-700">{criterion.label}</span>
+                </div>
+                <ChevronDown 
+                  className={`h-4 w-4 text-gray-500 transition-transform ${
+                    openItems.includes(criterion.id) ? 'rotate-180' : ''
+                  }`}
+                />
+              </div>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="px-3 pb-3">
+              <p className="text-sm text-gray-600 leading-relaxed mt-2">
+                {criterion.description}
+              </p>
+            </CollapsibleContent>
+          </Collapsible>
         ))}
       </CardContent>
     </Card>
