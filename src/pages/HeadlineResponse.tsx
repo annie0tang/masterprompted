@@ -2,10 +2,8 @@ import { Paperclip } from "lucide-react";
 import Header from "@/components/Header";
 import { Card, CardContent } from "@/components/ui/card";
 import EvaluationPanel from "@/components/EvaluationPanel";
-
 export default function HeadlineResponse() {
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       <Header />
       
       <main className="container mx-auto px-4 pt-24 pb-12">
@@ -35,7 +33,7 @@ export default function HeadlineResponse() {
                   Here is a possible headline for a long-form journalistic article about an AI ethics agreement reached across the EU:
                 </p>
                 
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
+                <h1 className="text-2xl text-gray-900 leading-tight font-normal md:text-4xl">
                   European Union Unites on Historic AI Ethics Framework, Charting Path for Responsible Technology Development
                 </h1>
               </div>
@@ -48,6 +46,5 @@ export default function HeadlineResponse() {
           </div>
         </div>
       </main>
-    </div>
-  );
+    </div>;
 }
