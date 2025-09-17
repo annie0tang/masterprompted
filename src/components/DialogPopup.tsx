@@ -1,9 +1,8 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogFooter, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
 
-interface OnboardingModalProps {
+interface DialogPopupProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
@@ -18,7 +17,7 @@ interface OnboardingModalProps {
   };
 }
 
-const OnboardingModal: React.FC<OnboardingModalProps> = ({
+const DialogPopup: React.FC<DialogPopupProps> = ({
   isOpen,
   onClose,
   title,
@@ -34,14 +33,6 @@ const OnboardingModal: React.FC<OnboardingModalProps> = ({
             <DialogTitle className="text-xl font-semibold text-foreground">
               {title}
             </DialogTitle>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="h-6 w-6 p-0"
-            >
-              <X className="h-4 w-4" />
-            </Button>
           </div>
         </DialogHeader>
         <div className="space-y-6">
@@ -73,4 +64,4 @@ const OnboardingModal: React.FC<OnboardingModalProps> = ({
   );
 };
 
-export default OnboardingModal;
+export default DialogPopup;
