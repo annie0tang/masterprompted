@@ -34,8 +34,7 @@ const Landing = () => {
           <div className="max-w-6xl mx-auto space-y-12">
             <div className="space-y-6">
               <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-                Guided Simulator:<br />
-                Responsible AI in Journalism
+                PromptED: Responsible AI use in Journalism
               </h1>
               
               <p className="text-lg md:text-xl text-white/90 max-w-4xl mx-auto leading-relaxed">
