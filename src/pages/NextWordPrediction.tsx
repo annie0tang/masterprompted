@@ -4,6 +4,7 @@ import { Paperclip, ArrowUp, X } from "lucide-react";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { PopoverSeries } from "@/components/PopoverSeries";
 
 export default function NextWordPrediction() {
   const navigate = useNavigate();
@@ -133,7 +134,6 @@ export default function NextWordPrediction() {
             ></div>
             
             <div className="flex justify-between items-start mb-4">
-              <h3 className="text-lg font-semibold">Please send the prompt</h3>
               <Button
                 onClick={closePopup}
                 variant="ghost"

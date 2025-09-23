@@ -15,16 +15,16 @@ const About = () => {
       content: <p>Welcome to Step 1lka sndlka sndkasnd kalsjnds kalj
         ndkasnsdkjasndlkasjndlksajndkaj!</p>,
     },
-    {
-      id: "step-2",
-      trigger: <button>Step 2</button>,
-      content: <p>This is Step 2.</p>,
-    },
-    {
-      id: "step-3",
-      trigger: <button>Step 3</button>,
-      content: <p>You're on Step 3.</p>,
-    },
+    // {
+    //   id: "step-2",
+    //   trigger: <button>Step 2</button>,
+    //   content: <p>This is Step 2.</p>,
+    // },
+    // {
+    //   id: "step-3",
+    //   trigger: <button>Step 3</button>,
+    //   content: <p>You're on Step 3.</p>,
+    // },
   ]
 
   return (
@@ -33,6 +33,7 @@ const About = () => {
 
       <main className="container mx-auto px-6 py-8">
         <div className="max-w-4xl mx-auto">
+          
           <h1 className="text-3xl font-bold text-foreground mb-6">
             About
           </h1>
@@ -48,8 +49,8 @@ const About = () => {
           onClose={() => setIsPopupOpen(false)} // This is the crucial part
         /> */}
         {/* <UncontrolledPopup isOpen={false}/> */}
-        <PopoverSeries steps={steps}/>
-
+        
+          <PopoverSeries steps={steps} />
       </main>
     </div>
   );
