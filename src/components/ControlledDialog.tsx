@@ -1,17 +1,27 @@
-import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+import React from 'react';
+import { Dialog, DialogClose, DialogFooter, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
-interface UncontrolledPopupProps {
+
+// To Implement:
+//
+// const [isPopupOpen, setIsPopupOpen] = useState(false);
+//
+// <ControlledDialog
+//   isOpen={isPopupOpen}
+//   onClose={() => setIsPopupOpen(false)} // This is the crucial part
+// />
+//
+// TODO: 
+// add question button to open popover series 
+// add series counter 
+// highlight trigger reference 
+//
+
+
+interface ControlledDialogProps {
   isOpen?: boolean;
+  onClose?: () => void;
   title?: string;
   description?: string;
   primaryAction?: {
@@ -24,15 +34,23 @@ interface UncontrolledPopupProps {
   };
 }
 
-const UncontrolledPopup: React.FC<UncontrolledPopupProps> = ({
+const ControlledDialog: React.FC<ControlledDialogProps> = ({
   isOpen = true,
+  onClose,
   title,
   description,
   primaryAction,
   secondaryAction,
 }) => {
+
+  const handleOpenChange = (open: boolean) => {
+    if (!open && onClose) {
+      onClose();
+    }
+  };
+
   return (
-    <Dialog defaultOpen={isOpen}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold text-foreground">
@@ -66,7 +84,7 @@ const UncontrolledPopup: React.FC<UncontrolledPopupProps> = ({
         </div>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default UncontrolledPopup;
+export default ControlledDialog;

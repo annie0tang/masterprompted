@@ -1,21 +1,17 @@
-import React from 'react';
-import { Dialog, DialogClose, DialogFooter, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
-
-// To Implement:
-//
-// const [isPopupOpen, setIsPopupOpen] = useState(false);
-//
-// <ControlledPopup
-//   isOpen={isPopupOpen}
-//   onClose={() => setIsPopupOpen(false)} // This is the crucial part
-// />
-//
-
-interface ControlledPopupProps {
+interface UncontrolledDialogProps {
   isOpen?: boolean;
-  onClose?: () => void;
   title?: string;
   description?: string;
   primaryAction?: {
@@ -28,23 +24,15 @@ interface ControlledPopupProps {
   };
 }
 
-const ControlledPopup: React.FC<ControlledPopupProps> = ({
+const UncontrolledDialog: React.FC<UncontrolledDialogProps> = ({
   isOpen = true,
-  onClose,
   title,
   description,
   primaryAction,
   secondaryAction,
 }) => {
-
-  const handleOpenChange = (open: boolean) => {
-    if (!open && onClose) {
-      onClose();
-    }
-  };
-
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+    <Dialog defaultOpen={isOpen}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold text-foreground">
@@ -78,7 +66,7 @@ const ControlledPopup: React.FC<ControlledPopupProps> = ({
         </div>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
 
-export default ControlledPopup;
+export default UncontrolledDialog;

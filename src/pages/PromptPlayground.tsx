@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import { Card, CardContent } from "@/components/ui/card";
 import EvaluationPanel from "@/components/EvaluationPanel";
 import Chatbox from "@/components/ChatBox";
-import ControlledPopup from "@/components/ControlledPopup";
+import ControlledPopup from "@/components/ControlledDialog";
 
 const PromptPlayground = () => {
   return (
