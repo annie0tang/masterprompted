@@ -1,14 +1,21 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/Header";
+import VideoLightbox from "@/components/VideoLightbox";
 import { ArrowRight, Play } from "lucide-react";
 
 const Landing = () => {
   const navigate = useNavigate();
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
 
   const handleStartSimulator = () => {
     navigate("/module/introduction");
+  };
+
+  const handleWatchTrailer = () => {
+    setIsVideoOpen(true);
   };
 
   return (
@@ -20,7 +27,8 @@ const Landing = () => {
           backgroundImage: `url("/hero.png")`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundRepeat: "no-repeat"
+          backgroundRepeat: "no-repeat",
+          backgroundAttachment: "fixed"
         }}
       />
       
@@ -43,7 +51,10 @@ const Landing = () => {
               
               {/* Watch Trailer Button */}
               <div className="flex justify-center">
-                <Button className="bg-white text-black hover:bg-white/90 px-8 py-4 rounded-full text-lg font-semibold flex items-center gap-3">
+                <Button 
+                  onClick={handleWatchTrailer}
+                  className="bg-white text-black hover:bg-white/90 px-8 py-4 rounded-full text-lg font-semibold flex items-center gap-3"
+                >
                   <img src="/play_circle.png" alt="Play" className="w-6 h-6" />
                   Watch Trailer
                 </Button>
@@ -141,6 +152,12 @@ const Landing = () => {
           </div>
         </footer>
       </div>
+      
+      <VideoLightbox 
+        isOpen={isVideoOpen}
+        onClose={() => setIsVideoOpen(false)}
+        videoUrl="https://www.youtube.com/watch?v=2PjWP60KUAk"
+      />
     </div>
   );
 };
