@@ -14,7 +14,7 @@ const evaluationCriteria = [
     id: "relevance", 
     label: "Relevance",
     icon: Target,
-    description: "Assesses how well the content addresses the topic at hand and meets the intended purpose. Content should be directly related to the subject matter and provide value to the target audience."
+    description: "Relevance measures how well the response matches the topic or intent of the prompt. If the prompt is not specific enough, the LLM output may leave out key information that affects a journalist's pool of information to draw from."
   },
   {
     id: "voice",
