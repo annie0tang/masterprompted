@@ -21,7 +21,7 @@ export function PopoverSeries({ steps, initialStep = 0, onClose }: PopoverSeries
   const triggerRefs = useRef<(HTMLElement | null)[]>([])
 
   const isOpen = currentStep !== null
-
+  // console.log("Current Trigger: ", steps[0].trigger)
   const close = () => {
     setCurrentStep(null)
     onClose?.()

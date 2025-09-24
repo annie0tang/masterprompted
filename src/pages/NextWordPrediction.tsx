@@ -6,6 +6,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { PopoverSeries } from "@/components/PopoverSeries";
+import Chatbox from "@/components/ChatBox";
 
 export default function NextWordPrediction() {
   const navigate = useNavigate();
@@ -46,7 +47,7 @@ export default function NextWordPrediction() {
     }
   };
 
-  const handleArrowClick = () => {
+  const handleSubmit = () => {
     // Navigate to the headline response page
     navigate("/module/headline-response");
   };
@@ -66,45 +67,13 @@ export default function NextWordPrediction() {
       
       <main className="container mx-auto px-4 pt-24 pb-12">
         <Breadcrumb />
-        <div className="max-w-4xl mx-auto relative min-h-[600px]">
-          {/* Prompt Box */}
-          <Card 
-            className="bg-white border border-gray-200 rounded-2xl shadow-lg"
-            style={{
-              position: 'absolute',
-              top: '100px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: '100%',
-              maxWidth: '768px'
-            }}
-          >
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between">
-                {/* Left content */}
-                <div className="flex-1">
-                  <p className="text-gray-800 text-lg leading-relaxed mb-4">
-                    Write a headline for a long form journalistic article about ai ethics agreement reached across the eu
-                  </p>
-                  
-                  {/* Attached file */}
-                  <div className="flex items-center gap-2 text-gray-600">
-                    <Paperclip className="h-4 w-4" />
-                    <span className="text-sm">EU_AI_Act.pdf</span>
-                  </div>
-                </div>
-                
-                {/* Arrow button */}
-                <Button
-                  ref={arrowButtonRef}
-                  onClick={handleArrowClick}
-                  className="arrow-button bg-gray-800 hover:bg-gray-700 text-white rounded-full p-3 ml-4"
-                >
-                  <ArrowUp className="h-5 w-5" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="max-w-2xl mx-auto relative min-h-[600px]">
+          <Chatbox 
+            canType={false} 
+            text="Write a headline for a long form journalistic article about ai ethics agreement reached across the eu" 
+            fileName="EU_AI_Act.pdf"
+            onSubmit={handleSubmit}
+          />
         </div>
       </main>
 
