@@ -1,8 +1,7 @@
-import { Paperclip } from "lucide-react";
 import Header from "@/components/Header";
 import Breadcrumb from "@/components/Breadcrumb";
-import { Card, CardContent } from "@/components/ui/card";
 import EvaluationPanel from "@/components/EvaluationPanel";
+import Chatbox from "@/components/ChatBox";
 export default function HeadlineResponse() {
   return <div className="min-h-screen bg-background">
       <Header />
@@ -15,19 +14,13 @@ export default function HeadlineResponse() {
             {/* Left column - Main content */}
             <div className="lg:col-span-8">
               {/* Original Prompt */}
-              <Card className="bg-gray-200 border-none rounded-2xl mb-8">
-                <CardContent className="p-6">
-                  <p className="text-gray-800 text-lg leading-relaxed mb-4">
-                    Write a headline for a long form journalistic article about ai ethics agreement reached across the eu
-                  </p>
-                  
-                  {/* Attached file */}
-                  <div className="flex items-center gap-2 text-gray-600">
-                    <Paperclip className="h-4 w-4" />
-                    <span className="text-sm">EU_AI_Act.pdf</span>
-                  </div>
-                </CardContent>
-              </Card>
+              <div className="mb-8">
+                <Chatbox 
+                  canType={false} 
+                  text="Write a headline for a long form journalistic article about ai ethics agreement reached across the eu" 
+                  fileName="EU_AI_Act.pdf"
+                />
+              </div>
 
               {/* AI Response */}
               <div className="space-y-6">
