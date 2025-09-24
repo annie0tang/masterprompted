@@ -92,10 +92,8 @@ export function PopoverSeries({ steps, initialStep = 0, onClose }: PopoverSeries
         <div
           className="fixed inset-0 bg-black/50 z-40 pointer-events-none"
           style={{
-            // Create a rounded rectangular cutout that fits the element
-            WebkitMask: `radial-gradient(ellipse ${rect.width / 2 + 12}px ${rect.height / 2 + 12}px at ${rect.left + rect.width / 2}px ${rect.top + rect.height / 2}px, transparent ${Math.min(rect.width, rect.height) / 2 + 8}px, black ${Math.min(rect.width, rect.height) / 2 + 16}px)`,
-            WebkitMaskComposite: "destination-out",
-            maskComposite: "exclude",
+            // Create a rectangular cutout that fits the element
+            clipPath: `polygon(0% 0%, 0% 100%, ${rect.left - 8}px 100%, ${rect.left - 8}px ${rect.top - 8}px, ${rect.right + 8}px ${rect.top - 8}px, ${rect.right + 8}px ${rect.bottom + 8}px, ${rect.left - 8}px ${rect.bottom + 8}px, ${rect.left - 8}px 100%, 100% 100%, 100% 0%)`,
           }}
         />
       )}
