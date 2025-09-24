@@ -36,6 +36,11 @@ const Header = ({ transparent = false }: { transparent?: boolean }) => {
       completed: false
     },
     { 
+      title: "About Simulator", 
+      path: "/module/about-simulator",
+      completed: false
+    },
+    { 
       title: "Next Word Prediction", 
       path: "/module/next-word-prediction",
       completed: false
