@@ -23,6 +23,7 @@ import LLMTraining from "./pages/LLMTraining";
 import PromptPlayground from "./pages/PromptPlayground";
 import About from "./pages/About";
 import Help from "./pages/Help";
+import ComponentLibrary from "./pages/ComponentLibrary";
 import Imprint from "./pages/Imprint";
 import NotFound from "./pages/NotFound";
 
@@ -40,6 +41,7 @@ const App = () => (
           <Route path="/playground" element={<PromptPlayground />} />
           <Route path="/about" element={<About />} />
           <Route path="/help" element={<Help />} />
+          <Route path="/components" element={<ComponentLibrary />} />
           <Route path="/imprint" element={<Imprint />} />
           <Route path="/module/introduction" element={<Introduction />} />
           <Route path="/module/about-simulator" element={<AboutSimulator />} />
