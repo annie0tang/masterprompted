@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import Breadcrumb from "@/components/Breadcrumb";
 
 export default function ConversationStyle() {
   return (
@@ -6,6 +7,7 @@ export default function ConversationStyle() {
       <Header />
       
       <main className="container mx-auto px-4 pt-24 pb-12">
+        <Breadcrumb />
         <div className="max-w-4xl mx-auto">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-foreground mb-4">Conversation Style</h1>

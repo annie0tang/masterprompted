@@ -1,5 +1,6 @@
 import { Paperclip } from "lucide-react";
 import Header from "@/components/Header";
+import Breadcrumb from "@/components/Breadcrumb";
 import { Card, CardContent } from "@/components/ui/card";
 import EvaluationPanel from "@/components/EvaluationPanel";
 export default function HeadlineResponse() {
@@ -7,6 +8,7 @@ export default function HeadlineResponse() {
       <Header />
       
       <main className="container mx-auto px-4 pt-24 pb-12">
+        <Breadcrumb />
         <div className="max-w-7xl mx-auto">
           {/* Two-column layout */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

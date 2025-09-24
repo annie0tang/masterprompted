@@ -1,0 +1,73 @@
+import { ChevronRight, Home } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+
+const breadcrumbMap: Record<string, string> = {
+  "/modules": "Modules",
+  "/module": "Guided Simulation",
+  "/module/introduction": "Introduction",
+  "/module/about-simulator": "About Simulator", 
+  "/module/journalistic-evaluation": "Journalistic Evaluation",
+  "/module/next-word-prediction": "Next Word Prediction",
+  "/module/headline-response": "Headline Response",
+  "/module/prompt-construction": "Prompt Construction",
+  "/module/prompt-construction/specificity": "Specificity",
+  "/module/prompt-construction/specificity/response": "Response",
+  "/module/prompt-construction/conversation-style": "Conversation Style",
+  "/module/prompt-construction/context": "Context",
+  "/module/prompt-construction/bias": "Bias",
+  "/module/system-parameters": "System Parameters",
+  "/module/multiple-sources": "Multiple Sources",
+  "/module/llm-training": "LLM Training"
+};
+
+export default function Breadcrumb() {
+  const location = useLocation();
+  const pathSegments = location.pathname.split('/').filter(Boolean);
+  
+  // Build breadcrumb items
+  const breadcrumbItems = [];
+  let currentPath = '';
+  
+  // Add home
+  breadcrumbItems.push({
+    label: "Home",
+    path: "/",
+    isLast: false
+  });
+  
+  // Add path segments
+  for (let i = 0; i < pathSegments.length; i++) {
+    currentPath += '/' + pathSegments[i];
+    const isLast = i === pathSegments.length - 1;
+    
+    const label = breadcrumbMap[currentPath] || pathSegments[i].charAt(0).toUpperCase() + pathSegments[i].slice(1);
+    
+    breadcrumbItems.push({
+      label,
+      path: currentPath,
+      isLast
+    });
+  }
+
+  return (
+    <nav className="flex items-center space-x-1 text-sm text-gray-600 mb-6">
+      {breadcrumbItems.map((item, index) => (
+        <div key={item.path} className="flex items-center">
+          {index > 0 && <ChevronRight className="h-4 w-4 mx-2 text-gray-400" />}
+          
+          {item.isLast ? (
+            <span className="text-gray-900 font-medium">{item.label}</span>
+          ) : (
+            <Link 
+              to={item.path} 
+              className="hover:text-gray-900 transition-colors"
+            >
+              {index === 0 && <Home className="h-4 w-4 inline mr-1" />}
+              {item.label}
+            </Link>
+          )}
+        </div>
+      ))}
+    </nav>
+  );
+}

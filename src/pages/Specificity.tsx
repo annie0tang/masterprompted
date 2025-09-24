@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
+import Breadcrumb from "@/components/Breadcrumb";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -26,6 +27,7 @@ export default function Specificity() {
       <Header />
       
       <main className="container mx-auto px-4 pt-24 pb-12">
+        <Breadcrumb />
         <div className="max-w-4xl mx-auto relative min-h-[600px]">
           {/* Tooltip/Popover */}
           {showTooltip && (

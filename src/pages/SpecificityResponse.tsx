@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
+import Breadcrumb from "@/components/Breadcrumb";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -21,6 +22,7 @@ export default function SpecificityResponse() {
       <Header />
       
       <main className="container mx-auto px-4 pt-24 pb-12">
+        <Breadcrumb />
         <div className="flex gap-6 max-w-7xl mx-auto">
           {/* Left Sidebar - Prompt Controls */}
           <div className="w-64 flex-shrink-0">

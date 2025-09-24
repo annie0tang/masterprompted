@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Paperclip, ArrowUp, X } from "lucide-react";
 import Header from "@/components/Header";
+import Breadcrumb from "@/components/Breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { PopoverSeries } from "@/components/PopoverSeries";
@@ -64,6 +65,7 @@ export default function NextWordPrediction() {
       <Header />
       
       <main className="container mx-auto px-4 pt-24 pb-12">
+        <Breadcrumb />
         <div className="max-w-4xl mx-auto relative min-h-[600px]">
           {/* Prompt Box */}
           <Card 

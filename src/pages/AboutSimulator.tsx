@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
+import Breadcrumb from "@/components/Breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -15,6 +16,7 @@ const AboutSimulator = () => {
       <Header />
       
       <main className="container mx-auto px-6 py-8">
+        <Breadcrumb />
         <div className="max-w-4xl mx-auto flex items-center justify-center min-h-[600px] relative">
           <Card 
             className="transition-all duration-200"
