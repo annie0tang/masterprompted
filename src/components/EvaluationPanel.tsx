@@ -32,7 +32,7 @@ const evaluationCriteria = [
     id: "plagiarism",
     label: "Plagiarism",
     icon: Copy,
-    description: "Checks for originality and proper attribution of sources. Identifies any instances of copied content, inadequate citations, or failure to credit original authors and publications."
+    description: "LLMs can plagiarise by directly taking content from training data. While some LLMs are able to attribute pieces of information, all LLMs have the ability to lose connection to data sources, making them vulnerable to reproducing substantial portions of text from data. User should be wary of this, even when the output has sources cited."
   }
 ];
 
