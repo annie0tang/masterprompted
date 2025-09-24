@@ -11,10 +11,10 @@ import Chatbox from "@/components/ChatBox";
 export default function SpecificityResponse() {
   const navigate = useNavigate();
   const [showTooltip, setShowTooltip] = useState(true);
-  const [specificityValue, setSpecificityValue] = useState([50]);
+  const [isSpecific, setIsSpecific] = useState(false);
 
   const handleReset = () => {
-    setSpecificityValue([50]);
+    setIsSpecific(false);
   };
 
   return (
@@ -66,18 +66,29 @@ export default function SpecificityResponse() {
                         </div>
                       )}
                       
-                      <div className="flex items-center justify-between text-xs text-gray-600 mb-2">
-                        <span>General</span>
-                        <span>Specific</span>
+                      {/* Binary Selector */}
+                      <div className="flex bg-gray-100 rounded-full p-1">
+                        <button
+                          onClick={() => setIsSpecific(false)}
+                          className={`flex-1 px-4 py-2 text-sm font-medium rounded-full transition-colors ${
+                            !isSpecific 
+                              ? 'bg-white text-gray-900 shadow-sm' 
+                              : 'text-gray-600 hover:text-gray-800'
+                          }`}
+                        >
+                          General
+                        </button>
+                        <button
+                          onClick={() => setIsSpecific(true)}
+                          className={`flex-1 px-4 py-2 text-sm font-medium rounded-full transition-colors ${
+                            isSpecific 
+                              ? 'bg-white text-gray-900 shadow-sm' 
+                              : 'text-gray-600 hover:text-gray-800'
+                          }`}
+                        >
+                          Specific
+                        </button>
                       </div>
-                      
-                      <Slider
-                        value={specificityValue}
-                        onValueChange={setSpecificityValue}
-                        max={100}
-                        step={1}
-                        className="mb-4"
-                      />
                     </div>
                     
                     <Button
