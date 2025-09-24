@@ -12,6 +12,7 @@ import NextWordPrediction from "./pages/NextWordPrediction";
 import HeadlineResponse from "./pages/HeadlineResponse";
 import PromptConstruction from "./pages/PromptConstruction";
 import Specificity from "./pages/Specificity";
+import Summarize from "./pages/Summarize";
 import ConversationStyle from "./pages/ConversationStyle";
 import Context from "./pages/Context";
 import Bias from "./pages/Bias";
@@ -46,6 +47,7 @@ const App = () => (
           <Route path="/module/headline-response" element={<HeadlineResponse />} />
           <Route path="/module/prompt-construction" element={<PromptConstruction />} />
           <Route path="/module/prompt-construction/specificity" element={<Specificity />} />
+          <Route path="/module/prompt-construction/summarize" element={<Summarize />} />
           <Route path="/module/prompt-construction/conversation-style" element={<ConversationStyle />} />
           <Route path="/module/prompt-construction/context" element={<Context />} />
           <Route path="/module/prompt-construction/bias" element={<Bias />} />
