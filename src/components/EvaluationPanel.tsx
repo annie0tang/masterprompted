@@ -26,7 +26,7 @@ const evaluationCriteria = [
     id: "bias",
     label: "Bias",
     icon: Scale, 
-    description: "Identifies potential prejudice, unfair representation, or one-sided perspectives in the content. Evaluates balance, objectivity, and fair presentation of different viewpoints."
+    description: "Bias refers to prejudices and unbalanced narratives outputted by LLMs due to biased training data, model architecture or prompt instructions. LLMs will always have a degree of bias in its representation of different topics and therefore can bias the journalist's piece of work."
   },
   {
     id: "plagiarism",
