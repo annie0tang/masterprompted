@@ -13,8 +13,12 @@ const SubmitButton = forwardRef<HTMLButtonElement, { onClick?: () => void; id?: 
       size="icon"
       className="absolute top-2 right-2 rounded-full p-3 ml-4"
       ref={ref}
+      style={{
+        background: '#64DB96',
+        border: 'none'
+      }}
     >
-      <ArrowUp className="h-5 w-5" />
+      <ArrowUp className="h-5 w-5 text-black" />
     </Button>
   );
 });
@@ -70,13 +74,13 @@ const Chatbox = ({ canType = true, text = "", onSubmit, onUpload, fileName, subm
     >
       <Textarea
         placeholder="Type your message here..."
-        className="pr-12 pb-10 border-none bg-transparent resize-none focus-visible:ring-0 focus-visible:ring-offset-0 text-base"
+        className="pr-12 pb-10 border-none bg-transparent resize-none focus-visible:ring-0 focus-visible:ring-offset-0 text-lg pl-10"
         disabled={!canType}
         defaultValue={text}
         style={{
           fontFamily: 'Manrope',
-          fontSize: '16px',
-          lineHeight: '24px',
+          fontSize: '18px',
+          lineHeight: '28px',
           color: '#1F1F1F'
         }}
       />
