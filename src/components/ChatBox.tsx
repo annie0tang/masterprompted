@@ -1,16 +1,18 @@
-import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 import { Paperclip, ArrowUp } from "lucide-react";
 import { forwardRef } from 'react';
 
-const SubmitButton = forwardRef<HTMLButtonElement, { onClick?: () => void }>(({ onClick }, ref) => {
+// Accept an 'id' prop
+const SubmitButton = forwardRef<HTMLButtonElement, { onClick?: () => void; id?: string }>(({ onClick, id }, ref) => {
   return (
     <Button
+      id={id} // Apply the id here
       onClick={onClick}
       variant="secondary"
       size="icon"
       className="absolute top-2 right-2 rounded-full p-3 ml-4"
-      ref={ref} // Apply the ref to the underlying Button component
+      ref={ref}
     >
       <ArrowUp className="h-5 w-5" />
     </Button>
@@ -43,10 +45,12 @@ type ChatboxProps = {
   onSubmit?: () => void;
   onUpload?: () => void;
   fileName?: string;
+  submitButtonId?: string; // Add a new prop for the button ID
 };
 
-const Chatbox = forwardRef<HTMLButtonElement, ChatboxProps>(({ canType = true, text = "", onSubmit, onUpload, fileName }, ref) => {
-  const renderTextarea = () => (
+// No need for forwardRef on Chatbox itself anymore
+const Chatbox = ({ canType = true, text = "", onSubmit, onUpload, fileName, submitButtonId }: ChatboxProps) => {
+  return (
     <div className="relative">
       <Textarea
         placeholder="Type your message here..."
@@ -54,12 +58,11 @@ const Chatbox = forwardRef<HTMLButtonElement, ChatboxProps>(({ canType = true, t
         disabled={!canType}
         defaultValue={text}
       />
-      <SubmitButton onClick={onSubmit} ref={ref} /> 
+      {/* Pass the ID to the SubmitButton */}
+      <SubmitButton onClick={onSubmit} id={submitButtonId} /> 
       <UploadFile onClick={onUpload} fileName={fileName} />
     </div>
   );
-
-  return renderTextarea();
-});
+};
 
 export default Chatbox;

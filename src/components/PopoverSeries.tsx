@@ -4,11 +4,10 @@ import { Button } from "@/components/ui/button"
 import { X } from "lucide-react"
 
 type Step = {
-  id: string
-  // Changed type to HTMLElement | null to accurately reflect the content of the ref
-  trigger: HTMLElement | null
-  content: React.ReactNode
-}
+  id: string;
+  trigger: string; // Changed type from HTMLElement | null to a string selector
+  content: React.ReactNode;
+};
 
 interface PopoverSeriesProps {
   steps: Step[]
@@ -20,31 +19,28 @@ interface PopoverSeriesProps {
 // It must accept a ref to satisfy PopoverTrigger asChild, even if we don't use the ref internally.
 // We are explicitly setting the type to accept a ref to an HTMLDivElement.
 const FakeTrigger = forwardRef<HTMLDivElement, { rect: DOMRect | null }>(({ rect }, ref) => {
-    if (!rect) return null; // Defensive check
+  if (!rect) return null; // Defensive check
 
-    return (
-        <div
-            className="absolute z-50 pointer-events-none"
-            style={{
-                width: rect.width,
-                height: rect.height,
-                left: rect.left,
-                top: rect.top,
-            }}
-            ref={ref} // Pass the ref from PopoverTrigger to the div
-        />
-    );
+  return (
+    <div
+      className="absolute z-50 pointer-events-none"
+      style={{
+        width: rect.width,
+        height: rect.height,
+        left: rect.left,
+        top: rect.top,
+      }}
+      ref={ref} // Pass the ref from PopoverTrigger to the div
+    />
+  );
 });
 
 export function PopoverSeries({ steps, initialStep = 0, onClose }: PopoverSeriesProps) {
   const [currentStep, setCurrentStep] = useState<number | null>(initialStep)
   const [rect, setRect] = useState<DOMRect | null>(null)
-  
+
   // The triggerRefs array is now entirely unnecessary and removed for simplicity.
 
-  const currentStepData = currentStep !== null ? steps[currentStep] : null;
-  const isOpen = currentStep !== null
-  
   const close = () => {
     setCurrentStep(null)
     onClose?.()
@@ -58,26 +54,35 @@ export function PopoverSeries({ steps, initialStep = 0, onClose }: PopoverSeries
     }
   }
 
-  // 2. FIX: Ensure useEffect correctly tracks dependencies and calculates rect
+  // This effect now finds the element using the selector string
   useEffect(() => {
-    // This effect now ONLY runs once, when the steps are initially available, or when currentStep changes
     if (currentStep !== null) {
-      const el = steps[currentStep]?.trigger 
-      if (el) {
-        setRect(el.getBoundingClientRect())
-      } else {
-         // If the trigger element is null (e.g., ref not attached yet), wait for next render
-         setRect(null); 
+      const selector = steps[currentStep]?.trigger;
+      if (selector) {
+        // Find the element in the DOM
+        const el = document.querySelector<HTMLElement>(selector);
+        if (el) {
+          setRect(el.getBoundingClientRect());
+        } else {
+          console.warn(`PopoverSeries could not find element with selector: ${selector}`);
+          setRect(null);
+        }
       }
     } else {
-      setRect(null)
+      setRect(null);
     }
-  }, [currentStep, steps]) // Include currentStep and steps for correctness
+  }, [currentStep, steps]); // Dependencies are correct
 
-  
-  if (!currentStepData || !rect) {
-    // We must return null here to allow the Chatbox ref to attach on the first render
-    return null; 
+  const currentStepData = currentStep !== null ? steps[currentStep] : null;
+  const isOpen = currentStep !== null
+
+  if (!currentStepData || !isOpen) {
+    return null;
+  }
+
+  // Return null if the rect hasn't been calculated yet for the current step
+  if (!rect) {
+    return null;
   }
 
   return (
@@ -100,11 +105,11 @@ export function PopoverSeries({ steps, initialStep = 0, onClose }: PopoverSeries
       <Popover
         key={currentStepData.id}
         open={isOpen}
-        onOpenChange={() => {}}
+        onOpenChange={() => { }}
       >
         <PopoverTrigger asChild>
-           {/* 3. Use the forwardRef-wrapped FakeTrigger */}
-           <FakeTrigger rect={rect} /> 
+          {/* 3. Use the forwardRef-wrapped FakeTrigger */}
+          <FakeTrigger rect={rect} />
         </PopoverTrigger>
 
         {/* ... (rest of PopoverContent remains the same, using currentStepData) ... */}
@@ -120,7 +125,7 @@ export function PopoverSeries({ steps, initialStep = 0, onClose }: PopoverSeries
               variant="ghost"
               size="icon"
             >
-              <X className="h-4 w-4" /> 
+              <X className="h-4 w-4" />
             </Button>
           </div>
           {steps.length > 1 ? (
