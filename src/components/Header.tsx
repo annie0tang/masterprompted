@@ -38,7 +38,7 @@ const Header = ({ transparent = false }: { transparent?: boolean }) => {
     { 
       title: "Next Word Prediction", 
       path: "/module/next-word-prediction",
-      completed: true
+      completed: false
     },
     { 
       title: "Prompt Construction", 
