@@ -28,7 +28,14 @@ export default function SpecificityResponse() {
           <div className="w-64 flex-shrink-0">
             <Card className="bg-white border border-gray-200 rounded-lg">
               <CardContent className="p-6">
-                <h3 className="font-semibold text-gray-900 mb-4">Prompt Controls</h3>
+                <div className="flex items-center gap-3 mb-4">
+                  <img 
+                    src="/lovable-uploads/Prompt Construction.png.png" 
+                    alt="Prompt Construction" 
+                    className="w-8 h-8 flex-shrink-0"
+                  />
+                  <h3 className="font-semibold text-gray-900">Prompt Controls</h3>
+                </div>
                 
                 <div className="space-y-4">
                   <div>
