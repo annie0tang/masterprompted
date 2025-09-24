@@ -51,12 +51,34 @@ type ChatboxProps = {
 // No need for forwardRef on Chatbox itself anymore
 const Chatbox = ({ canType = true, text = "", onSubmit, onUpload, fileName, submitButtonId }: ChatboxProps) => {
   return (
-    <div className="relative">
+    <div 
+      className="relative"
+      style={{
+        boxSizing: 'border-box',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        padding: '30px 40px 40px',
+        gap: '20px',
+        isolation: 'isolate',
+        background: '#FFFFFF',
+        border: '1px solid #C5C5C5',
+        boxShadow: '0px 6px 15px rgba(62, 62, 62, 0.15)',
+        borderRadius: '20px',
+        marginBottom: '32px'
+      }}
+    >
       <Textarea
         placeholder="Type your message here..."
-        className="pr-12 pb-10"
+        className="pr-12 pb-10 border-none bg-transparent resize-none focus-visible:ring-0 focus-visible:ring-offset-0 text-base"
         disabled={!canType}
         defaultValue={text}
+        style={{
+          fontFamily: 'Manrope',
+          fontSize: '16px',
+          lineHeight: '24px',
+          color: '#1F1F1F'
+        }}
       />
       {/* Pass the ID to the SubmitButton */}
       <SubmitButton onClick={onSubmit} id={submitButtonId} /> 
