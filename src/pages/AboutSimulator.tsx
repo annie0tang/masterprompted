@@ -43,19 +43,6 @@ const AboutSimulator = () => {
                 <span className="text-gray-500 text-sm">About this Simulator</span>
               </div>
 
-              {/* Traffic cone icon */}
-              <div className="mb-6">
-                <div className="w-16 h-16 relative">
-                  <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M32 8L24 48H40L32 8Z" fill="#64DB96"/>
-                    <path d="M32 8L28 28H36L32 8Z" fill="#4ECCA3"/>
-                    <path d="M20 52H44C46 54 46 56 44 56H20C18 56 18 54 20 52Z" fill="#8B8B8B"/>
-                    <circle cx="32" cy="18" r="2" fill="#FFFFFF"/>
-                    <circle cx="32" cy="28" r="2" fill="#FFFFFF"/>
-                    <circle cx="32" cy="38" r="2" fill="#FFFFFF"/>
-                  </svg>
-                </div>
-              </div>
 
               {/* Main heading */}
               <h1 className="text-3xl font-bold text-gray-900 leading-tight mb-4">
