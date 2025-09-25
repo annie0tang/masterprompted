@@ -9,13 +9,6 @@ export default function HeadlineResponse() {
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
   const [currentSentence, setCurrentSentence] = useState(["European", "Union", "unites", "on", "Historic AI Ethics Framework, Charting Path for Responsible Technology Development"]);
   
-  // Complete sentence mappings from the table (first row for each verb)
-  const verbSentences = {
-    "unites": ["European", "Union", "unites", "on", "Historic AI Ethics Framework, Charting Path for Responsible Technology Development"],
-    "Reaches": ["European", "Union", "Reaches", "Consensus", "on Historic AI Ethics Framework, Paving the Way for Responsible Tech Innovation"],
-    "finalizes": ["European", "Union", "finalizes", "landmark", "AI Ethics Agreement, Setting Global Benchmark for Safe Technology Development"]
-  };
-  
   // Word progression data from the table
   const wordProgressions = {
     "European Union unites": {
@@ -156,14 +149,7 @@ export default function HeadlineResponse() {
                           <span key={index}>
                             <span 
                               className="relative group cursor-pointer transition-colors duration-200 hover:bg-green-200 hover:px-1 hover:rounded"
-                              onClick={() => {
-                                // Change entire sentence based on verb selection
-                                const verbKey = word as keyof typeof verbSentences;
-                                if (verbSentences[verbKey]) {
-                                  setCurrentSentence(verbSentences[verbKey]);
-                                }
-                                setSelectedWord(selectedWord === `word-${index}` ? null : `word-${index}`);
-                              }}
+                              onClick={() => setSelectedWord(selectedWord === `word-${index}` ? null : `word-${index}`)}
                               onMouseEnter={(e) => {
                                 const randomNum = (Math.random()).toFixed(2);
                                 e.currentTarget.setAttribute('data-score', randomNum);
