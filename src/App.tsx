@@ -25,6 +25,7 @@ import About from "./pages/About";
 import Help from "./pages/Help";
 import ComponentLibrary from "./pages/ComponentLibrary";
 import Imprint from "./pages/Imprint";
+import Takeaways from "./pages/Takeaways";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -58,6 +59,7 @@ const App = () => (
           <Route path="/module/system-parameters" element={<SystemParameters />} />
           <Route path="/module/multiple-sources" element={<MultipleSources />} />
           <Route path="/module/llm-training" element={<LLMTraining />} />
+          <Route path="/takeaways" element={<Takeaways />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

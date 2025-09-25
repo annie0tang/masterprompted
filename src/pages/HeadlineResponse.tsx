@@ -4,8 +4,12 @@ import EvaluationPanel from "@/components/EvaluationPanel";
 import SentPrompt from "@/components/SentPrompt";
 import { PopoverSeries } from "@/components/PopoverSeries";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 
 export default function HeadlineResponse() {
+  const navigate = useNavigate();
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
   const [currentSentence, setCurrentSentence] = useState(["European", "Union", "Unites", "on", "Historic AI Ethics Framework, Charting Path for Responsible Technology Development"]);
   
@@ -258,6 +262,18 @@ export default function HeadlineResponse() {
                       />
                     </div>
                   )}
+                </div>
+                
+                {/* Takeaways Button */}
+                <div className="mt-8">
+                  <Button 
+                    variant="outline"
+                    onClick={() => navigate("/takeaways")}
+                    className="rounded-full px-6 py-3 border-2 border-foreground hover:bg-foreground hover:text-background transition-colors"
+                  >
+                    Takeaways
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
                 </div>
               </div>
             </div>
