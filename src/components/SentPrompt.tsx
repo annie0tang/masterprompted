@@ -8,7 +8,7 @@ type SentPromptProps = {
 const SentPrompt = ({ text, fileName }: SentPromptProps) => {
   return (
     <div 
-      className="relative mb-8 max-w-fit ml-auto"
+      className="mb-8 max-w-fit ml-auto"
       style={{
         background: '#F5F5F5',
         borderRadius: '20px',

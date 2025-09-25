@@ -89,6 +89,28 @@ const ComponentLibrary = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
+      <DialogPopup
+        isOpen={isControlledDialogOpen}
+        onClose={() => setIsControlledDialogOpen(false)}
+        title="This is a Dialog Popup component"
+        description='Use it to for dialog that overlays in the center of the screen.'
+        primaryAction={{ label: 'Primary Action', onClick: () => { } }}
+        secondaryAction={{ label: 'Secondary Action', onClick: () => { } }}
+      ></DialogPopup>
+      
+      {showSingleStep && (
+        <PopoverSeries
+          steps={singleStepTour}
+          onClose={() => setShowSingleStep(false)}
+        />
+      )}
+
+      {showMultiStep && (
+        <PopoverSeries
+          steps={multiStepTour}
+          onClose={() => setShowMultiStep(false)}
+        />
+      )}
 
       <main className="container mx-auto px-6 py-8">
         <div className="max-w-7xl mx-auto">
@@ -121,32 +143,24 @@ const ComponentLibrary = () => {
               </Card>
 
               {/* Dialog Components */}
-              <DialogPopup
-                isOpen={isControlledDialogOpen}
-                onClose={() => setIsControlledDialogOpen(false)}
-                title="This is a Dialog Popup component"
-                description='Use it to for dialog that overlays in the center of the screen.'
-                primaryAction={{ label: 'Primary Action', onClick: () => { } }}
-                secondaryAction={{ label: 'Secondary Action', onClick: () => { } }}
-              ></DialogPopup>
               <Card>
                 <CardHeader>
                   <CardTitle>Popup Components</CardTitle>
                   <CardDescription>Modal Popups and Popovers</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-8">
-                  <div>
-                    <Button variant="outline" onClick={() => openPopup(setIsControlledDialogOpen)} className="mb-4">
+                  <div className="flex justify-between">
+                    <Button
+                      variant="outline"
+                      onClick={() => openPopup(setIsControlledDialogOpen)}
+                    >
                       DialogPopup
                     </Button>
-                  </div>
 
-                  {/* PopoverSeries Controls */}
-                  <div className="space-y-2">
+                    {/* PopoverSeries Controls */}
                     <Button
                       variant="outline"
                       onClick={() => setShowSingleStep(true)}
-                      className="block mb-2"
                     >
                       PopoverSeries - Single Step
                     </Button>
@@ -157,23 +171,9 @@ const ComponentLibrary = () => {
                     >
                       PopoverSeries - Multi Step
                     </Button>
-
-                    {showSingleStep && (
-                      <PopoverSeries
-                        steps={singleStepTour}
-                        onClose={() => setShowSingleStep(false)}
-                      />
-                    )}
-
-                    {showMultiStep && (
-                      <PopoverSeries
-                        steps={multiStepTour}
-                        onClose={() => setShowMultiStep(false)}
-                      />
-                    )}
                   </div>
                   {/* Dummy Items for PopoverSeries */}
-                  <div className="flex">
+                  <div className="flex justify-center gap-4">
                     <div className="p-4 border rounded-lg" id="dummy-item-1">Item One</div>
                     <div className="p-4 border rounded-lg" id="dummy-item-2">Item Two</div>
                     <div className="p-4 border rounded-lg" id="dummy-item-3">Item Three</div>
