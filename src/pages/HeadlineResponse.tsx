@@ -7,21 +7,21 @@ import { useState } from "react";
 
 export default function HeadlineResponse() {
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
-  const [currentSentence, setCurrentSentence] = useState(["European", "Union", "unites", "on", "Historic AI Ethics Framework, Charting Path for Responsible Technology Development"]);
+  const [currentSentence, setCurrentSentence] = useState(["European", "Union", "Unites", "on", "Historic AI Ethics Framework, Charting Path for Responsible Technology Development"]);
   
   // Word progression data from the table
   const wordProgressions = {
-    "European Union unites": {
+    "European Union Unites": {
       "on": "Historic AI Ethics Framework, Charting Path for Responsible Technology Development",
-      "around": "Sweeping AI Ethics Charter, Pioneering International Tech Policy Standards", 
-      "behind": "Historic AI Ethics Framework, Setting Standards for Responsible Innovation"
+      "Around": "Sweeping AI Ethics Charter, Pioneering International Tech Policy Standards", 
+      "Behind": "Historic AI Ethics Framework, Setting Standards for Responsible Innovation"
     },
     "European Union Reaches": {
       "Consensus": "on Historic AI Ethics Framework, Paving the Way for Responsible Tech Innovation",
       "Agreement": "on Historic AI Ethics Framework, Laying Groundwork for Safe Tech Development",
       "Milestone": "in AI Ethics, Advancing a Unified Vision for Responsible Innovation"
     },
-    "European Union finalizes": {
+    "European Union Finalizes": {
       "landmark": "AI Ethics Agreement, Setting Global Benchmark for Safe Technology Development",
       "sweeping": "AI Ethics Agreement, Establishing New Norms for Responsible Tech",
       "pioneering": "AI Ethics Framework, Guiding the Future of Safe Innovation"
@@ -32,9 +32,9 @@ export default function HeadlineResponse() {
     // For Union position (index 1)
     if (currentPath.length === 2 && currentPath[0] === "European" && currentPath[1] === "Union") {
       return [
-        { word: "unites", nextWords: ["on", "around", "behind"] },
+        { word: "Unites", nextWords: ["on", "Around", "Behind"] },
         { word: "Reaches", nextWords: ["Consensus", "Agreement", "Milestone"] },
-        { word: "finalizes", nextWords: ["landmark", "sweeping", "pioneering"] }
+        { word: "Finalizes", nextWords: ["landmark", "sweeping", "pioneering"] }
       ];
     }
     
@@ -120,7 +120,7 @@ export default function HeadlineResponse() {
                 <div className="relative">
                   <h1 className="text-2xl text-gray-900 leading-tight font-normal md:text-4xl">
                     {currentSentence.map((word, index) => {
-                      const isClickable = (index === 2 && (word === "unites" || word === "Reaches" || word === "finalizes"));
+                      const isClickable = (index === 2 && (word === "Unites" || word === "Reaches" || word === "Finalizes"));
                       
                       // Special handling for Union/Unites position
                       if (index === 1 && word === "Union") {
@@ -149,7 +149,7 @@ export default function HeadlineResponse() {
                              >
                                {word}
                                <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-                                 {word === "unites" ? "0.67" : word === "Reaches" ? "0.24" : "0.09"}
+                                 {word === "Unites" ? "0.67" : word === "Reaches" ? "0.24" : "0.09"}
                                </span>
                              </span>
                             {index < currentSentence.length - 1 && " "}
@@ -215,13 +215,13 @@ export default function HeadlineResponse() {
                                      
                                      if (wordIndex === 1) {
                                        // For Union position, set specific sentences based on verb
-                                       if (option.word === "unites") {
-                                         newSentence.push("Unites", "On", "Historic", "AI", "Ethics", "Framework,", "Charting", "Path", "For", "Responsible", "Technology", "Development");
-                                       } else if (option.word === "Reaches") {
-                                         newSentence.push("Reaches", "Consensus", "On", "Historic", "AI", "Ethics", "Framework,", "Paving", "The", "Way", "For", "Responsible", "Tech", "Innovation");
-                                       } else if (option.word === "finalizes") {
-                                         newSentence.push("Finalizes", "Landmark", "AI", "Ethics", "Agreement,", "Setting", "Global", "Benchmark", "For", "Safe", "Technology", "Development");
-                                       }
+                                        if (option.word === "Unites") {
+                                          newSentence.push("Unites", "On", "Historic", "AI", "Ethics", "Framework,", "Charting", "Path", "For", "Responsible", "Technology", "Development");
+                                        } else if (option.word === "Reaches") {
+                                          newSentence.push("Reaches", "Consensus", "On", "Historic", "AI", "Ethics", "Framework,", "Paving", "The", "Way", "For", "Responsible", "Tech", "Innovation");
+                                        } else if (option.word === "Finalizes") {
+                                          newSentence.push("Finalizes", "Landmark", "AI", "Ethics", "Agreement,", "Setting", "Global", "Benchmark", "For", "Safe", "Technology", "Development");
+                                        }
                                      } else {
                                        // Handle other word selections
                                        newSentence.push(...currentSentence.slice(2, wordIndex + 1));
