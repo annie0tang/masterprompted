@@ -14,7 +14,8 @@ export default function HeadlineResponse() {
   const navigate = useNavigate();
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
   const [currentSentence, setCurrentSentence] = useState(["European", "Union", "Unites", "Around", "Sweeping", "AI", "Ethics", "Charter,", "Pioneering", "International", "Tech", "Policy", "Standards"]);
-  const [showTooltip, setShowTooltip] = useState(true);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [tooltipShown, setTooltipShown] = useState(false);
   
   // Word progression data from the table
   const wordProgressions = {
@@ -119,26 +120,22 @@ export default function HeadlineResponse() {
                       if (index === 1 && word === "Union") {
                         return (
                           <span key={index}>
-                            <TooltipProvider>
-                              <Tooltip open={showTooltip}>
-                                <TooltipTrigger asChild>
-                                  <span 
-                                     className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg"
-                                     onClick={() => setSelectedWord(selectedWord === `word-${index}` ? null : `word-${index}`)}
-                                     onMouseEnter={() => setShowTooltip(false)}
-                                     data-word-union
-                                   >
-                                     {word}
-                                     <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-                                       0.73
-                                     </span>
-                                  </span>
-                                </TooltipTrigger>
-                                <TooltipContent side="top" className="max-w-xs">
-                                  <p>The numbers on top of each word represent the probability that the word would be selected. Use them to understand what would be the most probable selection by the LLM.</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
+                            <span 
+                               className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg"
+                               onClick={() => setSelectedWord(selectedWord === `word-${index}` ? null : `word-${index}`)}
+                               onMouseEnter={() => {
+                                 if (!tooltipShown) {
+                                   setShowTooltip(true);
+                                   setTooltipShown(true);
+                                 }
+                               }}
+                               data-word-union
+                             >
+                               {word}
+                               <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                                 0.73
+                               </span>
+                            </span>
                             {index < currentSentence.length - 1 && " "}
                           </span>
                         );
@@ -147,26 +144,22 @@ export default function HeadlineResponse() {
                        if (isClickable) {
                          return (
                            <span key={index}>
-                             <TooltipProvider>
-                               <Tooltip open={showTooltip}>
-                                 <TooltipTrigger asChild>
-                                   <span 
-                                     className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg"
-                                     onClick={() => setSelectedWord(selectedWord === `word-${index}` ? null : `word-${index}`)}
-                                     onMouseEnter={() => setShowTooltip(false)}
-                                     data-word-unites={word === "Unites" ? true : undefined}
-                                   >
-                                     {word}
-                                     <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-                                       {word === "Unites" ? "0.67" : word === "Reaches" ? "0.24" : "0.09"}
-                                     </span>
-                                   </span>
-                                 </TooltipTrigger>
-                                 <TooltipContent side="top" className="max-w-xs">
-                                   <p>The numbers on top of each word represent the probability that the word would be selected. Use them to understand what would be the most probable selection by the LLM.</p>
-                                 </TooltipContent>
-                               </Tooltip>
-                             </TooltipProvider>
+                             <span 
+                               className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg"
+                               onClick={() => setSelectedWord(selectedWord === `word-${index}` ? null : `word-${index}`)}
+                               onMouseEnter={() => {
+                                 if (!tooltipShown) {
+                                   setShowTooltip(true);
+                                   setTooltipShown(true);
+                                 }
+                               }}
+                               data-word-unites={word === "Unites" ? true : undefined}
+                             >
+                               {word}
+                               <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                                 {word === "Unites" ? "0.67" : word === "Reaches" ? "0.24" : "0.09"}
+                               </span>
+                             </span>
                              {index < currentSentence.length - 1 && " "}
                            </span>
                          );
@@ -310,6 +303,26 @@ export default function HeadlineResponse() {
           </div>
         </div>
       </main>
+      
+      {/* Single tooltip for probability explanation */}
+      {showTooltip && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
+          <div className="bg-emerald-500 text-white p-4 rounded-lg shadow-lg max-w-xs pointer-events-auto relative">
+            <p className="text-sm leading-relaxed mb-4">
+              The numbers on top of each word represent the probability that the word would be selected.
+            </p>
+            <p className="text-sm leading-relaxed mb-4">
+              Use them to understand what would be the most probable selection by the LLM
+            </p>
+            <button 
+              onClick={() => setShowTooltip(false)}
+              className="absolute bottom-2 right-2 bg-white text-emerald-500 px-3 py-1 rounded text-sm font-medium hover:bg-gray-100 transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
       
       {/* PopoverSeries for word interaction tour */}
       <PopoverSeries steps={popoverSteps} />
