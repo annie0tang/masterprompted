@@ -7,7 +7,7 @@ const breadcrumbMap: Record<string, string> = {
   "/module/introduction": "Introduction",
   "/module/about-simulator": "About Simulator", 
   "/module/journalistic-evaluation": "Journalistic Evaluation",
-  "/module/next-word-prediction": "Next Word Prediction",
+  "/module/next-word-prediction-intro": "Next Word Prediction",
   "/module/headline-response": "Headline Response",
   "/module/prompt-construction": "Prompt Construction",
   "/module/prompt-construction/specificity": "Prompt Construction",
