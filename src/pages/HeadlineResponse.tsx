@@ -108,31 +108,27 @@ export default function HeadlineResponse() {
                   
                   {/* Word alternatives popup */}
                   {selectedWord && (
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
-                      <div className="relative">
+                    <div className="absolute inset-0 z-10">
+                      <div className="relative w-full h-full">
                         {wordAlternatives[selectedWord as keyof typeof wordAlternatives].map((alt, index) => {
-                          // Calculate circular positions around the word
-                          const radius = 80;
-                          const angle = (index * 120) - 60; // 120 degrees apart, starting from top-left
+                          // Calculate circular positions around the center word
+                          const radius = 100;
+                          const angle = (index * 120) - 90; // 120 degrees apart, starting from top
                           const x = Math.cos((angle * Math.PI) / 180) * radius;
                           const y = Math.sin((angle * Math.PI) / 180) * radius;
                           
                           return (
-                            <div key={index} className="absolute">
-                              {/* Connecting line from center to bubble */}
+                            <div key={index}>
+                              {/* Connecting line from center word to alternative */}
                               <svg 
-                                className="absolute w-2 h-2 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                                style={{ 
-                                  width: `${radius + 40}px`,
-                                  height: `${radius + 40}px`,
-                                  transform: `translate(${x - radius/2}px, ${y - radius/2}px)`
-                                }}
+                                className="absolute inset-0 w-full h-full pointer-events-none"
+                                style={{ zIndex: 1 }}
                               >
                                 <line 
-                                  x1={radius/2} 
-                                  y1={radius/2} 
-                                  x2={radius/2 + x/2} 
-                                  y2={radius/2 + y/2} 
+                                  x1="50%" 
+                                  y1="50%" 
+                                  x2={`calc(50% + ${x}px)`} 
+                                  y2={`calc(50% + ${y}px)`} 
                                   stroke="#10b981" 
                                   strokeWidth="2"
                                 />
@@ -140,10 +136,12 @@ export default function HeadlineResponse() {
                               
                               {/* Alternative word bubble */}
                               <div 
-                                className="bg-green-200 text-green-800 px-3 py-2 rounded-lg shadow-lg cursor-pointer hover:bg-green-300 transition-colors duration-200 whitespace-nowrap"
+                                className="absolute bg-green-200 text-green-800 px-3 py-2 rounded-lg shadow-lg cursor-pointer hover:bg-green-300 transition-colors duration-200 whitespace-nowrap"
                                 style={{ 
-                                  transform: `translate(${x}px, ${y}px)`,
-                                  transformOrigin: 'center'
+                                  left: '50%',
+                                  top: '50%',
+                                  transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
+                                  zIndex: 2
                                 }}
                                 onClick={() => setSelectedWord(null)}
                               >
