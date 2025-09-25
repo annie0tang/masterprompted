@@ -108,42 +108,55 @@ export default function HeadlineResponse() {
                   
                   {/* Word alternatives popup */}
                   {selectedWord && (
-                    <div className="absolute top-full mt-4 left-0 z-10">
-                      <div className="flex flex-col space-y-2">
-                        {wordAlternatives[selectedWord as keyof typeof wordAlternatives].map((alt, index) => (
-                          <div key={index} className="relative">
-                            {/* Connecting line */}
-                            <svg 
-                              className="absolute -top-2 left-4 w-32 h-8" 
-                              style={{ 
-                                transform: `translateX(${index * 60}px) translateY(-${20 + index * 10}px)` 
-                              }}
-                            >
-                              <path 
-                                d={`M 0,20 Q 20,${10 - index * 5} 40,0`} 
-                                stroke="#10b981" 
-                                strokeWidth="2" 
-                                fill="none"
-                              />
-                            </svg>
-                            
-                            {/* Alternative word bubble */}
-                            <div 
-                              className="bg-green-200 text-green-800 px-3 py-2 rounded-lg shadow-lg cursor-pointer hover:bg-green-300 transition-colors duration-200"
-                              style={{ 
-                                transform: `translateX(${index * 80}px) translateY(-${30 + index * 15}px)` 
-                              }}
-                              onClick={() => setSelectedWord(null)}
-                            >
-                              <div className="text-xs font-medium mb-1">
-                                {alt.probability.toFixed(2)}
-                              </div>
-                              <div className="text-sm font-semibold">
-                                {alt.word}
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+                      <div className="relative">
+                        {wordAlternatives[selectedWord as keyof typeof wordAlternatives].map((alt, index) => {
+                          // Calculate circular positions around the word
+                          const radius = 80;
+                          const angle = (index * 120) - 60; // 120 degrees apart, starting from top-left
+                          const x = Math.cos((angle * Math.PI) / 180) * radius;
+                          const y = Math.sin((angle * Math.PI) / 180) * radius;
+                          
+                          return (
+                            <div key={index} className="absolute">
+                              {/* Connecting line from center to bubble */}
+                              <svg 
+                                className="absolute w-2 h-2 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                                style={{ 
+                                  width: `${radius + 40}px`,
+                                  height: `${radius + 40}px`,
+                                  transform: `translate(${x - radius/2}px, ${y - radius/2}px)`
+                                }}
+                              >
+                                <line 
+                                  x1={radius/2} 
+                                  y1={radius/2} 
+                                  x2={radius/2 + x/2} 
+                                  y2={radius/2 + y/2} 
+                                  stroke="#10b981" 
+                                  strokeWidth="2"
+                                />
+                              </svg>
+                              
+                              {/* Alternative word bubble */}
+                              <div 
+                                className="bg-green-200 text-green-800 px-3 py-2 rounded-lg shadow-lg cursor-pointer hover:bg-green-300 transition-colors duration-200 whitespace-nowrap"
+                                style={{ 
+                                  transform: `translate(${x}px, ${y}px)`,
+                                  transformOrigin: 'center'
+                                }}
+                                onClick={() => setSelectedWord(null)}
+                              >
+                                <div className="text-xs font-medium mb-1 text-center">
+                                  {alt.probability.toFixed(2)}
+                                </div>
+                                <div className="text-sm font-semibold text-center">
+                                  {alt.word}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                       
                       {/* Background overlay to close popup */}
