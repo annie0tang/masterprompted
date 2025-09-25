@@ -32,7 +32,43 @@ import { AlertCircle } from "lucide-react";
 const ComponentLibrary = () => {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const [isControlledDialogOpen, setIsControlledDialogOpen] = useState(false);
-  const [isUncontrolledDialogOpen, setIsUncontrolledDialogOpen] = useState(false);
+
+  const singleStepTour = [
+    {
+      id: 'single-step',
+      trigger: '#dummy-item-2',
+      content: <p className="text-sm leading-relaxed">
+        This is a single-step tour highlighting the middle item.
+      </p>
+    }
+  ];
+
+  const multiStepTour = [
+    {
+      id: 'step-1',
+      trigger: '#dummy-item-1',
+      content: <p className="text-sm leading-relaxed">
+        This is the first item in our tour.
+      </p>
+    },
+    {
+      id: 'step-2',
+      trigger: '#dummy-item-2',
+      content: <p className="text-sm leading-relaxed">
+        Moving on to the second item.
+      </p>
+    },
+    {
+      id: 'step-3',
+      trigger: '#dummy-item-3',
+      content: <p className="text-sm leading-relaxed">
+        And finally, the third item completes our tour.
+      </p>
+    }
+  ];
+
+  const [showSingleStep, setShowSingleStep] = useState(false);
+  const [showMultiStep, setShowMultiStep] = useState(false);
 
 
   interface PopupSetter {
@@ -67,6 +103,84 @@ const ComponentLibrary = () => {
           <section className="mb-12">
             <h2 className="text-2xl font-semibold text-foreground mb-6">Custom Components</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+              {/* VideoLightbox Component */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>VideoLightbox</CardTitle>
+                  <CardDescription>Video player with lightbox functionality</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button onClick={() => setIsVideoOpen(true)}>Open Video</Button>
+                  <VideoLightbox
+                    isOpen={isVideoOpen}
+                    onClose={() => setIsVideoOpen(false)}
+                    videoUrl="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                  />
+                </CardContent>
+              </Card>
+
+              {/* Dialog Components */}
+              <DialogPopup
+                isOpen={isControlledDialogOpen}
+                onClose={() => setIsControlledDialogOpen(false)}
+                title="This is a Dialog Popup component"
+                description='Use it to for dialog that overlays in the center of the screen.'
+                primaryAction={{ label: 'Primary Action', onClick: () => { } }}
+                secondaryAction={{ label: 'Secondary Action', onClick: () => { } }}
+              ></DialogPopup>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Popup Components</CardTitle>
+                  <CardDescription>Modal Popups and Popovers</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-8">
+                  <div>
+                    <Button variant="outline" onClick={() => openPopup(setIsControlledDialogOpen)} className="mb-4">
+                      DialogPopup
+                    </Button>
+                  </div>
+
+                  {/* PopoverSeries Controls */}
+                  <div className="space-y-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowSingleStep(true)}
+                      className="block mb-2"
+                    >
+                      PopoverSeries - Single Step
+                    </Button>
+
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowMultiStep(true)}
+                    >
+                      PopoverSeries - Multi Step
+                    </Button>
+
+                    {showSingleStep && (
+                      <PopoverSeries
+                        steps={singleStepTour}
+                        onClose={() => setShowSingleStep(false)}
+                      />
+                    )}
+
+                    {showMultiStep && (
+                      <PopoverSeries
+                        steps={multiStepTour}
+                        onClose={() => setShowMultiStep(false)}
+                      />
+                    )}
+                  </div>
+                  {/* Dummy Items for PopoverSeries */}
+                  <div className="flex">
+                    <div className="p-4 border rounded-lg" id="dummy-item-1">Item One</div>
+                    <div className="p-4 border rounded-lg" id="dummy-item-2">Item Two</div>
+                    <div className="p-4 border rounded-lg" id="dummy-item-3">Item Three</div>
+                  </div>
+
+                </CardContent>
+              </Card>
 
               {/* SentPrompt Component */}
               <Card>
@@ -106,40 +220,6 @@ const ComponentLibrary = () => {
                 </CardContent>
               </Card>
 
-              {/* VideoLightbox Component */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>VideoLightbox</CardTitle>
-                  <CardDescription>Video player with lightbox functionality</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button onClick={() => setIsVideoOpen(true)}>Open Video</Button>
-                  <VideoLightbox
-                    isOpen={isVideoOpen}
-                    onClose={() => setIsVideoOpen(false)}
-                    videoUrl="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                  />
-                </CardContent>
-              </Card>
-
-              {/* Dialog Components */}
-              <DialogPopup
-                isOpen={isControlledDialogOpen}
-                onClose={() => setIsControlledDialogOpen(false)}
-                title="This is a Dialog Popup component"
-                description='Use it to for dialog that overlays in the center of the screen.'
-                primaryAction={{ label: 'Primary Action', onClick: () => {} }}
-                secondaryAction={{ label: 'Secondary Action', onClick: () => {} }}
-              ></DialogPopup>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Popup Components</CardTitle>
-                  <CardDescription>Modal dialog examples (click buttons to open)</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <Button variant="outline" onClick={() => openPopup(setIsControlledDialogOpen)}>Open Dialog Popup</Button>
-                </CardContent>
-              </Card>
             </div>
           </section>
 

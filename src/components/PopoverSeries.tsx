@@ -36,26 +36,61 @@ const FakeTrigger = forwardRef<HTMLDivElement, { rect: DOMRect | null }>(({ rect
 });
 
 export function PopoverSeries({ steps, initialStep = 0, onClose }: PopoverSeriesProps) {
-  const [currentStep, setCurrentStep] = useState<number | null>(initialStep)
+  const [currentStep, setCurrentStep] = useState<number | null>(null)
   const [rect, setRect] = useState<DOMRect | null>(null)
   const [borderRadius, setBorderRadius] = useState<string>('0px')
+  const [isScrolling, setIsScrolling] = useState(false)
 
-  // The triggerRefs array is now entirely unnecessary and removed for simplicity.
+  const scrollToTop = () => {
+    return new Promise<void>((resolve) => {
+      // If already at top, resolve immediately
+      if (window.scrollY === 0) {
+        resolve();
+        return;
+      }
+
+      setIsScrolling(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      const checkScroll = () => {
+        if (window.scrollY === 0) {
+          window.removeEventListener('scroll', checkScroll);
+          setIsScrolling(false);
+          resolve();
+        }
+      };
+
+      window.addEventListener('scroll', checkScroll);
+    });
+  };
 
   const close = () => {
     setCurrentStep(null)
     onClose?.()
   }
 
-  const goToStep = (stepIndex: number) => {
+  const goToStep = async (stepIndex: number) => {
     if (stepIndex >= 0 && stepIndex < steps.length) {
-      setCurrentStep(stepIndex)
+      if (stepIndex === 0) {
+        await scrollToTop();
+      }
+      setCurrentStep(stepIndex);
     } else {
-      close()
+      close();
     }
   }
 
+  // Initialize with scroll to top
+  useEffect(() => {
+    if (initialStep === 0) {
+      scrollToTop().then(() => {
+        setCurrentStep(initialStep);
+      });
+    }
+  }, []);
+
   // This effect now finds the element using the selector string
+  // Effect for handling element measurements
   useEffect(() => {
     if (currentStep !== null) {
       const selector = steps[currentStep]?.trigger;
@@ -79,8 +114,23 @@ export function PopoverSeries({ steps, initialStep = 0, onClose }: PopoverSeries
     }
   }, [currentStep, steps]); // Dependencies are correct
 
-  const currentStepData = currentStep !== null ? steps[currentStep] : null;
-  const isOpen = currentStep !== null
+  const isOpen = currentStep !== null;
+  const currentStepData = isOpen ? steps[currentStep] : null;
+
+  // Effect for handling body scroll lock
+  useEffect(() => {
+    if (isOpen) {
+      // Save the current body overflow style
+      const originalStyle = window.getComputedStyle(document.body).overflow;
+      // Prevent scrolling
+      document.body.style.overflow = 'hidden';
+      
+      // Cleanup function
+      return () => {
+        document.body.style.overflow = originalStyle;
+      };
+    }
+  }, [isOpen]);
 
   if (!currentStepData || !isOpen) {
     return null;
@@ -96,9 +146,13 @@ export function PopoverSeries({ steps, initialStep = 0, onClose }: PopoverSeries
       {/* 1. Render the mask/hole */}
       {isOpen && rect && (
         <>
-          <div className="fixed inset-0 bg-black/0 z-40 pointer-events-none" />
+          {/* Semi-transparent overlay that blocks clicks */}
+          <div 
+            className="fixed inset-0 bg-black/0 z-40"
+            onClick={(e) => e.stopPropagation()} 
+          />
           <div
-            className="fixed z-40 pointer-events-none"
+            className="fixed z-41"
             style={{
               left: rect.left - 8,
               top: rect.top - 8,
