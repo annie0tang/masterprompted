@@ -218,27 +218,33 @@ export default function HeadlineResponse() {
                                     transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
                                     zIndex: 2
                                   }}
-                                  onClick={() => {
-                                    const newSentence = [...currentSentence];
-                                    
-                                    if (wordIndex === 1) {
-                                      // For Union position, replace the verb
-                                      newSentence[2] = option.word;
-                                      // Reset the sentence to default completion
-                                      newSentence[3] = "on";
-                                      newSentence[4] = "Historic AI Ethics Framework, Charting Path for Responsible Technology Development";
-                                      newSentence.splice(5);
-                                    } else {
-                                      newSentence[wordIndex + 1] = option.word;
-                                      if (option.completion) {
-                                        newSentence[wordIndex + 2] = option.completion;
-                                        // Remove any words beyond the completion
-                                        newSentence.splice(wordIndex + 3);
-                                      }
-                                    }
-                                    setCurrentSentence(newSentence);
-                                    setSelectedWord(null);
-                                  }}
+                                   onClick={() => {
+                                     const newSentence = ["European", "Union"];
+                                     
+                                     if (wordIndex === 1) {
+                                       // For Union position, set specific sentences based on verb
+                                       if (option.word === "unites") {
+                                         newSentence.push("Unites", "On", "Historic", "AI", "Ethics", "Framework,", "Charting", "Path", "For", "Responsible", "Technology", "Development");
+                                       } else if (option.word === "Reaches") {
+                                         newSentence.push("Reaches", "Consensus", "On", "Historic", "AI", "Ethics", "Framework,", "Paving", "The", "Way", "For", "Responsible", "Tech", "Innovation");
+                                       } else if (option.word === "finalizes") {
+                                         newSentence.push("Finalizes", "Landmark", "AI", "Ethics", "Agreement,", "Setting", "Global", "Benchmark", "For", "Safe", "Technology", "Development");
+                                       }
+                                     } else {
+                                       // Handle other word selections
+                                       newSentence.push(...currentSentence.slice(2, wordIndex + 1));
+                                       newSentence.push(option.word);
+                                       if (option.completion) {
+                                         // Split completion into individual words and capitalize each
+                                         const completionWords = option.completion.split(" ").map(word => 
+                                           word.charAt(0).toUpperCase() + word.slice(1)
+                                         );
+                                         newSentence.push(...completionWords);
+                                       }
+                                     }
+                                     setCurrentSentence(newSentence);
+                                     setSelectedWord(null);
+                                   }}
                                 >
                                   <div className="text-xs font-medium mb-1 text-center text-green-800">
                                     {Math.random().toFixed(2)}
