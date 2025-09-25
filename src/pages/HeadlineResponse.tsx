@@ -129,7 +129,7 @@ export default function HeadlineResponse() {
                         return (
                           <span key={index}>
                             <span 
-                               className="relative group cursor-pointer transition-colors duration-200 hover:bg-green-200 hover:px-1 hover:rounded"
+                               className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg"
                                onClick={() => setSelectedWord(selectedWord === `word-${index}` ? null : `word-${index}`)}
                                data-word-union
                              >
@@ -147,7 +147,7 @@ export default function HeadlineResponse() {
                         return (
                           <span key={index}>
                              <span 
-                               className="relative group cursor-pointer transition-colors duration-200 hover:bg-green-200 hover:px-1 hover:rounded"
+                               className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg"
                                onClick={() => setSelectedWord(selectedWord === `word-${index}` ? null : `word-${index}`)}
                                data-word-unites={word === "Unites" ? true : undefined}
                              >
