@@ -16,6 +16,8 @@ export default function HeadlineResponse() {
   const [currentSentence, setCurrentSentence] = useState(["European", "Union", "Unites", "Around", "Sweeping", "AI", "Ethics", "Charter,", "Pioneering", "International", "Tech", "Policy", "Standards"]);
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipShown, setTooltipShown] = useState(false);
+  const [showFactualInaccuracyTooltip, setShowFactualInaccuracyTooltip] = useState(false);
+  const [factualTooltipShown, setFactualTooltipShown] = useState(false);
   
   // Word progression data from the table
   const wordProgressions = {
@@ -165,19 +167,42 @@ export default function HeadlineResponse() {
                          );
                        }
                       
-                      // Handle TextFlag for "Charter,"
-                      if (word === "Charter,") {
-                        return (
-                          <span key={index}>
-                            <TextFlag 
-                              text="Charter"
-                              evaluationFactor="factual-accuracy"
-                              explanation="The term 'charter' has been used here to describe the EU AI Act. A charter is a different type of document than an act and therefore are not interchangeable terms."
-                            />
-                            ,{index < currentSentence.length - 1 && " "}
-                          </span>
-                        );
-                      }
+                       // Handle TextFlag for "Charter,"
+                       if (word === "Charter,") {
+                         return (
+                           <span key={index} className="relative">
+                             <TextFlag 
+                               text="Charter"
+                               evaluationFactor="factual-accuracy"
+                               explanation="The term 'charter' has been used here to describe the EU AI Act. A charter is a different type of document than an act and therefore are not interchangeable terms."
+                             />
+                             ,{index < currentSentence.length - 1 && " "}
+                             
+                             {/* Factual Inaccuracy Tooltip */}
+                             {showFactualInaccuracyTooltip && (
+                               <div className="absolute left-full top-1/2 transform -translate-y-1/2 ml-4 z-50">
+                                 <div className="bg-emerald-500 text-white p-4 rounded-lg shadow-lg max-w-xs">
+                                   <p className="text-sm leading-relaxed mb-2 font-medium">
+                                     You found the factual inaccuracy!
+                                   </p>
+                                   <p className="text-sm leading-relaxed mb-4">
+                                     Through a series of word selections, the LLM has generated an error in factual information.
+                                   </p>
+                                   <p className="text-sm leading-relaxed mb-4">
+                                     Hover over the word to read more about the falsehood.
+                                   </p>
+                                   <button 
+                                     onClick={() => setShowFactualInaccuracyTooltip(false)}
+                                     className="bg-white text-emerald-500 px-3 py-1 rounded text-sm font-medium hover:bg-gray-100 transition-colors"
+                                   >
+                                     Close
+                                   </button>
+                                 </div>
+                               </div>
+                             )}
+                           </span>
+                         );
+                       }
                       
                       return (
                         <span key={index}>
@@ -256,8 +281,16 @@ export default function HeadlineResponse() {
                                          newSentence.push(...completionWords);
                                        }
                                      }
-                                     setCurrentSentence(newSentence);
-                                     setSelectedWord(null);
+                                      setCurrentSentence(newSentence);
+                                      setSelectedWord(null);
+                                      
+                                      // Check if "Unites Around" combination is selected
+                                      if (newSentence.includes("Unites") && newSentence.includes("Around") && !factualTooltipShown) {
+                                        setTimeout(() => {
+                                          setShowFactualInaccuracyTooltip(true);
+                                          setFactualTooltipShown(true);
+                                        }, 500);
+                                      }
                                    }}
                                 >
                                    <div className="text-xs font-medium mb-1 text-center text-green-800">
