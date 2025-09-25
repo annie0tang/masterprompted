@@ -127,17 +127,13 @@ export default function HeadlineResponse() {
                         return (
                           <span key={index}>
                             <span 
-                              className="relative group cursor-pointer transition-colors duration-200 hover:bg-green-200 hover:px-1 hover:rounded"
-                              onClick={() => setSelectedWord(selectedWord === `word-${index}` ? null : `word-${index}`)}
-                              onMouseEnter={(e) => {
-                                const randomNum = (Math.random()).toFixed(2);
-                                e.currentTarget.setAttribute('data-score', randomNum);
-                              }}
-                            >
-                              {word}
-                              <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-                                {typeof window !== 'undefined' && Math.random().toFixed(2)}
-                              </span>
+                               className="relative group cursor-pointer transition-colors duration-200 hover:bg-green-200 hover:px-1 hover:rounded"
+                               onClick={() => setSelectedWord(selectedWord === `word-${index}` ? null : `word-${index}`)}
+                             >
+                               {word}
+                               <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                                 0.73
+                               </span>
                             </span>
                             {index < currentSentence.length - 1 && " "}
                           </span>
@@ -147,19 +143,15 @@ export default function HeadlineResponse() {
                       if (isClickable) {
                         return (
                           <span key={index}>
-                            <span 
-                              className="relative group cursor-pointer transition-colors duration-200 hover:bg-green-200 hover:px-1 hover:rounded"
-                              onClick={() => setSelectedWord(selectedWord === `word-${index}` ? null : `word-${index}`)}
-                              onMouseEnter={(e) => {
-                                const randomNum = (Math.random()).toFixed(2);
-                                e.currentTarget.setAttribute('data-score', randomNum);
-                              }}
-                            >
-                              {word}
-                              <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-                                {typeof window !== 'undefined' && Math.random().toFixed(2)}
-                              </span>
-                            </span>
+                             <span 
+                               className="relative group cursor-pointer transition-colors duration-200 hover:bg-green-200 hover:px-1 hover:rounded"
+                               onClick={() => setSelectedWord(selectedWord === `word-${index}` ? null : `word-${index}`)}
+                             >
+                               {word}
+                               <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                                 {word === "unites" ? "0.67" : word === "Reaches" ? "0.24" : "0.09"}
+                               </span>
+                             </span>
                             {index < currentSentence.length - 1 && " "}
                           </span>
                         );
@@ -176,7 +168,7 @@ export default function HeadlineResponse() {
                   
                   {/* Word alternatives popup */}
                   {selectedWord && (
-                    <div className="absolute inset-0 z-10 pointer-events-none" style={{ transform: `translate(${selectedWord === "word-3" ? "50px" : "-100px"}, -30px)` }}>
+                    <div className="absolute inset-0 z-10 pointer-events-none" style={{ transform: `translate(${selectedWord === "word-1" ? "-160px" : selectedWord === "word-3" ? "50px" : "-100px"}, -30px)` }}>
                       <div className="relative w-full h-full">
                         {(() => {
                           const wordIndex = parseInt(selectedWord.split('-')[1]);
@@ -246,9 +238,9 @@ export default function HeadlineResponse() {
                                      setSelectedWord(null);
                                    }}
                                 >
-                                  <div className="text-xs font-medium mb-1 text-center text-green-800">
-                                    {Math.random().toFixed(2)}
-                                  </div>
+                                   <div className="text-xs font-medium mb-1 text-center text-green-800">
+                                     {index === 0 ? "0.67" : index === 1 ? "0.24" : "0.09"}
+                                   </div>
                                   <div className="text-sm font-semibold text-center">
                                     {option.word}
                                   </div>
