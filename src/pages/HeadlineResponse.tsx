@@ -3,6 +3,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import EvaluationPanel from "@/components/EvaluationPanel";
 import SentPrompt from "@/components/SentPrompt";
 import { PopoverSeries } from "@/components/PopoverSeries";
+import TextFlag from "@/components/TextFlag";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,7 @@ import { ArrowRight } from "lucide-react";
 export default function HeadlineResponse() {
   const navigate = useNavigate();
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
-  const [currentSentence, setCurrentSentence] = useState(["European", "Union", "Unites", "on", "Historic AI Ethics Framework, Charting Path for Responsible Technology Development"]);
+  const [currentSentence, setCurrentSentence] = useState(["European", "Union", "Unites", "Around", "Sweeping", "AI", "Ethics", "Charter,", "Pioneering", "International", "Tech", "Policy", "Standards"]);
   
   // Word progression data from the table
   const wordProgressions = {
@@ -157,6 +158,20 @@ export default function HeadlineResponse() {
                                </span>
                              </span>
                             {index < currentSentence.length - 1 && " "}
+                          </span>
+                        );
+                      }
+                      
+                      // Handle TextFlag for "Charter,"
+                      if (word === "Charter,") {
+                        return (
+                          <span key={index}>
+                            <TextFlag 
+                              text="Charter"
+                              evaluationFactor="factual-accuracy"
+                              explanation="The term 'charter' has been used here to describe the EU AI Act. A charter is a different type of document than an act and therefore are not interchangeable terms."
+                            />
+                            ,{index < currentSentence.length - 1 && " "}
                           </span>
                         );
                       }
