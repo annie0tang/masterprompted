@@ -1,7 +1,6 @@
 import Header from "@/components/Header";
 import { useState, useRef, useEffect } from "react";
-import ControlledPopup from "@/components/ControlledDialog";
-import UncontrolledPopup from "@/components/UncontrolledDialog";
+import ControlledPopup from "@/components/DialogPopup";
 import { PopoverSeries } from "@/components/PopoverSeries";
 
 const About = () => {

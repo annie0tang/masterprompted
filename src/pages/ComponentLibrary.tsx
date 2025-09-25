@@ -4,8 +4,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import EvaluationPanel from "@/components/EvaluationPanel";
 import SentPrompt from "@/components/SentPrompt";
 import VideoLightbox from "@/components/VideoLightbox";
-import ControlledDialog from "@/components/ControlledDialog";
-import UncontrolledDialog from "@/components/UncontrolledDialog";
+import DialogPopup from "@/components/DialogPopup";
 import { PopoverSeries } from "@/components/PopoverSeries";
 
 // UI Components
@@ -32,6 +31,17 @@ import { AlertCircle } from "lucide-react";
 
 const ComponentLibrary = () => {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const [isControlledDialogOpen, setIsControlledDialogOpen] = useState(false);
+  const [isUncontrolledDialogOpen, setIsUncontrolledDialogOpen] = useState(false);
+
+
+  interface PopupSetter {
+    (open: boolean): void;
+  }
+
+  const openPopup: (setter: PopupSetter) => void = (setter) => {
+    setter(true);
+  };
 
   const showToast = () => {
     toast({
@@ -43,7 +53,7 @@ const ComponentLibrary = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="container mx-auto px-6 py-8">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-3xl font-bold text-foreground mb-6">
@@ -52,12 +62,12 @@ const ComponentLibrary = () => {
           <p className="text-muted-foreground text-lg mb-8">
             A visual showcase of all available components in the project
           </p>
-          
+
           {/* Custom Components Section */}
           <section className="mb-12">
             <h2 className="text-2xl font-semibold text-foreground mb-6">Custom Components</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              
+
               {/* SentPrompt Component */}
               <Card>
                 <CardHeader>
@@ -65,7 +75,7 @@ const ComponentLibrary = () => {
                   <CardDescription>User message display component</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <SentPrompt 
+                  <SentPrompt
                     text="This is an example of a sent prompt message with an attachment"
                     fileName="example_document.pdf"
                   />
@@ -104,7 +114,7 @@ const ComponentLibrary = () => {
                 </CardHeader>
                 <CardContent>
                   <Button onClick={() => setIsVideoOpen(true)}>Open Video</Button>
-                  <VideoLightbox 
+                  <VideoLightbox
                     isOpen={isVideoOpen}
                     onClose={() => setIsVideoOpen(false)}
                     videoUrl="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
@@ -113,14 +123,21 @@ const ComponentLibrary = () => {
               </Card>
 
               {/* Dialog Components */}
+              <DialogPopup
+                isOpen={isControlledDialogOpen}
+                onClose={() => setIsControlledDialogOpen(false)}
+                title="This is a Dialog Popup component"
+                description='Use it to for dialog that overlays in the center of the screen.'
+                primaryAction={{ label: 'Primary Action', onClick: () => {} }}
+                secondaryAction={{ label: 'Secondary Action', onClick: () => {} }}
+              ></DialogPopup>
               <Card>
                 <CardHeader>
-                  <CardTitle>Dialog Components</CardTitle>
+                  <CardTitle>Popup Components</CardTitle>
                   <CardDescription>Modal dialog examples (click buttons to open)</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <Button variant="outline">Open Controlled Dialog</Button>
-                  <Button variant="outline">Open Uncontrolled Dialog</Button>
+                  <Button variant="outline" onClick={() => openPopup(setIsControlledDialogOpen)}>Open Dialog Popup</Button>
                 </CardContent>
               </Card>
             </div>
@@ -129,7 +146,7 @@ const ComponentLibrary = () => {
           {/* UI Components Section */}
           <section className="mb-12">
             <h2 className="text-2xl font-semibold text-foreground mb-6">UI Components</h2>
-            
+
             {/* Buttons */}
             <Card className="mb-8">
               <CardHeader>
@@ -168,12 +185,12 @@ const ComponentLibrary = () => {
                     <Textarea id="textarea-example" placeholder="Enter long text here" />
                   </div>
                 </div>
-                
+
                 <div className="flex items-center space-x-2">
                   <Checkbox id="checkbox-example" />
                   <Label htmlFor="checkbox-example">Checkbox example</Label>
                 </div>
-                
+
                 <div className="flex items-center space-x-2">
                   <Switch id="switch-example" />
                   <Label htmlFor="switch-example">Switch example</Label>

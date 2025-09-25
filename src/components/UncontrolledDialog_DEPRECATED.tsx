@@ -25,7 +25,7 @@ interface UncontrolledDialogProps {
 }
 
 const UncontrolledDialog: React.FC<UncontrolledDialogProps> = ({
-  isOpen = true,
+  isOpen,
   title,
   description,
   primaryAction,

@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 //
 
 
-interface ControlledDialogProps {
+interface DialogPopupProps {
   isOpen?: boolean;
   onClose?: () => void;
   title?: string;
@@ -34,7 +34,7 @@ interface ControlledDialogProps {
   };
 }
 
-const ControlledDialog: React.FC<ControlledDialogProps> = ({
+const DialogPopup: React.FC<DialogPopupProps> = ({
   isOpen = true,
   onClose,
   title,
@@ -87,4 +87,4 @@ const ControlledDialog: React.FC<ControlledDialogProps> = ({
   );
 };
 
-export default ControlledDialog;
+export default DialogPopup;
