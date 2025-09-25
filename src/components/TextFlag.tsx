@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { CheckCircle, Target, Mic, Scale, Copy } from "lucide-react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
@@ -26,36 +26,28 @@ const labelMap = {
 };
 
 export default function TextFlag({ text, evaluationFactor, explanation, className = "" }: TextFlagProps) {
-  const [isHovered, setIsHovered] = useState(false);
   const Icon = iconMap[evaluationFactor];
   const label = labelMap[evaluationFactor];
 
-  const handleHoverChange = (hovered: boolean) => {
-    setIsHovered(hovered);
-    
-    // Highlight the corresponding evaluation criterion
+  // Permanently highlight the corresponding evaluation criterion on component mount
+  useEffect(() => {
     const criterionElement = document.querySelector(`[data-criterion-id="${evaluationFactor}"]`);
     if (criterionElement) {
       const triggerElement = criterionElement.querySelector('[data-radix-collection-item]') || 
                             criterionElement.querySelector('.flex.items-center.justify-between');
       if (triggerElement) {
-        if (hovered) {
-          triggerElement.classList.add('ring-2', 'ring-red-500', 'bg-red-50');
-          triggerElement.classList.remove('bg-gray-50', 'hover:bg-gray-100');
-        } else {
-          triggerElement.classList.remove('ring-2', 'ring-red-500', 'bg-red-50');
-          triggerElement.classList.add('bg-gray-50');
-        }
+        triggerElement.classList.add('ring-2', 'ring-red-500', 'bg-red-50');
+        triggerElement.classList.remove('bg-gray-50', 'hover:bg-gray-100');
       }
     }
-  };
+  }, [evaluationFactor]);
 
   return (
-    <HoverCard onOpenChange={handleHoverChange}>
+    <HoverCard>
       <HoverCardTrigger asChild>
-        <span className={`inline-flex items-center gap-1 cursor-pointer ${className}`}>
-          <Icon className="h-3 w-3 text-red-500 flex-shrink-0" />
-          <span className="border-b-2 border-red-500 text-current">
+        <span className={`inline-flex items-center gap-0.5 cursor-pointer ${className}`}>
+          <Icon className="h-4 w-4 text-red-500 flex-shrink-0" />
+          <span className="border-b border-red-500 text-current" style={{ borderBottomWidth: '2px', marginLeft: '1px' }}>
             {text}
           </span>
         </span>
