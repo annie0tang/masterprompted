@@ -120,7 +120,7 @@ export default function HeadlineResponse() {
                 </p>
                 
                 <div className="relative">
-                  <h1 className="text-2xl text-gray-900 leading-tight font-normal md:text-4xl">
+                  <h1 className="text-2xl text-gray-900 leading-tight font-normal md:text-4xl" style={{ wordSpacing: '0.2em' }}>
                     {currentSentence.map((word, index) => {
                       const isClickable = (index === 2 && (word === "Unites" || word === "Reaches" || word === "Finalizes"));
                       
