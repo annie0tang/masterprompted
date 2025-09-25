@@ -168,7 +168,7 @@ export default function HeadlineResponse() {
                   
                   {/* Word alternatives popup */}
                   {selectedWord && (
-                    <div className="absolute inset-0 z-10 pointer-events-none" style={{ transform: `translate(${selectedWord === "word-1" ? "-160px" : selectedWord === "word-3" ? "50px" : "-100px"}, -30px)` }}>
+                    <div className="absolute inset-0 z-10 pointer-events-none" style={{ transform: `translate(${selectedWord === "word-1" ? "-200px" : selectedWord === "word-3" ? "50px" : "-100px"}, -30px)` }}>
                       <div className="relative w-full h-full">
                         {(() => {
                           const wordIndex = parseInt(selectedWord.split('-')[1]);
