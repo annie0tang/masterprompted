@@ -6,6 +6,7 @@ import { PopoverSeries } from "@/components/PopoverSeries";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ArrowRight } from "lucide-react";
 
 export default function HeadlineResponse() {
@@ -130,15 +131,24 @@ export default function HeadlineResponse() {
                       if (index === 1 && word === "Union") {
                         return (
                           <span key={index}>
-                            <span 
-                               className="relative group cursor-pointer transition-colors duration-200 hover:bg-green-200 hover:px-1 hover:rounded"
-                               onClick={() => setSelectedWord(selectedWord === `word-${index}` ? null : `word-${index}`)}
-                             >
-                               {word}
-                               <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-                                 0.73
-                               </span>
-                            </span>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <span 
+                                  className="relative group cursor-pointer transition-colors duration-200 hover:bg-green-200 hover:px-1 hover:rounded"
+                                  onClick={() => setSelectedWord(selectedWord === `word-${index}` ? null : `word-${index}`)}
+                                >
+                                  {word}
+                                  <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                                    0.73
+                                  </span>
+                                </span>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-80 z-50 bg-popover border shadow-lg">
+                                <p className="text-sm">
+                                  Click on either of these words to select a different word. Try and find the word combination that leads to a factual inaccuracy
+                                </p>
+                              </PopoverContent>
+                            </Popover>
                             {index < currentSentence.length - 1 && " "}
                           </span>
                         );
@@ -147,15 +157,24 @@ export default function HeadlineResponse() {
                       if (isClickable) {
                         return (
                           <span key={index}>
-                             <span 
-                               className="relative group cursor-pointer transition-colors duration-200 hover:bg-green-200 hover:px-1 hover:rounded"
-                               onClick={() => setSelectedWord(selectedWord === `word-${index}` ? null : `word-${index}`)}
-                             >
-                               {word}
-                               <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-                                 {word === "Unites" ? "0.67" : word === "Reaches" ? "0.24" : "0.09"}
-                               </span>
-                             </span>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <span 
+                                  className="relative group cursor-pointer transition-colors duration-200 hover:bg-green-200 hover:px-1 hover:rounded"
+                                  onClick={() => setSelectedWord(selectedWord === `word-${index}` ? null : `word-${index}`)}
+                                >
+                                  {word}
+                                  <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                                    {word === "Unites" ? "0.67" : word === "Reaches" ? "0.24" : "0.09"}
+                                  </span>
+                                </span>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-80 z-50 bg-popover border shadow-lg">
+                                <p className="text-sm">
+                                  Click on either of these words to select a different word. Try and find the word combination that leads to a factual inaccuracy
+                                </p>
+                              </PopoverContent>
+                            </Popover>
                             {index < currentSentence.length - 1 && " "}
                           </span>
                         );
