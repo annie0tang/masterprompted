@@ -8,7 +8,7 @@ const AboutSimulator = () => {
   const navigate = useNavigate();
 
   const handleStartSimulator = () => {
-    navigate("/module/next-word-prediction");
+    navigate("/module/next-word-prediction-intro");
   };
 
   return (

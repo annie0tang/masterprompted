@@ -9,6 +9,7 @@ import Introduction from "./pages/Introduction";
 import AboutSimulator from "./pages/AboutSimulator";
 import JournalisticEvaluation from "./pages/JournalisticEvaluation";
 import NextWordPrediction from "./pages/NextWordPrediction";
+import NextWordPredictionIntro from "./pages/NextWordPredictionIntro";
 import HeadlineResponse from "./pages/HeadlineResponse";
 import PromptConstruction from "./pages/PromptConstruction";
 import Specificity from "./pages/Specificity";
@@ -47,6 +48,7 @@ const App = () => (
           <Route path="/module/introduction" element={<Introduction />} />
           <Route path="/module/about-simulator" element={<AboutSimulator />} />
           <Route path="/module/journalistic-evaluation" element={<JournalisticEvaluation />} />
+          <Route path="/module/next-word-prediction-intro" element={<NextWordPredictionIntro />} />
           <Route path="/module/next-word-prediction" element={<NextWordPrediction />} />
           <Route path="/module/headline-response" element={<HeadlineResponse />} />
           <Route path="/module/prompt-construction" element={<PromptConstruction />} />
