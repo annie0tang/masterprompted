@@ -108,25 +108,28 @@ export default function HeadlineResponse() {
                   
                   {/* Word alternatives popup */}
                   {selectedWord && (
-                    <div className="absolute inset-0 z-10">
+                    <div className="absolute inset-0 z-10 pointer-events-none">
                       <div className="relative w-full h-full">
                         {wordAlternatives[selectedWord as keyof typeof wordAlternatives].map((alt, index) => {
                           // Calculate circular positions around the center word
-                          const radius = 100;
+                          const radius = 120;
+                          const innerRadius = 40; // Gap between center word and lines
                           const angle = (index * 120) - 90; // 120 degrees apart, starting from top
                           const x = Math.cos((angle * Math.PI) / 180) * radius;
                           const y = Math.sin((angle * Math.PI) / 180) * radius;
+                          const innerX = Math.cos((angle * Math.PI) / 180) * innerRadius;
+                          const innerY = Math.sin((angle * Math.PI) / 180) * innerRadius;
                           
                           return (
                             <div key={index}>
-                              {/* Connecting line from center word to alternative */}
+                              {/* Connecting line with gap from center word */}
                               <svg 
                                 className="absolute inset-0 w-full h-full pointer-events-none"
                                 style={{ zIndex: 1 }}
                               >
                                 <line 
-                                  x1="50%" 
-                                  y1="50%" 
+                                  x1={`calc(50% + ${innerX}px)`} 
+                                  y1={`calc(50% + ${innerY}px)`} 
                                   x2={`calc(50% + ${x}px)`} 
                                   y2={`calc(50% + ${y}px)`} 
                                   stroke="#10b981" 
@@ -136,7 +139,7 @@ export default function HeadlineResponse() {
                               
                               {/* Alternative word bubble */}
                               <div 
-                                className="absolute bg-green-200 text-green-800 px-3 py-2 rounded-lg shadow-lg cursor-pointer hover:bg-green-300 transition-colors duration-200 whitespace-nowrap"
+                                className="absolute bg-green-200 text-green-800 px-3 py-2 rounded-lg shadow-lg cursor-pointer hover:bg-green-300 transition-colors duration-200 whitespace-nowrap pointer-events-auto"
                                 style={{ 
                                   left: '50%',
                                   top: '50%',
@@ -159,7 +162,7 @@ export default function HeadlineResponse() {
                       
                       {/* Background overlay to close popup */}
                       <div 
-                        className="fixed inset-0 -z-10" 
+                        className="fixed inset-0 -z-10 pointer-events-auto" 
                         onClick={() => setSelectedWord(null)}
                       />
                     </div>
