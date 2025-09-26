@@ -38,7 +38,7 @@ const Landing = () => {
         
         {/* Hero Section */}
         <main className="flex-1 relative overflow-hidden">
-          <div className="relative px-6 py-16 text-center text-white min-h-[80vh] flex flex-col justify-center">
+          <div className="relative px-6 py-16 text-center text-white min-h-[60vh] max-h-[70vh] flex flex-col justify-center">
           <div className="max-w-6xl mx-auto space-y-12">
             <div className="space-y-6">
               <h1 className="text-4xl md:text-6xl font-barlow-semi font-bold leading-tight">
