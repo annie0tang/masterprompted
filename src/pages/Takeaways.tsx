@@ -1,7 +1,14 @@
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Breadcrumb from "@/components/Breadcrumb";
 
 export default function Takeaways() {
+  const navigate = useNavigate();
+
+  const handleNextTask = () => {
+    navigate("/module/prompt-construction");
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -43,7 +50,10 @@ export default function Takeaways() {
           </div>
           
           <div className="mt-16">
-            <button className="bg-green-400 hover:bg-green-500 text-black font-medium px-8 py-3 rounded-full transition-colors">
+            <button 
+              onClick={handleNextTask}
+              className="bg-green-400 hover:bg-green-500 text-black font-medium px-8 py-3 rounded-full transition-colors"
+            >
               Next Task →
             </button>
           </div>
