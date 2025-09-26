@@ -28,7 +28,7 @@ export default function PromptConstruction() {
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'flex-start',
-              padding: '40px 50px 60px',
+              padding: '40px 50px 80px',
               gap: '40px',
               isolation: 'isolate',
               position: 'absolute',
