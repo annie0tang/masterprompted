@@ -16,7 +16,9 @@ export default function NextWordPrediction() {
       <Header />
       
       <main className="container mx-auto px-4 pt-24 pb-12">
-        <Breadcrumb />
+        <div className="mb-5">
+          <Breadcrumb />
+        </div>
         <div className="max-w-2xl mx-auto relative min-h-[600px]">
           <Chatbox 
             canType={false} 
