@@ -22,6 +22,7 @@ export default function HeadlineResponse() {
   const [showCharterTooltip, setShowCharterTooltip] = useState(false);
   const [charterTooltipShown, setCharterTooltipShown] = useState(false);
   const [useNewInteraction, setUseNewInteraction] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   // Word progression data from the table
   const wordProgressions = {
@@ -133,14 +134,65 @@ export default function HeadlineResponse() {
                         {currentSentence.map((word, index) => {
                           // Highlight "Unites" (index 2) and "On" (index 3)
                           if ((index === 2 && word === "Unites") || (index === 3 && word === "On")) {
+                            const wordKey = `word-${index}`;
+                            const isActive = activeDropdown === wordKey;
+                            
                             return (
-                              <span key={index}>
-                                <span className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg">
+                              <span key={index} className="relative">
+                                <span 
+                                  className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg"
+                                  onClick={() => setActiveDropdown(isActive ? null : wordKey)}
+                                >
                                   {word}
                                   <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
                                     {word === "Unites" ? "0.67" : "0.73"}
                                   </span>
                                 </span>
+                                
+                                {/* Dropdown that expands upward */}
+                                {isActive && (
+                                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 z-50">
+                                    <div className="bg-white rounded-lg shadow-lg border border-gray-200 py-2 min-w-32">
+                                      {word === "Unites" ? (
+                                        <>
+                                          <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm" onClick={() => {
+                                            const newSentence = ["European", "Union", "Reaches", "Consensus", "On", "Historic", "AI", "Ethics", "Framework,", "Paving", "The", "Way", "For", "Responsible", "Tech", "Innovation"];
+                                            setCurrentSentence(newSentence);
+                                            setActiveDropdown(null);
+                                          }}>
+                                            Reaches
+                                          </div>
+                                          <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm" onClick={() => {
+                                            const newSentence = ["European", "Union", "Finalizes", "Landmark", "AI", "Ethics", "Agreement,", "Setting", "Global", "Benchmark", "For", "Safe", "Technology", "Development"];
+                                            setCurrentSentence(newSentence);
+                                            setActiveDropdown(null);
+                                          }}>
+                                            Finalizes
+                                          </div>
+                                        </>
+                                      ) : (
+                                        <>
+                                          <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm" onClick={() => {
+                                            const newSentence = [...currentSentence];
+                                            newSentence[3] = "Behind";
+                                            setCurrentSentence(newSentence);
+                                            setActiveDropdown(null);
+                                          }}>
+                                            Behind
+                                          </div>
+                                          <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm" onClick={() => {
+                                            const newSentence = [...currentSentence];
+                                            newSentence[3] = "Around";
+                                            setCurrentSentence(newSentence);
+                                            setActiveDropdown(null);
+                                          }}>
+                                            Around
+                                          </div>
+                                        </>
+                                      )}
+                                    </div>
+                                  </div>
+                                )}
                                 {index < currentSentence.length - 1 && " "}
                               </span>
                             );
@@ -157,6 +209,13 @@ export default function HeadlineResponse() {
                     
                     {/* New Form Controls */}
                     
+                    {/* Click outside to close dropdown */}
+                    {activeDropdown && (
+                      <div 
+                        className="fixed inset-0 z-40" 
+                        onClick={() => setActiveDropdown(null)}
+                      />
+                    )}
                   </div>) : (/* Classic Interaction Form */
 
               <div className="relative">
