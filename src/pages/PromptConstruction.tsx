@@ -46,7 +46,7 @@ export default function PromptConstruction() {
             <img 
               src={starImage} 
               alt="Star illustration" 
-              className="absolute left-8 top-8 w-12 h-12 z-10"
+              className="absolute left-8 top-8 w-[325px] h-auto z-10"
             />
             <CardContent className="p-0 w-full">
               {/* Header with close button */}
