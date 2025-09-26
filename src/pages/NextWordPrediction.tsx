@@ -1,14 +1,42 @@
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Chatbox from "@/components/ChatBox";
 import Breadcrumb from "@/components/Breadcrumb";
+import { PopoverSeries } from "@/components/PopoverSeries";
 
 export default function NextWordPrediction() {
   const navigate = useNavigate();
+  const [clickCount, setClickCount] = useState(0);
+  const [showPopover, setShowPopover] = useState(false);
 
   const handleSubmit = () => {
     navigate("/module/headline-response");
   };
+
+  useEffect(() => {
+    const handleClick = (event: MouseEvent) => {
+      const submitButton = document.getElementById("chatbox-submit-button");
+      const target = event.target as HTMLElement;
+      
+      // Only count clicks that are NOT on the submit button
+      if (submitButton && !submitButton.contains(target)) {
+        setClickCount(prev => {
+          const newCount = prev + 1;
+          if (newCount >= 3) {
+            setShowPopover(true);
+          }
+          return newCount;
+        });
+      }
+    };
+
+    document.addEventListener("click", handleClick);
+
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, []);
 
 
   return (
@@ -26,6 +54,19 @@ export default function NextWordPrediction() {
             submitButtonId="chatbox-submit-button" // Pass the ID here
             onSubmit={handleSubmit}
           />
+          {showPopover && (
+            <PopoverSeries
+              steps={[
+                {
+                  id: "submit-hint",
+                  trigger: "#chatbox-submit-button",
+                  content: "Click here to submit your prompt and see the AI's response!"
+                }
+              ]}
+              initialStep={0}
+              onClose={() => setShowPopover(false)}
+            />
+          )}
         </div>
       </main>
     </div>
