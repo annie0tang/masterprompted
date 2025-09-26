@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-interface PromptControlsProps {
+interface ParameterSelectorProps {
     parameterTitle: string;
     leftParameter: string;
     rightParameter: string;
@@ -10,7 +10,7 @@ interface PromptControlsProps {
     onParameterChange?: (param: string) => void;
 
 }
-function ParameterSelector({ parameterTitle, leftParameter, rightParameter, showParameter = true, onParameterChange }: PromptControlsProps) {
+function ParameterSelector({ parameterTitle, leftParameter, rightParameter, showParameter = true, onParameterChange }: ParameterSelectorProps) {
     // Placeholder for parameter selector logic
     const [leftSelected, setLeftSelected] = useState(true);
 

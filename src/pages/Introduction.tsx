@@ -18,6 +18,18 @@ const Introduction = () => {
       <main className="container mx-auto px-6 py-8">
         <Breadcrumb />
         <div className="max-w-4xl mx-auto flex items-center justify-center min-h-[600px] relative">
+          {/* Task image positioned to the left */}
+          <img 
+            src="/task.png" 
+            alt="Task notebook" 
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 w-[280px] h-auto z-10"
+            style={{
+              left: 'calc(50% - 845px/2 - 320px)',
+              top: '50%',
+              transform: 'translateY(-50%)'
+            }}
+          />
+          
           <Card 
             className="transition-all duration-200"
             style={{
