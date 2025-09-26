@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 export default function HeadlineResponse() {
   const navigate = useNavigate();
@@ -20,6 +22,7 @@ export default function HeadlineResponse() {
   const [factualTooltipShown, setFactualTooltipShown] = useState(false);
   const [showCharterTooltip, setShowCharterTooltip] = useState(false);
   const [charterTooltipShown, setCharterTooltipShown] = useState(false);
+  const [useNewInteraction, setUseNewInteraction] = useState(false);
   
   // Word progression data from the table
   const wordProgressions = {
@@ -96,6 +99,22 @@ export default function HeadlineResponse() {
       
       <main className="container mx-auto px-4 pt-24 pb-12">
         <Breadcrumb />
+        
+        {/* Interaction Mode Toggle */}
+        <div className="mb-6 flex items-center space-x-2">
+          <Label htmlFor="interaction-mode" className="text-sm font-medium">
+            Interaction Mode:
+          </Label>
+          <Switch
+            id="interaction-mode"
+            checked={useNewInteraction}
+            onCheckedChange={setUseNewInteraction}
+          />
+          <span className="text-sm text-gray-600">
+            {useNewInteraction ? "New Form" : "Classic Form"}
+          </span>
+        </div>
+        
         <div className="max-w-7xl mx-auto">
           {/* Two-column layout */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -114,6 +133,39 @@ export default function HeadlineResponse() {
                 <p className="text-gray-700 text-lg">
                   Here is a possible headline for a long-form journalistic article about an AI ethics agreement reached across the EU:
                 </p>
+                
+                {/* Conditional rendering based on interaction mode */}
+                {useNewInteraction ? (
+                  /* New Interaction Form */
+                  <div className="space-y-6">
+                    <div className="relative">
+                      <h1 className="text-2xl text-gray-900 leading-loose font-normal md:text-4xl" style={{ wordSpacing: '0.2em', lineHeight: '1.8' }}>
+                        {currentSentence.join(" ")}
+                      </h1>
+                    </div>
+                    
+                    {/* New Form Controls */}
+                    <div className="bg-gray-50 p-6 rounded-lg border">
+                      <h3 className="text-lg font-semibold mb-4">New Interaction Form</h3>
+                      <p className="text-gray-600 mb-4">
+                        This is a placeholder for the new interaction form. You can develop new ways to interact with and modify the sentence here.
+                      </p>
+                      
+                      {/* Placeholder for new interaction controls */}
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <Button variant="outline">Alternative 1</Button>
+                          <Button variant="outline">Alternative 2</Button>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <Button variant="outline">Alternative 3</Button>
+                          <Button variant="outline">Alternative 4</Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  /* Classic Interaction Form */
                 
                 <div className="relative">
                   <h1 className="text-2xl text-gray-900 leading-loose font-normal md:text-4xl" style={{ wordSpacing: '0.2em', lineHeight: '1.8' }}>
@@ -352,6 +404,7 @@ export default function HeadlineResponse() {
                     </div>
                   )}
                 </div>
+                )}
                 
                 {/* Takeaways Button */}
                 <div className="mt-8">
