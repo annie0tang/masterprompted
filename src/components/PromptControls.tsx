@@ -166,14 +166,23 @@ export default function PromptControls({
                             />
                         </div>
 
-                        <Button
-                            onClick={handleReset}
-                            variant="ghost"
-                            size="sm"
-                            className="w-full text-gray-600 hover:text-gray-800 hover:bg-gray-50"
-                        >
-                            Reset
-                        </Button>
+                        <div className="flex gap-2">
+                            <Button
+                                onClick={handleReset}
+                                variant="ghost"
+                                size="sm"
+                                className="flex-1 text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+                            >
+                                Reset
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="flex-1 text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+                            >
+                                Optimize
+                            </Button>
+                        </div>
 
                         
                     </div>
