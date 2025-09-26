@@ -130,7 +130,28 @@ export default function HeadlineResponse() {
                     wordSpacing: '0.2em',
                     lineHeight: '1.8'
                   }}>
-                        {currentSentence.join(" ")}
+                        {currentSentence.map((word, index) => {
+                          // Highlight "Unites" (index 2) and "On" (index 3)
+                          if ((index === 2 && word === "Unites") || (index === 3 && word === "On")) {
+                            return (
+                              <span key={index}>
+                                <span className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg">
+                                  {word}
+                                  <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                                    {word === "Unites" ? "0.67" : "0.73"}
+                                  </span>
+                                </span>
+                                {index < currentSentence.length - 1 && " "}
+                              </span>
+                            );
+                          }
+                          return (
+                            <span key={index}>
+                              {word}
+                              {index < currentSentence.length - 1 && " "}
+                            </span>
+                          );
+                        })}
                       </h1>
                     </div>
                     
