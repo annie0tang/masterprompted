@@ -185,6 +185,8 @@ export function PopoverSeries({ steps, initialStep = 0, onClose }: PopoverSeries
         <PopoverContent
           onOpenAutoFocus={(e) => e.preventDefault()}
           className="z-50 relative space-y-4"
+          side="bottom"
+          align="center"
         >
           <div className="flex justify-between align-top">
             <div className="mt-2">{currentStepData.content}</div>
