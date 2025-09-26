@@ -15,6 +15,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Manrope', 'system-ui', 'sans-serif'],
+        'barlow-semi': ['Barlow Semi Condensed', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
