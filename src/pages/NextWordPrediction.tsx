@@ -14,6 +14,7 @@ export default function NextWordPrediction() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
+      <Breadcrumb />
       
       <main className="container mx-auto px-4 pt-24 pb-12">
         <div className="max-w-2xl mx-auto relative min-h-[600px]">
