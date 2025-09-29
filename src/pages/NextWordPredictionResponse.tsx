@@ -244,16 +244,16 @@ export default function HeadlineResponse() {
                             const rawOptions = getWordOptions('second');
                             return (
                               <span key={index}>
-                                   <DropdownMenu>
-                                     <DropdownMenuTrigger asChild>
-                                       <button className="relative group cursor-pointer transition-colors duration-200 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg inline-flex items-center gap-1">
-                                       {word}
-                                       <ChevronDown className="h-3 w-3" />
-                                       <span className="absolute -top-7 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded pointer-events-none whitespace-nowrap">
-                                         {rawOptions.find(opt => opt.word === word)?.probability || rawOptions[0]?.probability || "0.31"}
-                                       </span>
-                                     </button>
-                                   </DropdownMenuTrigger>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <button className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg inline-flex items-center gap-1">
+                                      {word}
+                                      <ChevronDown className="h-3 w-3" />
+                                      <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                                        {rawOptions.find(opt => opt.word === word)?.probability || rawOptions[0]?.probability || "0.67"}
+                                      </span>
+                                    </button>
+                                  </DropdownMenuTrigger>
                                    <DropdownMenuContent className="bg-white border border-gray-200 shadow-lg rounded-md z-[9999] min-w-[120px]">
                                     {options.map((option) => (
                                       <DropdownMenuItem 
@@ -281,16 +281,16 @@ export default function HeadlineResponse() {
                             if (isValidThirdWord) {
                               return (
                                 <span key={index}>
-                                   <DropdownMenu>
-                                     <DropdownMenuTrigger asChild>
-                                       <button className="relative group cursor-pointer transition-colors duration-200 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg inline-flex items-center gap-1">
-                                         {word}
-                                         <ChevronDown className="h-3 w-3" />
-                                         <span className="absolute -top-7 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded pointer-events-none whitespace-nowrap">
-                                           {rawOptions.find(opt => opt.word === word)?.probability || rawOptions[0]?.probability || "0.31"}
-                                         </span>
-                                       </button>
-                                     </DropdownMenuTrigger>
+                                  <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                      <button className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg inline-flex items-center gap-1">
+                                        {word}
+                                        <ChevronDown className="h-3 w-3" />
+                                        <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                                          {rawOptions.find(opt => opt.word === word)?.probability || rawOptions[0]?.probability || "0.73"}
+                                        </span>
+                                      </button>
+                                    </DropdownMenuTrigger>
                                     <DropdownMenuContent className="bg-white border border-gray-200 shadow-lg rounded-md z-[9999] min-w-[120px]">
                                       {options.map((option) => (
                                         <DropdownMenuItem 
@@ -392,14 +392,14 @@ export default function HeadlineResponse() {
                     // Special handling for Union/Unites position
                     if (index === 1 && word === "Union") {
                       return <span key={index}>
-                            <span className="relative group cursor-pointer transition-colors duration-200 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg" onClick={() => setSelectedWord(selectedWord === `word-${index}` ? null : `word-${index}`)} onMouseEnter={() => {
+                            <span className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg" onClick={() => setSelectedWord(selectedWord === `word-${index}` ? null : `word-${index}`)} onMouseEnter={() => {
                           if (!tooltipShown) {
                             setShowTooltip(true);
                             setTooltipShown(true);
                           }
                         }} data-word-union>
                                {word}
-                               <span className="absolute -top-7 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded pointer-events-none whitespace-nowrap">
+                               <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
                                  0.73
                                </span>
                             </span>
@@ -408,15 +408,15 @@ export default function HeadlineResponse() {
                     }
                     if (isClickable) {
                       return <span key={index}>
-                             <span className="relative group cursor-pointer transition-colors duration-200 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg" onClick={() => setSelectedWord(selectedWord === `word-${index}` ? null : `word-${index}`)} onMouseEnter={() => {
+                             <span className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg" onClick={() => setSelectedWord(selectedWord === `word-${index}` ? null : `word-${index}`)} onMouseEnter={() => {
                           if (!tooltipShown) {
                             setShowTooltip(true);
                             setTooltipShown(true);
                           }
                         }} data-word-unites={word === "Unites" ? true : undefined} data-word-reaches={word === "Reaches" ? true : undefined} data-word-finalizes={word === "Finalizes" ? true : undefined}>
                                {word}
-                               <span className="absolute -top-7 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded pointer-events-none whitespace-nowrap">
-                                 {word === "Unites" ? "0.31" : word === "Reaches" ? "0.24" : "0.09"}
+                               <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                                 {word === "Unites" ? "0.67" : word === "Reaches" ? "0.24" : "0.09"}
                                </span>
                              </span>
                              {index < currentSentence.length - 1 && " "}
