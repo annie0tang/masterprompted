@@ -45,11 +45,11 @@ export default function HeadlineResponse() {
           { word: "Agreement", probability: "0.28" },
           { word: "Milestone", probability: "0.07" }
         ];
-      } else if (secondWord === "Finalizes" || secondWord === "finalizes") {
+      } else if (secondWord.toLowerCase() === "finalizes") {
         return [
-          { word: "landmark", probability: "0.58" },
-          { word: "sweeping", probability: "0.31" },
-          { word: "pioneering", probability: "0.11" }
+          { word: "Landmark", probability: "0.58" },
+          { word: "Sweeping", probability: "0.31" },
+          { word: "Pioneering", probability: "0.11" }
         ];
       }
     }
@@ -68,7 +68,7 @@ export default function HeadlineResponse() {
         setCurrentSentence(["European", "Union", "Reaches", "Consensus", "on", "Historic", "AI", "Ethics", "Framework,", "Paving", "the", "Way", "for", "Responsible", "Tech", "Innovation"]);
         return;
       } else if (newWord === "Finalizes") {
-        setCurrentSentence(["European", "Union", "finalizes", "landmark", "AI", "Ethics", "Agreement,", "Setting", "Global", "Benchmark", "for", "Safe", "Technology", "Development"]);
+        setCurrentSentence(["European", "Union", "Finalizes", "Landmark", "AI", "Ethics", "Agreement,", "Setting", "Global", "Benchmark", "For", "Safe", "Technology", "Development"]);
         return;
       } else {
         // Reset third position and beyond for Unites
@@ -83,7 +83,7 @@ export default function HeadlineResponse() {
         const progressionData = wordProgressions[pathKey as keyof typeof wordProgressions];
         if (progressionData && thirdOptions.length > 0) {
           const thirdWord = thirdOptions[0].word;
-          const completion = progressionData[thirdWord as keyof typeof progressionData] as string;
+          const completion = progressionData[thirdWord.toLowerCase() as keyof typeof progressionData] as string;
           if (completion) {
             const completionWords = completion.split(" ");
             setCurrentSentence([...baseWords, ...completionWords]);
@@ -94,7 +94,7 @@ export default function HeadlineResponse() {
       const pathKey = currentSentence.slice(0, 3).join(" ");
       const progressionData = wordProgressions[pathKey as keyof typeof wordProgressions];
       if (progressionData) {
-        const completion = progressionData[newWord as keyof typeof progressionData] as string;
+        const completion = progressionData[newWord.toLowerCase() as keyof typeof progressionData] as string;
         if (completion) {
           const completionWords = completion.split(" ");
           setCurrentSentence(["European", "Union", currentSentence[2], newWord, ...completionWords]);
@@ -113,13 +113,13 @@ export default function HeadlineResponse() {
   const wordProgressions = {
     "European Union Unites": {
       "on": "Historic AI Ethics Framework, Charting Path for Responsible Technology Development",
-      "Around": "Sweeping AI Ethics Charter, Pioneering International Tech Policy Standards",
-      "Behind": "Historic AI Ethics Framework, Setting Standards for Responsible Innovation"
+      "around": "Sweeping AI Ethics Charter, Pioneering International Tech Policy Standards",
+      "behind": "Historic AI Ethics Framework, Setting Standards for Responsible Innovation"
     },
     "European Union Reaches": {
-      "Consensus": "on Historic AI Ethics Framework, Paving the Way for Responsible Tech Innovation",
-      "Agreement": "on Historic AI Ethics Framework, Laying Groundwork for Safe Tech Development",
-      "Milestone": "in AI Ethics, Advancing a Unified Vision for Responsible Innovation"
+      "consensus": "on Historic AI Ethics Framework, Paving the Way for Responsible Tech Innovation",
+      "agreement": "on Historic AI Ethics Framework, Laying Groundwork for Safe Tech Development",
+      "milestone": "in AI Ethics, Advancing a Unified Vision for Responsible Innovation"
     },
     "European Union Finalizes": {
       "landmark": "AI Ethics Agreement, Setting Global Benchmark for Safe Technology Development",
@@ -144,9 +144,9 @@ export default function HeadlineResponse() {
     const pathKey = currentPath.slice(0, 3).join(" ");
     const progressionData = wordProgressions[pathKey as keyof typeof wordProgressions];
     if (progressionData && currentPath.length === 3) {
-      return Object.keys(progressionData).map(word => ({
-        word,
-        completion: progressionData[word as keyof typeof progressionData]
+      return Object.keys(progressionData).map((key) => ({
+        word: key.charAt(0).toUpperCase() + key.slice(1),
+        completion: progressionData[key as keyof typeof progressionData]
       }));
     }
 
