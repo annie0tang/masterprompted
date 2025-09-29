@@ -29,7 +29,7 @@ export default function TextFlag({ text, evaluationFactor, explanation, classNam
   const Icon = iconMap[evaluationFactor];
   const label = labelMap[evaluationFactor];
 
-  // Permanently highlight the corresponding evaluation criterion on component mount
+  // Highlight the corresponding evaluation criterion when component is mounted
   useEffect(() => {
     const criterionElement = document.querySelector(`[data-criterion-id="${evaluationFactor}"]`);
     if (criterionElement) {
@@ -40,6 +40,18 @@ export default function TextFlag({ text, evaluationFactor, explanation, classNam
         triggerElement.classList.remove('bg-gray-50', 'hover:bg-gray-100');
       }
     }
+
+    // Cleanup: remove highlighting when component unmounts
+    return () => {
+      if (criterionElement) {
+        const triggerElement = criterionElement.querySelector('[data-radix-collection-item]') || 
+                              criterionElement.querySelector('.flex.items-center.justify-between');
+        if (triggerElement) {
+          triggerElement.classList.remove('ring-2', 'ring-red-500', 'bg-red-50');
+          triggerElement.classList.add('bg-gray-50', 'hover:bg-gray-100');
+        }
+      }
+    };
   }, [evaluationFactor]);
 
   return (
