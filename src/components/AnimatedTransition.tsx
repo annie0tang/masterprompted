@@ -15,7 +15,7 @@ interface AnimatedTransitionProps {
   onComplete?: () => void;
 }
 
-type AnimationPhase = "chatbox" | "sending" | "sent" | "thinking" | "responding" | "streaming" | "showEvaluation" | "complete";
+type AnimationPhase = "chatbox" | "sending" | "sent" | "thinking" | "responding" | "streaming" | "streamingComplete" | "showHeadline" | "showEvaluation" | "complete";
 
 const AnimatedTransition = ({ 
   promptText, 
@@ -26,6 +26,7 @@ const AnimatedTransition = ({
   const navigate = useNavigate();
   const [phase, setPhase] = useState<AnimationPhase>("chatbox");
   const [showResponseElements, setShowResponseElements] = useState(false);
+  const [showHeadline, setShowHeadline] = useState(false);
   const [showEvaluation, setShowEvaluation] = useState(false);
 
   // Auto-start the animation as soon as this component mounts
@@ -44,30 +45,37 @@ const AnimatedTransition = ({
 
     switch (phase) {
       case "sending":
-        timeout = setTimeout(() => setPhase("sent"), 600);
+        timeout = setTimeout(() => setPhase("sent"), 800);
         break;
       case "sent":
-        timeout = setTimeout(() => setPhase("thinking"), 300);
+        timeout = setTimeout(() => setPhase("thinking"), 500);
         break;
       case "thinking":
-        timeout = setTimeout(() => setPhase("responding"), 1500);
+        timeout = setTimeout(() => setPhase("responding"), 2000);
         break;
       case "responding":
         setShowResponseElements(true);
-        timeout = setTimeout(() => setPhase("streaming"), 800);
+        timeout = setTimeout(() => setPhase("streaming"), 1000);
         break;
       case "streaming":
-        // Streaming will trigger showEvaluation phase via TypewriterText onComplete
+        // Streaming will trigger streamingComplete phase via TypewriterText onComplete
+        break;
+      case "streamingComplete":
+        timeout = setTimeout(() => setPhase("showHeadline"), 1000);
+        break;
+      case "showHeadline":
+        setShowHeadline(true);
+        timeout = setTimeout(() => setPhase("showEvaluation"), 2000);
         break;
       case "showEvaluation":
         setShowEvaluation(true);
-        timeout = setTimeout(() => setPhase("complete"), 1500);
+        timeout = setTimeout(() => setPhase("complete"), 3000);
         break;
       case "complete":
         timeout = setTimeout(() => {
           navigate(targetRoute);
           onComplete?.();
-        }, 500);
+        }, 1000);
         break;
     }
 
@@ -124,7 +132,7 @@ const AnimatedTransition = ({
                   </div>
                 )}
                 
-                {(phase === "sent" || phase === "thinking" || phase === "responding" || phase === "streaming" || phase === "showEvaluation" || phase === "complete") && (
+                {(phase === "sent" || phase === "thinking" || phase === "responding" || phase === "streaming" || phase === "streamingComplete" || phase === "showHeadline" || phase === "showEvaluation" || phase === "complete") && (
                   <div className="animate-fade-in">
                     <SentPrompt text={promptText} fileName={fileName} />
                   </div>
@@ -146,14 +154,14 @@ const AnimatedTransition = ({
               )}
 
               {/* Streaming response */}
-              {(phase === "streaming" || phase === "showEvaluation" || phase === "complete") && (
+              {(phase === "streaming" || phase === "streamingComplete" || phase === "showHeadline" || phase === "showEvaluation" || phase === "complete") && (
                 <div className="animate-fade-in space-y-6">
                   <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
                     {phase === "streaming" ? (
                       <TypewriterText
                         text="Here is a possible headline for a long-form journalistic article about an AI ethics agreement reached across the EU:"
                         delay={30}
-                        onComplete={() => setPhase("showEvaluation")}
+                        onComplete={() => setPhase("streamingComplete")}
                         className="text-gray-700 text-lg"
                       />
                     ) : (
@@ -164,7 +172,7 @@ const AnimatedTransition = ({
                   </div>
                   
                   {/* Headline that appears after intro text */}
-                  {(phase === "showEvaluation" || phase === "complete") && (
+                  {showHeadline && (
                     <div className="animate-fade-in bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
                       <TypewriterText
                         text="European Union Unites On Historic AI Ethics Framework, Charting Path For Responsible Technology Development"
