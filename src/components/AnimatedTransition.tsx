@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Chatbox from "@/components/ChatBox";
 import SentPrompt from "@/components/SentPrompt";
 import LoadingDots from "@/components/LoadingDots";
+import TypewriterText from "@/components/TypewriterText";
 import Header from "@/components/Header";
 import Breadcrumb from "@/components/Breadcrumb";
 import EvaluationPanel from "@/components/EvaluationPanel";
@@ -14,7 +15,7 @@ interface AnimatedTransitionProps {
   onComplete?: () => void;
 }
 
-type AnimationPhase = "chatbox" | "transforming" | "sent" | "generating" | "morphing" | "complete";
+type AnimationPhase = "chatbox" | "sending" | "sent" | "thinking" | "responding" | "streaming" | "showEvaluation" | "complete";
 
 const AnimatedTransition = ({ 
   promptText, 
@@ -25,34 +26,42 @@ const AnimatedTransition = ({
   const navigate = useNavigate();
   const [phase, setPhase] = useState<AnimationPhase>("chatbox");
   const [showResponseElements, setShowResponseElements] = useState(false);
+  const [showEvaluation, setShowEvaluation] = useState(false);
 
   const handleSubmit = () => {
     // Start the animation sequence
-    setPhase("transforming");
+    setPhase("sending");
   };
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;
 
     switch (phase) {
-      case "transforming":
-        timeout = setTimeout(() => setPhase("sent"), 800);
+      case "sending":
+        timeout = setTimeout(() => setPhase("sent"), 600);
         break;
       case "sent":
-        timeout = setTimeout(() => setPhase("generating"), 500);
+        timeout = setTimeout(() => setPhase("thinking"), 300);
         break;
-      case "generating":
-        timeout = setTimeout(() => {
-          setShowResponseElements(true);
-          setPhase("morphing");
-        }, 2000);
+      case "thinking":
+        timeout = setTimeout(() => setPhase("responding"), 1500);
         break;
-      case "morphing":
+      case "responding":
+        setShowResponseElements(true);
+        timeout = setTimeout(() => setPhase("streaming"), 800);
+        break;
+      case "streaming":
+        // Streaming will trigger showEvaluation phase via TypewriterText onComplete
+        break;
+      case "showEvaluation":
+        setShowEvaluation(true);
+        timeout = setTimeout(() => setPhase("complete"), 1500);
+        break;
+      case "complete":
         timeout = setTimeout(() => {
-          setPhase("complete");
           navigate(targetRoute);
           onComplete?.();
-        }, 1000);
+        }, 500);
         break;
     }
 
@@ -66,31 +75,29 @@ const AnimatedTransition = ({
       <Header />
       
       <main className="container mx-auto px-6 py-6">
-        {/* Breadcrumb with fade animation */}
-        <div className={`transition-all duration-500 ${
-          phase === "morphing" ? "opacity-100" : "opacity-100"
-        }`}>
+        {/* Breadcrumb */}
+        <div className="transition-opacity duration-500">
           <Breadcrumb />
         </div>
         <div className="mb-5"></div>
         
         <div className="max-w-7xl mx-auto">
           {/* Layout morphing animation */}
-          <div className={`transition-all duration-1000 ${
+          <div className={`transition-all duration-1000 ease-out ${
             showResponseElements 
               ? "grid grid-cols-1 lg:grid-cols-12 gap-8" 
               : "flex justify-center"
           }`}>
             
             {/* Main content area */}
-            <div className={`transition-all duration-1000 ${
+            <div className={`transition-all duration-1000 ease-out ${
               showResponseElements ? "lg:col-span-8" : "max-w-2xl w-full"
             }`}>
               
-              {/* Prompt area with transformation */}
+              {/* Prompt area with smooth transformation */}
               <div className="mb-8">
                 {phase === "chatbox" && (
-                  <div className="animate-fade-in">
+                  <div className="transition-all duration-300">
                     <Chatbox 
                       canType={false} 
                       text={promptText}
@@ -100,8 +107,8 @@ const AnimatedTransition = ({
                   </div>
                 )}
                 
-                {phase === "transforming" && (
-                  <div className="animate-scale-in">
+                {phase === "sending" && (
+                  <div className="transform transition-all duration-600 scale-98 opacity-90">
                     <Chatbox 
                       canType={false} 
                       text={promptText}
@@ -111,40 +118,62 @@ const AnimatedTransition = ({
                   </div>
                 )}
                 
-                {(phase === "sent" || phase === "generating" || phase === "morphing" || phase === "complete") && (
+                {(phase === "sent" || phase === "thinking" || phase === "responding" || phase === "streaming" || phase === "showEvaluation" || phase === "complete") && (
                   <div className="animate-fade-in">
                     <SentPrompt text={promptText} fileName={fileName} />
                   </div>
                 )}
               </div>
 
-              {/* Loading/Generation phase */}
-              {phase === "generating" && (
+              {/* Thinking phase */}
+              {phase === "thinking" && (
                 <div className="animate-fade-in bg-white rounded-lg p-8 border border-gray-200 shadow-sm">
-                  <LoadingDots text="Analyzing prompt and generating response" />
+                  <LoadingDots text="Analyzing prompt" />
                 </div>
               )}
 
-              {/* Response content with morphing animation */}
-              {(phase === "morphing" || phase === "complete") && (
+              {/* Responding phase */}
+              {phase === "responding" && (
+                <div className="animate-fade-in bg-white rounded-lg p-8 border border-gray-200 shadow-sm">
+                  <LoadingDots text="Generating response" />
+                </div>
+              )}
+
+              {/* Streaming response */}
+              {(phase === "streaming" || phase === "showEvaluation" || phase === "complete") && (
                 <div className="animate-fade-in space-y-6">
-                  <p className="text-gray-700 text-lg">
-                    Here is a possible headline for a long-form journalistic article about an AI ethics agreement reached across the EU:
-                  </p>
-                  
-                  {/* Preview of the response content */}
-                  <div className="bg-white rounded-lg p-6 border border-gray-200">
-                    <h1 className="text-2xl text-gray-900 leading-loose font-normal md:text-4xl">
-                      European Union Unites On Historic AI Ethics Framework, Charting Path For Responsible Technology Development
-                    </h1>
+                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                    {phase === "streaming" ? (
+                      <TypewriterText
+                        text="Here is a possible headline for a long-form journalistic article about an AI ethics agreement reached across the EU:"
+                        delay={30}
+                        onComplete={() => setPhase("showEvaluation")}
+                        className="text-gray-700 text-lg"
+                      />
+                    ) : (
+                      <p className="text-gray-700 text-lg">
+                        Here is a possible headline for a long-form journalistic article about an AI ethics agreement reached across the EU:
+                      </p>
+                    )}
                   </div>
+                  
+                  {/* Headline that appears after intro text */}
+                  {(phase === "showEvaluation" || phase === "complete") && (
+                    <div className="animate-fade-in bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                      <TypewriterText
+                        text="European Union Unites On Historic AI Ethics Framework, Charting Path For Responsible Technology Development"
+                        delay={40}
+                        className="text-2xl text-gray-900 leading-loose font-normal md:text-4xl block"
+                      />
+                    </div>
+                  )}
                 </div>
               )}
             </div>
 
-            {/* Right sidebar that fades in during morphing */}
-            {showResponseElements && (
-              <div className="lg:col-span-4 animate-slide-in-right">
+            {/* Right sidebar - Evaluation Panel appears last */}
+            {showResponseElements && showEvaluation && (
+              <div className="lg:col-span-4 animate-fade-in animate-slide-in-right">
                 <EvaluationPanel />
               </div>
             )}
