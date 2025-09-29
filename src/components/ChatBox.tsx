@@ -6,7 +6,7 @@ import { Paperclip, ArrowUp } from "lucide-react";
 import { useState, useEffect } from 'react'; // Import hooks
 
 // SubmitButton and UploadFile components remain the same...
-function SubmitButton({ onClick, id }: { onClick?: () => void; id?: string }) {
+function SubmitButton({ onClick, id }: { onClick?: (e?: React.MouseEvent) => void; id?: string }) {
   return (
     <Button
       id={id}
@@ -51,7 +51,9 @@ const Chatbox = ({ canType = true, text = "", onSubmit, onUpload, fileName, subm
     setInputValue(text);
   }, [text]);
 
-  const handleSubmit = () => {
+  const handleSubmit = (e?: React.MouseEvent) => {
+    e?.preventDefault();
+    e?.stopPropagation();
     // ✨ On submit, call the parent's function with the current internal value
     if (onSubmit) {
       onSubmit(inputValue);
