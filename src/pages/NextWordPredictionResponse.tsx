@@ -24,7 +24,6 @@ export default function HeadlineResponse() {
   const [charterTooltipShown, setCharterTooltipShown] = useState(false);
   const [useNewInteraction, setUseNewInteraction] = useState(false);
 
-  // Helper function to get word options for dropdowns
   const getWordOptions = (position: 'second' | 'third') => {
     if (position === 'second') {
       return [
@@ -46,7 +45,7 @@ export default function HeadlineResponse() {
           { word: "Agreement", probability: "0.28" },
           { word: "Milestone", probability: "0.07" }
         ];
-      } else if (secondWord === "Finalizes") {
+      } else if (secondWord === "Finalizes" || secondWord === "finalizes") {
         return [
           { word: "landmark", probability: "0.58" },
           { word: "sweeping", probability: "0.31" },
@@ -218,8 +217,8 @@ export default function HeadlineResponse() {
                     lineHeight: '1.8'
                   }}>
                         {currentSentence.map((word, index) => {
-                          // Handle dropdown for second position (Unites/Reaches/Finalizes)
-                          if (index === 2 && (word === "Unites" || word === "Reaches" || word === "Finalizes")) {
+                          // Handle dropdown for second position (Unites/Reaches/Finalizes/finalizes)
+                          if (index === 2 && (word === "Unites" || word === "Reaches" || word === "Finalizes" || word === "finalizes")) {
                             const options = getWordOptions('second');
                             return (
                               <span key={index}>
@@ -251,7 +250,7 @@ export default function HeadlineResponse() {
                             );
                           }
                           
-                          // Handle dropdown for third position (On/Around/Behind/etc.)
+                          // Handle dropdown for third position (On/Around/Behind/landmark/etc.)
                           if (index === 3) {
                             const options = getWordOptions('third');
                             const isValidThirdWord = options.some(opt => opt.word === word);
