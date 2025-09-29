@@ -321,7 +321,7 @@ export default function HeadlineResponse() {
                     
                     {/* Factual Inaccuracy Tooltip for New Form */}
                     {showFactualInaccuracyTooltip && (
-                      <div className="fixed right-80 top-1/2 transform -translate-y-1/2 z-50">
+                      <div className="absolute left-full top-0 ml-4 z-50">
                         <div className="bg-emerald-500 text-white px-6 py-3 rounded-lg shadow-lg max-w-md w-80">
                           <p className="text-sm leading-relaxed mb-2 font-medium">
                             You found the factual inaccuracy!
