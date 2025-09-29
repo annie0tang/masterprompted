@@ -238,6 +238,7 @@ export default function HeadlineResponse() {
                           // Handle dropdown for second position (Unites/Reaches/Finalizes/finalizes)
                           if (index === 2 && (word === "Unites" || word === "Reaches" || word === "Finalizes" || word === "finalizes")) {
                             const options = getWordOptions('second', index);
+                            const rawOptions = getWordOptions('second');
                             return (
                               <span key={index}>
                                 <DropdownMenu>
@@ -246,7 +247,7 @@ export default function HeadlineResponse() {
                                       {word}
                                       <ChevronDown className="h-3 w-3" />
                                       <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-                                        {options.find(opt => opt.word === word)?.probability || "0.67"}
+                                        {rawOptions.find(opt => opt.word === word)?.probability || rawOptions[0]?.probability || "0.67"}
                                       </span>
                                     </button>
                                   </DropdownMenuTrigger>
@@ -270,8 +271,9 @@ export default function HeadlineResponse() {
                           
                           // Handle dropdown for third position (On/Around/Behind/landmark/etc.)
                           if (index === 3) {
+                            const rawOptions = getWordOptions('third');
                             const options = getWordOptions('third', index);
-                            const isValidThirdWord = options.some(opt => opt.word === word);
+                            const isValidThirdWord = rawOptions.some(opt => opt.word === word);
                             
                             if (isValidThirdWord) {
                               return (
@@ -282,7 +284,7 @@ export default function HeadlineResponse() {
                                         {word}
                                         <ChevronDown className="h-3 w-3" />
                                         <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-                                          {options.find(opt => opt.word === word)?.probability || "0.73"}
+                                          {rawOptions.find(opt => opt.word === word)?.probability || rawOptions[0]?.probability || "0.73"}
                                         </span>
                                       </button>
                                     </DropdownMenuTrigger>
