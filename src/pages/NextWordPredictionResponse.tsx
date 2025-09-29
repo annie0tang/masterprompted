@@ -25,8 +25,10 @@ export default function HeadlineResponse() {
   const [useNewInteraction, setUseNewInteraction] = useState(false);
 
   const getWordOptions = (position: 'second' | 'third') => {
+    let options: { word: string; probability: string }[] = [];
+    
     if (position === 'second') {
-      return [
+      options = [
         { word: "Unites", probability: "0.67" },
         { word: "Reaches", probability: "0.24" },
         { word: "Finalizes", probability: "0.09" }
@@ -34,26 +36,32 @@ export default function HeadlineResponse() {
     } else { // third position
       const secondWord = currentSentence[2];
       if (secondWord === "Unites") {
-        return [
+        options = [
           { word: "On", probability: "0.73" },
           { word: "Around", probability: "0.42" },
           { word: "Behind", probability: "0.12" }
         ];
       } else if (secondWord === "Reaches") {
-        return [
+        options = [
           { word: "Consensus", probability: "0.65" },
           { word: "Agreement", probability: "0.28" },
           { word: "Milestone", probability: "0.07" }
         ];
       } else if (secondWord.toLowerCase() === "finalizes") {
-        return [
+        options = [
           { word: "Landmark", probability: "0.58" },
           { word: "Sweeping", probability: "0.31" },
           { word: "Pioneering", probability: "0.11" }
         ];
       }
     }
-    return [];
+    
+    // Filter out words that are already selected in the sentence
+    return options.filter(option => 
+      !currentSentence.some(word => 
+        word.toLowerCase().replace(/[,.]/, '') === option.word.toLowerCase()
+      )
+    );
   };
 
   // Function to handle word selection and update sentence
