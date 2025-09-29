@@ -56,12 +56,15 @@ export default function HeadlineResponse() {
       }
     }
     
-    // Filter out words that are already selected in the sentence
-    return options.filter(option => 
-      !currentSentence.some((word, i) => 
-        word.toLowerCase().replace(/[,.]/g, '') === option.word.toLowerCase()
-      )
-    );
+    // Filter out only the currently selected word from its own dropdown
+    if (currentIndex !== undefined) {
+      const currentWord = currentSentence[currentIndex];
+      return options.filter(option => 
+        option.word.toLowerCase() !== currentWord.toLowerCase().replace(/[,.]/g, '')
+      );
+    }
+    
+    return options;
   };
 
   // Function to handle word selection and update sentence
