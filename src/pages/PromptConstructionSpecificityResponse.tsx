@@ -19,26 +19,13 @@ export default function SpecificityResponse() {
           {/* Left Sidebar - Sent Prompt and Controls */}
           <div className="w-80 flex-shrink-0 space-y-6">
             {/* Sent Prompt */}
-            <SentPrompt 
-              text="Give me a summary of the main points in the AI Act." 
-              fileName="EU_AI_Act.pdf"
-            />
+            <SentPrompt text="Give me a summary of the main points in the AI Act." fileName="EU_AI_Act.pdf" />
             
             {/* Prompt Controls */}
-            <PromptControls 
-              showSpecificity={true}
-              showStyle={true}
-              showContext={true}
-              showBias={true}
-            />
+            <PromptControls showSpecificity={true} showStyle={true} showContext={true} showBias={true} />
             
             {/* Modify Prompt Button */}
-            <Button 
-              variant="default"
-              className="w-full bg-emerald-500 hover:bg-emerald-600 text-white"
-            >
-              Modify Prompt
-            </Button>
+            
           </div>
 
           {/* Main Content */}
@@ -90,10 +77,7 @@ export default function SpecificityResponse() {
               {/* Navigation */}
               <div className="mt-12 flex justify-between items-center">
                 <div></div>
-                <Button 
-                  variant="outline" 
-                  className="px-8 py-2 rounded-full border-gray-300 hover:border-gray-400"
-                >
+                <Button variant="outline" className="px-8 py-2 rounded-full border-gray-300 hover:border-gray-400">
                   Next →
                 </Button>
               </div>
