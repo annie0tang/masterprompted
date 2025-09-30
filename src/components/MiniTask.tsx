@@ -56,7 +56,7 @@ export function MiniTask({ title, description, onStartTask, className = "" }: Mi
             width: spotlightRects.unite.width + 4,
             height: spotlightRects.unite.height + 4,
             background: 'transparent',
-            borderRadius: '4px',
+            borderRadius: '8px',
             boxShadow: `0 0 0 9999px rgba(0, 0, 0, 0.5)`,
           }}
         />
@@ -72,7 +72,7 @@ export function MiniTask({ title, description, onStartTask, className = "" }: Mi
             width: spotlightRects.on.width + 4,
             height: spotlightRects.on.height + 4,
             background: 'transparent',
-            borderRadius: '4px',
+            borderRadius: '8px',
             boxShadow: `0 0 0 9999px rgba(0, 0, 0, 0.5)`,
           }}
         />
