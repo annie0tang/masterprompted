@@ -12,9 +12,9 @@ export default function PromptConstructionSummarize() {
 
   const handleAddDocument = () => {
     setIsDocumentAttached(true);
-    // After a short delay, navigate to the next screen
+    // After a short delay, navigate to the main prompt construction page
     setTimeout(() => {
-      navigate("/module/prompt-construction/specificity");
+      navigate("/module/prompt-construction");
     }, 1000);
   };
 
