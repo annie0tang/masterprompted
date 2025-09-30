@@ -102,7 +102,7 @@ export function MiniTask({ title, description, onStartTask, className = "" }: Mi
               {title}
             </h3>
             <p className="text-gray-600 text-sm leading-relaxed mb-4">
-              {description}
+              Click on the green highlighted words to select alternate words the LLM could have chosen – each combination will lead to a different outcome, one of which has generated misinformation
             </p>
             
             {/* Start Task Button */}
