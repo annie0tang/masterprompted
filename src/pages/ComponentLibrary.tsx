@@ -78,6 +78,8 @@ const ComponentLibrary = () => {
 
   const [showSingleStep, setShowSingleStep] = useState(false);
   const [showMultiStep, setShowMultiStep] = useState(false);
+  // demo state for Chatbox in component library
+  const [demoChatValue, setDemoChatValue] = useState<string>("Type your message here...");
 
 
   interface PopupSetter {
@@ -263,7 +265,8 @@ const ComponentLibrary = () => {
                 </CardHeader>
                 <CardContent>
                   <Chatbox
-                    text="Type your message here..."
+                    value={demoChatValue}
+                    onChange={setDemoChatValue}
                     onSubmit={(message) => console.log("Message sent:", message)}
                   />
                 </CardContent>

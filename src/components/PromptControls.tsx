@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-// No longer needs useState from 'react'
+import { useState } from 'react';
 
 // 1. Update ParameterProps to use string-based current value and change handler
 interface ParameterProps {
@@ -84,20 +84,20 @@ interface PromptControlsProps {
     enableBias?: boolean;
 
     // State values
-    specificity: string;
-    style: string;
-    context: string;
-    bias: string;
+    specificity?: string;
+    style?: string;
+    context?: string;
+    bias?: string;
 
-    // State change handlers
-    onSpecificityChange: (value: string) => void;
-    onStyleChange: (value: string) => void;
-    onContextChange: (value: string) => void;
-    onBiasChange: (value: string) => void;
+    // State change handlers (optional)
+    onSpecificityChange?: (value: string) => void;
+    onStyleChange?: (value: string) => void;
+    onContextChange?: (value: string) => void;
+    onBiasChange?: (value: string) => void;
 
-    // Event handlers
-    onReset: () => void;
-    onSubmit: () => void;
+    // Event handlers (optional)
+    onReset?: () => void;
+    onSubmit?: () => void;
 }
 
 export default function PromptControls({
@@ -120,7 +120,48 @@ export default function PromptControls({
     onReset,
     onSubmit,
 }: PromptControlsProps) {
-    // State and handlers have been removed from this component.
+    // If parent doesn't provide state/handlers, keep an internal editing state
+    const [localSpecificity, setLocalSpecificity] = useState<string>(specificity ?? "General");
+    const [localStyle, setLocalStyle] = useState<string>(style ?? "Conversational");
+    const [localContext, setLocalContext] = useState<string>(context ?? "No Background");
+    const [localBias, setLocalBias] = useState<string>(bias ?? "No Bias");
+
+    // Helpers to call parent handlers when available, otherwise update local state
+    const handleSpecificityChange = (val: string) => {
+        if (onSpecificityChange) onSpecificityChange(val);
+        else setLocalSpecificity(val);
+    };
+
+    const handleStyleChange = (val: string) => {
+        if (onStyleChange) onStyleChange(val);
+        else setLocalStyle(val);
+    };
+
+    const handleContextChange = (val: string) => {
+        if (onContextChange) onContextChange(val);
+        else setLocalContext(val);
+    };
+
+    const handleBiasChange = (val: string) => {
+        if (onBiasChange) onBiasChange(val);
+        else setLocalBias(val);
+    };
+
+    const handleResetClick = () => {
+        // Reset parent state if handler provided, otherwise reset local state
+        if (onReset) onReset();
+        else {
+            setLocalSpecificity("General");
+            setLocalStyle("Conversational");
+            setLocalContext("No Background");
+            setLocalBias("No Bias");
+        }
+    };
+
+    const handleSubmitClick = () => {
+        if (onSubmit) onSubmit();
+        // otherwise nothing — this is a demo control
+    };
 
     return (
         <Card className="bg-white border border-gray-200 rounded-lg">
@@ -142,8 +183,8 @@ export default function PromptControls({
                             rightParameter="Specific"
                             showParameter={showSpecificity}
                             enabled={enableSpecificity}
-                            currentValue={specificity}
-                            onParameterChange={onSpecificityChange}
+                            currentValue={specificity ?? localSpecificity}
+                            onParameterChange={handleSpecificityChange}
                         />
                         <Parameter
                             parameterTitle="Interaction Style"
@@ -151,8 +192,8 @@ export default function PromptControls({
                             rightParameter="Instructional"
                             showParameter={showStyle}
                             enabled={enableStyle}
-                            currentValue={style}
-                            onParameterChange={onStyleChange}
+                            currentValue={style ?? localStyle}
+                            onParameterChange={handleStyleChange}
                         />
                         <Parameter
                             parameterTitle="Context"
@@ -160,8 +201,8 @@ export default function PromptControls({
                             rightParameter="With Background"
                             showParameter={showContext}
                             enabled={enableContext}
-                            currentValue={context}
-                            onParameterChange={onContextChange}
+                            currentValue={context ?? localContext}
+                            onParameterChange={handleContextChange}
                         />
                         <Parameter
                             parameterTitle="Bias"
@@ -169,14 +210,14 @@ export default function PromptControls({
                             rightParameter="With Bias"
                             showParameter={showBias}
                             enabled={enableBias}
-                            currentValue={bias}
-                            onParameterChange={onBiasChange}
+                            currentValue={bias ?? localBias}
+                            onParameterChange={handleBiasChange}
                         />
                     </div>
 
                     <div className="flex gap-2">
                         <Button
-                            onClick={onReset}
+                            onClick={handleResetClick}
                             variant="outline"
                             size="sm"
                             className="flex-1 text-gray-600 hover:text-gray-800 hover:bg-gray-50"
@@ -184,7 +225,7 @@ export default function PromptControls({
                             Reset
                         </Button>
                         <Button
-                            onClick={onSubmit}
+                            onClick={handleSubmitClick}
                             variant="default"
                             size="sm"
                             className="flex-1 text-gray-600 hover:text-gray-800 hover:bg-gray-50"
