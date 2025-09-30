@@ -45,23 +45,23 @@ const AnimatedTransition = ({
 
     switch (phase) {
       case "sending":
-        timeout = setTimeout(() => setPhase("sent"), 1200);
+        timeout = setTimeout(() => setPhase("sent"), 100);
         break;
       case "sent":
-        timeout = setTimeout(() => setPhase("responding"), 800);
+        timeout = setTimeout(() => setPhase("responding"), 100);
         break;
       case "responding":
-        timeout = setTimeout(() => setPhase("streaming"), 1500);
+        timeout = setTimeout(() => setPhase("streaming"), 100);
         break;
       case "streaming":
         // Streaming will trigger streamingComplete phase via TypewriterText onComplete
         break;
       case "streamingComplete":
-        timeout = setTimeout(() => setPhase("showHeadline"), 800);
+        timeout = setTimeout(() => setPhase("showHeadline"), 100);
         break;
       case "showHeadline":
         setShowHeadline(true);
-        timeout = setTimeout(() => setPhase("showEvaluation"), 1200);
+        timeout = setTimeout(() => setPhase("showEvaluation"), 100);
         break;
       case "showEvaluation":
         setShowResponseElements(true);
