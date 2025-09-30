@@ -138,7 +138,7 @@ const AnimatedTransition = ({
 
               {/* Responding phase */}
               {phase === "responding" && (
-                <div className="animate-fade-in bg-white rounded-lg p-8 border border-gray-200 shadow-sm">
+                <div className="animate-fade-in p-8">
                   <LoadingDots text="Generating response" />
                 </div>
               )}
@@ -146,7 +146,7 @@ const AnimatedTransition = ({
               {/* Streaming response */}
               {(phase === "streaming" || phase === "streamingComplete" || phase === "showHeadline" || phase === "showEvaluation" || phase === "complete") && (
                 <div className="animate-fade-in space-y-6">
-                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                  <div className="p-6">
                     {phase === "streaming" ? (
                       <TypewriterText
                         text="Here is a possible headline for a long-form journalistic article about an AI ethics agreement reached across the EU:"
@@ -163,7 +163,7 @@ const AnimatedTransition = ({
                   
                   {/* Headline that appears after intro text */}
                   {showHeadline && (
-                    <div className="animate-fade-in bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                    <div className="animate-fade-in p-6">
                       <TypewriterText
                         text="European Union Unites On Historic AI Ethics Framework, Charting Path For Responsible Technology Development"
                         delay={40}
