@@ -3,7 +3,6 @@
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Paperclip, ArrowUp } from "lucide-react";
-import { useState, useEffect } from 'react'; // Import hooks
 
 // SubmitButton and UploadFile components remain the same...
 function SubmitButton({ onClick, id }: { onClick?: (e?: React.MouseEvent) => void; id?: string }) {
@@ -35,30 +34,26 @@ function UploadFile({ onClick, fileName }: { onClick?: () => void; fileName?: st
 
 type ChatboxProps = {
   canType?: boolean;
-  text?: string; // Can be used to set an initial value
+  // Controlled-only API
+  value: string;
+  onChange: (value: string) => void;
   onSubmit?: (value: string) => void; // Function to lift state up
   onUpload?: () => void;
   fileName?: string;
   submitButtonId?: string;
 };
+const Chatbox = ({ canType = true, value, onChange, onSubmit, onUpload, fileName, submitButtonId }: ChatboxProps) => {
+  // Controlled-only component: `value` drives the textarea and `onChange` must be provided.
 
-const Chatbox = ({ canType = true, text = "", onSubmit, onUpload, fileName, submitButtonId }: ChatboxProps) => {
-  // ✨ Internal state to track typing without re-rendering the parent
-  const [inputValue, setInputValue] = useState(text);
-
-  // update internal state due to initial/external text changes
-  useEffect(() => {
-    setInputValue(text);
-  }, [text]);
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onChange(e.target.value);
+  };
 
   const handleSubmit = (e?: React.MouseEvent) => {
     e?.preventDefault();
     e?.stopPropagation();
-    // ✨ On submit, call the parent's function with the current internal value
-    if (onSubmit) {
-      onSubmit(inputValue);
-    }
-    setInputValue(""); 
+    if (onSubmit) onSubmit(value);
+    // Do not clear `value` here; parent controls the value and should decide what to show after submit.
   };
 
   return (
@@ -77,13 +72,14 @@ const Chatbox = ({ canType = true, text = "", onSubmit, onUpload, fileName, subm
         placeholder="Type your message here..."
         className="border-none bg-transparent resize-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 min-h-[60px]"
         disabled={!canType}
-        value={inputValue} // Controlled by internal state
-        onChange={(e) => setInputValue(e.target.value)} // Update internal state on typing
+        value={value}
+        onChange={handleInputChange}
         onKeyDown={e => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
             handleSubmit();
-          }}}
+          }
+        }}
         style={{ fontFamily: 'Manrope', fontSize: '16px', lineHeight: '24px', color: '#1F1F1F' }}
       />
       

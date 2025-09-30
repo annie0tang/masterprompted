@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+// No longer needs useState from 'react'
 
 // 1. Update ParameterProps to use string-based current value and change handler
 interface ParameterProps {
@@ -11,11 +11,8 @@ interface ParameterProps {
     rightParameter: string;
     showParameter?: boolean;
     enabled?: boolean;
-    // Removed: leftSelected?: boolean;
-    // Removed: handleButtonClick?: (p: boolean) => void;
-    
-    currentValue: string; // New prop for current selected string value
-    onParameterChange?: (param: string) => void; // String setter
+    currentValue: string; 
+    onParameterChange?: (param: string) => void;
 }
 
 function Parameter({
@@ -32,12 +29,10 @@ function Parameter({
         return null;
     }
     
-    // 2. New Selection Logic: Left is selected if currentValue is the null state ("") OR matches leftParameter
+    // Logic remains the same, driven by props
     const isLeftSelected = currentValue === leftParameter || currentValue === "";
-    // Right is selected if currentValue matches rightParameter
     const isRightSelected = currentValue === rightParameter;
 
-    // 3. New Click Handlers: Set state to the parameter string value
     const handleLeftClick = () => {
         if (enabled) {
             onParameterChange?.(leftParameter);
@@ -77,6 +72,7 @@ function Parameter({
     );
 }
 
+// Props updated to accept state and handlers from the parent component
 interface PromptControlsProps {
     showSpecificity?: boolean;
     showStyle?: boolean;
@@ -87,6 +83,21 @@ interface PromptControlsProps {
     enableContext?: boolean;
     enableBias?: boolean;
 
+    // State values
+    specificity: string;
+    style: string;
+    context: string;
+    bias: string;
+
+    // State change handlers
+    onSpecificityChange: (value: string) => void;
+    onStyleChange: (value: string) => void;
+    onContextChange: (value: string) => void;
+    onBiasChange: (value: string) => void;
+
+    // Event handlers
+    onReset: () => void;
+    onSubmit: () => void;
 }
 
 export default function PromptControls({
@@ -97,38 +108,19 @@ export default function PromptControls({
     enableSpecificity = true,
     enableStyle = true,
     enableContext = true,
-    enableBias = true
+    enableBias = true,
+    specificity,
+    style,
+    context,
+    bias,
+    onSpecificityChange,
+    onStyleChange,
+    onContextChange,
+    onBiasChange,
+    onReset,
+    onSubmit,
 }: PromptControlsProps) {
-    // 4. Remove boolean states:
-    /*
-    const [isGeneral, setIsGeneral] = useState(true);
-    const [isConversational, setIsConversational] = useState(true);
-    const [hasNoContext, setHasNoContext] = useState(true);
-    const [hasNoBias, setHasNoBias] = useState(true);
-    */
-
-    // 5. Use string states, initialized to the null state ("")
-    const [specificity, setSpecificity] = useState<string>("General");
-    const [style, setStyle] = useState<string>("Conversational");
-    const [context, setContext] = useState<string>("No Background");
-    const [bias, setBias] = useState<string>("No Bias");
-
-    // 6. Update handleReset to set all states to the null string value
-    const handleReset = () => {
-        setSpecificity("General");
-        setStyle("Conversational");
-        setContext("No Background");
-        setBias("No Bias");
-    };
-
-    const handleSubmit = () => {
-        // Handle submit logic here
-        // The values to use are specificity, style, context, and bias
-        console.log("Specificity:", specificity);
-        console.log("Style:", style);
-        console.log("Context:", context);
-        console.log("Bias:", bias);
-    }
+    // State and handlers have been removed from this component.
 
     return (
         <Card className="bg-white border border-gray-200 rounded-lg">
@@ -143,7 +135,7 @@ export default function PromptControls({
                 </div>
                 <div>
                     <div className="relative">
-                        {/* Selectors - Updated to use string states */}
+                        {/* Selectors are now controlled by props from the parent */}
                         <Parameter
                             parameterTitle="Prompt Specificity"
                             leftParameter="General"
@@ -151,7 +143,7 @@ export default function PromptControls({
                             showParameter={showSpecificity}
                             enabled={enableSpecificity}
                             currentValue={specificity}
-                            onParameterChange={setSpecificity}
+                            onParameterChange={onSpecificityChange}
                         />
                         <Parameter
                             parameterTitle="Interaction Style"
@@ -160,7 +152,7 @@ export default function PromptControls({
                             showParameter={showStyle}
                             enabled={enableStyle}
                             currentValue={style}
-                            onParameterChange={setStyle}
+                            onParameterChange={onStyleChange}
                         />
                         <Parameter
                             parameterTitle="Context"
@@ -169,7 +161,7 @@ export default function PromptControls({
                             showParameter={showContext}
                             enabled={enableContext}
                             currentValue={context}
-                            onParameterChange={setContext}
+                            onParameterChange={onContextChange}
                         />
                         <Parameter
                             parameterTitle="Bias"
@@ -178,13 +170,13 @@ export default function PromptControls({
                             showParameter={showBias}
                             enabled={enableBias}
                             currentValue={bias}
-                            onParameterChange={setBias}
+                            onParameterChange={onBiasChange}
                         />
                     </div>
 
                     <div className="flex gap-2">
                         <Button
-                            onClick={handleReset}
+                            onClick={onReset}
                             variant="outline"
                             size="sm"
                             className="flex-1 text-gray-600 hover:text-gray-800 hover:bg-gray-50"
@@ -192,7 +184,7 @@ export default function PromptControls({
                             Reset
                         </Button>
                         <Button
-                            onClick={handleSubmit} // Added onClick handler
+                            onClick={onSubmit}
                             variant="default"
                             size="sm"
                             className="flex-1 text-gray-600 hover:text-gray-800 hover:bg-gray-50"
