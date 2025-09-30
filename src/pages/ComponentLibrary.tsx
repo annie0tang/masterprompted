@@ -6,6 +6,15 @@ import SentPrompt from "@/components/SentPrompt";
 import VideoLightbox from "@/components/VideoLightbox";
 import DialogPopup from "@/components/DialogPopup";
 import { PopoverSeries } from "@/components/PopoverSeries";
+import { MiniTask } from "@/components/MiniTask";
+import Answer from "@/components/Answer";
+import Chatbox from "@/components/ChatBox";
+import GuidanceTooltip from "@/components/GuidanceTooltip";
+import LoadingDots from "@/components/LoadingDots";
+import ModuleNavigation from "@/components/ModuleNavigation";
+import PromptControls from "@/components/PromptControls";
+import TextFlag from "@/components/TextFlag";
+import TypewriterText from "@/components/TypewriterText";
 
 // UI Components
 import { Button } from "@/components/ui/button";
@@ -217,6 +226,133 @@ const ComponentLibrary = () => {
                   <div className="max-w-md">
                     <EvaluationPanel />
                   </div>
+                </CardContent>
+              </Card>
+
+              {/* MiniTask Component */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>MiniTask</CardTitle>
+                  <CardDescription>Interactive task guidance component with spotlight effect</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <MiniTask
+                    title="Example Task"
+                    description="This is an example of the MiniTask component"
+                    onStartTask={() => console.log("Task started")}
+                  />
+                </CardContent>
+              </Card>
+
+              {/* Answer Component */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Answer</CardTitle>
+                  <CardDescription>AI response display component</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Answer text="This is an example of an AI-generated answer displayed using the Answer component." />
+                </CardContent>
+              </Card>
+
+              {/* ChatBox Component */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>ChatBox</CardTitle>
+                  <CardDescription>Chat input interface component</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Chatbox
+                    text="Type your message here..."
+                    onSubmit={(message) => console.log("Message sent:", message)}
+                  />
+                </CardContent>
+              </Card>
+
+              {/* GuidanceTooltip Component */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>GuidanceTooltip</CardTitle>
+                  <CardDescription>Interactive guidance tooltip component</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="relative">
+                    <GuidanceTooltip
+                      text="This is an example guidance tooltip"
+                      isVisible={true}
+                      onClose={() => console.log("Tooltip closed")}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* LoadingDots Component */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>LoadingDots</CardTitle>
+                  <CardDescription>Animated loading indicator</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <LoadingDots />
+                </CardContent>
+              </Card>
+
+              {/* ModuleNavigation Component */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>ModuleNavigation</CardTitle>
+                  <CardDescription>Navigation between modules</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ModuleNavigation
+                    nextRoute="/next-example"
+                    nextLabel="Next Module"
+                  />
+                </CardContent>
+              </Card>
+
+              {/* PromptControls Component */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>PromptControls</CardTitle>
+                  <CardDescription>Controls for prompt input and submission</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <PromptControls
+                    showSpecificity={true}
+                    showStyle={true}
+                    showContext={true}
+                    showBias={true}
+                  />
+                </CardContent>
+              </Card>
+
+              {/* TextFlag Component */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>TextFlag</CardTitle>
+                  <CardDescription>Text highlighting and flagging component</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <TextFlag
+                    text="This text has been flagged"
+                    evaluationFactor="factual-accuracy"
+                    explanation="This is an example explanation of why this text was flagged"
+                  />
+                </CardContent>
+              </Card>
+
+              {/* TypewriterText Component */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>TypewriterText</CardTitle>
+                  <CardDescription>Animated typewriter text effect</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <TypewriterText
+                    text="This text appears with a typewriter effect"
+                    delay={50}
+                  />
                 </CardContent>
               </Card>
 
