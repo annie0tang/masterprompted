@@ -45,34 +45,34 @@ const AnimatedTransition = ({
 
     switch (phase) {
       case "sending":
-        timeout = setTimeout(() => setPhase("sent"), 800);
+        timeout = setTimeout(() => setPhase("sent"), 1200);
         break;
       case "sent":
-        timeout = setTimeout(() => setPhase("responding"), 500);
+        timeout = setTimeout(() => setPhase("responding"), 800);
         break;
       case "responding":
         setShowResponseElements(true);
-        timeout = setTimeout(() => setPhase("streaming"), 1000);
+        timeout = setTimeout(() => setPhase("streaming"), 1500);
         break;
       case "streaming":
         // Streaming will trigger streamingComplete phase via TypewriterText onComplete
         break;
       case "streamingComplete":
-        timeout = setTimeout(() => setPhase("showHeadline"), 1000);
+        timeout = setTimeout(() => setPhase("showHeadline"), 1500);
         break;
       case "showHeadline":
         setShowHeadline(true);
-        timeout = setTimeout(() => setPhase("showEvaluation"), 2000);
+        timeout = setTimeout(() => setPhase("showEvaluation"), 3000);
         break;
       case "showEvaluation":
         setShowEvaluation(true);
-        timeout = setTimeout(() => setPhase("complete"), 3000);
+        timeout = setTimeout(() => setPhase("complete"), 4000);
         break;
       case "complete":
         timeout = setTimeout(() => {
           navigate(targetRoute);
           onComplete?.();
-        }, 1000);
+        }, 1500);
         break;
     }
 
@@ -94,14 +94,14 @@ const AnimatedTransition = ({
         
         <div className="max-w-7xl mx-auto">
           {/* Layout morphing animation */}
-          <div className={`transition-all duration-1000 ease-out ${
+          <div className={`transition-all duration-[2000ms] ease-in-out ${
             showResponseElements 
               ? "grid grid-cols-1 lg:grid-cols-12 gap-8" 
               : "flex justify-center"
           }`}>
             
             {/* Main content area */}
-            <div className={`transition-all duration-1000 ease-out ${
+            <div className={`transition-all duration-[2000ms] ease-in-out ${
               showResponseElements ? "lg:col-span-8" : "max-w-2xl w-full"
             }`}>
               
@@ -130,7 +130,7 @@ const AnimatedTransition = ({
                 )}
                 
                 {(phase === "sent" || phase === "responding" || phase === "streaming" || phase === "streamingComplete" || phase === "showHeadline" || phase === "showEvaluation" || phase === "complete") && (
-                  <div className="animate-fade-in">
+                  <div className="animate-fade-in duration-1000">
                     <SentPrompt text={promptText} fileName={fileName} />
                   </div>
                 )}
@@ -138,19 +138,19 @@ const AnimatedTransition = ({
 
               {/* Responding phase */}
               {phase === "responding" && (
-                <div className="animate-fade-in p-8">
+                <div className="animate-fade-in duration-1000 p-8">
                   <LoadingDots text="Generating response" />
                 </div>
               )}
 
               {/* Streaming response */}
               {(phase === "streaming" || phase === "streamingComplete" || phase === "showHeadline" || phase === "showEvaluation" || phase === "complete") && (
-                <div className="animate-fade-in space-y-6">
+                <div className="animate-fade-in duration-1000 space-y-6">
                   <div className="p-6">
                     {phase === "streaming" ? (
                       <TypewriterText
                         text="Here is a possible headline for a long-form journalistic article about an AI ethics agreement reached across the EU:"
-                        delay={30}
+                        delay={80}
                         onComplete={() => setPhase("streamingComplete")}
                         className="text-gray-700 text-lg"
                       />
@@ -163,10 +163,10 @@ const AnimatedTransition = ({
                   
                   {/* Headline that appears after intro text */}
                   {showHeadline && (
-                    <div className="animate-fade-in p-6">
+                    <div className="animate-fade-in duration-1500 p-6">
                       <TypewriterText
                         text="European Union Unites On Historic AI Ethics Framework, Charting Path For Responsible Technology Development"
-                        delay={40}
+                        delay={100}
                         className="text-2xl text-gray-900 leading-loose font-normal md:text-4xl block"
                       />
                     </div>
@@ -177,7 +177,7 @@ const AnimatedTransition = ({
 
             {/* Right sidebar - Evaluation Panel appears last */}
             {showResponseElements && showEvaluation && (
-              <div className="lg:col-span-4 animate-fade-in animate-slide-in-right">
+              <div className="lg:col-span-4 animate-fade-in duration-[2000ms] animate-slide-in-right">
                 <EvaluationPanel />
               </div>
             )}
