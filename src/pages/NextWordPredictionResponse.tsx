@@ -232,7 +232,7 @@ export default function HeadlineResponse() {
                               <span key={index}>
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
-                                    <button className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg inline-flex items-center gap-1">
+                                    <button data-word-union className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg inline-flex items-center gap-1">
                                       {word}
                                       <ChevronDown className="h-3 w-3" />
                                       <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
