@@ -31,9 +31,9 @@ export default function GuidanceTooltip({ text, isVisible, onClose, className = 
             Close
           </Button>
         </div>
-        {/* Arrow pointing down */}
-        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
-          <div className="w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-emerald-600"></div>
+        {/* Arrow pointing left from right side */}
+        <div className="absolute -right-2 top-1/2 transform -translate-y-1/2">
+          <div className="w-0 h-0 border-t-8 border-b-8 border-l-8 border-t-transparent border-b-transparent border-l-emerald-600"></div>
         </div>
       </div>
     </div>
