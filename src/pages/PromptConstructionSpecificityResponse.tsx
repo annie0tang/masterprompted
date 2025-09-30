@@ -6,8 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import EvaluationPanel from "@/components/EvaluationPanel";
-import SentPrompt from "@/components/SentPrompt";
-import ModuleNavigation from "@/components/ModuleNavigation";
+import Chatbox from "@/components/ChatBox";
 export default function SpecificityResponse() {
   const navigate = useNavigate();
   const [showTooltip, setShowTooltip] = useState(true);
@@ -52,7 +51,7 @@ export default function SpecificityResponse() {
                             </div>
                             {/* Arrow pointing left to "Specific" button */}
                             <div className="absolute top-1/2 -left-1 transform -translate-y-1/2">
-                              <div className="w-0 h-0 border-t-4 border-b-4 border-r-4 border-t-transparent border-b-transparent border-r-emerald-600"></div>
+                              
                             </div>
                           </div>
                         </div>}
@@ -81,7 +80,7 @@ export default function SpecificityResponse() {
           <div className="flex-1">
             {/* Original Prompt Display */}
             <div className="mb-6">
-              <SentPrompt text="Summarize the main points of the EU AI Act, including its risk categories and rules for high-risk AI systems" fileName="EU_AI_Act.pdf" />
+              <Chatbox canType={false} text="Summarize the main points of the EU AI Act, including its risk categories and rules for high-risk AI systems" fileName="EU_AI_Act.pdf" />
             </div>
 
             {/* AI Response */}
@@ -119,10 +118,5 @@ export default function SpecificityResponse() {
           </div>
         </div>
       </main>
-      
-      <ModuleNavigation 
-        previousRoute="/module/prompt-construction/specificity" 
-        nextRoute="/module/prompt-construction/context"
-      />
     </div>;
 }
