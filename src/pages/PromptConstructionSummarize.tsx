@@ -25,23 +25,26 @@ export default function PromptConstructionSummarize() {
       <main className="container mx-auto px-6 py-6">
         <Breadcrumb />
         <div className="mb-5"></div>
-        <div className="max-w-4xl mx-auto relative min-h-[600px] flex items-center justify-center">
+        <div className="max-w-4xl mx-auto relative min-h-[600px]">
           
           {/* Add Document Card */}
           <Card 
-            className={`cursor-pointer transition-all duration-300 border-2 ${
+            className={`cursor-pointer transition-all duration-300 bg-white border border-gray-200 rounded-2xl shadow-lg ${
               isDocumentAttached 
                 ? 'border-primary bg-primary/5' 
-                : 'border-gray-200 hover:border-gray-300 bg-white'
-            } rounded-xl shadow-sm hover:shadow-md`}
+                : 'hover:border-gray-300'
+            }`}
             style={{
+              position: 'absolute',
+              top: '100px',
+              left: '50%',
+              transform: 'translateX(-50%)',
               width: '100%',
-              maxWidth: '680px',
-              padding: '20px'
+              maxWidth: '768px'
             }}
             onClick={handleAddDocument}
           >
-            <CardContent className="flex items-center justify-center py-8">
+            <CardContent className="p-6">
               {!isDocumentAttached ? (
                 <div className="flex items-center gap-4 text-gray-700">
                   <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
