@@ -16,29 +16,40 @@ export function MiniTask({ title, description, onStartTask, className = "" }: Mi
   });
 
   useEffect(() => {
-    // Find the "unite" and "on" elements and get their positions
-    const uniteElement = document.querySelector('[data-word="unite"]') as HTMLElement;
-    const onElement = document.querySelector('[data-word="on"]') as HTMLElement;
-
-    if (uniteElement) {
-      setSpotlightRects(prev => ({ ...prev, unite: uniteElement.getBoundingClientRect() }));
-    }
-    if (onElement) {
-      setSpotlightRects(prev => ({ ...prev, on: onElement.getBoundingClientRect() }));
-    }
-
-    // Update positions on window resize
-    const handleResize = () => {
-      if (uniteElement) {
-        setSpotlightRects(prev => ({ ...prev, unite: uniteElement.getBoundingClientRect() }));
+    // Find the "Unites" and "On" elements and get their positions
+    const queryTargets = () => {
+      const uniteEl = document.querySelector('[data-word="unites"], [data-word="unite"]') as HTMLElement | null;
+      const onEl = document.querySelector('[data-word="on"]') as HTMLElement | null;
+      console.log('MiniTask spotlight targets:', { uniteEl, onEl });
+      if (uniteEl) {
+        const rect = uniteEl.getBoundingClientRect();
+        console.log('Unites rect:', rect);
+        setSpotlightRects(prev => ({ ...prev, unite: rect }));
+      } else {
+        setSpotlightRects(prev => ({ ...prev, unite: null }));
       }
-      if (onElement) {
-        setSpotlightRects(prev => ({ ...prev, on: onElement.getBoundingClientRect() }));
+      if (onEl) {
+        const rect = onEl.getBoundingClientRect();
+        console.log('On rect:', rect);
+        setSpotlightRects(prev => ({ ...prev, on: rect }));
+      } else {
+        setSpotlightRects(prev => ({ ...prev, on: null }));
       }
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    const handleRecalc = () => {
+      queryTargets();
+    };
+
+    window.addEventListener('resize', handleRecalc);
+    window.addEventListener('scroll', handleRecalc, true);
+    // Initial calc
+    queryTargets();
+
+    return () => {
+      window.removeEventListener('resize', handleRecalc);
+      window.removeEventListener('scroll', handleRecalc, true);
+    };
   }, []);
 
   return (
@@ -49,7 +60,7 @@ export function MiniTask({ title, description, onStartTask, className = "" }: Mi
       {/* Spotlight for "unite" word */}
       {spotlightRects.unite && (
         <div
-          className="fixed z-41"
+          className="fixed z-50 pointer-events-none"
           style={{
             left: spotlightRects.unite.left - 2,
             top: spotlightRects.unite.top - 2,
@@ -65,7 +76,7 @@ export function MiniTask({ title, description, onStartTask, className = "" }: Mi
       {/* Spotlight for "on" word */}
       {spotlightRects.on && (
         <div
-          className="fixed z-41"
+          className="fixed z-50 pointer-events-none"
           style={{
             left: spotlightRects.on.left - 2,
             top: spotlightRects.on.top - 2,
