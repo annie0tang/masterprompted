@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef, forwardRef } from "react" // Import forwardRef
+import { useState, useEffect, forwardRef } from "react"
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
 import { Button } from "@/components/ui/button"
 import { X } from "lucide-react"
 
 type Step = {
   id: string;
-  trigger: string; // Changed type from HTMLElement | null to a string selector
+  trigger: string;
   content: React.ReactNode;
 };
 
@@ -15,22 +15,23 @@ interface PopoverSeriesProps {
   onClose?: () => void
 }
 
-// 1. FIX: Wrap FakeTrigger with forwardRef
-// It must accept a ref to satisfy PopoverTrigger asChild, even if we don't use the ref internally.
-// We are explicitly setting the type to accept a ref to an HTMLDivElement.
+// The FakeTrigger component is a proxy element for positioning the Popover.
 const FakeTrigger = forwardRef<HTMLDivElement, { rect: DOMRect | null }>(({ rect }, ref) => {
-  if (!rect) return null; // Defensive check
+  if (!rect) return null;
 
   return (
     <div
-      className="absolute z-50 pointer-events-none"
+      // MODIFICATION 1: Changed position from `absolute` to `fixed`.
+      // This ensures the trigger's position is calculated relative to the viewport,
+      // just like getBoundingClientRect(), fixing the popover offset issue.
+      className="fixed z-50 pointer-events-none"
       style={{
         width: rect.width,
         height: rect.height,
         left: rect.left,
         top: rect.top,
       }}
-      ref={ref} // Pass the ref from PopoverTrigger to the div
+      ref={ref}
     />
   );
 });
@@ -43,15 +44,12 @@ export function PopoverSeries({ steps, initialStep = 0, onClose }: PopoverSeries
 
   const scrollToTop = () => {
     return new Promise<void>((resolve) => {
-      // If already at top, resolve immediately
       if (window.scrollY === 0) {
         resolve();
         return;
       }
-
       setIsScrolling(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
-
       const checkScroll = () => {
         if (window.scrollY === 0) {
           window.removeEventListener('scroll', checkScroll);
@@ -59,7 +57,6 @@ export function PopoverSeries({ steps, initialStep = 0, onClose }: PopoverSeries
           resolve();
         }
       };
-
       window.addEventListener('scroll', checkScroll);
     });
   };
@@ -80,7 +77,6 @@ export function PopoverSeries({ steps, initialStep = 0, onClose }: PopoverSeries
     }
   }
 
-  // Initialize with scroll to top
   useEffect(() => {
     if (initialStep === 0) {
       scrollToTop().then(() => {
@@ -89,17 +85,13 @@ export function PopoverSeries({ steps, initialStep = 0, onClose }: PopoverSeries
     }
   }, []);
 
-  // This effect now finds the element using the selector string
-  // Effect for handling element measurements
   useEffect(() => {
     if (currentStep !== null) {
       const selector = steps[currentStep]?.trigger;
       if (selector) {
-        // Find the element in the DOM
         const el = document.querySelector<HTMLElement>(selector);
         if (el) {
           setRect(el.getBoundingClientRect());
-          // Get the computed border-radius of the element
           const computedStyle = window.getComputedStyle(el);
           setBorderRadius(computedStyle.borderRadius || '0px');
         } else {
@@ -112,76 +104,59 @@ export function PopoverSeries({ steps, initialStep = 0, onClose }: PopoverSeries
       setRect(null);
       setBorderRadius('0px');
     }
-  }, [currentStep, steps]); // Dependencies are correct
+  }, [currentStep, steps]);
 
   const isOpen = currentStep !== null;
   const currentStepData = isOpen ? steps[currentStep] : null;
 
-  // Effect for handling body scroll lock
   useEffect(() => {
     if (isOpen) {
-      // Save the current body overflow style
       const originalStyle = window.getComputedStyle(document.body).overflow;
-      // Prevent scrolling
       document.body.style.overflow = 'hidden';
-      
-      // Cleanup function
       return () => {
         document.body.style.overflow = originalStyle;
       };
     }
   }, [isOpen]);
 
-  if (!currentStepData || !isOpen) {
-    return null;
-  }
-
-  // Return null if the rect hasn't been calculated yet for the current step
-  if (!rect) {
+  if (!currentStepData || !isOpen || !rect) {
     return null;
   }
 
   return (
     <>
-      {/* 1. Render the mask/hole */}
+      {/* Spotlight/Mask Effect */}
       {isOpen && rect && (
-        <>
-          {/* Semi-transparent overlay that blocks clicks */}
-          <div 
-            className="fixed inset-0 bg-black/0 z-40"
-            onClick={(e) => e.stopPropagation()} 
-          />
-          <div
-            className="fixed z-41"
-            style={{
-              left: rect.left - 2,
-              top: rect.top - 2,
-              width: rect.width + 4,
-              height: rect.height + 4,
-              background: 'transparent',
-              borderRadius: borderRadius,
-              boxShadow: `0 0 0 9999px rgba(0, 0, 0, 0.5)`,
-            }}
-          />
-        </>
+        <div
+          // MODIFICATION 2: Added `pointer-events-none`.
+          // This allows clicks and interactions to pass through the spotlight
+          // "hole" to the element underneath, making it interactable.
+          className="fixed z-41 pointer-events-none"
+          style={{
+            left: rect.left - 2,
+            top: rect.top - 2,
+            width: rect.width + 4,
+            height: rect.height + 4,
+            borderRadius: borderRadius,
+            // The box-shadow creates the overlay effect around the transparent hole.
+            boxShadow: `0 0 0 9999px rgba(0, 0, 0, 0.5)`,
+          }}
+        />
+        // MODIFICATION 3: Removed the separate full-screen overlay div.
+        // It was redundant and blocked all interactions. The box-shadow above
+        // is sufficient to create the visual overlay.
       )}
 
-      {/* 2. Render the actual Popover for the current step */}
+      {/* Popover Component */}
       <Popover
         key={currentStepData.id}
         open={isOpen}
-        onOpenChange={(open) => {
-          if (!open) {
-            close();
-          }
-        }}
+        onOpenChange={(open) => !open && close()}
       >
         <PopoverTrigger asChild>
-          {/* 3. Use the forwardRef-wrapped FakeTrigger */}
           <FakeTrigger rect={rect} />
         </PopoverTrigger>
 
-        {/* ... (rest of PopoverContent remains the same, using currentStepData) ... */}
         <PopoverContent
           onOpenAutoFocus={(e) => e.preventDefault()}
           className="space-y-4"
@@ -208,39 +183,27 @@ export function PopoverSeries({ steps, initialStep = 0, onClose }: PopoverSeries
                 <Button
                   onClick={() => goToStep(currentStep - 1)}
                   disabled={currentStep === 0}
-                  variant="outline"
+                  variant="secondary"
                 >
                   Previous
                 </Button>
-                {currentStep === steps.length - 1 ?
-                  (
-                    <Button
-                      onClick={() => close()}
-                      variant="default"
-                    >
-                      Done
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={() => goToStep(currentStep + 1)}
-                      disabled={currentStep === steps.length - 1}
-                      variant="default"
-                    >
-                      Next
-                    </Button>
-                  )}
+                {currentStep === steps.length - 1 ? (
+                  <Button onClick={close}>Done</Button>
+                ) : (
+                  <Button
+                    onClick={() => goToStep(currentStep + 1)}
+                    disabled={currentStep === steps.length - 1}
+                  >
+                    Next
+                  </Button>
+                )}
               </div>
             </div>
-          ) :
+          ) : (
             <div className="flex justify-end">
-              <Button
-                onClick={() => close()}
-                variant="default"
-              >
-                Got it
-              </Button>
+              <Button onClick={close}>Got it</Button>
             </div>
-          }
+          )}
         </PopoverContent>
       </Popover>
     </>
