@@ -57,14 +57,14 @@ const Chatbox = ({ canType = true, value, onChange, onSubmit, onUpload, fileName
 
   return (
     <div 
-      className="relative mb-4"
+      className="relative mb-4 mx-auto"
       style={{
         background: '#FFFFFF',
         border: '1px solid #E5E5E5',
         boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
         borderRadius: '20px',
         padding: '24px',
-        maxWidth: '100%'
+        maxWidth: '800px'
       }}
     >
       <Textarea
