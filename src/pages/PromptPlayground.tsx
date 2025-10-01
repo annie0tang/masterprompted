@@ -29,10 +29,10 @@ const PromptPlayground = () => {
   const [submittedResponses, setSubmittedResponses] = useState<string[]>([]);
 
   // State lifted from PromptControls
-  const [specificity, setSpecificity] = useState<string>("General");
-  const [style, setStyle] = useState<string>("Conversational");
-  const [context, setContext] = useState<string>("No Background");
-  const [bias, setBias] = useState<string>("No Bias");
+  const [specificity, setSpecificity] = useState<string>("");
+  const [style, setStyle] = useState<string>("");
+  const [context, setContext] = useState<string>("");
+  const [bias, setBias] = useState<string>("");
 
   // ChatBox text state
   const [currentPrompt, setCurrentPrompt] = useState<string>("");
