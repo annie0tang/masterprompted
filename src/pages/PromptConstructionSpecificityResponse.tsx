@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import EvaluationPanel from "@/components/EvaluationPanel";
 import SentPrompt from "@/components/SentPrompt";
 import PromptControls from "@/components/PromptControls";
+import TextFlag from "@/components/TextFlag";
 export default function SpecificityResponse() {
   const navigate = useNavigate();
   return <div className="min-h-screen bg-background">
@@ -36,7 +37,15 @@ export default function SpecificityResponse() {
               
               <div className="mb-6">
                 <p className="text-gray-800 leading-relaxed mb-4 text-base">
-                  Certainly! The AI Act is a significant piece of legislation aimed at regulating artificial intelligence within the European Union.
+                  <TextFlag 
+                    text="Certainly!" 
+                    evaluationFactor="voice" 
+                    explanation="The tone here is overly casual and enthusiastic for a formal legislative summary. A more neutral voice would be appropriate for professional contexts."
+                  /> The AI Act is a <TextFlag 
+                    text="significant" 
+                    evaluationFactor="bias" 
+                    explanation="Using subjective language like 'significant' introduces bias by making a value judgment. A more objective approach would simply present the facts without such qualifiers."
+                  /> piece of legislation aimed at regulating artificial intelligence within the European Union.
                 </p>
               </div>
               
