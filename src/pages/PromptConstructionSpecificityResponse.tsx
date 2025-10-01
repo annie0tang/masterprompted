@@ -40,8 +40,8 @@ export default function SpecificityResponse() {
                   <TextFlag 
                     text="Certainly!" 
                     evaluationFactor="voice" 
-                    explanation="The tone here is overly casual and enthusiastic for a formal legislative summary. A more neutral voice would be appropriate for professional contexts."
-                  /> The AI Act is a <TextFlag 
+                    explanation="A prompt written in human-like language encourages a human-like response. This can lead to a more plausible sounding output than in reality."
+                  /> The AI Act is a <TextFlag
                     text="significant" 
                     evaluationFactor="bias" 
                     explanation="Using subjective language like 'significant' introduces bias by making a value judgment. A more objective approach would simply present the facts without such qualifiers."
