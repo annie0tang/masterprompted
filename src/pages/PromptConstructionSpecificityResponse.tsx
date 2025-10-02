@@ -58,7 +58,13 @@ export default function SpecificityResponse() {
                   <ul className="space-y-2 text-gray-700 ml-4">
                     <li className="flex items-start">
                       <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                      <p className="text-base leading-relaxed"><strong>Unacceptable Risk:</strong> Prohibited, e.g., social scoring and manipulative AI.</p>
+                      <p className="text-base leading-relaxed">
+                        <strong>Unacceptable Risk:</strong> <TextFlag 
+                          text="Prohibited, e.g., social scoring and manipulative AI." 
+                          evaluationFactor="plagiarism" 
+                          explanation="This sentence has been taken directly from the official summary of the AI Act and is listed without citation in this output."
+                        />
+                      </p>
                     </li>
                     <li className="flex items-start">
                       <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
