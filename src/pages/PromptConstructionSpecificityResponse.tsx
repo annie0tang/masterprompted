@@ -31,8 +31,8 @@ export default function SpecificityResponse() {
 
           {/* Main Content */}
           <div className="flex-1">
-            {/* Article Content */}
-            <div className="bg-white rounded-lg p-8">
+            {/* Article Content with scroll */}
+            <div className="bg-white rounded-lg p-8 max-h-[600px] overflow-y-auto">
               
               
               <div className="mb-6">
