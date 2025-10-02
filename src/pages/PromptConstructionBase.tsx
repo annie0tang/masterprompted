@@ -21,23 +21,17 @@ export default function PromptConstruction() {
       <main className="container mx-auto px-6 py-6">
         <Breadcrumb />
         <div className="mb-5"></div>
-        <div className="max-w-4xl mx-auto flex items-center justify-center min-h-[600px] relative">
+        <div className="max-w-4xl mx-auto flex items-center justify-center min-h-[600px]">
           <Card
-            className="transition-all duration-200"
+            className="transition-all duration-200 w-auto max-w-full"
             style={{
               boxSizing: 'border-box',
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'flex-start',
-              padding: '40px 50px 80px',
+              padding: '40px 50px 40px',
               gap: '40px',
               isolation: 'isolate',
-              position: 'absolute',
-              width: '845px',
-              height: 'auto',
-              minHeight: '450px',
-              left: 'calc(50% - 845px/2 + 0.5px)',
-              top: '100px',
               background: '#FFFFFF',
               border: '1px solid #C5C5C5',
               boxShadow: '0px 6px 15px rgba(62, 62, 62, 0.15)',
