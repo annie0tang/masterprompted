@@ -30,9 +30,9 @@ export default function SpecificityResponse() {
           </div>
 
           {/* Main Content */}
-          <div className="flex-1">
+          <div className="flex-1 flex flex-col">
             {/* Article Content with scroll */}
-            <div className="bg-white rounded-lg p-8 max-h-[600px] overflow-y-auto">
+            <div className="bg-white rounded-lg rounded-b-none p-8 max-h-[600px] overflow-y-auto flex-1">
               
               
               <div className="mb-6">
@@ -108,18 +108,17 @@ export default function SpecificityResponse() {
                   <p className="text-sm text-gray-600"><a href="https://www.adalovelaceinstitute.org/wp-content/Input Datas/2022/04/Expert-explainer-The-EU-AI-Act-11-April-2022.pdf" className="hover:underline" target="_blank" rel="noopener noreferrer">https://www.adalovelaceinstitute.org/wp-content/Input Datas/2022/04/Expert-explainer-The-EU-AI-Act-11-April-2022.pdf</a></p>
                 </div>
               </div>
-              
-              {/* Navigation */}
-              <div className="mt-12 flex justify-start items-center">
-                <Button 
-                  variant="secondary" 
-                  className="px-8 py-2 rounded-full"
-                  onClick={() => navigate("/module/prompt-construction/specificity/takeaways")}
-                >
-                  Takeaways →
-                </Button>
-              </div>
-              
+            </div>
+            
+            {/* Navigation Button - Fixed at bottom */}
+            <div className="bg-white rounded-lg rounded-t-none border-t border-gray-200 p-8 pt-6">
+              <Button 
+                variant="secondary" 
+                className="px-8 py-2 rounded-full"
+                onClick={() => navigate("/module/prompt-construction/specificity/takeaways")}
+              >
+                Takeaways →
+              </Button>
             </div>
           </div>
 
