@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import NavigationBar from "./NavigationBar";
 
 interface ModuleNavigationProps {
   previousRoute?: string;
@@ -18,37 +19,35 @@ const ModuleNavigation = ({
   const navigate = useNavigate();
 
   return (
-    <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-10">
-      <div className="flex items-center gap-1 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-full px-3 py-1.5 shadow-lg">
-        {previousRoute ? (
-          <Button
-            variant="ghost"
-            onClick={() => navigate(previousRoute)}
-            className="hover:bg-gray-100 rounded-full p-2"
-            size="icon"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-        ) : (
-          <div className="w-8 h-8"></div>
-        )}
-        
-        <div className="w-px h-6 bg-gray-300"></div>
-        
-        {nextRoute ? (
-          <Button
-            variant="ghost"
-            onClick={() => navigate(nextRoute)}
-            className="hover:bg-gray-100 rounded-full p-2"
-            size="icon"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        ) : (
-          <div className="w-8 h-8"></div>
-        )}
-      </div>
-    </div>
+    <NavigationBar>
+      {previousRoute ? (
+        <Button
+          variant="ghost"
+          onClick={() => navigate(previousRoute)}
+          className="hover:bg-gray-100 rounded-full p-2"
+          size="icon"
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </Button>
+      ) : (
+        <div className="w-8 h-8"></div>
+      )}
+      
+      <div className="w-px h-6 bg-gray-300"></div>
+      
+      {nextRoute ? (
+        <Button
+          variant="ghost"
+          onClick={() => navigate(nextRoute)}
+          className="hover:bg-gray-100 rounded-full p-2"
+          size="icon"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      ) : (
+        <div className="w-8 h-8"></div>
+      )}
+    </NavigationBar>
   );
 };
 
