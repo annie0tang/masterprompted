@@ -67,11 +67,6 @@ export default function PromptConstructionSummarize() {
           </Card>
         </div>
       </main>
-      
-      <ModuleNavigation 
-        previousRoute="/module/prompt-construction" 
-        nextRoute="/module/prompt-construction/specificity"
-      />
     </div>
   );
 }
