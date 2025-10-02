@@ -13,7 +13,11 @@ function ChatBody({ submittedPrompts, submittedResponses }: { submittedPrompts: 
         <div key={index}>
           <ChatPrompt text={prompt} />
           {submittedResponses[index] && (
-            <ChatAnswer text={submittedResponses[index]} />
+            <ChatAnswer 
+              text={submittedResponses[index]} 
+              answerArray={submittedResponses}
+              currentIndex={index}
+            />
           )}
         </div>
       ))}
