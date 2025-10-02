@@ -59,7 +59,7 @@ export default function TextFlag({ text, evaluationFactor, explanation, classNam
       <HoverCardTrigger asChild>
         <span className={`inline-flex items-center gap-0.5 cursor-pointer ${className}`}>
           <Icon className="h-4 w-4 text-red-500 flex-shrink-0" />
-          <span className="border-b border-red-500 text-current" style={{ borderBottomWidth: '2px', marginLeft: '1px' }}>
+          <span className="border-b-2 border-red-500 text-current inline-block ml-0.5">
             {text}
           </span>
         </span>
