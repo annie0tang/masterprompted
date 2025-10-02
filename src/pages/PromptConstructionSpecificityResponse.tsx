@@ -5,12 +5,15 @@ import Breadcrumb from "@/components/Breadcrumb";
 import ModuleNavigation from "@/components/ModuleNavigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import EvaluationPanel from "@/components/EvaluationPanel";
 import ChatPrompt from "@/components/ChatPrompt";
 import PromptControls from "@/components/PromptControls";
 import TextFlag from "@/components/TextFlag";
 export default function SpecificityResponse() {
   const navigate = useNavigate();
+  const [promptText, setPromptText] = useState("Give me a summary of the main points in the AI Act.");
+  
   return <div className="min-h-screen bg-background">
       <Header />
       
@@ -23,11 +26,23 @@ export default function SpecificityResponse() {
             {/* Sent Prompt */}
             <ChatPrompt text="Give me a summary of the main points in the AI Act." fileName="EU_AI_Act.pdf" />
             
+            {/* Guided Prompt Input */}
+            <Card>
+              <CardContent className="pt-6">
+                <label className="text-sm font-medium text-foreground mb-2 block">
+                  Modify Your Prompt
+                </label>
+                <Textarea
+                  value={promptText}
+                  onChange={(e) => setPromptText(e.target.value)}
+                  className="min-h-[120px] resize-none"
+                  placeholder="Enter your prompt here..."
+                />
+              </CardContent>
+            </Card>
+            
             {/* Prompt Controls */}
             <PromptControls showSpecificity={true} showStyle={true} showContext={true} showBias={true} />
-            
-            {/* Modify Prompt Button */}
-            
           </div>
 
           {/* Main Content */}
