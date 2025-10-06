@@ -47,10 +47,10 @@ const PromptPlayground = () => {
 
   // Handler functions lifted from PromptControls
   const handleReset = () => {
-    setSpecificity("General");
-    setStyle("Conversational");
-    setContext("No Background");
-    setBias("No Bias");
+    setSpecificity("");
+    setStyle("");
+    setContext("");
+    setBias("");
   };
 
   const handlePromptOptimize = async (
@@ -89,6 +89,8 @@ const PromptPlayground = () => {
     // update both currentPrompt and the editing buffer so Chatbox shows optimized text
     setCurrentPrompt(optimized_prompt);
     setEditingText(optimized_prompt);
+
+    handleReset();
   };
 
   // On submit: update `currentPrompt` synchronously, then perform async submit
