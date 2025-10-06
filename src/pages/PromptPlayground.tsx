@@ -113,7 +113,7 @@ const PromptPlayground = () => {
 
     console.log("Text submitted from Chatbox:", submittedText);
 
-    let currentFileIds: string[] = []; // Placeholder for file IDs
+    const currentFileIds: string[] = []; // Placeholder for file IDs
     const response = await fetch(
       "https://llm1.hochschule-stralsund.de:8000/answer",
       {
@@ -127,7 +127,7 @@ const PromptPlayground = () => {
       }
     );
 
-    const data: any = await response.json();
+    const data: { answer: string } = await response.json();
 
     const answer: string = data.answer;
 
