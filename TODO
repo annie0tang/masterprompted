@@ -2,7 +2,10 @@ TODO:
 - disable clicks on dimmed-out screen
 - fix element ordering in popoverSeries (absolute to flex)
 - fix link to guided simulator in landing page
-- radio group icons are slightly off center. 
+- radio group icons are slightly off center
+- align theming with greater AI-Code design philosophy
+- remove scrolling where possible
+- look into scraping data from google sheets
 
 IN PROGRESS:
 - 
