@@ -70,7 +70,7 @@ const Chatbox = ({ canType = true, value, onChange, onSubmit, onUpload, fileName
       {/* Text area - takes up most of the space */}
       <Textarea
         placeholder="Type your message here..."
-        className="mb-6 border-none bg-transparent resize-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 min-h-[120px] text-base leading-6 text-gray-900 font-['Manrope']"
+        className="mb-6 border-none bg-transparent resize-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 min-h-[100px] text-base leading-6 text-gray-900 font-['Manrope']"
         disabled={!canType}
         value={value}
         onChange={handleInputChange}

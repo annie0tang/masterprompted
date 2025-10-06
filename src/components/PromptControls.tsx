@@ -119,6 +119,9 @@ interface PromptControlsProps {
     // Event handlers (optional)
     onReset?: () => void;
     onSubmit?: () => void;
+    // Undo support
+    undoEnabled?: boolean;
+    onUndo?: () => void;
 }
 export default function PromptControls({
     showSpecificity = true,
@@ -138,7 +141,9 @@ export default function PromptControls({
     onContextChange,
     onBiasChange,
     onReset,
-    onSubmit
+    onSubmit,
+    undoEnabled = false,
+    onUndo
 }: PromptControlsProps) {
     // Local state remains the same
     const [localSpecificity, setLocalSpecificity] = useState<string>(specificity ?? "");
@@ -172,6 +177,9 @@ export default function PromptControls({
         if (onSubmit) onSubmit();
         // otherwise nothing — this is a demo control
     };
+    const handleUndoClick = () => {
+        if (onUndo && undoEnabled) onUndo();
+    };
     // The main PromptControls Card keeps its fixed width
     return <Card className="bg-white border border-gray-200 rounded-lg max-w-sm">
         <CardContent className="p-6">
@@ -188,15 +196,22 @@ export default function PromptControls({
                     <Parameter parameterTitle="Bias" leftParameter="No Bias" rightParameter="With Bias" showParameter={showBias} enabled={enableBias} currentValue={bias ?? localBias} onParameterChange={handleBiasChange} />
                 </div>
 
-                <div className="flex gap-2">
-
+                <div className="flex gap-2 items-stretch">
+                    <Button 
+                    onClick={handleUndoClick} 
+                    variant="secondary" 
+                    size="sm" 
+                    className="flex-1 min-h-[48px] leading-tight whitespace-normal text-center"
+                    disabled={!undoEnabled}> 
+                        Undo
+                    </Button>
                     <Button 
                     onClick={handleSubmitClick} 
                     variant="default" 
                     size="sm" 
-                    className="flex-1"
+                    className="flex-1 min-h-[48px] leading-tight whitespace-normal text-center"
                     disabled={!(specificity || style || context || bias)}> 
-                        Apply Changes
+                        Optimize Prompt
                     </Button>
                 </div>
             </div>

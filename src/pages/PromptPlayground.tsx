@@ -42,6 +42,8 @@ const PromptPlayground = () => {
   const [currentPrompt, setCurrentPrompt] = useState<string>("");
   // editingText is the live text being edited in the Chatbox (controlled)
   const [editingText, setEditingText] = useState<string>("");
+  // Stores the previous prompt to enable single-level undo
+  const [previousPrompt, setPreviousPrompt] = useState<string>("");
 
   const [sentBasePrompt, setSentBasePrompt] = useState<boolean>(false);
 
@@ -61,6 +63,9 @@ const PromptPlayground = () => {
     bias: string
   ) => {
     if (!prompt.trim()) return; // Don't optimize empty prompts
+
+    // Capture the previous prompt before applying changes
+    setPreviousPrompt(prompt);
 
     const optimize_prompt = await fetch(
       "https://llm1.hochschule-stralsund.de:8000/optimize",
@@ -91,6 +96,15 @@ const PromptPlayground = () => {
     setEditingText(optimized_prompt);
 
     handleReset();
+  };
+
+  // Undo handler: revert to the previous prompt (single-level undo)
+  const handleUndo = () => {
+    if (!previousPrompt) return;
+    setCurrentPrompt(previousPrompt);
+    setEditingText(previousPrompt);
+    // Clear previousPrompt after undo to disable the button until next change
+    setPreviousPrompt("");
   };
 
   // On submit: update `currentPrompt` synchronously, then perform async submit
@@ -162,6 +176,8 @@ const PromptPlayground = () => {
               onBiasChange={setBias}
               onReset={handleReset}
               onSubmit={() => handlePromptOptimize(currentPrompt, specificity, style, context, bias)}
+              undoEnabled={Boolean(previousPrompt && previousPrompt !== currentPrompt)}
+              onUndo={handleUndo}
               />
             </div>
           </div>
