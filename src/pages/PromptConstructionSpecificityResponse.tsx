@@ -12,18 +12,24 @@ export default function SpecificityResponse() {
   const navigate = useNavigate();
   const [bias, setBias] = useState("");
   const [appliedBias, setAppliedBias] = useState("");
+  const [context, setContext] = useState("");
+  const [appliedContext, setAppliedContext] = useState("");
   
   const handleApplyChanges = () => {
     setAppliedBias(bias);
+    setAppliedContext(context);
   };
   
   // Input prompt changes immediately
   const inputPrompt = bias === "With Bias" 
     ? "Summarize how the EU AI Act stifles AI research"
+    : context === "No Background"
+    ? "Summarize the main points in the AI Act."
     : "Summarize the main points in the AI Act without bias.";
   
   // Output content only changes after Apply Changes is clicked
   const showBiasedOutput = appliedBias === "With Bias";
+  const showNoBackgroundOutput = appliedContext === "No Background";
   
   return <div className="min-h-screen bg-background">
       <Header />
@@ -42,7 +48,9 @@ export default function SpecificityResponse() {
               showContext={true} 
               showBias={true}
               bias={bias}
+              context={context}
               onBiasChange={setBias}
+              onContextChange={setContext}
               onSubmit={handleApplyChanges}
             />
           </div>
@@ -55,88 +63,84 @@ export default function SpecificityResponse() {
               {showBiasedOutput ? (
                 // Biased content about EU AI Act stifling research
                 <div className="space-y-4">
-                  <p className="text-gray-800 leading-relaxed text-base">
-                    The EU AI Act is the world&apos;s first comprehensive legal framework for artificial intelligence, but critics argue that it could stifle AI research and innovation in several ways:
-                  </p>
-
-                  <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">High Compliance Costs</p>
-                    <ul className="space-y-2 text-gray-700 ml-4">
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Researchers and startups may face heavy administrative and technical burdens (e.g., documentation, conformity assessments, transparency obligations).</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">This favors large corporations with legal and compliance teams, while discouraging small labs and academic projects.</p>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">Regulation Before Maturity</p>
-                    <ul className="space-y-2 text-gray-700 ml-4">
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">The Act imposes strict rules even though many AI techniques are still experimental.</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Researchers fear it &quot;locks in&quot; today&apos;s categories of risk, making it harder to explore new methods without legal uncertainty.</p>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">Chilling Effect on Open Source</p>
-                    <ul className="space-y-2 text-gray-700 ml-4">
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Open-source AI models may fall under obligations (such as transparency on training data and design choices) that individual researchers cannot realistically meet.</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">This could push innovation away from Europe toward regions with lighter regulation.</p>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">Ambiguity and Legal Uncertainty</p>
-                    <ul className="space-y-2 text-gray-700 ml-4">
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Definitions of &quot;high-risk&quot; or &quot;general-purpose&quot; AI are broad and not always clear.</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Labs may avoid entire research areas to reduce the risk of future legal liabilities.</p>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">Slower Experimentation</p>
-                    <p className="text-gray-700 text-base leading-relaxed ml-4">Requirements like human oversight, robustness testing, and bias auditing—though important for safety—could slow down iterative experimentation in early-stage research.</p>
-                  </div>
-
-                  <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">Brain Drain &amp; Investment Flight</p>
-                    <ul className="space-y-2 text-gray-700 ml-4">
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Researchers and startups may relocate to the U.S., U.K., or Asia, where the regulatory environment is more flexible.</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Investors might shy away from European AI ventures because of the added legal risks.</p>
-                      </li>
-                    </ul>
-                  </div>
-
+...
                   <p className="text-gray-800 leading-relaxed text-base mt-4">
                     👉 In short: while the EU AI Act is intended to ensure safety, transparency, and trust in AI, critics argue that its rigid structure, compliance burden, and uncertainty could discourage open research, slow down innovation, and push talent and investment out of Europe.
                   </p>
+                </div>
+              ) : showNoBackgroundOutput ? (
+                // No Background content
+                <div className="space-y-4">
+                  <p className="text-gray-800 leading-relaxed text-base">
+                    The AI Act is the EU&apos;s regulation for artificial intelligence, adopted in 2024. Here are the main points:
+                  </p>
+
+                  <div>
+                    <p className="text-base font-semibold text-gray-900 mb-2">Risk-based approach:</p>
+                    <p className="text-gray-700 text-base leading-relaxed mb-3">AI systems are categorized by risk level:</p>
+                    <ul className="space-y-2 text-gray-700 ml-4">
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed">Unacceptable risk systems are banned (e.g., government social scoring, manipulative AI)</p>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed">High-risk systems face strict requirements (e.g., AI in employment, law enforcement, credit scoring, critical infrastructure)</p>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed">Limited risk systems need transparency (e.g., chatbots must disclose they&apos;re AI)</p>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed">Minimal risk systems have few requirements</p>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <p className="text-base font-semibold text-gray-900 mb-2">Requirements for high-risk AI:</p>
+                    <ul className="space-y-2 text-gray-700 ml-4">
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed">Risk management throughout the system&apos;s lifecycle</p>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed">High-quality training data to minimize bias</p>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed">Technical documentation and record-keeping</p>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed">Transparency about capabilities and limitations</p>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed">Human oversight mechanisms</p>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed">Robustness, accuracy, and cybersecurity</p>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed">Conformity assessments before deployment</p>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <p className="text-base font-semibold text-gray-900 mb-2">Scope:</p>
+                    <p className="text-gray-700 text-base leading-relaxed">Applies to AI providers and deployers in the EU market, regardless of location.</p>
+                  </div>
+
+                  <div>
+                    <p className="text-base font-semibold text-gray-900 mb-2">Goals:</p>
+                    <p className="text-gray-700 text-base leading-relaxed">Protect fundamental rights and safety while promoting innovation and creating harmonized rules across EU member states.</p>
+                  </div>
                 </div>
               ) : (
                 // Default content
