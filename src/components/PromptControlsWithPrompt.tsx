@@ -204,7 +204,7 @@ export default function PromptControlsWithPrompt({
                         variant="default" 
                         size="sm" 
                         className="flex-1"
-                        disabled={!(specificity || style || context || bias)}
+                        disabled={!((specificity ?? localSpecificity) || (style ?? localStyle) || (context ?? localContext) || (bias ?? localBias))}
                     > 
                         Apply Changes
                     </Button>
