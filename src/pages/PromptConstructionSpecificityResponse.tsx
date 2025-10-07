@@ -11,8 +11,13 @@ import TextFlag from "@/components/TextFlag";
 export default function SpecificityResponse() {
   const navigate = useNavigate();
   const [bias, setBias] = useState("");
+  const [appliedBias, setAppliedBias] = useState("");
   
-  const inputPrompt = bias === "With Bias" 
+  const handleApplyChanges = () => {
+    setAppliedBias(bias);
+  };
+  
+  const inputPrompt = appliedBias === "With Bias" 
     ? "Summarize how the EU AI Act stifles AI research"
     : "Give me a summary of the main points in the AI Act.";
   
@@ -34,6 +39,7 @@ export default function SpecificityResponse() {
               showBias={true}
               bias={bias}
               onBiasChange={setBias}
+              onSubmit={handleApplyChanges}
             />
           </div>
 
@@ -42,7 +48,7 @@ export default function SpecificityResponse() {
             {/* Article Content with scroll */}
             <div className="bg-white rounded-lg rounded-b-none p-8 max-h-[600px] overflow-y-auto flex-1">
               
-              {bias === "With Bias" ? (
+              {appliedBias === "With Bias" ? (
                 // Biased content about EU AI Act stifling research
                 <div className="space-y-4">
                   <p className="text-gray-800 leading-relaxed text-base">
