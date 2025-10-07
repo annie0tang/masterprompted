@@ -23,13 +23,13 @@ export default function SpecificityResponse() {
   // Input prompt changes immediately
   const inputPrompt = bias === "With Bias" 
     ? "Summarize how the EU AI Act stifles AI research"
-    : context === "No Background"
-    ? "Summarize the main points in the AI Act."
-    : "Summarize the main points in the AI Act without bias.";
+    : context === "With Background"
+    ? "Summarize the main points in the AI Act without bias."
+    : "Summarize the main points in the AI Act.";
   
   // Output content only changes after Apply Changes is clicked
   const showBiasedOutput = appliedBias === "With Bias";
-  const showNoBackgroundOutput = appliedContext === "No Background";
+  const showWithBackgroundOutput = appliedContext === "With Background";
   
   // Check if there are unapplied changes
   const hasUnappliedChanges = bias !== appliedBias || context !== appliedContext;
@@ -72,8 +72,77 @@ export default function SpecificityResponse() {
                     👉 In short: while the EU AI Act is intended to ensure safety, transparency, and trust in AI, critics argue that its rigid structure, compliance burden, and uncertainty could discourage open research, slow down innovation, and push talent and investment out of Europe.
                   </p>
                 </div>
-              ) : showNoBackgroundOutput ? (
-                // No Background content
+              ) : showWithBackgroundOutput ? (
+                // With Background content
+                <div className="space-y-4">
+                  <p className="text-gray-800 leading-relaxed text-base">
+                    The AI Act is EU legislation regulating artificial intelligence systems, adopted in 2024.
+                  </p>
+
+                  <div>
+                    <p className="text-base font-semibold text-gray-900 mb-2">Risk categorization:</p>
+                    <p className="text-gray-700 text-base leading-relaxed mb-3">The Act divides AI systems into four categories based on assessed risk levels:</p>
+                    <ul className="space-y-2 text-gray-700 ml-4">
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed"><strong>Unacceptable risk:</strong> Prohibited systems (social scoring by governments, exploitation of vulnerabilities)</p>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed"><strong>High risk:</strong> Systems requiring compliance with specific obligations (AI in employment, law enforcement, credit scoring, critical infrastructure, education)</p>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed"><strong>Limited risk:</strong> Systems with transparency requirements (chatbots, deepfakes)</p>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed"><strong>Minimal risk:</strong> Systems with no specific requirements under the Act</p>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <p className="text-base font-semibold text-gray-900 mb-2">Requirements for high-risk systems:</p>
+                    <ul className="space-y-2 text-gray-700 ml-4">
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed">Risk management processes</p>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed">Data governance standards for training data</p>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed">Technical documentation</p>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed">Transparency and information provision</p>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed">Human oversight capabilities</p>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed">Accuracy, robustness, and cybersecurity measures</p>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed">Conformity assessments before market placement</p>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <p className="text-base font-semibold text-gray-900 mb-2">Enforcement and scope:</p>
+                    <p className="text-gray-700 text-base leading-relaxed">The Act establishes penalties for non-compliance and applies to providers and deployers of AI systems in the EU market regardless of their geographic location.</p>
+                  </div>
+                </div>
+              ) : (
+                // Default content (No Background)
                 <div className="space-y-4">
                   <p className="text-gray-800 leading-relaxed text-base">
                     The AI Act is the EU&apos;s regulation for artificial intelligence, adopted in 2024. Here are the main points:
@@ -144,75 +213,6 @@ export default function SpecificityResponse() {
                   <div>
                     <p className="text-base font-semibold text-gray-900 mb-2">Goals:</p>
                     <p className="text-gray-700 text-base leading-relaxed">Protect fundamental rights and safety while promoting innovation and creating harmonized rules across EU member states.</p>
-                  </div>
-                </div>
-              ) : (
-                // Default content
-                <div className="space-y-4">
-                  <p className="text-gray-800 leading-relaxed text-base">
-                    The AI Act is EU legislation regulating artificial intelligence systems, adopted in 2024.
-                  </p>
-
-                  <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">Risk categorization:</p>
-                    <p className="text-gray-700 text-base leading-relaxed mb-3">The Act divides AI systems into four categories based on assessed risk levels:</p>
-                    <ul className="space-y-2 text-gray-700 ml-4">
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed"><strong>Unacceptable risk:</strong> Prohibited systems (social scoring by governments, exploitation of vulnerabilities)</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed"><strong>High risk:</strong> Systems requiring compliance with specific obligations (AI in employment, law enforcement, credit scoring, critical infrastructure, education)</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed"><strong>Limited risk:</strong> Systems with transparency requirements (chatbots, deepfakes)</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed"><strong>Minimal risk:</strong> Systems with no specific requirements under the Act</p>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">Requirements for high-risk systems:</p>
-                    <ul className="space-y-2 text-gray-700 ml-4">
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Risk management processes</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Data governance standards for training data</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Technical documentation</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Transparency and information provision</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Human oversight capabilities</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Accuracy, robustness, and cybersecurity measures</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Conformity assessments before market placement</p>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">Enforcement and scope:</p>
-                    <p className="text-gray-700 text-base leading-relaxed">The Act establishes penalties for non-compliance and applies to providers and deployers of AI systems in the EU market regardless of their geographic location.</p>
                   </div>
                 </div>
               )}
