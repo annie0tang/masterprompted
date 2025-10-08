@@ -1,4 +1,4 @@
-import { Paperclip } from "lucide-react";
+import { Paperclip, Plus, Minus } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
@@ -12,7 +12,7 @@ type ChatAnswerProps = {
 };
 
 const ChatAnswer = ({ text, answerArray = [], currentIndex = 0 }: ChatAnswerProps) => {
-  const [showDiff, setShowDiff] = useState(false);
+  const [showDiff, setShowDiff] = useState(true);
   
   // Show diff toggle only if there's a previous answer to compare against
   const canShowDiff = answerArray.length > 1 && currentIndex > 0;
@@ -23,24 +23,56 @@ const ChatAnswer = ({ text, answerArray = [], currentIndex = 0 }: ChatAnswerProp
   // Generate diff when needed
   const diffResult = showDiff && canShowDiff ? jsdiff.diffWords(previousAnswer, text) : [];
   
+  const [collapsedParts, setCollapsedParts] = useState<Record<number, boolean>>({});
+
+  const togglePart = (index: number, defaultCollapsed: boolean) => {
+    setCollapsedParts(prev => ({ ...prev, [index]: !(prev[index] ?? defaultCollapsed) }));
+  };
+
   const renderDiff = () => {
     return (
       <span>
         {diffResult.map((part, index) => {
           if (part.added) {
-            return (
+            const defaultCollapsed = false; // added text expanded by default
+            const isCollapsed = collapsedParts[index] ?? defaultCollapsed;
+            return isCollapsed ? (
+              <button
+                key={index}
+                onClick={() => togglePart(index, defaultCollapsed)}
+                className="inline-flex items-center justify-center align-middle h-[1.25em] w-[1.25em] mx-0.5 rounded-full border-2 border-green-600 text-green-700 bg-green-50"
+                aria-label="Expand added text"
+              >
+                <Plus className="h-3.5 w-3.5" />
+              </button>
+            ) : (
               <span
                 key={index}
-                className="bg-green-200 text-green-800 px-1 rounded"
+                onClick={() => togglePart(index, defaultCollapsed)}
+                className="bg-green-200 text-green-800 px-1 rounded cursor-pointer align-middle"
+                aria-label="Collapse added text"
               >
                 {part.value}
               </span>
             );
           } else if (part.removed) {
-            return (
+            const defaultCollapsed = true; // removed text collapsed by default
+            const isCollapsed = collapsedParts[index] ?? defaultCollapsed;
+            return isCollapsed ? (
+              <button
+                key={index}
+                onClick={() => togglePart(index, defaultCollapsed)}
+                className="inline-flex items-center justify-center align-middle h-[1.25em] w-[1.25em] mx-0.5 rounded-full border-2 border-red-600 text-red-700 bg-red-50"
+                aria-label="Expand removed text"
+              >
+                <Minus className="h-3.5 w-3.5" />
+              </button>
+            ) : (
               <span
                 key={index}
-                className="bg-red-200 text-red-800 px-1 rounded line-through"
+                onClick={() => togglePart(index, defaultCollapsed)}
+                className="bg-red-200 text-red-800 px-1 rounded line-through cursor-pointer align-middle"
+                aria-label="Collapse removed text"
               >
                 {part.value}
               </span>

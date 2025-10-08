@@ -188,7 +188,7 @@ const PromptPlayground = () => {
               value={editingText}
               onChange={setEditingText}
               onSubmit={handleChatSubmit}
-              canType={sentBasePrompt === false}
+              // canType={sentBasePrompt === false}
               submitButtonId="prompt-playground-submit"
             />
             <div className='flex-1 overflow-y-auto' ref={chatEndRef}>

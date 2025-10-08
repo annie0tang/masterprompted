@@ -1,16 +1,18 @@
 TODO:
-- PP: make the chat rich text-formatted
 - disable clicks on dimmed-out screen
 - radio group icons are slightly off center
 - align theming with greater AI-Code design philosophy
 - remove scrolling where possible
 - look into scraping data from google sheets
-- PP: maybe change the position of the chatbox
-- PP: diff changes--> displace deleted text, add replace function
-- PP: add chat versions to chat component
-- PP: make chatbox typeable always
-- PP: optimize and send simoultaneously
-- PP: show some way to communicate what prompt is being targeted for modification
+- fix minitask component
+- Prompt Playground
+  - chatbox: move to prompt controls
+  - make prompt controls part of a sidebar component maybe?
+  - diff: pull out deleted text, show on the side with a pointer
+  - add chat versions to prompt component
+  - journalistic eval is collapsibe
+  - optimize and send simoultaneously
+  - edit button for chats
 
 IN PROGRESS:
 - 
@@ -20,5 +22,8 @@ DONE:
 - Fix breadcrumb to the same position (below the nav bar) across pages
 - fix element ordering in popoverSeries (absolute to flex)
 - fix link to guided simulator in landing page
+- PP: make the chat rich text-formatted
+- PP: make chatbox typeable always
+
 
 
