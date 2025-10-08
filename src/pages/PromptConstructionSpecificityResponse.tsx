@@ -63,7 +63,7 @@ export default function SpecificityResponse() {
       <main className="container mx-auto px-6 py-6">
         <Breadcrumb />
         <div className="mb-5"></div>
-        <div className="flex gap-6 max-w-7xl mx-auto">
+        <div className="flex gap-6 max-w-[1400px] mx-auto">
           {/* Left Sidebar - Sent Prompt and Controls */}
           <div className="w-80 flex-shrink-0 space-y-6">
             {/* Prompt Controls with Sent Prompt */}
@@ -94,20 +94,20 @@ export default function SpecificityResponse() {
               {showGeneralOutput ? (
                 // General content
                 <div className="space-y-4">
-                  <p className="text-gray-800 leading-relaxed text-base">
+                  <p className="text-gray-800 leading-relaxed text-lg">
                     The EU AI Act is a comprehensive regulation for artificial intelligence adopted by the European Union in 2024. It's the first major legal framework in the world specifically created to govern AI systems.
                   </p>
-                  <p className="text-gray-800 leading-relaxed text-base">
+                  <p className="text-gray-800 leading-relaxed text-lg">
                     The Act organizes AI systems into risk categories. Some AI uses are completely prohibited, such as social scoring by governments or systems that manipulate people's behavior in harmful ways. High-risk AI systems - like those used in hiring, credit scoring, law enforcement, or critical infrastructure - face strict requirements around transparency, data quality, human oversight, and safety. Lower-risk systems mainly need to be transparent about being AI (like chatbots disclosing they're not human). Most AI applications are considered minimal risk and aren't heavily regulated.
                   </p>
-                  <p className="text-gray-800 leading-relaxed text-base">
+                  <p className="text-gray-800 leading-relaxed text-lg">
                     The legislation aims to balance protecting people's rights and safety with encouraging AI innovation. It applies to companies and organizations that offer AI systems in the EU, no matter where they're located.
                   </p>
                 </div>
               ) : showSpecificOutput ? (
                 // Specific content - detailed summary
                 <div className="space-y-4">
-                  <p className="text-gray-800 leading-relaxed text-base">
+                  <p className="text-gray-800 leading-relaxed text-lg">
                     Sure! Here's a summary of the EU AI Act main points, including its risk categories and rules for high-risk AI systems:
                   </p>
                   
@@ -186,23 +186,23 @@ export default function SpecificityResponse() {
               ) : showConversationalOutput ? (
                 // Conversational content
                 <div className="space-y-4">
-                  <p className="text-gray-800 leading-relaxed text-base">
+                  <p className="text-gray-800 leading-relaxed text-lg">
                     Sure! The AI Act is the EU's comprehensive law regulating artificial intelligence, adopted in 2024. It's the first major legislation of its kind globally.
                   </p>
-                  <p className="text-gray-800 leading-relaxed text-base">
+                  <p className="text-gray-800 leading-relaxed text-lg">
                     The Act works on a risk-based system. AI systems are grouped by how risky they are. Some AI uses are completely banned - things like government social scoring or AI that manipulates vulnerable people. High-risk AI (used in areas like hiring, law enforcement, credit decisions, or critical infrastructure) has to meet strict rules: good data governance, transparency about how it works, human oversight, and proper risk management.
                   </p>
-                  <p className="text-gray-800 leading-relaxed text-base">
+                  <p className="text-gray-800 leading-relaxed text-lg">
                     AI with lower risks mainly needs to be transparent - like chatbots telling you they're AI. Most AI systems are minimal risk and don't have many requirements.
                   </p>
-                  <p className="text-gray-800 leading-relaxed text-base">
+                  <p className="text-gray-800 leading-relaxed text-lg">
                     The goal is to keep people safe and protect their rights while still letting AI innovation happen. It applies to anyone who wants to use AI systems in the EU market, whether they're based in Europe or not.
                   </p>
                 </div>
               ) : showInstructionalOutput ? (
                 // Instructional content - TL;DR format
                 <div className="space-y-4">
-                  <p className="text-gray-800 leading-relaxed text-base">
+                  <p className="text-gray-800 leading-relaxed text-lg">
                     The AI Act is the EU's legislative proposal to regulate artificial intelligence.
                   </p>
                   <p className="text-base font-semibold text-gray-900">Here's the TL;DR:</p>
@@ -238,7 +238,7 @@ export default function SpecificityResponse() {
               ) : showBiasedOutput ? (
                 // Biased content about EU AI Act stifling research
                 <div className="space-y-4">
-                  <p className="text-gray-800 leading-relaxed text-base">
+                  <p className="text-gray-800 leading-relaxed text-lg">
                     The EU AI Act is the world's first comprehensive legal framework for artificial intelligence, but critics argue that it could stifle AI research and innovation in several ways:
                   </p>
 
@@ -324,7 +324,7 @@ export default function SpecificityResponse() {
               ) : showNoBiasOutput ? (
                 // No Bias content
                 <div className="space-y-4">
-                  <p className="text-gray-800 leading-relaxed text-base">
+                  <p className="text-gray-800 leading-relaxed text-lg">
                     The AI Act is EU legislation regulating artificial intelligence systems, adopted in 2024.
                   </p>
 
@@ -393,7 +393,7 @@ export default function SpecificityResponse() {
               ) : showWithBackgroundOutput ? (
                 // With Background content
                 <div className="space-y-4">
-                  <p className="text-gray-800 leading-relaxed text-base">
+                  <p className="text-gray-800 leading-relaxed text-lg">
                     <TextFlag 
                       text="Certainly!" 
                       evaluationFactor="voice"
@@ -534,7 +534,7 @@ export default function SpecificityResponse() {
               ) : showBaseOutput ? (
                 // Base output when all controls are "No Change"
                 <div className="space-y-4">
-                  <p className="text-gray-800 leading-relaxed text-base">
+                  <p className="text-gray-800 leading-relaxed text-lg">
                     <TextFlag 
                       text="Certainly!" 
                       evaluationFactor="voice"
@@ -600,7 +600,7 @@ export default function SpecificityResponse() {
               ) : (
                 // Default content (No Background) - shown when context is selected but not applied
                 <div className="space-y-4">
-                  <p className="text-gray-800 leading-relaxed text-base">
+                  <p className="text-gray-800 leading-relaxed text-lg">
                     The AI Act is the EU&apos;s regulation for artificial intelligence, adopted in 2024. Here are the main points:
                   </p>
 
