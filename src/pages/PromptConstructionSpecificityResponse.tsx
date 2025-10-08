@@ -16,11 +16,14 @@ export default function SpecificityResponse() {
   const [appliedContext, setAppliedContext] = useState("");
   const [style, setStyle] = useState("");
   const [appliedStyle, setAppliedStyle] = useState("");
+  const [specificity, setSpecificity] = useState("");
+  const [appliedSpecificity, setAppliedSpecificity] = useState("");
   
   const handleApplyChanges = () => {
     setAppliedBias(bias);
     setAppliedContext(context);
     setAppliedStyle(style);
+    setAppliedSpecificity(specificity);
   };
   
   // Input prompt changes immediately
@@ -34,6 +37,8 @@ export default function SpecificityResponse() {
     ? "TDLR; EU AI Act"
     : style === "Conversational"
     ? "Can you give me a summary of the main points in the AI Act?"
+    : specificity === "Specific"
+    ? "Summarize the main points of the EU AI Act, including its risk categories and rules for high-risk AI systems"
     : "Summarize the main points in the AI Act.";
   
   // Output content only changes after Apply Changes is clicked
@@ -42,10 +47,11 @@ export default function SpecificityResponse() {
   const showWithBackgroundOutput = appliedContext === "With Background";
   const showInstructionalOutput = appliedStyle === "Instructional";
   const showConversationalOutput = appliedStyle === "Conversational";
-  const showBaseOutput = !appliedBias && !appliedContext && !appliedStyle;
+  const showSpecificOutput = appliedSpecificity === "Specific";
+  const showBaseOutput = !appliedBias && !appliedContext && !appliedStyle && !appliedSpecificity;
   
   // Check if there are unapplied changes
-  const hasUnappliedChanges = bias !== appliedBias || context !== appliedContext || style !== appliedStyle;
+  const hasUnappliedChanges = bias !== appliedBias || context !== appliedContext || style !== appliedStyle || specificity !== appliedSpecificity;
   
   return <div className="min-h-screen bg-background">
       <Header />
@@ -66,9 +72,11 @@ export default function SpecificityResponse() {
               bias={bias}
               context={context}
               style={style}
+              specificity={specificity}
               onBiasChange={setBias}
               onContextChange={setContext}
               onStyleChange={setStyle}
+              onSpecificityChange={setSpecificity}
               onSubmit={handleApplyChanges}
               hasUnappliedChanges={hasUnappliedChanges}
             />
@@ -79,7 +87,86 @@ export default function SpecificityResponse() {
             {/* Article Content with scroll */}
             <div className="bg-white rounded-lg rounded-b-none p-8 max-h-[600px] overflow-y-auto flex-1">
               
-              {showConversationalOutput ? (
+              {showSpecificOutput ? (
+                // Specific content - detailed summary
+                <div className="space-y-4">
+                  <p className="text-gray-800 leading-relaxed text-base">
+                    Sure! Here's a summary of the EU AI Act main points, including its risk categories and rules for high-risk AI systems:
+                  </p>
+                  
+                  <div>
+                    <p className="text-base font-semibold text-gray-900 mb-2">Overview of the EU AI Act</p>
+                    <p className="text-gray-700 text-base leading-relaxed">
+                      The EU AI Act is a regulatory framework proposed by the European Union to ensure the safe and trustworthy development, deployment, and use of artificial intelligence within the EU.
+                      It aims to protect fundamental rights, promote innovation, and create a harmonized set of rules across member states.
+                      The Act classifies AI systems based on their risk level and imposes requirements accordingly.
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-base font-semibold text-gray-900 mb-2">Risk Categories of AI Systems</p>
+                    
+                    <div className="ml-4 space-y-3">
+                      <div>
+                        <p className="text-base font-semibold text-gray-900">Unacceptable Risk</p>
+                        <ul className="space-y-1 text-gray-700 ml-4 mt-1">
+                          <li className="text-base leading-relaxed">AI systems that pose a clear threat to safety, fundamental rights, or people's well-being.</li>
+                          <li className="text-base leading-relaxed">Examples: Social scoring by governments, systems that manipulate behavior causing harm, or exploit vulnerabilities of children or disabled people.</li>
+                          <li className="text-base leading-relaxed">These are banned outright.</li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <p className="text-base font-semibold text-gray-900">High Risk</p>
+                        <ul className="space-y-1 text-gray-700 ml-4 mt-1">
+                          <li className="text-base leading-relaxed">AI systems that have significant potential to impact people's lives or rights.</li>
+                          <li className="text-base leading-relaxed">Examples include AI used in:</li>
+                          <ul className="ml-4 space-y-1">
+                            <li className="text-base leading-relaxed">• Critical infrastructure (e.g., transport safety)</li>
+                            <li className="text-base leading-relaxed">• Education or vocational training (affecting access/opportunities)</li>
+                            <li className="text-base leading-relaxed">• Employment (recruitment, performance evaluation)</li>
+                            <li className="text-base leading-relaxed">• Law enforcement and border control</li>
+                            <li className="text-base leading-relaxed">• Access to essential services (e.g., credit scoring)</li>
+                            <li className="text-base leading-relaxed">• Biometric identification and management of critical public functions</li>
+                          </ul>
+                          <li className="text-base leading-relaxed">These systems are subject to strict obligations before they can be placed on the market or put into service.</li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <p className="text-base font-semibold text-gray-900">Limited Risk</p>
+                        <ul className="space-y-1 text-gray-700 ml-4 mt-1">
+                          <li className="text-base leading-relaxed">AI systems with specific transparency obligations.</li>
+                          <li className="text-base leading-relaxed">Users must be informed they are interacting with an AI system (e.g., chatbots).</li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <p className="text-base font-semibold text-gray-900">Minimal or No Risk</p>
+                        <ul className="space-y-1 text-gray-700 ml-4 mt-1">
+                          <li className="text-base leading-relaxed">Most AI systems fall here.</li>
+                          <li className="text-base leading-relaxed">No specific legal requirements under the Act.</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <p className="text-base font-semibold text-gray-900 mb-2">Rules for High-Risk AI Systems</p>
+                    <p className="text-gray-700 text-base leading-relaxed mb-2">High-risk AI systems must comply with the following key requirements:</p>
+                    
+                    <ul className="space-y-2 text-gray-700 ml-4">
+                      <li className="text-base leading-relaxed"><strong>Risk Management System:</strong> Developers must continuously identify, assess, and mitigate risks throughout the AI system's lifecycle.</li>
+                      <li className="text-base leading-relaxed"><strong>Data Governance:</strong> Training, validation, and testing data must be relevant, representative, free of errors, and complete to minimize bias.</li>
+                      <li className="text-base leading-relaxed"><strong>Documentation and Record-Keeping:</strong> Maintain technical documentation and logs to ensure traceability and facilitate compliance checks.</li>
+                      <li className="text-base leading-relaxed"><strong>Transparency:</strong> Users must receive clear information about the system's capabilities, limitations, and intended use.</li>
+                      <li className="text-base leading-relaxed"><strong>Human Oversight:</strong> Systems must be designed to allow meaningful human control to prevent or minimize risks.</li>
+                      <li className="text-base leading-relaxed"><strong>Robustness, Accuracy, and Cybersecurity:</strong> Systems must perform consistently and reliably and be resilient against attempts to manipulate or attack them.</li>
+                      <li className="text-base leading-relaxed"><strong>Conformity Assessment:</strong> Before market deployment, high-risk AI systems must undergo conformity assessments to verify compliance with the Act's requirements.</li>
+                    </ul>
+                  </div>
+                </div>
+              ) : showConversationalOutput ? (
                 // Conversational content
                 <div className="space-y-4">
                   <p className="text-gray-800 leading-relaxed text-base">
