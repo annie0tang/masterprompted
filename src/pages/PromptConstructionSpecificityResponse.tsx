@@ -527,7 +527,15 @@ export default function SpecificityResponse() {
                 // Base output when all controls are "No Change"
                 <div className="space-y-4">
                   <p className="text-gray-800 leading-relaxed text-base">
-                    Certainly! The AI Act is a significant piece of legislation aimed at regulating artificial intelligence within the European Union. Here&apos;s a summary of its main points:
+                    <TextFlag 
+                      text="Certainly!" 
+                      evaluationFactor="voice"
+                      explanation="A prompt written in human-like language encourages a human-like response. This can lead to a more plausible sounding output than in reality."
+                    /> The AI Act is a <TextFlag 
+                      text="significant" 
+                      evaluationFactor="bias"
+                      explanation="Although the AI Act may be regarded as &quot;significant,&quot; an LLM cannot determine such judgments. The linguistic choices of an LLM output can dangerously shape a user's interpretation."
+                    /> piece of legislation aimed at regulating artificial intelligence within the European Union. Here&apos;s a summary of its main points:
                   </p>
 
                   <div>
