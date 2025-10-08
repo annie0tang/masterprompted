@@ -414,11 +414,7 @@ export default function SpecificityResponse() {
                 // Default content (No Background) - shown when context is selected but not applied
                 <div className="space-y-4">
                   <p className="text-gray-800 leading-relaxed text-base">
-                    <strong>Input:</strong> Summarize the main points in the AI Act.
-                  </p>
-
-                  <p className="text-gray-800 leading-relaxed text-base">
-                    <strong>Output:</strong> The AI Act is the EU&apos;s regulation for artificial intelligence, adopted in 2024. Here are the main points:
+                    The AI Act is the EU&apos;s regulation for artificial intelligence, adopted in 2024. Here are the main points:
                   </p>
 
                   <p className="text-gray-700 text-base leading-relaxed">Risk-based approach: AI systems are categorized by risk level:</p>
