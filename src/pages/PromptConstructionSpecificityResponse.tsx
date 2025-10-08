@@ -32,6 +32,8 @@ export default function SpecificityResponse() {
     ? "I'm researching recent regulations on artificial intelligence. Please give me a summary of the main points in the AI Act, focusing on its key rules and how it aims to regulate AI systems."
     : style === "Instructional"
     ? "TDLR; EU AI Act"
+    : style === "Conversational"
+    ? "Can you give me a summary of the main points in the AI Act?"
     : "Summarize the main points in the AI Act.";
   
   // Output content only changes after Apply Changes is clicked
@@ -39,6 +41,7 @@ export default function SpecificityResponse() {
   const showNoBiasOutput = appliedBias === "No Bias";
   const showWithBackgroundOutput = appliedContext === "With Background";
   const showInstructionalOutput = appliedStyle === "Instructional";
+  const showConversationalOutput = appliedStyle === "Conversational";
   const showBaseOutput = !appliedBias && !appliedContext && !appliedStyle;
   
   // Check if there are unapplied changes
@@ -76,7 +79,23 @@ export default function SpecificityResponse() {
             {/* Article Content with scroll */}
             <div className="bg-white rounded-lg rounded-b-none p-8 max-h-[600px] overflow-y-auto flex-1">
               
-              {showInstructionalOutput ? (
+              {showConversationalOutput ? (
+                // Conversational content
+                <div className="space-y-4">
+                  <p className="text-gray-800 leading-relaxed text-base">
+                    Sure! The AI Act is the EU's comprehensive law regulating artificial intelligence, adopted in 2024. It's the first major legislation of its kind globally.
+                  </p>
+                  <p className="text-gray-800 leading-relaxed text-base">
+                    The Act works on a risk-based system. AI systems are grouped by how risky they are. Some AI uses are completely banned - things like government social scoring or AI that manipulates vulnerable people. High-risk AI (used in areas like hiring, law enforcement, credit decisions, or critical infrastructure) has to meet strict rules: good data governance, transparency about how it works, human oversight, and proper risk management.
+                  </p>
+                  <p className="text-gray-800 leading-relaxed text-base">
+                    AI with lower risks mainly needs to be transparent - like chatbots telling you they're AI. Most AI systems are minimal risk and don't have many requirements.
+                  </p>
+                  <p className="text-gray-800 leading-relaxed text-base">
+                    The goal is to keep people safe and protect their rights while still letting AI innovation happen. It applies to anyone who wants to use AI systems in the EU market, whether they're based in Europe or not.
+                  </p>
+                </div>
+              ) : showInstructionalOutput ? (
                 // Instructional content - TL;DR format
                 <div className="space-y-4">
                   <p className="text-gray-800 leading-relaxed text-base">
