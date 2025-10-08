@@ -7,6 +7,7 @@ interface TextFlagProps {
   evaluationFactor: "factual-accuracy" | "relevance" | "voice" | "bias" | "plagiarism";
   explanation: string;
   className?: string;
+  href?: string;
 }
 
 const iconMap = {
@@ -25,7 +26,7 @@ const labelMap = {
   "plagiarism": "Plagiarism",
 };
 
-export default function TextFlag({ text, evaluationFactor, explanation, className = "" }: TextFlagProps) {
+export default function TextFlag({ text, evaluationFactor, explanation, className = "", href }: TextFlagProps) {
   const Icon = iconMap[evaluationFactor];
   const label = labelMap[evaluationFactor];
 
@@ -59,9 +60,20 @@ export default function TextFlag({ text, evaluationFactor, explanation, classNam
       <HoverCardTrigger asChild>
         <span className={`inline-flex items-center gap-0.5 cursor-pointer ${className}`}>
           <Icon className="h-4 w-4 text-destructive flex-shrink-0" />
-          <span className="underline decoration-destructive decoration-2 underline-offset-2 text-current ml-0.5">
-            {text}
-          </span>
+          {href ? (
+            <a 
+              href={href} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="underline decoration-destructive decoration-2 underline-offset-2 text-current ml-0.5 hover:opacity-80"
+            >
+              {text}
+            </a>
+          ) : (
+            <span className="underline decoration-destructive decoration-2 underline-offset-2 text-current ml-0.5">
+              {text}
+            </span>
+          )}
         </span>
       </HoverCardTrigger>
       <HoverCardContent 

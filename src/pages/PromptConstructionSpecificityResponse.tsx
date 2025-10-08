@@ -410,7 +410,7 @@ export default function SpecificityResponse() {
                       /> Overview of the EU AI Act
                     </p>
                     <p className="text-gray-700 text-base leading-relaxed">
-                      The EU Artificial Intelligence Act (AI Act) is the first comprehensive legal framework for AI regulation globally. Adopted in 2024, it aims to ensure that AI systems in the EU are safe, transparent, and respect fundamental rights. The Act employs a risk-based approach, imposing varying levels of obligations depending on the potential impact of AI systems (<TextFlag text="Digital Strategy" evaluationFactor="relevance" explanation="Given the context of the prompt, the LLM has outputted more 'recent' information and given recent sources too." />).
+                      The EU Artificial Intelligence Act (AI Act) is the first comprehensive legal framework for AI regulation globally. Adopted in 2024, it aims to ensure that AI systems in the EU are safe, transparent, and respect fundamental rights. The Act employs a risk-based approach, imposing varying levels of obligations depending on the potential impact of AI systems (<TextFlag text="Digital Strategy" evaluationFactor="relevance" explanation="Given the context of the prompt, the LLM has outputted more 'recent' information and given recent sources too." href="https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai?utm_source=chatgpt.com" />).
                     </p>
                   </div>
 
