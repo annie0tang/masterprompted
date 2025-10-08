@@ -386,7 +386,11 @@ export default function SpecificityResponse() {
                 // With Background content
                 <div className="space-y-4">
                   <p className="text-gray-800 leading-relaxed text-base">
-                    Certainly! Here&apos;s an updated summary of the EU AI Act, focusing on its key rules and how it aims to regulate AI systems:
+                    <TextFlag 
+                      text="Certainly!" 
+                      evaluationFactor="voice"
+                      explanation="A prompt written in human-like language encourages a human-like response. This can lead to a more plausible sounding output than in reality."
+                    /> Here&apos;s an updated summary of the EU AI Act, focusing on its key rules and how it aims to regulate AI systems:
                   </p>
 
                   <div>
@@ -407,7 +411,11 @@ export default function SpecificityResponse() {
                       <li className="flex items-start">
                         <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
                         <div className="text-base leading-relaxed">
-                          <p className="mb-2"><strong>High Risk:</strong> AI systems that have significant potential to impact people&apos;s lives or rights. These include AI used in:</p>
+                          <p className="mb-2"><strong>High Risk:</strong> AI systems that have <TextFlag 
+                            text="significant" 
+                            evaluationFactor="bias"
+                            explanation="Although the AI Act may be regarded as &quot;significant,&quot; an LLM cannot determine such judgments. The linguistic choices of an LLM output can dangerously shape a user's interpretation."
+                          /> potential to impact people&apos;s lives or rights. These include AI used in:</p>
                           <ul className="ml-4 space-y-1">
                             <li>• Critical infrastructure (e.g., transport safety)</li>
                             <li>• Education or vocational training</li>
