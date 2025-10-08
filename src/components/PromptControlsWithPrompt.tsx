@@ -227,7 +227,7 @@ Goals: Protect fundamental rights and safety while promoting innovation and crea
                 
                 let displayText = "";
                 if (allNoChange) {
-                    displayText = "Summarize the main points in the AI Act.";
+                    displayText = "Give me a summary of the main points in the AI Act.";
                 } else {
                     displayText = promptText ?? "";
                 }
