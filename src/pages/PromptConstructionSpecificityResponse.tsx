@@ -208,7 +208,7 @@ export default function SpecificityResponse() {
                   <p className="text-base font-semibold text-gray-900">Here's the TL;DR:</p>
                   <SectionFlag 
                     evaluationFactor="relevance"
-                    explanation="The writing here is short and minimal in information. This could be due to the succinct form of writing and/or the lack of context/specificity."
+                    explanation="The writing here is short and minimal in information. This could be due to the succinct form of writing and/or the lack of context/specificity, but in anycase the LLM has had to decide itself what was relevant for the output."
                   >
                     <div className="space-y-2">
                       <p className="text-gray-700 text-base leading-relaxed">
