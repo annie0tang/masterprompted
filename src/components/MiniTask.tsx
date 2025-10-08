@@ -95,7 +95,7 @@ export function MiniTask({
 
 
       {/* MiniTask component - fixed to bottom with card styling */}
-      <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-full max-w-[25vw] ${className}`}>
+      <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-full max-w-[50vw] ${className}`}>
         <div className="bg-card border border-border rounded-lg p-6 shadow-lg">
           <div className="flex items-start gap-4">
             <div className="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
