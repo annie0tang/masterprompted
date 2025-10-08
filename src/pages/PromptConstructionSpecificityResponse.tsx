@@ -239,86 +239,105 @@ export default function SpecificityResponse() {
                 // Biased content about EU AI Act stifling research
                 <div className="space-y-4">
                   <p className="text-gray-800 leading-relaxed text-lg">
-                    The EU AI Act is the world's first comprehensive legal framework for artificial intelligence, but critics argue that it could stifle AI research and innovation in several ways:
+                    Here's a summary of key criticisms of how the EU AI Act may stifle AI research, along with the uncertainties. Happy to go deeper into any one of these if you like:
                   </p>
 
                   <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">High Compliance Costs</p>
-                    <ul className="space-y-2 text-gray-700 ml-4">
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Researchers and startups may face heavy administrative and technical burdens (e.g., documentation, conformity assessments, transparency obligations).</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">This favors large corporations with legal and compliance teams, while discouraging small labs and academic projects.</p>
-                      </li>
-                    </ul>
+                    <p className="text-base font-semibold text-gray-900 mb-3">Key ways EU AI Act could hinder AI research</p>
+                    
+                    <div className="space-y-4">
+                      <div>
+                        <p className="text-base font-semibold text-gray-900 mb-2">Regulatory burden, compliance costs, and slowdowns</p>
+                        <ul className="space-y-2 text-gray-700 ml-4">
+                          <li className="flex items-start">
+                            <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <p className="text-base leading-relaxed">The Act places heavy documentation, transparency, and conformity-assessment obligations on AI systems, especially for high-risk or general purpose AI. This increases costs and administrative overhead for research teams.</p>
+                          </li>
+                          <li className="flex items-start">
+                            <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <p className="text-base leading-relaxed">Time-to-market or time-to-research can suffer because new systems have to satisfy risk assessments, safety checks etc., delaying experimentation and deployment.</p>
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <p className="text-base font-semibold text-gray-900 mb-2">Ambiguous definitions & legal uncertainty</p>
+                        <ul className="space-y-2 text-gray-700 ml-4">
+                          <li className="flex items-start">
+                            <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <p className="text-base leading-relaxed">Key terms like "general purpose AI," "high risk," "vulnerability," "explainability," etc., are not precisely defined, so research teams may not know whether, or how, they are regulated.</p>
+                          </li>
+                          <li className="flex items-start">
+                            <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <p className="text-base leading-relaxed">Lack of clarity over what counts as acceptable use of training data, especially for generative models. This uncertainty can cause risk-averse behaviour.</p>
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <p className="text-base font-semibold text-gray-900 mb-2">Impact on open source and freedom of research</p>
+                        <ul className="space-y-2 text-gray-700 ml-4">
+                          <li className="flex items-start">
+                            <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <p className="text-base leading-relaxed">Research and open source projects may be disproportionately affected because they often have limited funding and legal resources to handle compliance.</p>
+                          </li>
+                          <li className="flex items-start">
+                            <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <p className="text-base leading-relaxed">Some worry that constraints on "general purpose AI" or requirements for transparency / explainability may push researchers to use more interpretable but less powerful models, avoiding black-box methods, which may reduce innovation.</p>
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <p className="text-base font-semibold text-gray-900 mb-2">Potential competitive disadvantage</p>
+                        <ul className="space-y-2 text-gray-700 ml-4">
+                          <li className="flex items-start">
+                            <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <p className="text-base leading-relaxed">Because of stricter regulation in the EU, research labs and companies may find it easier to do riskier, cutting-edge work elsewhere (e.g. in more lightly regulated environments), leading to brain drain of talent and investment.</p>
+                          </li>
+                          <li className="flex items-start">
+                            <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <p className="text-base leading-relaxed">Smaller players or start-ups may find it especially hard to compete with big organisations that can absorb regulatory costs and legal risk.</p>
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <p className="text-base font-semibold text-gray-900 mb-2">Risk of over-regulation & chilling effects</p>
+                        <ul className="space-y-2 text-gray-700 ml-4">
+                          <li className="flex items-start">
+                            <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <p className="text-base leading-relaxed">The possibility that many projects will avoid exploring some innovations because the regulatory risk/penalties are high, or because meeting all obligations is seen as too onerous.</p>
+                          </li>
+                          <li className="flex items-start">
+                            <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <p className="text-base leading-relaxed">Delays and lack of guidance (e.g. missing standards, unclear procedures) exacerbate this uncertainty.</p>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
                   </div>
 
                   <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">Regulation Before Maturity</p>
+                    <p className="text-base font-semibold text-gray-900 mb-3">Areas where the picture is less clear</p>
                     <ul className="space-y-2 text-gray-700 ml-4">
                       <li className="flex items-start">
                         <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">The Act imposes strict rules even though many AI techniques are still experimental.</p>
+                        <p className="text-base leading-relaxed">The Act excludes "research and development" from its scope, per the Commission's statements.</p>
                       </li>
                       <li className="flex items-start">
                         <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Researchers fear it "locks in" today's categories of risk, making it harder to explore new methods without legal uncertainty.</p>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">Chilling Effect on Open Source</p>
-                    <ul className="space-y-2 text-gray-700 ml-4">
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Open-source AI models may fall under obligations (such as transparency on training data and design choices) that individual researchers cannot realistically meet.</p>
+                        <p className="text-base leading-relaxed">The intended use of regulatory sandboxes: these are meant to allow experimentation under regulatory oversight, offering a way to reduce barriers—but their effectiveness depends heavily on implementation (capacity, clarity, consistency).</p>
                       </li>
                       <li className="flex items-start">
                         <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">This could push innovation away from Europe toward regions with lighter regulation.</p>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">Ambiguity and Legal Uncertainty</p>
-                    <ul className="space-y-2 text-gray-700 ml-4">
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Definitions of "high-risk" or "general-purpose" AI are broad and not always clear.</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Labs may avoid entire research areas to reduce the risk of future legal liabilities.</p>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">Slower Experimentation</p>
-                    <p className="text-gray-700 text-base leading-relaxed">Requirements like human oversight, robustness testing, and bias auditing—though important for safety—could slow down iterative experimentation in early-stage research.</p>
-                  </div>
-
-                  <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">Brain Drain & Investment Flight</p>
-                    <ul className="space-y-2 text-gray-700 ml-4">
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Researchers and startups may relocate to the U.S., U.K., or Asia, where the regulatory environment is more flexible.</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Investors might shy away from European AI ventures because of the added legal risks.</p>
+                        <p className="text-base leading-relaxed">Whether actual enforcement will be so strict that many research efforts get blocked, or whether flexibility/interpretative guidance will mitigate the risks.</p>
                       </li>
                     </ul>
                   </div>
 
                   <p className="text-gray-800 leading-relaxed text-base mt-4">
-                    👉 In short: while the EU AI Act is intended to ensure safety, transparency, and trust in AI, critics argue that its rigid structure, compliance burden, and uncertainty could discourage open research, slow down innovation, and push talent and investment out of Europe.
+                    If you want, I can map these concerns to specific articles of the AI Act (i.e. which rules are most problematic in practice), or look at what supporters argue are the benefits (so you can weigh both sides).
                   </p>
                 </div>
               ) : showNoBiasOutput ? (
