@@ -31,7 +31,7 @@ export default function SpecificityResponse() {
     : context === "With Background"
     ? "I'm researching recent regulations on artificial intelligence. Please give me a summary of the main points in the AI Act, focusing on its key rules and how it aims to regulate AI systems."
     : style === "Instructional"
-    ? "TDLR"
+    ? "TDLR; EU AI Act"
     : "Summarize the main points in the AI Act.";
   
   // Output content only changes after Apply Changes is clicked
