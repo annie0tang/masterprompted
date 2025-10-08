@@ -93,6 +93,8 @@ interface PromptControlsWithPromptProps {
     onReset?: () => void;
     onSubmit?: () => void;
     hasUnappliedChanges?: boolean;
+    onPromptChange?: (prompt: string) => void;
+    onOutputChange?: (output: string) => void;
 }
 
 export default function PromptControlsWithPrompt({
@@ -115,7 +117,9 @@ export default function PromptControlsWithPrompt({
     onBiasChange,
     onReset,
     onSubmit,
-    hasUnappliedChanges
+    hasUnappliedChanges,
+    onPromptChange,
+    onOutputChange
 }: PromptControlsWithPromptProps) {
     const [localSpecificity, setLocalSpecificity] = useState<string>(specificity ?? "");
     const [localStyle, setLocalStyle] = useState<string>(style ?? "");
@@ -147,6 +151,14 @@ export default function PromptControlsWithPrompt({
             if (onStyleChange) onStyleChange(""); else setLocalStyle("");
             if (onBiasChange) onBiasChange(""); else setLocalBias("");
         }
+        
+        // Update prompt and output based on context selection
+        if (val === "No Background") {
+            if (onPromptChange) {
+                onPromptChange("Summarize the main points in the AI Act.");
+            }
+        }
+        
         if (onContextChange) onContextChange(val); else setLocalContext(val);
     };
     const handleBiasChange = (val: string) => {
@@ -167,6 +179,31 @@ export default function PromptControlsWithPrompt({
         }
     };
     const handleSubmitClick = () => {
+        // Update output based on current context value
+        const currentContext = context ?? localContext;
+        if (currentContext === "No Background" && onOutputChange) {
+            onOutputChange(`The AI Act is the EU's regulation for artificial intelligence, adopted in 2024. Here are the main points:
+Risk-based approach: AI systems are categorized by risk level:
+
+Unacceptable risk systems are banned (e.g., government social scoring, manipulative AI)
+High-risk systems face strict requirements (e.g., AI in employment, law enforcement, credit scoring, critical infrastructure)
+Limited risk systems need transparency (e.g., chatbots must disclose they're AI)
+Minimal risk systems have few requirements
+
+Requirements for high-risk AI:
+
+Risk management throughout the system's lifecycle
+High-quality training data to minimize bias
+Technical documentation and record-keeping
+Transparency about capabilities and limitations
+Human oversight mechanisms
+Robustness, accuracy, and cybersecurity
+Conformity assessments before deployment
+
+Scope: Applies to AI providers and deployers in the EU market, regardless of location.
+Goals: Protect fundamental rights and safety while promoting innovation and creating harmonized rules across EU member states.`);
+        }
+        
         if (onSubmit) onSubmit();
     };
 
