@@ -208,7 +208,7 @@ export default function SpecificityResponse() {
                   <p className="text-base font-semibold text-gray-900">Here's the TL;DR:</p>
                   <SectionFlag 
                     evaluationFactor="relevance"
-                    explanation="When the voice of the prompt becomes technical, the output will respond in a similar manner. Writing in a technical manner allows for a more concise answer that is easier to analyse."
+                    explanation="put section flag from risk categories to policing. the tooltip text should be 'When the voice of the prompt becomes technical, the output will respond in a similar manner. Writing in a technical manner allows for a more concise answer that is easier to analyse.' this is related to relevance"
                   >
                     <div className="space-y-2">
                       <p className="text-gray-700 text-base leading-relaxed">
