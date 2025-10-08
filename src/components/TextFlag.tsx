@@ -73,7 +73,7 @@ export default function TextFlag({ text, evaluationFactor, explanation, classNam
             <Icon className="h-4 w-4 text-destructive" />
             <h4 className="font-semibold text-destructive text-sm">{label}</h4>
           </div>
-          <p className="text-sm text-muted-foreground leading-relaxed">
+          <p className="text-sm text-foreground font-normal leading-relaxed">
             {explanation}
           </p>
         </div>
