@@ -206,16 +206,18 @@ export default function SpecificityResponse() {
                     The AI Act is the EU's legislative proposal to regulate artificial intelligence.
                   </p>
                   <p className="text-base font-semibold text-gray-900">Here's the TL;DR:</p>
-                  <p className="text-gray-700 text-base leading-relaxed">
-                    <strong>Risk Categories:</strong> AI systems are sorted by risk levels, from high to minimal.
-                  </p>
                   <SectionFlag 
                     evaluationFactor="relevance"
                     explanation="When the voice of the prompt becomes technical, the output will respond in a similar manner. Writing in a technical manner allows for a more concise answer that is easier to analyse."
                   >
-                    <p className="text-gray-700 text-base leading-relaxed">
-                      • <strong>Regulations for High-Risk:</strong> Strict rules apply to AI in critical areas like healthcare and policing.
-                    </p>
+                    <div className="space-y-2">
+                      <p className="text-gray-700 text-base leading-relaxed">
+                        <strong>Risk Categories:</strong> AI systems are sorted by risk levels, from high to minimal.
+                      </p>
+                      <p className="text-gray-700 text-base leading-relaxed">
+                        • <strong>Regulations for High-Risk:</strong> Strict rules apply to AI in critical areas like healthcare and policing.
+                      </p>
+                    </div>
                   </SectionFlag>
                   <p className="text-gray-700 text-base leading-relaxed">
                     • <strong>Transparency:</strong> AI must be identifiable, and users informed when they interact with AI.
