@@ -25,9 +25,7 @@ export default function SpecificityResponse() {
     ? "Summarize how the EU AI Act stifles AI research"
     : bias === "No Bias"
     ? "Summarize the main points in the AI Act without bias."
-    : context === "With Background"
-    ? "I'm researching recent regulations on artificial intelligence. Please give me a summary of the main points in the AI Act, focusing on its key rules and how it aims to regulate AI systems."
-    : "Give me a summary of the main points in the AI Act.";
+    : "Summarize the main points in the AI Act.";
   
   // Output content only changes after Apply Changes is clicked
   const showBiasedOutput = appliedBias === "With Bias";
@@ -227,216 +225,132 @@ export default function SpecificityResponse() {
                 // With Background content
                 <div className="space-y-4">
                   <p className="text-gray-800 leading-relaxed text-base">
-                    Certainly! Here&apos;s an updated summary of the EU AI Act, focusing on its key rules and how it aims to regulate AI systems:
+                    The AI Act is EU legislation regulating artificial intelligence systems, adopted in 2024.
                   </p>
 
                   <div>
-                    <p className="text-base font-semibold text-gray-900 mb-3">🧠 Overview of the EU AI Act</p>
-                    <p className="text-gray-700 text-base leading-relaxed">
-                      The EU Artificial Intelligence Act (AI Act) is the first comprehensive legal framework for AI regulation globally. Adopted in 2024, it aims to ensure that AI systems in the EU are safe, transparent, and respect fundamental rights. The Act employs a risk-based approach, imposing varying levels of obligations depending on the potential impact of AI systems.
-                    </p>
-                  </div>
-
-                  <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">⚖️ Risk-Based Classification of AI Systems</p>
-                    <p className="text-gray-700 text-base leading-relaxed mb-3">The Act categorizes AI systems into four risk levels:</p>
-                    <ul className="space-y-3 text-gray-700 ml-4">
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed"><strong>Unacceptable Risk:</strong> AI systems that pose a clear threat to safety, fundamental rights, or people&apos;s well-being are prohibited. Examples include social scoring by governments and real-time remote biometric identification in public spaces.</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <div className="text-base leading-relaxed">
-                          <p className="mb-2"><strong>High Risk:</strong> AI systems that have significant potential to impact people&apos;s lives or rights. These include AI used in:</p>
-                          <ul className="ml-4 space-y-1">
-                            <li>• Critical infrastructure (e.g., transport safety)</li>
-                            <li>• Education or vocational training</li>
-                            <li>• Employment (e.g., recruitment, performance evaluation)</li>
-                            <li>• Law enforcement and border control</li>
-                            <li>• Access to essential services (e.g., credit scoring)</li>
-                            <li>• Biometric identification and management of critical public functions</li>
-                          </ul>
-                        </div>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed"><strong>Limited Risk:</strong> AI systems with specific transparency obligations. Users must be informed they are interacting with an AI system (e.g., chatbots).</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed"><strong>Minimal or No Risk:</strong> Most AI systems fall into this category and are not subject to specific legal requirements under the Act.</p>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">🛡️ Rules for High-Risk AI Systems</p>
-                    <p className="text-gray-700 text-base leading-relaxed mb-3">High-risk AI systems are subject to strict obligations before they can be placed on the market or put into service:</p>
+                    <p className="text-base font-semibold text-gray-900 mb-2">Risk categorization:</p>
+                    <p className="text-gray-700 text-base leading-relaxed mb-3">The Act divides AI systems into four categories based on assessed risk levels:</p>
                     <ul className="space-y-2 text-gray-700 ml-4">
                       <li className="flex items-start">
                         <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed"><strong>Risk Management System:</strong> Developers must continuously identify, assess, and mitigate risks throughout the AI system&apos;s lifecycle.</p>
+                        <p className="text-base leading-relaxed"><strong>Unacceptable risk:</strong> Prohibited systems (social scoring by governments, exploitation of vulnerabilities)</p>
                       </li>
                       <li className="flex items-start">
                         <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed"><strong>Data Governance:</strong> Training, validation, and testing data must be relevant, representative, free of errors, and complete to minimize bias.</p>
+                        <p className="text-base leading-relaxed"><strong>High risk:</strong> Systems requiring compliance with specific obligations (AI in employment, law enforcement, credit scoring, critical infrastructure, education)</p>
                       </li>
                       <li className="flex items-start">
                         <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed"><strong>Documentation and Record-Keeping:</strong> Maintain technical documentation and logs to ensure traceability and facilitate compliance checks.</p>
+                        <p className="text-base leading-relaxed"><strong>Limited risk:</strong> Systems with transparency requirements (chatbots, deepfakes)</p>
                       </li>
                       <li className="flex items-start">
                         <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed"><strong>Transparency:</strong> Users must receive clear information about the system&apos;s capabilities, limitations, and intended use.</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed"><strong>Human Oversight:</strong> Systems must be designed to allow meaningful human control to prevent or minimize risks.</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed"><strong>Robustness, Accuracy, and Cybersecurity:</strong> Systems must perform consistently and reliably and be resilient against attempts to manipulate or attack them.</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed"><strong>Conformity Assessment:</strong> Before market deployment, high-risk AI systems must undergo conformity assessments to verify compliance with the Act&apos;s requirements.</p>
+                        <p className="text-base leading-relaxed"><strong>Minimal risk:</strong> Systems with no specific requirements under the Act</p>
                       </li>
                     </ul>
                   </div>
 
                   <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">📅 Implementation Timeline</p>
+                    <p className="text-base font-semibold text-gray-900 mb-2">Requirements for high-risk systems:</p>
                     <ul className="space-y-2 text-gray-700 ml-4">
                       <li className="flex items-start">
                         <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed"><strong>1 August 2024:</strong> The AI Act entered into force.</p>
+                        <p className="text-base leading-relaxed">Risk management processes</p>
                       </li>
                       <li className="flex items-start">
                         <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed"><strong>2 August 2026:</strong> Rules for high-risk AI systems (Annex III) become applicable.</p>
+                        <p className="text-base leading-relaxed">Data governance standards for training data</p>
                       </li>
                       <li className="flex items-start">
                         <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed"><strong>2 August 2027:</strong> Rules for high-risk AI systems (Annex I) become applicable.</p>
+                        <p className="text-base leading-relaxed">Technical documentation</p>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed">Transparency and information provision</p>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed">Human oversight capabilities</p>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed">Accuracy, robustness, and cybersecurity measures</p>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <p className="text-base leading-relaxed">Conformity assessments before market placement</p>
                       </li>
                     </ul>
                   </div>
 
                   <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">⚖️ Enforcement and Penalties</p>
-                    <p className="text-gray-700 text-base leading-relaxed mb-3">The AI Act establishes robust enforcement mechanisms:</p>
-                    <ul className="space-y-2 text-gray-700 ml-4">
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed"><strong>Market Surveillance:</strong> National authorities can withdraw or prohibit non-compliant AI systems.</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed"><strong>Post-Market Monitoring:</strong> Providers must establish systems to continually assess AI performance and compliance post-deployment.</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <div className="text-base leading-relaxed">
-                          <p className="mb-2"><strong>Fines:</strong> Non-compliance can result in significant fines:</p>
-                          <ul className="ml-4 space-y-1">
-                            <li>• Up to €35 million or 7% of global annual turnover for the most serious infringements</li>
-                            <li>• Up to €15 million or 3% of global annual turnover for other violations</li>
-                            <li>• Up to €7.5 million or 1.5% of global annual turnover for providing incorrect information to authorities</li>
-                          </ul>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">🌐 Global Impact</p>
-                    <p className="text-gray-700 text-base leading-relaxed">
-                      The EU AI Act positions the EU as a global leader in AI regulation, promoting an ethical and human-centric approach. It aims to balance innovation with public safety and rights protection, setting a benchmark for international AI standards and potentially influencing global norms in AI governance.
-                    </p>
+                    <p className="text-base font-semibold text-gray-900 mb-2">Enforcement and scope:</p>
+                    <p className="text-gray-700 text-base leading-relaxed">The Act establishes penalties for non-compliance and applies to providers and deployers of AI systems in the EU market regardless of their geographic location.</p>
                   </div>
                 </div>
               ) : showBaseOutput ? (
                 // Base output when all controls are "No Change"
                 <div className="space-y-4">
                   <p className="text-gray-800 leading-relaxed text-base">
-                    The AI Act is the EU&apos;s regulation for artificial intelligence, adopted in 2024. Here are the main points:
+                    Certainly! The AI Act is a significant piece of legislation aimed at regulating artificial intelligence within the European Union. Here&apos;s a summary of its main points:
                   </p>
 
                   <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">Risk-based approach:</p>
-                    <p className="text-gray-700 text-base leading-relaxed mb-3">AI systems are categorized by risk level:</p>
-                    <ul className="space-y-2 text-gray-700 ml-4">
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Unacceptable risk systems are banned (e.g., government social scoring, manipulative AI)</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">High-risk systems face strict requirements (e.g., AI in employment, law enforcement, credit scoring, critical infrastructure)</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Limited risk systems need transparency (e.g., chatbots must disclose they&apos;re AI)</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Minimal risk systems have few requirements</p>
-                      </li>
+                    <p className="text-base font-semibold text-gray-900 mb-2">Risk-Based Classification:</p>
+                    <p className="text-gray-700 text-base leading-relaxed mb-2">AI systems are classified according to their risk level:</p>
+                    <ul className="space-y-2 text-gray-700 ml-6 list-disc">
+                      <li className="text-base leading-relaxed"><strong>Unacceptable Risk:</strong> Prohibited, e.g., social scoring and manipulative AI.</li>
+                      <li className="text-base leading-relaxed"><strong>High-Risk:</strong> Subject to strict regulation.</li>
+                      <li className="text-base leading-relaxed"><strong>Limited Risk:</strong> Requires transparency to users, e.g., chatbots and deepfakes.</li>
+                      <li className="text-base leading-relaxed"><strong>Minimal Risk:</strong> Mostly unregulated, e.g., AI-enabled video games and spam filters.</li>
                     </ul>
                   </div>
 
                   <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">Requirements for high-risk AI:</p>
-                    <ul className="space-y-2 text-gray-700 ml-4">
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Risk management throughout the system&apos;s lifecycle</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">High-quality training data to minimize bias</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Technical documentation and record-keeping</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Transparency about capabilities and limitations</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Human oversight mechanisms</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Robustness, accuracy, and cybersecurity</p>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <p className="text-base leading-relaxed">Conformity assessments before deployment</p>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">Scope:</p>
+                    <p className="text-base font-semibold text-gray-900 mb-2">Obligations for Providers:</p>
                     <p className="text-gray-700 text-base leading-relaxed">
-                      Applies to AI providers and deployers in the EU market, regardless of location.
+                      The majority of obligations fall on providers (developers) of high-risk AI systems, including those outside the EU if their systems are used within the EU.
                     </p>
                   </div>
 
                   <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">Goals:</p>
+                    <p className="text-base font-semibold text-gray-900 mb-2">User Responsibilities:</p>
                     <p className="text-gray-700 text-base leading-relaxed">
-                      Protect fundamental rights and safety while promoting innovation and creating harmonized rules across EU member states.
+                      Users (deployers) of high-risk AI systems have certain obligations, though less than providers.
                     </p>
                   </div>
+
+                  <div>
+                    <p className="text-base font-semibold text-gray-900 mb-2">General Purpose AI (GPAI):</p>
+                    <p className="text-gray-700 text-base leading-relaxed">
+                      Providers of GPAI models must provide technical documentation, instructions for use, comply with the Copyright Directive, and publish a summary of the training data used.
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-base font-semibold text-gray-900 mb-2">Prohibited AI Systems:</p>
+                    <p className="text-gray-700 text-base leading-relaxed">
+                      Certain types of AI systems are banned, including those that deploy subliminal techniques or exploit vulnerabilities related to age, disability, or socio-economic circumstances.
+                    </p>
+                  </div>
+
+                  <p className="text-gray-700 text-base leading-relaxed">
+                    The AI Act is part of a broader set of proposals to regulate digital services and aims to harmonize rules for AI development and usage while ensuring ethical safeguards and transparency. It&apos;s designed to become a global standard for AI regulation, similar to how GDPR has become for data protection.
+                  </p>
+
+                  <p className="text-gray-700 text-base leading-relaxed">
+                    For a more detailed exploration, you can refer to the full text of the AI Act through the provided resources.
+                  </p>
                 </div>
               ) : (
                 // Default content (No Background) - shown when context is selected but not applied
                 <div className="space-y-4">
+                  <p className="text-gray-800 leading-relaxed text-base">
+                    <strong>Input:</strong> Summarize the main points in the AI Act.
+                  </p>
+
                   <p className="text-gray-800 leading-relaxed text-base">
                     <strong>Output:</strong> The AI Act is the EU&apos;s regulation for artificial intelligence, adopted in 2024. Here are the main points:
                   </p>
