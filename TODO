@@ -4,7 +4,6 @@ TODO:
 - align theming with greater AI-Code design philosophy
 - remove scrolling where possible
 - look into scraping data from google sheets
-- fix minitask component
 - Prompt Playground
   - chatbox: move to prompt controls
   - make prompt controls part of a sidebar component maybe?
@@ -24,6 +23,7 @@ DONE:
 - fix link to guided simulator in landing page
 - PP: make the chat rich text-formatted
 - PP: make chatbox typeable always
+- fix minitask component
 
 
 

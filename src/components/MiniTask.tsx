@@ -70,7 +70,7 @@ export function MiniTask({
   }, []);
   return <>
       {/* Dimmed overlay */}
-      <div className="fixed inset-0 bg-black/50 z-40 pointer-events-none" />
+      <div className="fixed inset-0 bg-black/0 z-40 pointer-events-none" />
       
       {/* Combined spotlight covering both words */}
       {(spotlightRects.unite || spotlightRects.on) && (() => {
@@ -95,8 +95,8 @@ export function MiniTask({
 
 
       {/* MiniTask component - fixed to bottom with card styling */}
-      <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-full max-w-[50vw] ${className}`}>
-        <div className="bg-card border border-border rounded-lg p-6 shadow-lg">
+      <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-full max-w-[33vw] ${className}`}>
+        <div className="bg-card border border-border rounded-lg p-4 shadow-lg">
           <div className="flex items-start gap-4">
             <div className="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
               <AlignJustify className="w-5 h-5 text-primary" />
