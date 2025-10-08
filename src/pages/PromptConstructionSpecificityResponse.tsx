@@ -247,7 +247,13 @@ export default function SpecificityResponse() {
                   </p>
 
                   <div>
-                    <p className="text-base font-semibold text-gray-900 mb-3">Key ways EU AI Act could hinder AI research</p>
+                    <p className="text-base font-semibold text-gray-900 mb-3">
+                      <TextFlag 
+                        text="Key ways EU AI Act could hinder AI research"
+                        evaluationFactor="bias"
+                        explanation="Output goes on to one-sidedly represent the topic in question. It reinforces confirmation bias by presenting information that are strictly in line with the biased prompt, i.e. with user's prior beliefs. Such outputs could be factually inaccurate as well."
+                      />
+                    </p>
                     
                     <div className="space-y-4">
                       <div>
