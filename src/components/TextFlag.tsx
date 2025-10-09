@@ -35,7 +35,9 @@ export default function TextFlag({ text, evaluationFactor, explanation, classNam
     const criterionElement = document.querySelector(`[data-criterion-id="${evaluationFactor}"]`);
     if (criterionElement) {
       const triggerElement = criterionElement.querySelector('[data-radix-collection-item]') || 
-                            criterionElement.querySelector('.flex.items-center.justify-between');
+                            criterionElement.querySelector('.flex.items-center.justify-between') ||
+                            criterionElement.querySelector('button') ||
+                            criterionElement.querySelector('[role="button"]');
       if (triggerElement) {
         triggerElement.classList.add('ring-2', 'ring-destructive', 'bg-destructive/10');
         triggerElement.classList.remove('bg-muted', 'hover:bg-muted/80');
