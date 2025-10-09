@@ -43,11 +43,6 @@ export default function EvaluationPanel() {
     setOpenItem(prev => prev === id ? null : id);
   };
 
-  // Check if criterion should have red highlight (voice, bias, plagiarism)
-  const shouldHighlight = (id: string) => {
-    return id === 'voice' || id === 'bias' || id === 'plagiarism';
-  };
-
   return (
     <Card className="w-[20rem] bg-white border border-gray-200 rounded-2xl shadow-sm">  <CardHeader className="pb-4">
         <CardTitle className="text-lg font-semibold text-gray-900">
@@ -63,11 +58,7 @@ export default function EvaluationPanel() {
             data-criterion-id={criterion.id}
           >
             <CollapsibleTrigger className="w-full">
-              <div className={`flex items-center justify-between p-3 rounded-lg transition-colors cursor-pointer ${
-                shouldHighlight(criterion.id) 
-                  ? 'bg-destructive/10 hover:bg-destructive/15 ring-2 ring-destructive' 
-                  : 'bg-gray-50 hover:bg-gray-100'
-              }`}>
+              <div className="flex items-center justify-between p-3 rounded-lg transition-colors cursor-pointer bg-muted hover:bg-muted/80">
                 <div className="flex items-center gap-3 mr-20">
                   <criterion.icon className="h-4 w-4 text-gray-600" />
                   <span className="text-sm font-medium text-gray-700">{criterion.label}</span>
