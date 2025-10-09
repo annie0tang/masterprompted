@@ -65,7 +65,7 @@ export default function EvaluationPanel() {
             <CollapsibleTrigger className="w-full">
               <div className={`flex items-center justify-between p-3 rounded-lg transition-colors cursor-pointer ${
                 shouldHighlight(criterion.id) 
-                  ? 'bg-destructive/10 hover:bg-destructive/15' 
+                  ? 'bg-destructive/10 hover:bg-destructive/15 ring-2 ring-destructive' 
                   : 'bg-gray-50 hover:bg-gray-100'
               }`}>
                 <div className="flex items-center gap-3 mr-20">
