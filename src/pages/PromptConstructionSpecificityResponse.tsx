@@ -383,7 +383,11 @@ export default function SpecificityResponse() {
                 // No Bias content
                 <div className="space-y-4">
                   <p className="text-gray-800 leading-relaxed text-lg">
-                    The AI Act is EU legislation regulating artificial intelligence systems, adopted in 2024.
+                    The AI Act is EU legislation regulating artificial intelligence systems, <TextFlag 
+                      text="adopted in 2024."
+                      evaluationFactor="relevance"
+                      explanation="It is true that the EU AI Act was adopted in 2024. However, what does this mean? At this point in time, none of the requirements apply. The AI has decided what is relevant for you and what is not."
+                    />
                   </p>
 
                   <div>
@@ -665,7 +669,11 @@ export default function SpecificityResponse() {
                 // Default content (No Background) - shown when context is selected but not applied
                 <div className="space-y-4">
                   <p className="text-gray-800 leading-relaxed text-lg">
-                    The AI Act is the EU&apos;s regulation for artificial intelligence, adopted in 2024. Here are the main points:
+                    The AI Act is the EU&apos;s regulation for artificial intelligence, <TextFlag 
+                      text="adopted in 2024."
+                      evaluationFactor="relevance"
+                      explanation="It is true that the EU AI Act was adopted in 2024. However, what does this mean? At this point in time, none of the requirements apply. The AI has decided what is relevant for you and what is not."
+                    /> Here are the main points:
                   </p>
 
                   <p className="text-gray-700 text-base leading-relaxed">Risk-based approach: AI systems are categorized by risk level:</p>
