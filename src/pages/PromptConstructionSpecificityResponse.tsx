@@ -116,7 +116,11 @@ export default function SpecificityResponse() {
                 // Specific content - detailed summary
                 <div className="space-y-4">
                   <p className="text-gray-800 leading-relaxed text-lg">
-                    Sure! Here's a summary of the EU AI Act main points, including its risk categories and rules for high-risk AI systems:
+                    <TextFlag 
+                      text="Sure!"
+                      evaluationFactor="voice"
+                      explanation="A prompt written in human-like language encourages a human-like response. This can lead to a more plausible sounding output than in reality."
+                    /> Here's a summary of the EU AI Act main points, including its risk categories and rules for high-risk AI systems:
                   </p>
                   
                   <div>
