@@ -17,9 +17,9 @@ const NextWordPredictionIntro = () => {
       
       <main className="container mx-auto px-6 py-6">
         <Breadcrumb />
-        <div className="max-w-4xl mx-auto flex items-center justify-center min-h-[600px] relative">
+        <div className="max-w-5xl mx-auto py-8">
           <Card 
-            className="transition-all duration-200"
+            className="transition-all duration-200 w-full"
             style={{
               boxSizing: 'border-box',
               display: 'flex',
@@ -28,11 +28,6 @@ const NextWordPredictionIntro = () => {
               padding: '40px 50px 50px',
               gap: '30px',
               isolation: 'isolate',
-              position: 'absolute',
-              width: '845px',
-              minHeight: 'auto',
-              left: 'calc(50% - 845px/2 + 0.5px)',
-              top: '100px',
               background: '#FFFFFF',
               border: '1px solid #C5C5C5',
               boxShadow: '0px 6px 15px rgba(62, 62, 62, 0.15)',
