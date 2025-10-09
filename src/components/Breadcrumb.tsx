@@ -56,9 +56,14 @@ export default function Breadcrumb() {
       isLast: true
     });
   } else {
-    // Add path segments, but stop at prompt-construction level
+    // Add path segments, but stop at prompt-construction level and skip "prompt" segment
     for (let i = 0; i < pathSegments.length; i++) {
       currentPath += '/' + pathSegments[i];
+      
+      // Skip the "prompt" segment
+      if (pathSegments[i] === 'prompt') {
+        continue;
+      }
       
       // If we're in prompt-construction sub-routes, stop at prompt-construction
       if (currentPath === '/module/prompt-construction') {
