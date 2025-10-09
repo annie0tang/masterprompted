@@ -62,8 +62,8 @@ export default function TextFlag({ text, evaluationFactor, explanation, classNam
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <span className={`inline-block cursor-pointer ${className}`}>
-          <Icon className="h-4 w-4 text-destructive block mb-1" />
+        <span className={`inline cursor-pointer ${className}`}>
+          <Icon className="h-4 w-4 text-destructive inline align-baseline mr-1" />
           {href ? (
             <a 
               href={href} 
