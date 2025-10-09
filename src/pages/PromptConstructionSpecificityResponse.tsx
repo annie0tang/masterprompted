@@ -102,7 +102,11 @@ export default function SpecificityResponse() {
                     /> It's the first major legal framework in the world specifically created to govern AI systems.
                   </p>
                   <p className="text-gray-800 leading-relaxed text-lg">
-                    The Act organizes AI systems into risk categories. Some AI uses are completely prohibited, such as social scoring by governments or systems that manipulate people's behavior in harmful ways. High-risk AI systems - like those used in hiring, credit scoring, law enforcement, or critical infrastructure - face strict requirements around transparency, data quality, human oversight, and safety. Lower-risk systems mainly need to be transparent about being AI (like chatbots disclosing they're not human). Most AI applications are considered minimal risk and aren't heavily regulated.
+                    <TextFlag 
+                      text="The Act organizes AI systems into risk categories."
+                      evaluationFactor="relevance"
+                      explanation="The LLM response reflects the generality and simplicity of the prompt. The language is uncomplicated and with less detail."
+                    /> Some AI uses are completely prohibited, such as social scoring by governments or systems that manipulate people's behavior in harmful ways. High-risk AI systems - like those used in hiring, credit scoring, law enforcement, or critical infrastructure - face strict requirements around transparency, data quality, human oversight, and safety. Lower-risk systems mainly need to be transparent about being AI (like chatbots disclosing they're not human). Most AI applications are considered minimal risk and aren't heavily regulated.
                   </p>
                   <p className="text-gray-800 leading-relaxed text-lg">
                     The legislation aims to balance protecting people's rights and safety with encouraging AI innovation. It applies to companies and organizations that offer AI systems in the EU, no matter where they're located.
