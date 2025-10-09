@@ -208,7 +208,11 @@ export default function SpecificityResponse() {
                       text="Sure!"
                       evaluationFactor="voice"
                       explanation="A prompt written in human-like language encourages a human-like response. This can lead to a more plausible sounding output than in reality."
-                    /> The AI Act is the EU's comprehensive law regulating artificial intelligence, adopted in 2024. It's the first major legislation of its kind globally.
+                    /> The AI Act is the EU's comprehensive law regulating artificial intelligence, <TextFlag 
+                      text="adopted in 2024."
+                      evaluationFactor="relevance"
+                      explanation="It is true that the EU AI Act was adopted in 2024. However, what does this mean? At this point in time, none of the requirements apply. The AI has decided what is relevant for you and what is not."
+                    /> It's the first major legislation of its kind globally.
                   </p>
                   <p className="text-gray-800 leading-relaxed text-lg">
                     The Act works on a risk-based system. AI systems are grouped by how risky they are. Some AI uses are completely banned - things like government social scoring or AI that manipulates vulnerable people. High-risk AI (used in areas like hiring, law enforcement, credit decisions, or critical infrastructure) has to meet strict rules: good data governance, transparency about how it works, human oversight, and proper risk management.
