@@ -262,7 +262,7 @@ Goals: Protect fundamental rights and safety while promoting innovation and crea
                         className="flex-1"
                         disabled={hasUnappliedChanges !== undefined ? !hasUnappliedChanges : !((specificity ?? localSpecificity) || (style ?? localStyle) || (context ?? localContext) || (bias ?? localBias))}
                     > 
-                        Optimize Prompt
+                        Send Prompt
                     </Button>
                 </div>
             </div>
