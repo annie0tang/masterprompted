@@ -60,7 +60,8 @@ export default function NextWordPrediction() {
       <main className="container mx-auto px-6 py-6">
         <Breadcrumb />
         <div className="mb-5"></div>
-        <div className="max-w-2xl mx-auto relative min-h-[600px]">
+        <div className="max-w-2xl mx-auto flex items-center justify-center min-h-[calc(100vh-300px)]">
+          <div className="w-full relative">
           <Chatbox 
             canType={false} 
             value={"Write a headline for a long form journalistic article about ai ethics agreement reached across the eu"}
@@ -85,6 +86,7 @@ export default function NextWordPrediction() {
               }}
             />
           )}
+          </div>
         </div>
       </main>
       
