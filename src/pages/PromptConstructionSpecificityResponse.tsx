@@ -514,7 +514,11 @@ export default function SpecificityResponse() {
                   </div>
 
                   <div>
-                    <p className="text-base font-semibold text-gray-900 mb-2">🛡️ Rules for High-Risk AI Systems</p>
+                    <p className="text-base font-semibold text-gray-900 mb-2">🛡️ <TextFlag 
+                      text="Rules for High-Risk AI Systems"
+                      evaluationFactor="relevance"
+                      explanation={<>The LLM has decided to go into detail on the requirements for high-risk AI. Follow <a href="https://artificialintelligenceact.eu/high-level-summary/" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-80">this link</a> to see what the EU Act Website has decided to be the most relevant points.</>}
+                    /></p>
                     <p className="text-gray-700 text-base leading-relaxed mb-3">High-risk AI systems are subject to strict obligations before they can be placed on the market or put into service:</p>
                     <ul className="space-y-2 text-gray-700 ml-4">
                       <li className="flex items-start">
