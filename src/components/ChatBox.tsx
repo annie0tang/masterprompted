@@ -64,13 +64,16 @@ const Chatbox = ({ canType = true, value, onChange, onSubmit, onUpload, fileName
   };
 
   return (
-    <div className={`relative bg-white border border-gray-200 rounded-2xl px-3 py-3 ${fullHeight ? 'h-full flex flex-col min-h-0' : 'max-w-3xl'}`}>
+    <div className={`relative bg-white border border-gray-200 rounded-2xl ${fullHeight ? 'h-full flex flex-col min-h-0' : 'max-w-3xl'}`}>
       {/* Submit button - positioned in top right */}
+      <div className="absolute top-4 right-4 z-10">
+        <SubmitButton onClick={handleSubmit} id={submitButtonId} />
+      </div>
 
       {/* Text area - takes up most of the space */}
       <Textarea
         placeholder="Type your message here..."
-        className={`mb-6 border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 p-0 text-base leading-6 text-gray-900 font-['Manrope'] ${fullHeight ? 'flex-1 min-h-0 resize-none overflow-y-auto' : 'min-h-[100px] resize-none'}`}
+        className={`border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 px-6 py-4 pr-16 text-base leading-6 text-gray-900 font-['Manrope'] ${fullHeight ? 'flex-1 min-h-0 resize-none overflow-y-auto' : 'min-h-[100px] resize-none'}`}
         disabled={!canType}
         value={value}
         onChange={handleInputChange}
@@ -81,12 +84,6 @@ const Chatbox = ({ canType = true, value, onChange, onSubmit, onUpload, fileName
           }
         }}
       />
-      <div className="flex justify-between align-middle">
-
-        <UploadFile onClick={onUpload} fileName={fileName} />
-
-        <SubmitButton onClick={handleSubmit} id={submitButtonId} />
-      </div>
     </div>
   );
 };
