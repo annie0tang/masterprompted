@@ -1,4 +1,4 @@
-import { useEffect, ReactNode } from "react";
+import { ReactNode } from "react";
 import { CheckCircle, Target, Mic, Scale, Copy } from "lucide-react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
@@ -28,31 +28,6 @@ const labelMap = {
 export default function SectionFlag({ children, evaluationFactor, explanation, className = "" }: SectionFlagProps) {
   const Icon = iconMap[evaluationFactor];
   const label = labelMap[evaluationFactor];
-
-  // Highlight the corresponding evaluation criterion when component is mounted
-  useEffect(() => {
-    const criterionElement = document.querySelector(`[data-criterion-id="${evaluationFactor}"]`);
-    if (criterionElement) {
-      const triggerElement = criterionElement.querySelector('[data-radix-collection-item]') || 
-                            criterionElement.querySelector('.flex.items-center.justify-between');
-      if (triggerElement) {
-        triggerElement.classList.add('ring-2', 'ring-destructive', 'bg-destructive/10');
-        triggerElement.classList.remove('bg-gray-50', 'hover:bg-gray-100');
-      }
-    }
-
-    // Cleanup: remove highlighting when component unmounts
-    return () => {
-      if (criterionElement) {
-        const triggerElement = criterionElement.querySelector('[data-radix-collection-item]') || 
-                              criterionElement.querySelector('.flex.items-center.justify-between');
-        if (triggerElement) {
-          triggerElement.classList.remove('ring-2', 'ring-destructive', 'bg-destructive/10');
-          triggerElement.classList.add('bg-gray-50', 'hover:bg-gray-100');
-        }
-      }
-    };
-  }, [evaluationFactor]);
 
   return (
     <HoverCard>
