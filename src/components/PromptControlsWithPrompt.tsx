@@ -207,10 +207,10 @@ Goals: Protect fundamental rights and safety while promoting innovation and crea
         if (onSubmit) onSubmit();
     };
 
-    return <Card className="bg-white border border-gray-200 rounded-lg max-w-sm">
+    return <Card className="bg-white border border-gray-200 rounded-2xl shadow-sm max-w-sm">
         <CardContent className="p-6">
             <div className="flex items-center gap-3 mb-4">
-                <h3 className="font-semibold text-gray-900">Prompt Controls</h3>
+                <h3 className="text-lg font-semibold text-gray-900">Prompt Controls</h3>
             </div>
 
             {/* Sent Prompt Display */}
