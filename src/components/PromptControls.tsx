@@ -105,6 +105,7 @@ interface PromptControlsProps {
     onChatChange?: (value: string) => void;
     onChatSubmit?: (value: string) => void;
     chatSubmitButtonId?: string;
+    disableSend?: boolean;
 }
 export default function PromptControls({
     showSpecificity = true,
@@ -124,7 +125,8 @@ export default function PromptControls({
     chatValue = "",
     onChatChange,
     onChatSubmit,
-    chatSubmitButtonId
+    chatSubmitButtonId,
+    disableSend
 }: PromptControlsProps) {
     // --- REFACTORED: Removed local state and individual handlers ---
 
@@ -149,7 +151,9 @@ export default function PromptControls({
                     onChange={onChatChange ?? (() => {})}
                     onSubmit={onChatSubmit}
                     submitButtonId={chatSubmitButtonId}
+                    disableSend={disableSend}
                     fullHeight
+                    
                 />
             </div>
 

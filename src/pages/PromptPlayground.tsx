@@ -67,11 +67,19 @@ const PromptPlayground = () => {
     bias: "",
   });
 
+  const [disableSend, setDisableSend] = useState(false);
+
   // ChatBox text state
   const [currentPrompt, setCurrentPrompt] = useState<string>("");
   const [editingText, setEditingText] = useState<string>("");
   // Stores the previous prompt to enable single-level undo
   const [previousPrompt, setPreviousPrompt] = useState<string>("");
+
+  const [enableBias, setEnableBias] = useState<boolean>(false);
+  const [enableSpecificity, setEnableSpecificity] = useState<boolean>(false)
+  const [enableStyle, setEnableStyle] = useState<boolean>(false)
+  const [enableContext, setEnableContext] = useState<boolean>(false)
+
 
   // --- REFACTORED: Consolidated handler for all parameter changes ---
   const handleParameterChange = (paramKey: keyof Parameters, value: string) => {
@@ -169,6 +177,11 @@ const PromptPlayground = () => {
   useEffect(() => {
     if (!currentPrompt.trim()) return;
 
+    if (Object.values(parameters).every(p => p === "")) {
+      setEditingText(currentPrompt);
+      return;
+    }
+
     // Only optimize if at least one parameter is set
     if (Object.values(parameters).some(p => p !== "")) {
       handlePromptOptimize(
@@ -193,8 +206,24 @@ const PromptPlayground = () => {
   const handleChatSubmit = (submittedText: string) => {
     if (!submittedText.trim()) return;
     setCurrentPrompt(submittedText);
+    setDisableSend(true);
     void createNewThreadAndFetch(submittedText);
+    setEnableSpecificity(true);
+    setEnableBias(true);
+    setEnableContext(true);
+    setEnableStyle(true);
+    handleReset();
   };
+
+  const handleInputChange = (input: string) => {
+    // console.log(input)
+    setEditingText(input);
+    setDisableSend(false);
+    setEnableSpecificity(false);
+    setEnableBias(false);
+    setEnableContext(false);
+    setEnableStyle(false);
+  }
 
   const createNewThreadAndFetch = async (submittedText: string) => {
     let newThreadIndex = -1;
@@ -207,56 +236,68 @@ const PromptPlayground = () => {
 
   // Helper to submit answer for the latest thread's latest version
 
-const submitAnswerForLatestVersion = async () => {
-  if (threads.length === 0) return;
-  const threadIndex = threads.length - 1;
-  const versionIndex = threads[threadIndex].versions.length - 1;
-  const promptText = threads[threadIndex].versions[versionIndex]?.prompt;
+  const submitAnswerForLatestVersion = async () => {
+    if (threads.length === 0) return;
+    const threadIndex = threads.length - 1;
+    const versionIndex = threads[threadIndex].versions.length - 1;
+    const promptText = threads[threadIndex].versions[versionIndex]?.prompt;
 
-  // Add new version if prompt has changed
-  if (editingText !== promptText) {
-    setThreads(prev => {
-      const copy = [...prev];
-      const t = { ...copy[threadIndex] };
-      t.versions = [...t.versions, { prompt: editingText, answer: null }];
-      t.currentIndex = t.versions.length - 1;
-      copy[threadIndex] = t;
-      return copy;
-    });
+    // Add new version if prompt has changed
+    if (editingText !== promptText) {
+      setThreads(prev => {
+        const copy = [...prev];
+        const t = { ...copy[threadIndex] };
+        t.versions = [...t.versions, { prompt: editingText, answer: null }];
+        t.currentIndex = t.versions.length - 1;
+        copy[threadIndex] = t;
+        return copy;
+      });
 
-    const response = await fetch(
-      "https://llm1.hochschule-stralsund.de:8000/answer",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          prompt: editingText,
-          temperature: 0.7,
-          fileIds: [],
-        }),
-      }
-    );
-    const data: { answer: string } = await response.json();
-    const answer: string = data.answer;
+      const response = await fetch(
+        "https://llm1.hochschule-stralsund.de:8000/answer",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            prompt: editingText,
+            temperature: 0.7,
+            fileIds: [],
+          }),
+        }
+      );
+      const data: { answer: string } = await response.json();
+      const answer: string = data.answer;
 
-    setThreads(prev => {
-      const copy = [...prev];
-      const t = { ...copy[threadIndex] };
-      const versions = [...t.versions];
-      versions[t.currentIndex] = { prompt: editingText, answer };
-      t.versions = versions;
-      copy[threadIndex] = t;
-      return copy;
-    });
-    handleReset();
-  }
-};
-
-  useEffect(() => {
-    if (chatEndRef.current) {
-      chatEndRef.current.scrollTop = chatEndRef.current.scrollHeight;
+      setThreads(prev => {
+        const copy = [...prev];
+        const t = { ...copy[threadIndex] };
+        const versions = [...t.versions];
+        versions[t.currentIndex] = { prompt: editingText, answer };
+        t.versions = versions;
+        copy[threadIndex] = t;
+        return copy;
+      });
+      handleReset();
+      setCurrentPrompt(editingText)
     }
-  }, [threads]);
+  };
+
+const prevThreadCount = useRef(threads.length);
+useEffect(() => {
+  if (threads.length !== prevThreadCount.current) {
+    if (chatEndRef.current) {
+      const latestVersionElement = chatEndRef.current.querySelector(`[versionindex="${threads[threads.length - 1].currentIndex}"]`);
+      if (latestVersionElement) {
+        const rect = latestVersionElement.getBoundingClientRect();
+        const offset = rect.top - chatEndRef.current.offsetTop + chatEndRef.current.scrollTop;
+        chatEndRef.current.scrollTo({ top: offset, behavior: 'smooth' });
+      } else {
+        chatEndRef.current.scrollTop = chatEndRef.current.scrollHeight;
+      }
+    }
+  }
+  prevThreadCount.current = threads.length;
+}, [threads.length]);
 
   const handlePrevVersion = (threadIndex: number) => {
     setThreads(prev => {
@@ -295,9 +336,14 @@ const submitAnswerForLatestVersion = async () => {
                 onOptimize={submitAnswerForLatestVersion}
                 onUndo={handleUndo}
                 chatValue={editingText}
-                onChatChange={setEditingText}
+                onChatChange={handleInputChange}
                 onChatSubmit={handleChatSubmit}
                 chatSubmitButtonId="prompt-playground-submit"
+                disableSend={disableSend}
+                enableBias={enableBias}
+                enableSpecificity={enableSpecificity}
+                enableContext={enableContext}
+                enableStyle={enableStyle}
               />
             </div>
           </div>

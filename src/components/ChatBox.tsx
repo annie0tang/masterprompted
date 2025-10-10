@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Paperclip, SendHorizontal } from "lucide-react";
 
 // SubmitButton component
-function SubmitButton({ onClick, id }: { onClick?: (e?: React.MouseEvent) => void; id?: string }) {
+function SubmitButton({ onClick, id, disableSend }: { onClick?: (e?: React.MouseEvent) => void; id?: string; disableSend?: boolean }) {
   return (
     <Button
       id={id}
@@ -13,6 +13,7 @@ function SubmitButton({ onClick, id }: { onClick?: (e?: React.MouseEvent) => voi
       variant="default"
       size="icon"
       className="rounded-full h-10 w-10"
+      disabled={disableSend}
     >
       <SendHorizontal className="h-5 w-5" />
     </Button>
@@ -45,11 +46,12 @@ type ChatboxProps = {
   onUpload?: () => void;
   fileName?: string;
   submitButtonId?: string;
+  disableSend?: boolean;
   // When true, the chatbox will expand to fill its parent's height
   fullHeight?: boolean;
 };
 
-const Chatbox = ({ canType = true, value, onChange, onSubmit, onUpload, fileName, submitButtonId, fullHeight = false }: ChatboxProps) => {
+const Chatbox = ({ canType = true, value, onChange, onSubmit, onUpload, fileName, submitButtonId, fullHeight = false, disableSend = false }: ChatboxProps) => {
   // Controlled-only component: `value` drives the textarea and `onChange` must be provided.
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -67,7 +69,7 @@ const Chatbox = ({ canType = true, value, onChange, onSubmit, onUpload, fileName
     <div className={`relative bg-card border border-border rounded-lg shadow-md ${fullHeight ? 'h-full flex flex-col min-h-0' : 'max-w-3xl'}`}>
       {/* Submit button - positioned in top right */}
       <div className="absolute top-4 right-4 z-10">
-        <SubmitButton onClick={handleSubmit} id={submitButtonId} />
+        <SubmitButton onClick={handleSubmit} id={submitButtonId} disableSend={disableSend} />
       </div>
 
       {/* Text area - takes up most of the space */}

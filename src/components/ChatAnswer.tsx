@@ -17,11 +17,12 @@ type ChatAnswerProps = {
 const ChatAnswer = ({ text, answerArray = [], currentIndex = 0 }: ChatAnswerProps) => {
   const [showDiff, setShowDiff] = useState(false);
 
+  // Convert escaped newline sequences (\\n) into real newline characters.
   const formattedText = text.replace(/\\n/g, '\n');
 
   const canShowDiff = answerArray.length > 1 && currentIndex > 0;
-  const previousAnswer = canShowDiff ? answerArray[currentIndex - 1].replace(/\\n/g, '\n') : "";
-  const diffResult = showDiff && canShowDiff ? jsdiff.diffWords(previousAnswer, formattedText) : [];
+  const originalAnswer = canShowDiff ? answerArray[0].replace(/\\n/g, '\n') : "";
+  const diffResult = showDiff && canShowDiff ? jsdiff.diffWords(originalAnswer, formattedText) : [];
   
   const [collapsedParts, setCollapsedParts] = useState<Record<number, boolean>>({});
 
