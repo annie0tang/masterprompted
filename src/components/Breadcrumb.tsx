@@ -60,8 +60,8 @@ export default function Breadcrumb() {
     for (let i = 0; i < pathSegments.length; i++) {
       currentPath += '/' + pathSegments[i];
       
-      // Skip the "prompt" segment
-      if (pathSegments[i] === 'prompt') {
+      // Skip the "prompt" and "response" segments
+      if (pathSegments[i] === 'prompt' || pathSegments[i] === 'response') {
         continue;
       }
       
