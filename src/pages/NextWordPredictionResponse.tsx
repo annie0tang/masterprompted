@@ -197,12 +197,12 @@ export default function HeadlineResponse() {
   return <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="container mx-auto px-6 py-6">
+      <main className="container mx-auto px-6 py-6 max-w-7xl">
         <div className="mb-6">
           <Breadcrumb />
         </div>
         
-        <div className="max-w-7xl mx-auto">
+        <div className="w-full">
           {/* Two-column layout */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Left column - Main content */}
