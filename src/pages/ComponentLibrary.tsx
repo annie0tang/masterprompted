@@ -327,6 +327,8 @@ const ComponentLibrary = () => {
                     showStyle={true}
                     showContext={true}
                     showBias={true}
+                    parameters={{ specificity: "", style: "", context: "", bias: "" }}
+                    onParameterChange={(key, value) => console.log(key, value)}
                   />
                 </CardContent>
               </Card>

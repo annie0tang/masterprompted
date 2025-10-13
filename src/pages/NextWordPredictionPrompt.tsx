@@ -42,17 +42,11 @@ export default function NextWordPrediction() {
   }, []);
 
 
-  if (showAnimation) {
-    return (
-      // <AnimatedTransition
-      //   promptText="Write a headline for a long form journalistic article about ai ethics agreement reached across the eu"
-      //   fileName="EU_AI_Act.pdf"
-      //   targetRoute="/module/next-word-prediction/response"
-      //   onComplete={() => setShowAnimation(false)}
-      // />
-      navigate('/module/next-word-prediction/response')
-    );
-  }
+  useEffect(() => {
+    if (showAnimation) {
+      navigate('/module/next-word-prediction/response');
+    }
+  }, [showAnimation, navigate]);
 
   return (
     <div className="min-h-screen bg-background">

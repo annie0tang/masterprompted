@@ -9,7 +9,7 @@ import GuidanceTooltip from "@/components/GuidanceTooltip";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown, Info } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 export default function HeadlineResponse() {
@@ -254,13 +254,25 @@ export default function HeadlineResponse() {
                                   </DropdownMenuTrigger>
                                    <DropdownMenuContent className="bg-white border border-gray-200 shadow-lg rounded-md z-[9999] min-w-[120px]">
                                     {options.map((option) => (
-                                      <DropdownMenuItem 
+                                       <DropdownMenuItem 
                                         key={option.word}
                                         onClick={() => handleWordSelection(option.word, index)}
                                         className="cursor-pointer hover:bg-gray-100 flex justify-between items-center"
                                       >
                                         <span>{option.word}</span>
-                                        <span className="text-xs text-gray-500 ml-2">{option.probability}</span>
+                                        <span className="text-xs text-gray-500 ml-2 flex items-center gap-1">
+                                          {option.probability}
+                                          <TooltipProvider>
+                                            <Tooltip>
+                                              <TooltipTrigger asChild>
+                                                <Info className="h-3 w-3 cursor-help" />
+                                              </TooltipTrigger>
+                                              <TooltipContent>
+                                                These are example probabilities that could be assigned to a word that weights words to be selected by the LLM.
+                                              </TooltipContent>
+                                            </Tooltip>
+                                          </TooltipProvider>
+                                        </span>
                                       </DropdownMenuItem>
                                     ))}
                                   </DropdownMenuContent>
@@ -297,7 +309,19 @@ export default function HeadlineResponse() {
                                           className="cursor-pointer hover:bg-gray-100 flex justify-between items-center"
                                         >
                                           <span>{option.word}</span>
-                                          <span className="text-xs text-gray-500 ml-2">{option.probability}</span>
+                                          <span className="text-xs text-gray-500 ml-2 flex items-center gap-1">
+                                            {option.probability}
+                                            <TooltipProvider>
+                                              <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                  <Info className="h-3 w-3 cursor-help" />
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                  These are example probabilities that could be assigned to a word that weights words to be selected by the LLM.
+                                                </TooltipContent>
+                                              </Tooltip>
+                                            </TooltipProvider>
+                                          </span>
                                         </DropdownMenuItem>
                                       ))}
                                     </DropdownMenuContent>

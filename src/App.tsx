@@ -7,7 +7,7 @@ import Modules from "./pages/Modules";
 import Introduction from "./pages/IntroBase";
 import AboutSimulator from "./pages/IntroAboutSimulator";
 import JournalisticEvaluation from "./pages/JournalisticEvaluation";
-import NextWordPrediction from "./pages/NextWordPredictionPrompt";
+import NextWordPredictionPrompt from "./pages/NextWordPredictionPrompt";
 import NextWordPredictionIntro from "./pages/NextWordPredictionBase";
 import HeadlineResponse from "./pages/NextWordPredictionResponse";
 import PromptConstruction from "./pages/PromptConstructionBase";
@@ -53,7 +53,7 @@ const App = () => (
 
           {/* NEXT WORD PREDICTION MODULE */}
           <Route path="/module/next-word-prediction" element={<NextWordPredictionIntro />} />
-          <Route path="/module/next-word-prediction/prompt" element={<NextWordPrediction />} />
+          <Route path="/module/next-word-prediction/prompt" element={<NextWordPredictionPrompt />} />
           <Route path="/module/next-word-prediction/response" element={<HeadlineResponse />} />
           <Route path="/module/next-word-prediction/takeaways" element={<Takeaways />} />
 
