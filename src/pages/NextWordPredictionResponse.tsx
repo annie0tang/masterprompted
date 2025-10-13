@@ -247,8 +247,18 @@ export default function HeadlineResponse() {
                                     <button data-word-union data-word={word.toLowerCase()} className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg inline-flex items-center gap-1">
                                       {word}
                                       <ChevronDown className="h-3 w-3" />
-                                      <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                                      <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap flex items-center gap-1" style={{ pointerEvents: 'auto' }}>
                                         {rawOptions.find(opt => opt.word === word)?.probability || rawOptions[0]?.probability || "0.67"}
+                                        <TooltipProvider>
+                                          <Tooltip>
+                                            <TooltipTrigger asChild>
+                                              <Info className="h-3 w-3 cursor-help" />
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                              These are example probabilities that could be assigned to a word that weights words to be selected by the LLM.
+                                            </TooltipContent>
+                                          </Tooltip>
+                                        </TooltipProvider>
                                       </span>
                                     </button>
                                   </DropdownMenuTrigger>
@@ -260,19 +270,7 @@ export default function HeadlineResponse() {
                                         className="cursor-pointer hover:bg-gray-100 flex justify-between items-center"
                                       >
                                         <span>{option.word}</span>
-                                        <span className="text-xs text-gray-500 ml-2 flex items-center gap-1">
-                                          {option.probability}
-                                          <TooltipProvider>
-                                            <Tooltip>
-                                              <TooltipTrigger asChild>
-                                                <Info className="h-3 w-3 cursor-help" />
-                                              </TooltipTrigger>
-                                              <TooltipContent>
-                                                These are example probabilities that could be assigned to a word that weights words to be selected by the LLM.
-                                              </TooltipContent>
-                                            </Tooltip>
-                                          </TooltipProvider>
-                                        </span>
+                                        <span className="text-xs text-gray-500 ml-2">{option.probability}</span>
                                       </DropdownMenuItem>
                                     ))}
                                   </DropdownMenuContent>
@@ -296,8 +294,18 @@ export default function HeadlineResponse() {
                                       <button data-word={word.toLowerCase()} className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg inline-flex items-center gap-1">
                                         {word}
                                         <ChevronDown className="h-3 w-3" />
-                                        <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                                        <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap flex items-center gap-1" style={{ pointerEvents: 'auto' }}>
                                           {rawOptions.find(opt => opt.word === word)?.probability || rawOptions[0]?.probability || "0.73"}
+                                          <TooltipProvider>
+                                            <Tooltip>
+                                              <TooltipTrigger asChild>
+                                                <Info className="h-3 w-3 cursor-help" />
+                                              </TooltipTrigger>
+                                              <TooltipContent>
+                                                These are example probabilities that could be assigned to a word that weights words to be selected by the LLM.
+                                              </TooltipContent>
+                                            </Tooltip>
+                                          </TooltipProvider>
                                         </span>
                                       </button>
                                     </DropdownMenuTrigger>
@@ -309,19 +317,7 @@ export default function HeadlineResponse() {
                                           className="cursor-pointer hover:bg-gray-100 flex justify-between items-center"
                                         >
                                           <span>{option.word}</span>
-                                          <span className="text-xs text-gray-500 ml-2 flex items-center gap-1">
-                                            {option.probability}
-                                            <TooltipProvider>
-                                              <Tooltip>
-                                                <TooltipTrigger asChild>
-                                                  <Info className="h-3 w-3 cursor-help" />
-                                                </TooltipTrigger>
-                                                <TooltipContent>
-                                                  These are example probabilities that could be assigned to a word that weights words to be selected by the LLM.
-                                                </TooltipContent>
-                                              </Tooltip>
-                                            </TooltipProvider>
-                                          </span>
+                                          <span className="text-xs text-gray-500 ml-2">{option.probability}</span>
                                         </DropdownMenuItem>
                                       ))}
                                     </DropdownMenuContent>
