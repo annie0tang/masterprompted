@@ -254,8 +254,8 @@ export default function HeadlineResponse() {
                                             <TooltipTrigger asChild>
                                               <Info className="h-3 w-3 cursor-help" />
                                             </TooltipTrigger>
-                                            <TooltipContent>
-                                              These are example probabilities that could be assigned to a word that weights words to be selected by the LLM.
+                                            <TooltipContent className="max-w-xs">
+                                              <p className="text-sm leading-relaxed">These are example probabilities that could be assigned to a word that weights words to be selected by the LLM.</p>
                                             </TooltipContent>
                                           </Tooltip>
                                         </TooltipProvider>
@@ -301,8 +301,8 @@ export default function HeadlineResponse() {
                                               <TooltipTrigger asChild>
                                                 <Info className="h-3 w-3 cursor-help" />
                                               </TooltipTrigger>
-                                              <TooltipContent>
-                                                These are example probabilities that could be assigned to a word that weights words to be selected by the LLM.
+                                              <TooltipContent className="max-w-xs">
+                                                <p className="text-sm leading-relaxed">These are example probabilities that could be assigned to a word that weights words to be selected by the LLM.</p>
                                               </TooltipContent>
                                             </Tooltip>
                                           </TooltipProvider>
