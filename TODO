@@ -16,6 +16,8 @@ TODO:
 - edit button for chats
 - scroll behavior: go down as far as posisble while keep most recent prompt on-screen
   - also needs to work for send optimized prompt
+  - diff text shouldn't highlight newlines
+  - formatting can only format new text. treat removed text as plaintext.
 
 
 IN PROGRESS:

@@ -10,7 +10,7 @@ import { PopoverSeries } from "@/components/PopoverSeries";
 import { Skeleton } from "@/components/ui/skeleton"
 import { CircleQuestionMark } from "lucide-react";
 import RemovedTextSidebar from "@/components/RemovedTextSidebar";
-import * as jsdiff from "diff";
+import { diffWordsWithNewlineProtection } from "@/lib/diff";
 
 export type Parameters = {
   specificity: string;
@@ -42,7 +42,8 @@ function ChatBody({
   showDiff: boolean;
   onToggleDiff: (checked: boolean) => void;
   hoveredCommentId: string | null;
-  onHoverComment: (id: string | null) => void;
+  // Updated signature to include source of hover
+  onHoverComment: (id: string | null, source: 'chat' | 'sidebar') => void; 
   scrollContainerRef: React.RefObject<HTMLDivElement>;
   onUpdateCommentPosition: (id: string, top: number) => void;
   inlineCommentIds: Set<string>;
@@ -89,6 +90,24 @@ function ChatBody({
     </div>
   );
 }
+
+/**
+ * Checks if a target element is fully visible within its scroll container.
+ * @param container The scrolling element (e.g., chat body, sidebar).
+ * @param target The element to check for visibility (e.g., icon, sidebar text).
+ * @returns boolean
+ */
+const isElementInView = (container: HTMLElement, target: HTMLElement): boolean => {
+  const containerRect = container.getBoundingClientRect();
+  const targetRect = target.getBoundingClientRect();
+
+  // Check if the target is within the container's vertical bounds
+  const isTopInView = targetRect.top >= containerRect.top;
+  const isBottomInView = targetRect.bottom <= containerRect.bottom;
+
+  return isTopInView && isBottomInView;
+};
+
 const PromptPlayground = () => {
   const chatEndRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -118,7 +137,6 @@ const PromptPlayground = () => {
   const [hoveredCommentId, setHoveredCommentId] = useState<string | null>(null);
   const [commentPositions, setCommentPositions] = useState<Record<string, number>>({});
   const [inlineCommentIds, setInlineCommentIds] = useState(() => new Set<string>());
-  const isSyncingScroll = useRef(false);
 
   const activeComments = useMemo<RemovedComment[]>(() => {
     if (!showDiff) return [];
@@ -127,7 +145,7 @@ const PromptPlayground = () => {
       if (thread.currentIndex > 0) {
         const currentAnswer = thread.versions[thread.currentIndex].answer?.replace(/\\n/g, '\n') ?? "";
         const originalAnswer = thread.versions[0].answer?.replace(/\\n/g, '\n') ?? "";
-        const diffResult = jsdiff.diffWords(originalAnswer, currentAnswer);
+        const diffResult = diffWordsWithNewlineProtection(originalAnswer, currentAnswer);
         diffResult.forEach((part, index) => {
           if (part.removed) {
             allComments.push({
@@ -168,38 +186,72 @@ const PromptPlayground = () => {
     });
   };
 
-  const handleHoverComment = (id: string | null) => {
+  /**
+   * Manages setting the hovered ID and triggering cross-container scroll synchronization.
+   * Scrolling only happens if the target element in the non-hovered container is out of view.
+   */
+  const handleHoverComment = useCallback((id: string | null, source: 'chat' | 'sidebar') => {
     setHoveredCommentId(id);
-    if (id && sidebarRef.current && !inlineCommentIds.has(id)) {
-      const commentEl = document.getElementById(id);
-      if (commentEl) {
-        isSyncingScroll.current = true;
-        sidebarRef.current.scrollTo({
-          top: commentEl.offsetTop - 20,
-          behavior: 'smooth'
-        });
-        setTimeout(() => isSyncingScroll.current = false, 500); // Disable sync briefly
-      }
+
+    if (!id || !chatEndRef.current || !sidebarRef.current) return;
+
+    const chatContainer = chatEndRef.current;
+    const sidebarContainer = sidebarRef.current;
+
+    // The chat icon ID is the comment ID. The sidebar text ID is prefixed.
+    const chatIconEl = document.getElementById(id); 
+    const sidebarCommentEl = document.getElementById(`sidebar-comment-${id}`); 
+
+    if (!chatIconEl || !sidebarCommentEl) {
+      return;
     }
-  }
+    
+    if (source === 'chat') {
+      // Chat Icon is hovered (stationary). Target: Sidebar Text.
+      if (isElementInView(sidebarContainer, sidebarCommentEl)) {
+        return; // Already in view, do nothing
+      }
+      
+      const sidebarRect = sidebarContainer.getBoundingClientRect();
+      const commentRect = sidebarCommentEl.getBoundingClientRect();
+      
+      // Calculate scroll position to center the sidebar text
+      const commentScrollY = commentRect.top + sidebarContainer.scrollTop - sidebarRect.top;
+      const commentHeight = commentRect.height;
+      const containerHeight = sidebarRect.height;
+      
+      const targetScrollTop = commentScrollY - (containerHeight / 2) + (commentHeight / 2);
 
-  // --- Scroll Synchronization Effect ---
-  useEffect(() => {
-    const chatEl = chatEndRef.current;
-    const sidebarEl = sidebarRef.current;
+      sidebarContainer.scrollTo({
+        top: targetScrollTop,
+        behavior: 'smooth'
+      });
+      
+    } else if (source === 'sidebar') {
+      // Sidebar Text is hovered (stationary). Target: Chat Icon.
+      if (isElementInView(chatContainer, chatIconEl)) {
+        return; // Already in view, do nothing
+      }
 
-    if (!chatEl || !sidebarEl) return;
+      const chatContainerRect = chatContainer.getBoundingClientRect();
+      const chatIconRect = chatIconEl.getBoundingClientRect();
+      
+      // Icon's position relative to the chat container's scroll start
+      const iconScrollY = chatIconRect.top + chatContainer.scrollTop - chatContainerRect.top;
+      const iconHeight = chatIconRect.height;
+      const containerHeight = chatContainerRect.height;
+      
+      // Target scroll position centers the icon:
+      const targetScrollTop = iconScrollY - (containerHeight / 2) + (iconHeight / 2);
 
-    const syncSidebarToChat = () => {
-      if (isSyncingScroll.current) return;
-      isSyncingScroll.current = true;
-      sidebarEl.scrollTop = chatEl.scrollTop;
-      requestAnimationFrame(() => isSyncingScroll.current = false);
-    };
+      chatContainer.scrollTo({
+        top: targetScrollTop,
+        behavior: 'smooth'
+      });
+    }
+  }, []); // Removed commentPositions dependency as it's not strictly needed for this centered scrolling logic
 
-    chatEl.addEventListener('scroll', syncSidebarToChat);
-    return () => chatEl.removeEventListener('scroll', syncSidebarToChat);
-  }, []);
+  // Removed the previous continuous scroll synchronization effect as requested.
 
   useEffect(() => {
     try {
@@ -331,7 +383,9 @@ const PromptPlayground = () => {
     setEnableSpecificity(!isEmpty); setEnableBias(!isEmpty); setEnableContext(!isEmpty); setEnableStyle(!isEmpty);
   };
 
-  useEffect(() => { if (chatEndRef.current) chatEndRef.current.scrollTop = chatEndRef.current.scrollHeight; }, [threads]);
+  // only scrolls when a new thread is added
+  useEffect(() => { if (chatEndRef.current) chatEndRef.current.scrollTop = chatEndRef.current.scrollHeight; }, [threads.length]);
+
   const handlePrevVersion = (threadIndex: number) => setThreads(prev => { const c = [...prev]; c[threadIndex].currentIndex = Math.max(0, c[threadIndex].currentIndex - 1); return c; });
   const handleNextVersion = (threadIndex: number) => setThreads(prev => { const c = [...prev]; c[threadIndex].currentIndex = Math.min(c[threadIndex].versions.length - 1, c[threadIndex].currentIndex + 1); return c; });
 
@@ -351,7 +405,8 @@ const PromptPlayground = () => {
             </div>
           </div>
           <div className="flex-none w-[calc(18rem+2.5rem)] h-full flex">
-            <div className="flex-1 h-full overflow-y-hidden" ref={sidebarRef}>
+            {/* Changed from overflow-y-hidden to overflow-y-auto to allow independent scrolling */}
+            <div className="flex-1 h-full overflow-y-auto" ref={sidebarRef}>
               {showDiff && <RemovedTextSidebar {...{ comments: activeComments, positions: commentPositions, hoveredCommentId, onHover: handleHoverComment, inlineCommentIds, onCommentClick: handleCommentClick }} />}
             </div>
             <div className="w-[2.5rem] flex-none flex flex-col items-end gap-4 relative">

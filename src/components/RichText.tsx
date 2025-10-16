@@ -7,6 +7,7 @@ type RichTextProps = {
   className?: string;
   // This prop controls the rendering mode.
   inline?: boolean;
+  diff?: boolean;
 };
 
 // Escapes HTML to prevent injection.
@@ -20,20 +21,23 @@ function escapeHtml(input: string): string {
 }
 
 // Handles inline markdown formatting like **bold** and *italics*.
-function applyInlineFormatting(raw: string): string {
+function applyInlineFormatting(raw: string, diff: boolean): string {
   let html = escapeHtml(raw);
-  // Bold: **text**
-  html = html.replace(/\*\*(.+?)\*\*/gs, "<strong>$1</strong>");
-  // Italics: *text* and _text_
-  html = html.replace(/(^|\W)\*(?!\s)(.+?)(?!\s)\*(?=\W|$)/gs, "$1<em>$2</em>");
-  html = html.replace(/(^|\W)_(?!\s)(.+?)(?!\s)_(?=\W|$)/gs, "$1<em>$2</em>");
   
+  if (!diff) {
+    // Bold: **text**
+    html = html.replace(/\*\*(.+?)\*\*/gs, "<strong>$1</strong>");
+    // Italics: *text* and _text_
+    html = html.replace(/(^|\W)\*(?!\s)(.+?)(?!\s)\*(?=\W|$)/gs, "$1<em>$2</em>");
+    html = html.replace(/(^|\W)_(?!\s)(.+?)(?!\s)_(?=\W|$)/gs, "$1<em>$2</em>");
+  }
+
   html = html.replace(/\n/g, "<br/>");
   return html;
 }
 
 // Handles block-level rendering (paragraphs and line breaks).
-function renderBlockText(input: string): string {
+function renderBlockText(input: string, diff: boolean): string {
   // Split into paragraphs by one or more empty lines
   const paragraphs = input.split(/\n\s*\n/);
   return paragraphs
@@ -41,18 +45,18 @@ function renderBlockText(input: string): string {
       // Don't render empty paragraphs
       if (!paragraph.trim()) return '';
       // Apply inline formatting and convert single newlines to <br>
-      const formatted = applyInlineFormatting(paragraph).replace(/\n/g, "<br/>");
+      const formatted = applyInlineFormatting(paragraph, diff).replace(/\n/g, "<br/>");
       return `<p>${formatted}</p>`;
     })
     .join("");
 }
 
-const RichText: React.FC<RichTextProps> = ({ text, className, inline = false }) => {
+const RichText: React.FC<RichTextProps> = ({ text, className, inline = false, diff = false }) => {
   // Use a <span> for inline mode, otherwise use a <div> fragment.
   const Component = inline ? 'span' : 'div';
-  
+
   // Choose the correct rendering function based on the 'inline' prop.
-  const html = inline ? applyInlineFormatting(text) : renderBlockText(text);
+  const html = inline ? applyInlineFormatting(text, diff) : renderBlockText(text, diff);
 
   return (
     <Component
