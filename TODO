@@ -5,40 +5,16 @@ TODO:
 - look into scraping data from google sheets
 - allow directional placement of popoverseries
 - add info to parameters
-- minor: add bounce to only manual revert neutral parameters, not send prompt as well
+- minor: add bounce to only manual revert neutral parameters, make sure to exclude send prompt.
 - some way to pull old prompts back into chatbox easily (click on chatprompt component?)
-- DIFF BRANCH: 
-  - clean up diff w/ newlines gore
-  - new line gore within deleted text now
-  - make corresponding deleted text scroll to be of equal height instead of scrolling to the top of the component.
-  - Stop the column from automatically scrolling when the mouse is over a deleted text part and make scrollable via manual user input.
-  - implement connectorlines.tsx
 - edit button for chats
-- scroll behavior: go down as far as posisble while keep most recent prompt on-screen
-  - also needs to work for send optimized prompt
-  - diff text shouldn't highlight newlines
-  - formatting can only format new text. treat removed text as plaintext.
-
-
-IN PROGRESS:
-- 
-
-DONE:
-- add loading component while waiting on GPT
-- double optimize bug. or at least double bounce GONE?
-- Please have a look at the popover on NWP - the text box is now on another part of the screen!
-- Fix breadcrumb to the same position (below the nav bar) across pages
-- fix element ordering in popoverSeries (absolute to flex)
-- fix link to guided simulator in landing page
-- PP: make the chat rich text-formatted
-- PP: make chatbox typeable always
-- fix minitask component
-- journalistic eval is collapsibe
-- optimize and send simoultaneously
-- add chat versions to prompt component
-- make prompt controls part of a sidebar component maybe?
-- chatbox: move to prompt controls
-- imrpove journalistic eval minimization
+- DIFF: 
+  - implement connectorlines.tsx
+  - add code block formatting to richtext
+  - richtext beyond newline doesn't work with diff because it's too hard to create a custom less-stringent diff using jsdiff. probably need to switch diff tools?
+    - do that and then add richtext support during diff
+  - beginnings of optimization issues. diff hover thing starts slowing down with big texts. probably need to reduce re-renders.
+  - still some newline gore issues! need to remove trailing/leading newlines from the span...
 
 
 

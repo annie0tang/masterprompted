@@ -208,7 +208,7 @@ export default function PromptControls({
                         />
                     </div>
 
-                    <div className="flex gap-2 items-stretch">
+                    <div className="flex py-2 items-stretch">
                         <Button 
                             onClick={handleSubmitClick} 
                             variant="default" 
