@@ -254,7 +254,18 @@ const ComponentLibrary = () => {
                   <CardDescription>AI response display component</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ChatAnswer text="This is an example of an AI-generated answer displayed using the Answer component." />
+                  <ChatAnswer 
+                    text="This is an example of an AI-generated answer displayed using the Answer component." 
+                    threadIndex={0}
+                    showDiff={false}
+                    onToggleDiff={() => {}}
+                    hoveredCommentId={null}
+                    onHoverComment={() => {}}
+                    scrollContainerRef={{ current: null }}
+                    onUpdateCommentPosition={() => {}}
+                    inlineCommentIds={new Set()}
+                    onCommentClick={() => {}}
+                  />
                 </CardContent>
               </Card>
 

@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Info } from "lucide-react";
 import Chatbox from "./ChatBox";
 import { Parameters } from "@/pages/PromptPlayground";
 
@@ -17,6 +19,7 @@ interface ParameterProps {
     enabled?: boolean;
     currentValue: string;
     onParameterChange?: (key: keyof Parameters, value: string) => void;
+    infoText?: string;
 }
 
 function Parameter({
@@ -27,7 +30,8 @@ function Parameter({
     showParameter = true,
     enabled = true,
     currentValue,
-    onParameterChange
+    onParameterChange,
+    infoText
 }: ParameterProps) {
     if (!showParameter) {
         return null;
@@ -52,8 +56,20 @@ function Parameter({
             className={`my-2 p-0 px-1 border border-border rounded-lg ${!enabled && 'opacity-60 pointer-events-none'}`}
             disabled={!enabled}
         >
-            <legend className="text-xs font-medium text-muted-foreground px-2 mx-auto">
-                {parameterTitle}
+            <legend className="text-xs font-medium text-muted-foreground px-2 mx-auto flex items-center gap-1">
+                <span>{parameterTitle}</span>
+                {infoText && (
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Info className="w-3 h-3 cursor-help" />
+                            </TooltipTrigger>
+                            <TooltipContent side="top" align="center" sideOffset={6} className="max-w-sm">
+                                {infoText}
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                )}
             </legend>
             
             <RadioGroup 
@@ -174,7 +190,8 @@ export default function PromptControls({
                             showParameter={showSpecificity} 
                             enabled={enableSpecificity} 
                             currentValue={parameters.specificity} 
-                            onParameterChange={onParameterChange} 
+                            onParameterChange={onParameterChange}
+                            infoText="Prompt Specificity is how explicit you are in your prompt for the desired output. The more specific you are, the better the results will be."
                         />
                         <Parameter 
                             parameterTitle="Interaction Style" 
@@ -184,7 +201,8 @@ export default function PromptControls({
                             showParameter={showStyle} 
                             enabled={enableStyle} 
                             currentValue={parameters.style} 
-                            onParameterChange={onParameterChange} 
+                            onParameterChange={onParameterChange}
+                            infoText="Conversation Style is the manner in which you prompt your LLM. You can interact like it is human but this is not necessary."
                         />
                         <Parameter 
                             parameterTitle="Context" 
@@ -194,7 +212,8 @@ export default function PromptControls({
                             showParameter={showContext} 
                             enabled={enableContext} 
                             currentValue={parameters.context} 
-                            onParameterChange={onParameterChange} 
+                            onParameterChange={onParameterChange}
+                            infoText="Context is the additional information you give to the LLM to help it answers as well as possible. This may include background to your prompt"
                         />
                         <Parameter 
                             parameterTitle="Bias" 
@@ -204,7 +223,8 @@ export default function PromptControls({
                             showParameter={showBias} 
                             enabled={enableBias} 
                             currentValue={parameters.bias} 
-                            onParameterChange={onParameterChange} 
+                            onParameterChange={onParameterChange}
+                            infoText="Confirmation bias is when the way you phrase a prompt affects the perspective the LLM produces"
                         />
                     </div>
 
