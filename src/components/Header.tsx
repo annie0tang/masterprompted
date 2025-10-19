@@ -26,8 +26,7 @@ const Header = ({ transparent = false }: { transparent?: boolean }) => {
     { label: "Prompt Playground", path: "/playground" },
     { label: "About", path: "/about" },
     { label: "Contact", path: "/contact" },
-    { label: "Imprint", path: "/imprint" },
-    { label: "DEV: Components", path: "/components" } // Dev link
+    { label: "Imprint", path: "/imprint" }
   ];
 
   const moduleItems = [

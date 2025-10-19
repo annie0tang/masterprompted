@@ -259,12 +259,12 @@ const ComponentLibrary = () => {
                     threadIndex={0}
                     showDiff={false}
                     onToggleDiff={() => {}}
-                    hoveredCommentId={null}
                     onHoverComment={() => {}}
                     scrollContainerRef={{ current: null }}
                     onUpdateCommentPosition={() => {}}
                     inlineCommentIds={new Set()}
                     onCommentClick={() => {}}
+                    toggleDiffHelp={() => {}}
                   />
                 </CardContent>
               </Card>
