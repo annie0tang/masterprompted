@@ -51,12 +51,12 @@ export default function PromptConstructionSpecificityTakeaways() {
             </div>
           </div>
           
-          <div className="mt-16 hidden">
+          <div className="mt-16">
             <button 
-              onClick={handleContinue}
+              onClick={() => navigate("/prompt-playground")}
               className="bg-green-400 hover:bg-green-500 text-black font-medium px-8 py-3 rounded-full transition-colors"
             >
-              Continue →
+              Prompt Playground
             </button>
           </div>
         </div>
