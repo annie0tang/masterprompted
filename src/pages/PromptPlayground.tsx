@@ -19,7 +19,7 @@ export type Parameters = {
   bias: string;
 };
 
-type ThreadVersion = { prompt: string; answer?: string };
+type ThreadVersion = { prompt: string; answer?: string; parameters?: Parameters };
 type Thread = { versions: ThreadVersion[]; currentIndex: number };
 type RemovedComment = { id: string; value: string };
 
@@ -57,6 +57,7 @@ const ChatBody = memo(function ChatBody({
           <div key={threadIndex}>
             <ChatPrompt
               text={current.prompt}
+              parameters={current.parameters}
               versionIndex={thread.currentIndex}
               versionCount={thread.versions.length}
               onPrevVersion={() => onPrevVersion(threadIndex)}
@@ -338,6 +339,7 @@ const PromptPlayground = () => {
       if (!fullReset) {
         setEditingText(currentPrompt);
         setDisableOptimize(true);
+        setOptimizePulse(prev => prev + 1);
       }
       setFullReset(false);
       return;
@@ -373,24 +375,24 @@ const PromptPlayground = () => {
       setThreads(prev => {
         const copy = [...prev];
         const t = copy[threadIndex];
-        t.versions = [...t.versions, { prompt: promptText, answer: undefined }];
+        t.versions = [...t.versions, { prompt: promptText, answer: undefined, parameters }];
         t.currentIndex = newVersionIndex;
         return copy;
       });
       await submitAnswerForThreadVersion(threadIndex, newVersionIndex, promptText);
-      handleReset();
     }
   };
 
-  const handleSubmit = async (submittedText: string, isNewThread: boolean = false) => {
+  const handleSubmit = async (submittedText: string, isOptimize: boolean = false) => {
     if (!submittedText.trim()) return;
-    setCurrentPrompt(submittedText);
+    if (isOptimize) {
+      setCurrentPrompt(submittedText);
+    }
     setDisableSend(true);
     setDisableOptimize(true);
     setHasManualEdit(false);
     setEnableSpecificity(true); setEnableBias(true); setEnableContext(true); setEnableStyle(true);
-    if (threads.length === 0 || isNewThread || hasManualEdit) {
-      handleReset();
+    if (threads.length === 0 || hasManualEdit) {
       await createNewThreadAndFetch(submittedText);
     } else {
       await submitAnswerForLatestVersion(submittedText);
@@ -398,7 +400,7 @@ const PromptPlayground = () => {
   };
 
   const handleChatSubmit = (submittedText: string) => { void handleSubmit(submittedText, true); };
-  const handleOptimizeSubmit = async () => { if (editingText.trim()) { handleReset(); void handleSubmit(editingText, false); } };
+  const handleOptimizeSubmit = async () => { if (editingText.trim()) { void handleSubmit(editingText, false); } };
   const handleInputChange = (input: string) => {
     setHasManualEdit(true);
     handleReset();
@@ -471,13 +473,14 @@ const PromptPlayground = () => {
             </span>
           )
         },
-        { id: "controls-hint", trigger: "#removed-text-sidebar", side: "left", content:
-          <span>
-          <span className="text-red-900 line-through px-1.5 py-0.5 rounded-md border border-red-200">
+        {
+          id: "controls-hint", trigger: "#removed-text-sidebar", side: "left", content:
+            <span>
+              <span className="text-red-900 line-through px-1.5 py-0.5 rounded-md border border-red-200">
                 Removed text
-              </span> 
-              {" will appear here. You can insert it back in by clicking on it." }
               </span>
+              {" will appear here. You can insert it back in by clicking on it."}
+            </span>
         }
       ]} initialStep={0} onClose={() => setShowDiffPopover(false)} />}
     </div>
@@ -485,4 +488,3 @@ const PromptPlayground = () => {
 };
 
 export default PromptPlayground;
-

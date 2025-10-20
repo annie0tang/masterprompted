@@ -3,18 +3,17 @@ TODO:
 - align theming with greater AI-Code design philosophy
 - remove scrolling where possible
 - look into scraping data from google sheets
-- allow directional placement of popoverseries
 - add info to parameters
 - minor: add bounce to only manual revert neutral parameters, make sure to exclude send prompt.
 - some way to pull old prompts back into chatbox easily (click on chatprompt component?)
 - edit button for chats
+- need to make prompt optimization more reliable, probably add a system prompt or something.
 - DIFF: 
-  - implement connectorlines.tsx
+  - implement connectorlines.tsx?
   - add code block formatting to richtext
   - richtext beyond newline doesn't work with diff because it's too hard to create a custom less-stringent diff using jsdiff. probably need to switch diff tools?
     - do that and then add richtext support during diff
-  - beginnings of optimization issues. diff hover thing starts slowing down with big texts. probably need to reduce re-renders.
-  - still some newline gore issues! need to remove trailing/leading newlines from the span...
+    - still some minor newline gore issues, need to remove trailing/leading newlines from the span
 
 
 

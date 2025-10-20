@@ -1,9 +1,11 @@
 import { Paperclip, ChevronLeft, ChevronRight } from "lucide-react";
 import RichText from "./RichText";
+import type { Parameters } from "@/pages/PromptPlayground";
 
 type ChatPromptProps = {
   text: string;
   fileName?: string;
+  parameters?: Parameters;
   // Version navigation
   versionIndex?: number;
   versionCount?: number;
@@ -11,7 +13,12 @@ type ChatPromptProps = {
   onNextVersion?: () => void;
 };
 
-const ChatPrompt = ({ text, fileName, versionIndex = 0, versionCount = 1, onPrevVersion, onNextVersion }: ChatPromptProps) => {
+const ChatPrompt = ({ text, fileName, parameters, versionIndex = 0, versionCount = 1, onPrevVersion, onNextVersion }: ChatPromptProps) => {
+  const paramString = parameters && Object.entries(parameters)
+    .filter(([, value]) => value)
+    .map(([key, value]) => `${value}`)
+    .join(', ');
+
   return (
     <div
       className="mb-6 max-w-fit ml-auto bg-secondary relative"
@@ -27,19 +34,25 @@ const ChatPrompt = ({ text, fileName, versionIndex = 0, versionCount = 1, onPrev
         className="text-foreground leading-relaxed"
       />
       {(fileName || versionCount > 1) && (
-        <div className="grid grid-cols-2 items-between mt-2">
+        <div className="flex justify-between items-center mt-2">
+          {/* Left side: Parameters and Attachments */}
+          <div className="flex flex-col items-start gap-1">
+            {versionIndex > 0 && paramString && (
+              <p className="text-xs text-muted-foreground italic">
+                {paramString}
+              </p>
+            )}
+            {fileName && (
+              <div className="inline-flex items-center gap-2">
+                <Paperclip className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm text-foreground font-medium">
+                  {fileName}
+                </span>
+              </div>
+            )}
+          </div>
 
-          {/* Attachment section */}
-          {fileName && (
-            <div className="inline-flex items-center gap-2">
-              <Paperclip className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm text-foreground font-medium">
-                {fileName}
-              </span>
-            </div>
-          )}
-
-          {/* Version navigation - only if more than one version */}
+          {/* Right side: Version navigation - only if more than one version */}
           {versionCount > 1 && (
             <div className="flex items-center gap-1 text-sm text-muted-foreground justify-end col-start-2">
               <button

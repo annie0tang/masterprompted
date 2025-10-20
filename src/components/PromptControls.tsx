@@ -60,7 +60,7 @@ function Parameter({
                 <span>{parameterTitle}</span>
                 {infoText && (
                     <TooltipProvider>
-                        <Tooltip>
+                        <Tooltip delayDuration={300}>
                             <TooltipTrigger asChild>
                                 <Info className="w-3 h-3 cursor-help" />
                             </TooltipTrigger>
