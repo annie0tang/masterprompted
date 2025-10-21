@@ -345,77 +345,83 @@ export default function SpecificityResponse() {
               // No Bias content
               <div className="space-y-4">
                 <p className="text-gray-800 leading-relaxed text-lg">
-                  The AI Act is EU legislation regulating artificial intelligence systems, <TextFlag
-                    text="adopted in 2024."
+                  <TextFlag
+                    text="The European Union's Artificial Intelligence Act (EU AI Act) is a regulatory framework aimed at ensuring the safe and responsible development of AI systems."
                     evaluationFactor="relevance"
-                    explanation="It is true that the EU AI Act was adopted in 2024. However, what does this mean? At this point in time, none of the requirements apply. The AI has decided what is relevant for you and what is not."
-                  />
+                    explanation="The LLM has provided a balanced introduction that sets context without imposing bias, showing how neutral framing affects the overall tone of the response."
+                  /> While the Act&apos;s intentions are to promote trust and safety, some critics argue that it may stifle AI innovation. Here&apos;s a summary of the concerns:
                 </p>
 
                 <div>
-                  <p className="text-base font-semibold text-gray-900 mb-2">Risk categorization:</p>
-                  <p className="text-gray-700 text-base leading-relaxed mb-3">The Act divides AI systems into four categories based on assessed risk levels:</p>
-                  <ul className="space-y-2 text-gray-700 ml-4">
-                    <li className="flex items-start">
-                      <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                      <p className="text-base leading-relaxed"><strong>Unacceptable risk:</strong> Prohibited systems (social scoring by governments, exploitation of vulnerabilities)</p>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                      <p className="text-base leading-relaxed"><strong>High risk:</strong> Systems requiring compliance with specific obligations (AI in employment, law enforcement, credit scoring, critical infrastructure, education)</p>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                      <p className="text-base leading-relaxed"><strong>Limited risk:</strong> Systems with transparency requirements (chatbots, deepfakes)</p>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                      <p className="text-base leading-relaxed"><strong>Minimal risk:</strong> Systems with no specific requirements under the Act</p>
-                    </li>
-                  </ul>
+                  <p className="text-base font-semibold text-gray-900 mb-2">Potential stifling effects:</p>
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-base font-semibold text-gray-900 mb-2">1. Overly broad definitions</p>
+                      <p className="text-gray-700 text-base leading-relaxed">
+                        The Act&apos;s definitions of high-risk AI systems may be too broad, encompassing a wide range of applications, including those that are not inherently high-risk. This could lead to unnecessary regulatory burdens and stifling innovation in areas like healthcare, finance, or education.
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-base font-semibold text-gray-900 mb-2">2. Stringent requirements</p>
+                      <p className="text-gray-700 text-base leading-relaxed">
+                        The Act imposes strict requirements on high-risk AI systems, including human oversight, transparency, and explainability. While these requirements are intended to ensure safety, they may be too onerous for some developers, particularly startups or small businesses, which may struggle to comply.
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-base font-semibold text-gray-900 mb-2">3. Unclear guidelines</p>
+                      <p className="text-gray-700 text-base leading-relaxed">
+                        The Act&apos;s guidelines for AI system development and deployment are still evolving, and some critics argue that they may be too vague or open to interpretation. This could lead to confusion and uncertainty among developers, hindering innovation.
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-base font-semibold text-gray-900 mb-2">4. Potential for regulatory overreach</p>
+                      <p className="text-gray-700 text-base leading-relaxed">
+                        The Act&apos;s scope may be too broad, potentially leading to regulatory overreach and stifling innovation in areas that are not directly related to high-risk AI systems.
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 <div>
-                  <p className="text-base font-semibold text-gray-900 mb-2"><TextFlag
-                    text="Requirements for high-risk systems:"
-                    evaluationFactor="relevance"
-                    explanation={<>The LLM has decided to go into detail on the requirements for high-risk AI. Follow <a href="https://artificialintelligenceact.eu/high-level-summary/" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-80">this link</a> to see what the EU Act Website has decided to be the most relevant points.</>}
-                  /></p>
-                  <ul className="space-y-2 text-gray-700 ml-4">
-                    <li className="flex items-start">
-                      <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                      <p className="text-base leading-relaxed">Risk management processes</p>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                      <p className="text-base leading-relaxed">Data governance standards for training data</p>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                      <p className="text-base leading-relaxed">Technical documentation</p>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                      <p className="text-base leading-relaxed">Transparency and information provision</p>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                      <p className="text-base leading-relaxed">Human oversight capabilities</p>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                      <p className="text-base leading-relaxed">Accuracy, robustness, and cybersecurity measures</p>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                      <p className="text-base leading-relaxed">Conformity assessments before market placement</p>
-                    </li>
-                  </ul>
+                  <p className="text-base font-semibold text-gray-900 mb-2">
+                    <TextFlag
+                      text="Counterarguments:"
+                      evaluationFactor="relevance"
+                      explanation="By including counterarguments, the LLM demonstrates balance and provides a more comprehensive view of the topic, allowing readers to form their own informed opinions."
+                    />
+                  </p>
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-base font-semibold text-gray-900 mb-2">1. Safety and trust</p>
+                      <p className="text-gray-700 text-base leading-relaxed">
+                        The EU AI Act is designed to promote safety and trust in AI systems, which is essential for their widespread adoption. By setting clear guidelines and requirements, the Act can help ensure that AI systems are developed and deployed responsibly.
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-base font-semibold text-gray-900 mb-2">2. Innovation-friendly provisions</p>
+                      <p className="text-gray-700 text-base leading-relaxed">
+                        The Act includes provisions aimed at supporting innovation, such as the creation of a European AI Innovation Hub and the promotion of research and development in AI.
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-base font-semibold text-gray-900 mb-2">3. Risk-based approach</p>
+                      <p className="text-gray-700 text-base leading-relaxed">
+                        The Act takes a risk-based approach to regulation, which means that developers are only subject to strict requirements if their AI systems pose a high risk to users or society.
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 <div>
-                  <p className="text-base font-semibold text-gray-900 mb-2">Enforcement and scope:</p>
-                  <p className="text-gray-700 text-base leading-relaxed">The Act establishes penalties for non-compliance and applies to providers and deployers of AI systems in the EU market regardless of their geographic location.</p>
+                  <p className="text-base font-semibold text-gray-900 mb-2">Conclusion:</p>
+                  <p className="text-gray-700 text-base leading-relaxed">
+                    While the EU AI Act may have some potential stifling effects on AI innovation, these concerns are not universally accepted. The Act&apos;s proponents argue that it is necessary to ensure the safe and responsible development of AI systems, which is essential for their widespread adoption. The Act&apos;s provisions aimed at supporting innovation, such as the creation of a European AI Innovation Hub, may help mitigate any stifling effects. Ultimately, the impact of the EU AI Act on AI innovation will depend on how effectively it is implemented and enforced.
+                  </p>
                 </div>
               </div>
             ) : showWithBackgroundOutput ? (
