@@ -285,8 +285,7 @@ export default function SpecificityResponse() {
                     <p className="text-base font-semibold text-gray-900 mb-2">1. <TextFlag
                       text="Overly broad definitions"
                       evaluationFactor="bias"
-                      explanation="Although the AI Act may be regarded as &quot;significant,&quot; an LLM cannot determine such judgments. The linguistic choices of an LLM output can dangerously shape a user's interpretation."
-                    /></p>
+                      explanation="Output goes on to one-sidedly represent the topic in question. It reinforces confirmation bias by presenting information that are strictly in line with the biased prompt, i.e. with user's prior beliefs. Such outputs could be factually inaccurate as well." /></p>
                     <p className="text-gray-700 text-base leading-relaxed">
                       The Act defines AI as any system that can "perceive its environment and take actions" or "make decisions autonomously." This broad definition could capture many AI systems that are not necessarily "autonomous" or "perceive their environment" in the classical sense, potentially stifling innovation.
                     </p>
@@ -295,7 +294,17 @@ export default function SpecificityResponse() {
                   <div>
                     <p className="text-base font-semibold text-gray-900 mb-2">2. Restrictive liability provisions</p>
                     <p className="text-gray-700 text-base leading-relaxed">
-                      The Act proposes to hold AI developers liable for damages caused by their AI systems, even if the developer had no control over the system&apos;s actions. This could create a chilling effect on AI research, as developers may be reluctant to develop AI systems that could potentially cause harm.
+                      <TextFlag
+                        text="The Act proposes to hold AI developers liable for damages caused by their AI systems"
+                        evaluationFactor="factual-accuracy"
+                        explanation={'These liability provisions are not contained in the AI Act itself, rather they are addressed by two complementary legislative proposals (The Product Liability Directive (PLD) and the AI Liability Directive (AILD)). Such conflations are common when the model is trying to fit information into a biased narrative.'}
+                      />
+                      , even if the developer had no control over the system&apos;s actions.
+                      <TextFlag
+                        text="This could create a chilling effect on AI research."
+                        evaluationFactor="voice"
+                        explanation={'Notice how the output describes the effect as "chilling"; colorful language like this can evoke strong emotional responses in readers. This could lead them to accept the biased viewpoint without critical analysis.'}
+                      />
                     </p>
                   </div>
 
