@@ -9,7 +9,7 @@ import GuidanceTooltip from "@/components/GuidanceTooltip";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ChevronDown, Info } from "lucide-react";
+import { ArrowRight, ChevronDown, Info, InfoIcon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 export default function HeadlineResponse() {
@@ -267,10 +267,22 @@ export default function HeadlineResponse() {
                                        <DropdownMenuItem 
                                         key={option.word}
                                         onClick={() => handleWordSelection(option.word, index)}
-                                        className="cursor-pointer hover:bg-gray-100 flex justify-between items-center"
+                                        className="cursor-pointer hover:bg-gray-100 flex justify-between items-center gap-2"
                                       >
                                         <span>{option.word}</span>
-                                        <span className="text-xs text-gray-500 ml-2">{option.probability}</span>
+                                        <div className="flex items-center gap-1">
+                                          <span className="text-xs text-gray-500">{option.probability}</span>
+                                          <TooltipProvider>
+                                            <Tooltip>
+                                              <TooltipTrigger asChild onClick={(e) => e.stopPropagation()}>
+                                                <Info className="h-3 w-3 cursor-help text-gray-400 hover:text-gray-600" />
+                                              </TooltipTrigger>
+                                              <TooltipContent side="right" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
+                                                <p className="text-sm leading-relaxed">These are example probabilities that could be assigned to a word that weights words to be selected by the LLM.</p>
+                                              </TooltipContent>
+                                            </Tooltip>
+                                          </TooltipProvider>
+                                        </div>
                                       </DropdownMenuItem>
                                     ))}
                                   </DropdownMenuContent>
@@ -314,10 +326,22 @@ export default function HeadlineResponse() {
                                         <DropdownMenuItem 
                                           key={option.word}
                                           onClick={() => handleWordSelection(option.word, index)}
-                                          className="cursor-pointer hover:bg-gray-100 flex justify-between items-center"
+                                          className="cursor-pointer hover:bg-gray-100 flex justify-between items-center gap-2"
                                         >
                                           <span>{option.word}</span>
-                                          <span className="text-xs text-gray-500 ml-2">{option.probability}</span>
+                                          <div className="flex items-center gap-1">
+                                            <span className="text-xs text-gray-500">{option.probability}</span>
+                                            <TooltipProvider>
+                                              <Tooltip>
+                                                <TooltipTrigger asChild onClick={(e) => e.stopPropagation()}>
+                                                  <Info className="h-3 w-3 cursor-help text-gray-400 hover:text-gray-600" />
+                                                </TooltipTrigger>
+                                                <TooltipContent side="right" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
+                                                  <p className="text-sm leading-relaxed">These are example probabilities that could be assigned to a word that weights words to be selected by the LLM.</p>
+                                                </TooltipContent>
+                                              </Tooltip>
+                                            </TooltipProvider>
+                                          </div>
                                         </DropdownMenuItem>
                                       ))}
                                     </DropdownMenuContent>
