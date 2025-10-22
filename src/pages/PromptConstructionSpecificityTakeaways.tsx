@@ -67,9 +67,9 @@ export default function PromptConstructionSpecificityTakeaways() {
               <ProgressIndicator 
                 currentStep="takeaway" 
                 steps={[
-                  { id: 'intro', label: 'Introduction' },
-                  { id: 'main', label: 'Guided Exploration' },
-                  { id: 'takeaway', label: 'Takeaways' }
+                  { id: 'intro', label: 'Introduction', path: '/module/prompt-construction' },
+                  { id: 'main', label: 'Guided Exploration', path: '/module/prompt-construction/specificity/response' },
+                  { id: 'takeaway', label: 'Takeaways', path: '/module/prompt-construction/specificity/takeaways' }
                 ]} 
               />
             </div>
