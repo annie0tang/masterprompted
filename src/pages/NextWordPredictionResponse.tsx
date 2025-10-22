@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Breadcrumb from "@/components/Breadcrumb";
 import EvaluationPanel from "@/components/EvaluationPanel";
 import ChatPrompt from "@/components/ChatPrompt";
+import LearningProgressBar from "@/components/LearningProgressBar";
 import { MiniTask } from "@/components/MiniTask";
 import TextFlag from "@/components/TextFlag";
 import ModuleNavigation from "@/components/ModuleNavigation";
@@ -488,6 +489,14 @@ export default function HeadlineResponse() {
         </button>
       </div>
     </div>}
+
+    <div className="mt-8">
+      <LearningProgressBar 
+        module="next-word-prediction"
+        currentStep="main"
+        baseRoute="/module/next-word-prediction"
+      />
+    </div>
 
     <ModuleNavigation
       previousRoute="/module/next-word-prediction/prompt"

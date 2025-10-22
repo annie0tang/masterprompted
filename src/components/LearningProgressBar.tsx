@@ -17,12 +17,12 @@ const moduleConfigs: Record<string, {
     mainRoute: '/module/prompt-construction/specificity/response',
     takeawayRoute: '/module/prompt-construction/specificity/takeaways'
   },
+  'next-word-prediction': {
+    introRoute: '/module/next-word-prediction',
+    mainRoute: '/module/next-word-prediction/response',
+    takeawayRoute: '/module/next-word-prediction/takeaways'
+  },
   // Add more modules here as needed
-  // 'next-word-prediction': {
-  //   introRoute: '/module/next-word-prediction',
-  //   mainRoute: '/module/next-word-prediction/main',
-  //   takeawayRoute: '/module/next-word-prediction/takeaways'
-  // },
 };
 
 export default function LearningProgressBar({ 

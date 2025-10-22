@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Breadcrumb from "@/components/Breadcrumb";
 import ModuleNavigation from "@/components/ModuleNavigation";
+import LearningProgressBar from "@/components/LearningProgressBar";
 
 export default function Takeaways() {
   const navigate = useNavigate();
@@ -58,6 +59,14 @@ export default function Takeaways() {
             >
               Next Task →
             </button>
+          </div>
+          
+          <div className="mt-8">
+            <LearningProgressBar 
+              module="next-word-prediction"
+              currentStep="takeaway"
+              baseRoute="/module/next-word-prediction"
+            />
           </div>
         </div>
       </main>

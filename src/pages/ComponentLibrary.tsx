@@ -16,6 +16,7 @@ import PromptControls from "@/components/PromptControls";
 import PromptControlsWithPrompt from "@/components/PromptControlsWithPrompt";
 import TextFlag from "@/components/TextFlag";
 import TypewriterText from "@/components/TypewriterText";
+import LearningProgressBar from "@/components/LearningProgressBar";
 
 // UI Components
 import { Button } from "@/components/ui/button";
@@ -391,6 +392,34 @@ const ComponentLibrary = () => {
                     text="This text appears with a typewriter effect"
                     delay={50}
                   />
+                </CardContent>
+              </Card>
+
+              {/* LearningProgressBar Component */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>LearningProgressBar</CardTitle>
+                  <CardDescription>Progress indicator for learning modules</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-6">
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-4">Prompt Construction Module - Intro Step</p>
+                      <LearningProgressBar 
+                        module="prompt-construction"
+                        currentStep="intro"
+                        baseRoute="/module/prompt-construction"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-4">Next Word Prediction Module - Main Step</p>
+                      <LearningProgressBar 
+                        module="next-word-prediction"
+                        currentStep="main"
+                        baseRoute="/module/next-word-prediction"
+                      />
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
 
