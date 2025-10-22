@@ -25,6 +25,7 @@ export default function HeadlineResponse() {
   const [showMiniTask, setShowMiniTask] = useState(true);
   const [secondProbTooltipOpen, setSecondProbTooltipOpen] = useState(false);
   const [thirdProbTooltipOpen, setThirdProbTooltipOpen] = useState(false);
+  const [dropdownProbTooltips, setDropdownProbTooltips] = useState<{[key: string]: boolean}>({});
 
   const getWordOptions = (position: 'second' | 'third', currentIndex?: number) => {
     let options: { word: string; probability: string }[] = [];
@@ -285,18 +286,38 @@ export default function HeadlineResponse() {
                                    </span>
                                 </button>
                               </DropdownMenuTrigger>
-                              <DropdownMenuContent className="bg-white border border-gray-200 shadow-lg rounded-md z-[9999] min-w-[120px]">
-                                {options.map((option) => (
-                                  <DropdownMenuItem
-                                    key={option.word}
-                                    onClick={() => handleWordSelection(option.word, index)}
-                                    className="cursor-pointer hover:bg-gray-100 flex justify-between items-center"
-                                  >
-                                    <span>{option.word}</span>
-                                    <span className="text-xs text-gray-500 ml-2">{option.probability}</span>
-                                  </DropdownMenuItem>
-                                ))}
-                              </DropdownMenuContent>
+                               <DropdownMenuContent className="bg-white border border-gray-200 shadow-lg rounded-md z-[9999] min-w-[120px]">
+                                 {options.map((option) => (
+                                   <DropdownMenuItem
+                                     key={option.word}
+                                     onClick={() => handleWordSelection(option.word, index)}
+                                     className="cursor-pointer hover:bg-gray-100 flex justify-between items-center gap-2"
+                                   >
+                                     <span>{option.word}</span>
+                                     <span className="flex items-center gap-1 text-xs text-gray-500">
+                                       {option.probability}
+                                       <TooltipProvider>
+                                         <Tooltip open={dropdownProbTooltips[`second-${option.word}`]} onOpenChange={(open) => setDropdownProbTooltips(prev => ({...prev, [`second-${option.word}`]: open}))}>
+                                           <TooltipTrigger asChild>
+                                             <Info 
+                                               className="h-3 w-3 cursor-pointer" 
+                                               onClick={(e) => {
+                                                 e.stopPropagation();
+                                                 setDropdownProbTooltips(prev => ({...prev, [`second-${option.word}`]: !prev[`second-${option.word}`]}));
+                                               }}
+                                               onMouseEnter={() => setDropdownProbTooltips(prev => ({...prev, [`second-${option.word}`]: true}))}
+                                               onMouseLeave={() => setDropdownProbTooltips(prev => ({...prev, [`second-${option.word}`]: false}))}
+                                             />
+                                           </TooltipTrigger>
+                                           <TooltipContent side="right" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
+                                             <p className="text-sm leading-relaxed">These are example probabilities that could be assigned to a word that weights words to be selected by the LLM.</p>
+                                           </TooltipContent>
+                                         </Tooltip>
+                                       </TooltipProvider>
+                                     </span>
+                                   </DropdownMenuItem>
+                                 ))}
+                               </DropdownMenuContent>
                             </DropdownMenu>
                             {index < currentSentence.length - 1 && " "}
                           </span>
@@ -340,18 +361,38 @@ export default function HeadlineResponse() {
                                      </span>
                                   </button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent className="bg-white border border-gray-200 shadow-lg rounded-md z-[9999] min-w-[120px]">
-                                  {options.map((option) => (
-                                    <DropdownMenuItem
-                                      key={option.word}
-                                      onClick={() => handleWordSelection(option.word, index)}
-                                      className="cursor-pointer hover:bg-gray-100 flex justify-between items-center"
-                                    >
-                                      <span>{option.word}</span>
-                                      <span className="text-xs text-gray-500 ml-2">{option.probability}</span>
-                                    </DropdownMenuItem>
-                                  ))}
-                                </DropdownMenuContent>
+                                 <DropdownMenuContent className="bg-white border border-gray-200 shadow-lg rounded-md z-[9999] min-w-[120px]">
+                                   {options.map((option) => (
+                                     <DropdownMenuItem
+                                       key={option.word}
+                                       onClick={() => handleWordSelection(option.word, index)}
+                                       className="cursor-pointer hover:bg-gray-100 flex justify-between items-center gap-2"
+                                     >
+                                       <span>{option.word}</span>
+                                       <span className="flex items-center gap-1 text-xs text-gray-500">
+                                         {option.probability}
+                                         <TooltipProvider>
+                                           <Tooltip open={dropdownProbTooltips[`third-${option.word}`]} onOpenChange={(open) => setDropdownProbTooltips(prev => ({...prev, [`third-${option.word}`]: open}))}>
+                                             <TooltipTrigger asChild>
+                                               <Info 
+                                                 className="h-3 w-3 cursor-pointer" 
+                                                 onClick={(e) => {
+                                                   e.stopPropagation();
+                                                   setDropdownProbTooltips(prev => ({...prev, [`third-${option.word}`]: !prev[`third-${option.word}`]}));
+                                                 }}
+                                                 onMouseEnter={() => setDropdownProbTooltips(prev => ({...prev, [`third-${option.word}`]: true}))}
+                                                 onMouseLeave={() => setDropdownProbTooltips(prev => ({...prev, [`third-${option.word}`]: false}))}
+                                               />
+                                             </TooltipTrigger>
+                                             <TooltipContent side="right" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
+                                               <p className="text-sm leading-relaxed">These are example probabilities that could be assigned to a word that weights words to be selected by the LLM.</p>
+                                             </TooltipContent>
+                                           </Tooltip>
+                                         </TooltipProvider>
+                                       </span>
+                                     </DropdownMenuItem>
+                                   ))}
+                                 </DropdownMenuContent>
                               </DropdownMenu>
                               {index < currentSentence.length - 1 && " "}
                             </span>
