@@ -24,30 +24,30 @@ export default function SpecificityResponse() {
 
 
   // Input prompt changes immediately
-  const inputPrompt = bias === "With Bias"
-    ? "Summarize how the EU AI Act stifles AI research"
-    : bias === "No Bias"
-      ? "Summarize the main points in the AI Act without bias."
-      : context === "With Background"
+  const inputPrompt = bias === "More Bias"
+    ? "Summarize how the EU AI Act stifles AI research."
+    : bias === "Less Bias"
+      ? "Summarize whether the EU AI Act stifles AI research."
+      : context === "More Background"
         ? "I'm researching recent regulations on artificial intelligence. Please give me a summary of the main points in the AI Act, focusing on its key rules and how it aims to regulate AI systems."
-        : style === "Instructional"
+        : style === "More Instructional"
           ? "TDLR; EU AI Act"
-          : style === "Conversational"
+          : style === "More Conversational"
             ? "Can you give me a summary of the main points in the AI Act?"
-            : specificity === "Specific"
+            : specificity === "More Specific"
               ? "Summarize the main points of the EU AI Act, including its risk categories and rules for high-risk AI systems"
-              : specificity === "General"
+              : specificity === "More General"
                 ? "Tell me about the AI Act."
                 : "Give me a summary of the main points in the AI Act.";
 
   // Output content only changes after Apply Changes is clicked
-  const showBiasedOutput = appliedBias === "With Bias";
-  const showNoBiasOutput = appliedBias === "No Bias";
-  const showWithBackgroundOutput = appliedContext === "With Background";
-  const showInstructionalOutput = appliedStyle === "Instructional";
-  const showConversationalOutput = appliedStyle === "Conversational";
-  const showSpecificOutput = appliedSpecificity === "Specific";
-  const showGeneralOutput = appliedSpecificity === "General";
+  const showBiasedOutput = appliedBias === "More Bias";
+  const showNoBiasOutput = appliedBias === "Less Bias";
+  const showWithBackgroundOutput = appliedContext === "More Background";
+  const showInstructionalOutput = appliedStyle === "More Instructional";
+  const showConversationalOutput = appliedStyle === "More Conversational";
+  const showSpecificOutput = appliedSpecificity === "More Specific";
+  const showGeneralOutput = appliedSpecificity === "More General";
   const showBaseOutput = !appliedBias && !appliedContext && !appliedStyle && !appliedSpecificity;
   const [sentPrompt, setSentPrompt] = useState(inputPrompt);
 

@@ -11,7 +11,7 @@ const Landing = () => {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
 
   const handleStartSimulator = () => {
-    navigate("/module/intro");
+    navigate("/module/intro/about-simulator");
   };
 
   const handleStartPlayground = () => {

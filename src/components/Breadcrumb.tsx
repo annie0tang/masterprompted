@@ -74,6 +74,17 @@ export default function Breadcrumb() {
         });
         break;
       }
+
+            // If we're in prompt-construction sub-routes, stop at prompt-construction
+      if (currentPath === '/module/intro') {
+        breadcrumbItems.push({
+          label: breadcrumbMap[currentPath] || pathSegments[i].charAt(0).toUpperCase() + pathSegments[i].slice(1),
+          path: currentPath,
+          isLast: true
+        });
+        break;
+      }
+      
       
       const isLast = i === pathSegments.length - 1;
       const label = breadcrumbMap[currentPath] || pathSegments[i].charAt(0).toUpperCase() + pathSegments[i].slice(1);

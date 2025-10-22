@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { useState } from 'react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Info } from "lucide-react";
 
 interface ParameterProps {
     parameterTitle: string;
@@ -12,6 +14,7 @@ interface ParameterProps {
     enabled?: boolean;
     currentValue: string;
     onParameterChange?: (param: string) => void;
+    infoText?: string;
 }
 
 function Parameter({
@@ -21,14 +24,16 @@ function Parameter({
     showParameter = true,
     enabled = true,
     currentValue,
-    onParameterChange
+    onParameterChange,
+    infoText
 }: ParameterProps) {
     if (!showParameter) {
         return null;
     }
 
     const NO_CHANGE_VALUE = "";
-    
+
+
     let selectedValue = currentValue;
     if (selectedValue !== leftParameter && selectedValue !== rightParameter) {
         selectedValue = NO_CHANGE_VALUE;
@@ -40,36 +45,50 @@ function Parameter({
         }
     };
 
-    return <fieldset 
-        className={`my-3 p-0 px-1 border border-border rounded-lg ${!enabled && 'opacity-60 pointer-events-none'}`}
+    return <fieldset
+        className={`my-2 p-0 px-1 border border-border rounded-lg ${!enabled && 'opacity-60 pointer-events-none'}`}
         disabled={!enabled}
     >
-        <legend className="text-xs font-medium text-muted-foreground px-2 mx-auto">
-            {parameterTitle}
+        <legend className="text-xs font-medium text-muted-foreground px-2 mx-auto flex items-center gap-1">
+            <span>{parameterTitle}</span>
+            {infoText && (
+                <TooltipProvider>
+                    <Tooltip delayDuration={300}>
+                        <TooltipTrigger asChild>
+                            <Info className="w-3 h-3 cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent side="top" align="center" sideOffset={6} className="max-w-sm">
+                            {infoText}
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
+            )}
         </legend>
-        
-        <RadioGroup 
-            value={selectedValue} 
-            onValueChange={handleValueChange} 
-            orientation="horizontal" 
-            className="flex w-full justify-between gap-0 p-1"
+
+        <RadioGroup
+            value={selectedValue}
+            onValueChange={handleValueChange}
+            orientation="horizontal"
+            className="relative flex w-full justify-between gap-0 p-1"
         >
-            <div className="flex flex-1 flex-col items-center gap-1">
+            <div className="pointer-events-none absolute top-[12px] left-[calc(16.666%+14px)] w-[calc(33.333%-26px)] h-px bg-gray-300" />
+            <div className="pointer-events-none absolute top-[12px] left-[calc(50%+12px)] w-[calc(33.333%-26px)] h-px bg-gray-300" />
+            <div className="flex flex-1 flex-col items-center gap-1 w-1/4">
                 <RadioGroupItem value={leftParameter} id={`${parameterTitle}-r1`} />
                 <Label htmlFor={`${parameterTitle}-r1`} className="text-[10px] font-normal whitespace-nowrap px-1">{leftParameter}</Label>
             </div>
-            
-            <div className="flex flex-1 flex-col items-center gap-1">
+
+            <div className="flex flex-1 flex-col items-center gap-1 w-1/4">
                 <RadioGroupItem value={NO_CHANGE_VALUE} id={`${parameterTitle}-r2`} />
-                <Label htmlFor={`${parameterTitle}-r2`} className="text-[10px] font-normal whitespace-nowrap px-1">No Change</Label>
+                <Label htmlFor={`${parameterTitle}-r2`} className="text-[10px] font-normal whitespace-nowrap px-1">Original</Label>
             </div>
-            
-            <div className="flex flex-1 flex-col items-center gap-1">
+
+            <div className="flex flex-1 flex-col items-center gap-1 w-1/4">
                 <RadioGroupItem value={rightParameter} id={`${parameterTitle}-r3`} />
                 <Label htmlFor={`${parameterTitle}-r3`} className="text-[10px] font-normal whitespace-nowrap px-1">{rightParameter}</Label>
             </div>
         </RadioGroup>
-    </fieldset>;
+    </fieldset>
 }
 
 interface PromptControlsWithPromptProps {
@@ -151,14 +170,14 @@ export default function PromptControlsWithPrompt({
             if (onStyleChange) onStyleChange(""); else setLocalStyle("");
             if (onBiasChange) onBiasChange(""); else setLocalBias("");
         }
-        
+
         // Update prompt and output based on context selection
         if (val === "No Background") {
             if (onPromptChange) {
                 onPromptChange("Summarize the main points in the AI Act.");
             }
         }
-        
+
         if (onContextChange) onContextChange(val); else setLocalContext(val);
     };
     const handleBiasChange = (val: string) => {
@@ -203,7 +222,7 @@ Conformity assessments before deployment
 Scope: Applies to AI providers and deployers in the EU market, regardless of location.
 Goals: Protect fundamental rights and safety while promoting innovation and creating harmonized rules across EU member states.`);
         }
-        
+
         if (onSubmit) onSubmit();
     };
 
@@ -220,16 +239,16 @@ Goals: Protect fundamental rights and safety while promoting innovation and crea
                 const currentContext = context ?? localContext;
                 const currentBias = bias ?? localBias;
                 const allNoChange = !currentSpecificity && !currentStyle && !currentContext && !currentBias;
-                
+
                 const shouldShow = allNoChange || !!promptText;
-                
+
                 if (!shouldShow) return null;
-                
+
                 let displayText = promptText;
-                
+
                 return (
                     <div className="mb-6 bg-secondary rounded-lg p-4">
-                        <p 
+                        <p
                             className="text-foreground leading-relaxed text-sm"
                             style={{
                                 fontFamily: 'Manrope',
@@ -243,20 +262,24 @@ Goals: Protect fundamental rights and safety while promoting innovation and crea
 
             <div>
                 <div className="relative">
-                    <Parameter parameterTitle="Prompt Specificity" leftParameter="General" rightParameter="Specific" showParameter={showSpecificity} enabled={enableSpecificity} currentValue={specificity ?? localSpecificity} onParameterChange={handleSpecificityChange} />
-                    <Parameter parameterTitle="Interaction Style" leftParameter="Conversational" rightParameter="Instructional" showParameter={showStyle} enabled={enableStyle} currentValue={style ?? localStyle} onParameterChange={handleStyleChange} />
-                    <Parameter parameterTitle="Context" leftParameter="No Background" rightParameter="With Background" showParameter={showContext} enabled={enableContext} currentValue={context ?? localContext} onParameterChange={handleContextChange} />
-                    <Parameter parameterTitle="Bias" leftParameter="No Bias" rightParameter="With Bias" showParameter={showBias} enabled={enableBias} currentValue={bias ?? localBias} onParameterChange={handleBiasChange} />
+                    <Parameter parameterTitle="Prompt Specificity" leftParameter="More General" rightParameter="More Specific" showParameter={showSpecificity} enabled={enableSpecificity} currentValue={specificity ?? localSpecificity} onParameterChange={handleSpecificityChange} infoText="Prompt Specificity is how explicit you are in your prompt for the desired output. The more specific you are, the better the results will be."
+                    />
+                    <Parameter parameterTitle="Interaction Style" leftParameter="More Conversational" rightParameter="More Instructional" showParameter={showStyle} enabled={enableStyle} currentValue={style ?? localStyle} onParameterChange={handleStyleChange} infoText="Conversation Style is the manner in which you prompt your LLM. You can interact like it is human but this is not necessary."
+                    />
+                    <Parameter parameterTitle="Context" leftParameter="Less Background" rightParameter="More Background" showParameter={showContext} enabled={enableContext} currentValue={context ?? localContext} onParameterChange={handleContextChange} infoText="Context is the additional information you give to the LLM to help it answers as well as possible. This may include background to your prompt"
+                    />
+                    <Parameter parameterTitle="Bias" leftParameter="Less Bias" rightParameter="More Bias" showParameter={showBias} enabled={enableBias} currentValue={bias ?? localBias} onParameterChange={handleBiasChange} infoText="Confirmation bias is when the way you phrase a prompt affects the perspective the LLM produces"
+                    />
                 </div>
 
                 <div className="flex gap-2">
-                    <Button 
-                        onClick={handleSubmitClick} 
-                        variant="default" 
-                        size="sm" 
+                    <Button
+                        onClick={handleSubmitClick}
+                        variant="default"
+                        size="sm"
                         className="flex-1"
                         disabled={hasUnappliedChanges !== undefined ? !hasUnappliedChanges : !((specificity ?? localSpecificity) || (style ?? localStyle) || (context ?? localContext) || (bias ?? localBias))}
-                    > 
+                    >
                         Send Prompt
                     </Button>
                 </div>

@@ -144,7 +144,7 @@ const Chatbox = ({ canType = true, value, onChange, onSubmit, onUpload, fileName
   }, [animationKey]);
 
   return (
-  <div ref={containerRef} id={id} className={`relative bg-card border border-border rounded-lg shadow-md ${fullHeight ? 'h-full flex flex-col min-h-0' : 'max-w-3xl'} ${isBouncing ? 'bounce-once' : ''}`}>
+  <div ref={containerRef} id={id} className={`relative bg-card border border-border rounded-2xl shadow-lg min-h-24 ${fullHeight ? 'h-full flex flex-col' : 'max-w-3xl'} ${isBouncing ? 'bounce-once' : ''}`}>
       {/* Submit button - positioned in top right */}
       <div className="absolute top-4 right-4 z-10">
         <SubmitButton onClick={handleSubmit} id={submitButtonId} disableSend={disableSend} />

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -8,10 +8,40 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { SendHorizontal } from "lucide-react";
+import { PopoverSeries } from "@/components/PopoverSeries";
+import Chatbox from "@/components/ChatBox";
+
 export default function Specificity() {
   const navigate = useNavigate();
   const [showTooltip, setShowTooltip] = useState(true);
   const [promptText, setPromptText] = useState("Summarize the main points of the EU AI Act, including its risk categories and rules for high-risk AI systems");
+  const [clickCount, setClickCount] = useState(0);
+  const [showPopover, setShowPopover] = useState(false);
+  const [showAnimation, setShowAnimation] = useState(false);
+
+  useEffect(() => {
+    const handleClick = (event: MouseEvent) => {
+      const submitButton = document.getElementById("chatbox-submit-button");
+      const target = event.target as HTMLElement;
+
+      // Only count clicks that are NOT on the submit button
+      if (submitButton && !submitButton.contains(target)) {
+        setClickCount(prev => {
+          const newCount = prev + 1;
+          if (newCount >= 3) {
+            setShowPopover(true);
+          }
+          return newCount;
+        });
+      }
+    };
+
+    document.addEventListener("click", handleClick);
+
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, []);
   const handleSubmit = () => {
     // Navigate to the document attachment page
     navigate("/module/prompt-construction/summarize");
@@ -21,43 +51,40 @@ export default function Specificity() {
     console.log("File upload clicked");
   };
   return <div className="min-h-screen bg-background">
-      <Header />
-      
-      <main className="container mx-auto px-6 py-6">
-        <Breadcrumb />
-        <div className="mb-5"></div>
-        <div className="max-w-4xl mx-auto relative min-h-[600px]">
-          {/* Guidance Tooltip */}
-          <GuidanceTooltip text="Let's start by prompting for a summary of the ai act." isVisible={showTooltip} onClose={() => setShowTooltip(false)} className="top-8 left-1/2 transform -translate-x-1/2" />
+    <Header />
 
-          {/* Prompt Box */}
-          <Card className="bg-white border border-gray-200 rounded-2xl shadow-lg" style={{
-          position: 'absolute',
-          top: '100px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '100%',
-          maxWidth: '768px'
-        }}>
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between">
-                {/* Left content */}
-                <div className="flex-1 mr-4">
-                  <Textarea value={promptText} onChange={e => setPromptText(e.target.value)} placeholder="Type your message here..." style={{
-                  fontSize: '18px',
-                  lineHeight: '1.5'
-                }} className="border-0 p-0 text-gray-800 text-lg leading-relaxed mb-4 resize-none min-h-[60px] focus:ring-0 focus:outline-none bg-transparent my-0" />
-                  
-                </div>
-                
-                {/* Arrow button */}
-                <Button onClick={handleSubmit} variant="default" size="icon" className="rounded-full h-10 w-10 ml-4">
-                  <SendHorizontal className="h-5 w-5" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+    <main className="container mx-auto px-6 py-6">
+      <Breadcrumb />
+      <div className="mb-5"></div>
+
+      <div className="max-w-2xl mx-auto flex items-center justify-center min-h-[calc(100vh-300px)]">
+        <div className="w-full relative">
+          <Chatbox
+            canType={false}
+            value={"Summarize the main points of the EU AI Act, including its risk categories and rules for high-risk AI systems."}
+            onChange={() => { }}
+            fileName="EU_AI_Act.pdf"
+            submitButtonId="chatbox-submit-button" // Pass the ID here
+            onSubmit={handleSubmit}
+          />
+          {showPopover && (
+            <PopoverSeries
+              steps={[
+                {
+                  id: "submit-hint",
+                  trigger: "#chatbox-submit-button",
+                  content: "Click here to submit your prompt and see the AI's response!"
+                }
+              ]}
+              initialStep={0}
+              onClose={() => {
+                setShowPopover(false);
+                setClickCount(0); // Reset click count when popover is closed
+              }}
+            />
+          )}
         </div>
-      </main>
-    </div>;
+      </div>
+    </main>
+  </div>;
 }

@@ -8,7 +8,7 @@ const AboutSimulator = () => {
   const navigate = useNavigate();
 
   const handleStartSimulator = () => {
-    navigate("/module/next-word-prediction");
+    navigate("/module/intro/");
   };
 
   return (
@@ -79,7 +79,7 @@ const AboutSimulator = () => {
                     lineHeight: '28px'
                   }}
                 >
-                  Start Simulator
+                  Continue
                   <svg width="10" height="8" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M1 5H11M11 5L7 1M11 5L7 9" stroke="#1F1F1F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>

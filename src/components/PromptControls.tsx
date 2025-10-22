@@ -87,7 +87,7 @@ function Parameter({
                 
                 <div className="flex flex-1 flex-col items-center gap-1 w-1/4">
                     <RadioGroupItem value={NO_CHANGE_VALUE} id={`${parameterTitle}-r2`} />
-                    <Label htmlFor={`${parameterTitle}-r2`} className="text-[10px] font-normal whitespace-nowrap px-1">No Change</Label>
+                    <Label htmlFor={`${parameterTitle}-r2`} className="text-[10px] font-normal whitespace-nowrap px-1">Original</Label>
                 </div>
                 
                 <div className="flex flex-1 flex-col items-center gap-1 w-1/4">
@@ -165,7 +165,7 @@ export default function PromptControls({
     return (
         <Card className="bg-card border border-border rounded-lg max-w-sm h-full">
             <CardContent className="p-4 h-full flex flex-col gap-2">
-                <div className="flex-1 min-h-0">
+                <div className="flex-1 min-h-0 z-50">
                     <Chatbox
                         value={chatValue}
                         onChange={onChatChange ?? (() => {})}
@@ -185,8 +185,8 @@ export default function PromptControls({
                         <Parameter 
                             parameterTitle="Prompt Specificity" 
                             parameterKey="specificity" 
-                            leftParameter="General" 
-                            rightParameter="Specific" 
+                            leftParameter="More General" 
+                            rightParameter="More Specific" 
                             showParameter={showSpecificity} 
                             enabled={enableSpecificity} 
                             currentValue={parameters.specificity} 
@@ -196,8 +196,8 @@ export default function PromptControls({
                         <Parameter 
                             parameterTitle="Interaction Style" 
                             parameterKey="style" 
-                            leftParameter="Conversational" 
-                            rightParameter="Instructional" 
+                            leftParameter="More Conversational" 
+                            rightParameter="More Instructional" 
                             showParameter={showStyle} 
                             enabled={enableStyle} 
                             currentValue={parameters.style} 
@@ -207,8 +207,8 @@ export default function PromptControls({
                         <Parameter 
                             parameterTitle="Context" 
                             parameterKey="context" 
-                            leftParameter="No Background" 
-                            rightParameter="With Background" 
+                            leftParameter="Less Background" 
+                            rightParameter="More Background" 
                             showParameter={showContext} 
                             enabled={enableContext} 
                             currentValue={parameters.context} 
@@ -218,8 +218,8 @@ export default function PromptControls({
                         <Parameter 
                             parameterTitle="Bias" 
                             parameterKey="bias" 
-                            leftParameter="No Bias" 
-                            rightParameter="With Bias" 
+                            leftParameter="Less Bias" 
+                            rightParameter="More Bias" 
                             showParameter={showBias} 
                             enabled={enableBias} 
                             currentValue={parameters.bias} 

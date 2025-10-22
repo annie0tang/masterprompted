@@ -32,7 +32,7 @@ const Header = ({ transparent = false }: { transparent?: boolean }) => {
   const moduleItems = [
     { 
       title: "Introduction", 
-      path: "/module/intro",
+      path: "/module/intro/about-simulator",
       completed: false
     },
     { 

@@ -7,7 +7,7 @@ export default function PromptConstructionSpecificityTakeaways() {
   const navigate = useNavigate();
 
   const handleContinue = () => {
-    navigate("/module/prompt-construction/conversation-style");
+    navigate("/playground");
   };
 
   return (
@@ -53,7 +53,7 @@ export default function PromptConstructionSpecificityTakeaways() {
           
           <div className="mt-16">
             <button 
-              onClick={() => navigate("/prompt-playground")}
+              onClick={() => navigate("/playground")}
               className="bg-green-400 hover:bg-green-500 text-black font-medium px-8 py-3 rounded-full transition-colors inline-flex items-center gap-3"
             >
               Prompt Playground
