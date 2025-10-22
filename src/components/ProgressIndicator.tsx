@@ -29,11 +29,16 @@ export default function ProgressIndicator({ currentStep, steps }: ProgressIndica
             aria-label={step.label}
           />
           <span
-            className={`text-xs transition-all duration-300 opacity-0 group-hover:opacity-100 ${
+            className={`text-xs transition-all duration-300 opacity-0 group-hover:opacity-100 whitespace-nowrap ${
               index === stepIndex
                 ? 'text-primary font-medium'
                 : 'text-gray-500'
             }`}
+            style={{ 
+              transform: 'rotate(-90deg)',
+              transformOrigin: 'center center',
+              marginTop: '20px'
+            }}
           >
             {step.label}
           </span>
