@@ -23,6 +23,8 @@ export default function HeadlineResponse() {
   const [showCharterTooltip, setShowCharterTooltip] = useState(false);
   const [charterTooltipShown, setCharterTooltipShown] = useState(false);
   const [showMiniTask, setShowMiniTask] = useState(true);
+  const [secondProbTooltipOpen, setSecondProbTooltipOpen] = useState(false);
+  const [thirdProbTooltipOpen, setThirdProbTooltipOpen] = useState(false);
 
   const getWordOptions = (position: 'second' | 'third', currentIndex?: number) => {
     let options: { word: string; probability: string }[] = [];
@@ -260,19 +262,27 @@ export default function HeadlineResponse() {
                                 <button data-word-union data-word={word.toLowerCase()} className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg inline-flex items-center gap-1">
                                   {word}
                                   <ChevronDown className="h-3 w-3" />
-                                  <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap flex items-center gap-1" style={{ pointerEvents: 'auto' }}>
-                                    {rawOptions.find(opt => opt.word === word)?.probability || rawOptions[0]?.probability || "0.67"}
-                                    <TooltipProvider>
-                                      <Tooltip>
-                                        <TooltipTrigger asChild>
-                                          <Info className="h-3 w-3 cursor-help" />
-                                        </TooltipTrigger>
-                                        <TooltipContent side="top" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
-                                          <p className="text-sm leading-relaxed">These are example probabilities that could be assigned to a word that weights words to be selected by the LLM.</p>
-                                        </TooltipContent>
-                                      </Tooltip>
-                                    </TooltipProvider>
-                                  </span>
+                                   <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap flex items-center gap-1" style={{ pointerEvents: 'auto' }}>
+                                     {rawOptions.find(opt => opt.word === word)?.probability || rawOptions[0]?.probability || "0.67"}
+                                     <TooltipProvider>
+                                       <Tooltip open={secondProbTooltipOpen} onOpenChange={setSecondProbTooltipOpen}>
+                                         <TooltipTrigger asChild>
+                                           <Info 
+                                             className="h-3 w-3 cursor-pointer" 
+                                             onClick={(e) => {
+                                               e.stopPropagation();
+                                               setSecondProbTooltipOpen(!secondProbTooltipOpen);
+                                             }}
+                                             onMouseEnter={() => setSecondProbTooltipOpen(true)}
+                                             onMouseLeave={() => setSecondProbTooltipOpen(false)}
+                                           />
+                                         </TooltipTrigger>
+                                         <TooltipContent side="top" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
+                                           <p className="text-sm leading-relaxed">These are example probabilities that could be assigned to a word that weights words to be selected by the LLM.</p>
+                                         </TooltipContent>
+                                       </Tooltip>
+                                     </TooltipProvider>
+                                   </span>
                                 </button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent className="bg-white border border-gray-200 shadow-lg rounded-md z-[9999] min-w-[120px]">
@@ -307,19 +317,27 @@ export default function HeadlineResponse() {
                                   <button data-word={word.toLowerCase()} className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg inline-flex items-center gap-1">
                                     {word}
                                     <ChevronDown className="h-3 w-3" />
-                                    <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap flex items-center gap-1" style={{ pointerEvents: 'auto' }}>
-                                      {rawOptions.find(opt => opt.word === word)?.probability || rawOptions[0]?.probability || "0.73"}
-                                      <TooltipProvider>
-                                        <Tooltip>
-                                          <TooltipTrigger asChild>
-                                            <Info className="h-3 w-3 cursor-help" />
-                                          </TooltipTrigger>
-                                          <TooltipContent side="top" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
-                                            <p className="text-sm leading-relaxed">These are example probabilities that could be assigned to a word that weights words to be selected by the LLM.</p>
-                                          </TooltipContent>
-                                        </Tooltip>
-                                      </TooltipProvider>
-                                    </span>
+                                     <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap flex items-center gap-1" style={{ pointerEvents: 'auto' }}>
+                                       {rawOptions.find(opt => opt.word === word)?.probability || rawOptions[0]?.probability || "0.73"}
+                                       <TooltipProvider>
+                                         <Tooltip open={thirdProbTooltipOpen} onOpenChange={setThirdProbTooltipOpen}>
+                                           <TooltipTrigger asChild>
+                                             <Info 
+                                               className="h-3 w-3 cursor-pointer" 
+                                               onClick={(e) => {
+                                                 e.stopPropagation();
+                                                 setThirdProbTooltipOpen(!thirdProbTooltipOpen);
+                                               }}
+                                               onMouseEnter={() => setThirdProbTooltipOpen(true)}
+                                               onMouseLeave={() => setThirdProbTooltipOpen(false)}
+                                             />
+                                           </TooltipTrigger>
+                                           <TooltipContent side="top" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
+                                             <p className="text-sm leading-relaxed">These are example probabilities that could be assigned to a word that weights words to be selected by the LLM.</p>
+                                           </TooltipContent>
+                                         </Tooltip>
+                                       </TooltipProvider>
+                                     </span>
                                   </button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="bg-white border border-gray-200 shadow-lg rounded-md z-[9999] min-w-[120px]">
