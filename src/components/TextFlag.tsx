@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { CheckCircle, Target, Mic, Scale, Copy } from "lucide-react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
@@ -30,6 +30,7 @@ const labelMap = {
 export default function TextFlag({ text, evaluationFactor, explanation, className = "", href }: TextFlagProps) {
   const Icon = iconMap[evaluationFactor];
   const label = labelMap[evaluationFactor];
+  const [hoverCardOpen, setHoverCardOpen] = useState(false);
 
   // Highlight the corresponding evaluation criterion when component is mounted
   useEffect(() => {
@@ -61,9 +62,15 @@ export default function TextFlag({ text, evaluationFactor, explanation, classNam
   }, [evaluationFactor]);
 
   return (
-    <HoverCard>
+    <HoverCard open={hoverCardOpen} onOpenChange={setHoverCardOpen}>
       <HoverCardTrigger asChild>
-        <span className={`inline cursor-pointer ${className}`}>
+        <span 
+          className={`inline cursor-pointer ${className}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            setHoverCardOpen(!hoverCardOpen);
+          }}
+        >
           <Icon className="inline h-3.5 w-3.5 text-destructive -mt-0.5 mr-0.5" />
           {href ? (
             <a 
@@ -71,6 +78,7 @@ export default function TextFlag({ text, evaluationFactor, explanation, classNam
               target="_blank" 
               rel="noopener noreferrer" 
               className="underline decoration-destructive decoration-2 underline-offset-2 text-current hover:opacity-80"
+              onClick={(e) => e.stopPropagation()}
             >
               {text}
             </a>

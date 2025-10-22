@@ -7,6 +7,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Info } from "lucide-react";
 import Chatbox from "./ChatBox";
 import { Parameters } from "@/pages/PromptPlayground";
+import { useState } from "react";
 
 const NO_CHANGE_VALUE = "no-change";
 
@@ -33,6 +34,8 @@ function Parameter({
     onParameterChange,
     infoText
 }: ParameterProps) {
+    const [tooltipOpen, setTooltipOpen] = useState(false);
+    
     if (!showParameter) {
         return null;
     }
@@ -60,12 +63,13 @@ function Parameter({
                 <span>{parameterTitle}</span>
                 {infoText && (
                     <TooltipProvider>
-                        <Tooltip delayDuration={300}>
+                        <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen} delayDuration={300}>
                             <TooltipTrigger asChild>
                                 <Info 
                                     className="w-3 h-3 cursor-pointer" 
                                     onClick={(e) => {
                                         e.stopPropagation();
+                                        setTooltipOpen(!tooltipOpen);
                                     }}
                                 />
                             </TooltipTrigger>
