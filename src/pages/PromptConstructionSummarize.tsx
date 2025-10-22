@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Breadcrumb from "@/components/Breadcrumb";
 import ModuleNavigation from "@/components/ModuleNavigation";
+import ProgressIndicator from "@/components/ProgressIndicator";
 import { Card, CardContent } from "@/components/ui/card";
 import { Plus, Paperclip } from "lucide-react";
 
@@ -25,6 +26,14 @@ export default function PromptConstructionSummarize() {
       <main className="container mx-auto px-6 py-6">
         <Breadcrumb />
         <div className="mb-5"></div>
+        <ProgressIndicator 
+          currentStep="main" 
+          steps={[
+            { id: 'intro', label: 'Introduction' },
+            { id: 'main', label: 'Guided Exploration' },
+            { id: 'takeaway', label: 'Takeaways' }
+          ]} 
+        />
         <div className="max-w-4xl mx-auto relative min-h-[600px]">
           
           {/* Add Document Card */}

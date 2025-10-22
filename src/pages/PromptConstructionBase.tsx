@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Breadcrumb from "@/components/Breadcrumb";
 import ModuleNavigation from "@/components/ModuleNavigation";
+import ProgressIndicator from "@/components/ProgressIndicator";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +22,14 @@ export default function PromptConstruction() {
       <main className="container mx-auto px-6 py-6">
         <Breadcrumb />
         <div className="mb-5"></div>
+        <ProgressIndicator 
+          currentStep="intro" 
+          steps={[
+            { id: 'intro', label: 'Introduction' },
+            { id: 'main', label: 'Guided Exploration' },
+            { id: 'takeaway', label: 'Takeaways' }
+          ]} 
+        />
         <div className="max-w-4xl mx-auto flex items-center justify-center min-h-[600px]">
           <Card
             className="transition-all duration-200 w-auto max-w-full"
