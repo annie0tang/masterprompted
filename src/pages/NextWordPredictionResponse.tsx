@@ -481,6 +481,11 @@ export default function HeadlineResponse() {
           </div>
         </div>}
       
+      <div className="mt-6 text-sm text-gray-500 max-w-7xl mx-auto">
+        LLMs have been used in the following places: The creation of prompt output examples in the Guided Exploration<br />
+        LLMs used include: Mistral, Claude, Chat GPT & Llama 3.1 8B (open source)
+      </div>
+      
       <ModuleNavigation
         previousRoute="/module/next-word-prediction/prompt" 
         nextRoute="/module/next-word-prediction/takeaways"
