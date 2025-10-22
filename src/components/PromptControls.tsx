@@ -224,7 +224,7 @@ export default function PromptControls({
                             enabled={enableBias} 
                             currentValue={parameters.bias} 
                             onParameterChange={onParameterChange}
-                            infoText="Choose whether to include a specific perspective or viewpoint in your prompt."
+                            infoText="Explore how neutral or leading prompts can effect and bias LLM output"
                         />
                     </div>
 
