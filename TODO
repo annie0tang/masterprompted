@@ -1,22 +1,25 @@
 TODO:
-- spotlight: disable clicks on dimmed-out screen
 - align theming with greater AI-Code design philosophy
-- remove scrolling where possible
 - look into scraping data from google sheets
 - add info to parameters
 - minor: add bounce to only manual revert neutral parameters, make sure to exclude send prompt.
 - some way to pull old prompts back into chatbox easily (click on chatprompt component?)
 - edit button for chats
 - need to make prompt optimization more reliable, probably add a system prompt or something.
+- make clickable (next word prediction probabilities info, prompt control panel parameters info, journalistic eval highlights)
+- progress bar?
+- change the tooltip component so they overlay over everything not just local components
+- add a legend to the diff component (added/removed text)
+- change bias parameter name to confirmation bias?
 - DIFF: 
   - implement connectorlines.tsx?
   - add code block formatting to richtext
   - richtext beyond newline doesn't work with diff because it's too hard to create a custom less-stringent diff using jsdiff. probably need to switch diff tools?
     - do that and then add richtext support during diff
     - still some minor newline gore issues, need to remove trailing/leading newlines from the span
-
-
-
+- DONE: 
+  - spotlight: disable clicks on dimmed-out screen
+  - remove scrolling where possible
 
 
 
