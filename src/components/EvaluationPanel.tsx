@@ -38,16 +38,17 @@ const evaluationCriteria = [
 // Define props for the component, including the optional initialIsOpen prop
 interface EvaluationPanelProps {
   initialIsOpen?: boolean;
+  canClose?: boolean;
 }
 
 // Update the component signature to accept the props
-export default function EvaluationPanel({ initialIsOpen = true }: EvaluationPanelProps) {
+export default function EvaluationPanel({ initialIsOpen = true, canClose = false }: EvaluationPanelProps) {
   // Use state to manage the main panel open state. Keep it in sync whenever the prop changes
   const [isPanelOpen, setIsPanelOpen] = useState(initialIsOpen);
 
   // If the parent updates `initialIsOpen` at any time, reflect that change in local state.
   useEffect(() => {
-    if (!initialIsOpen) setIsPanelOpen(initialIsOpen);
+    setIsPanelOpen(initialIsOpen);
   }, [initialIsOpen]);
   // State for managing which criteria item is open
   const [openItem, setOpenItem] = useState<string | null>(null);
@@ -64,8 +65,12 @@ export default function EvaluationPanel({ initialIsOpen = true }: EvaluationPane
           {/* Expand/Minimize button in top-right */}
           <button
             aria-label={isPanelOpen ? 'Minimize evaluation panel' : 'Expand evaluation panel'}
-            className="absolute top-1 right-1 p-1 rounded-full hover:bg-muted/50"
-            onClick={() => setIsPanelOpen(false)}
+            className={
+              `absolute top-1 right-1 p-1 rounded-full hover:bg-muted/50 ${!canClose ? 'opacity-50 cursor-not-allowed' : ''}`
+            }
+            onClick={() => { if (canClose) setIsPanelOpen(false); }}
+            aria-disabled={!canClose}
+            title={!canClose ? 'Panel cannot be minimized right now' : undefined}
           >
             <ListChevronsDownUp className="h-5 w-5 text-muted-foreground" />
           </button>

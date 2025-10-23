@@ -450,7 +450,7 @@ const PromptPlayground = () => {
               <button className="p-2 rounded-full hover:bg-muted/50" onClick={() => setShowControlPanelPopover(true)}>
                 <CircleQuestionMark className="h-6 w-6 text-muted-foreground" />
               </button>
-              <EvaluationPanel initialIsOpen={!showDiff} />
+              <EvaluationPanel initialIsOpen={!showDiff} canClose={true} />
             </div>
           </div>
         </div>
