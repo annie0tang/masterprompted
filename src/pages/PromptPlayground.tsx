@@ -326,9 +326,13 @@ const PromptPlayground = () => {
         body: JSON.stringify({ prompt, language: "en", temperature: 0.7, specificity, communication_mode: style, depth: context, bias, length: "short" }),
       });
       const data = await response.json();
-      setEditingText(data.optimized_prompt);
-      setDisableOptimize(false);
-      setOptimizePulse(prev => prev + 1);
+      if (data && typeof data.optimized_prompt === "string") {
+        setEditingText(data.optimized_prompt);
+        setDisableOptimize(false);
+        setOptimizePulse(prev => prev + 1);
+      } else {
+        throw new Error("handlePromptOptimize: optimized_prompt missing or not a string");
+      }
     } catch (err) { console.error("handlePromptOptimize failed:", err); }
     setWaitingForOptimization(false);
   }, []);
@@ -400,7 +404,7 @@ const PromptPlayground = () => {
   };
 
   const handleChatSubmit = (submittedText: string) => { void handleSubmit(submittedText, true); };
-  const handleOptimizeSubmit = async () => { if (editingText.trim()) { void handleSubmit(editingText, false); } };
+  const handleOptimizeSubmit = async () => { if (editingText.trim()) { void handleSubmit(editingText, false); }};
   const handleInputChange = (input: string) => {
     setHasManualEdit(true);
     handleReset();
