@@ -113,18 +113,28 @@ const ChatAnswer = ({
   return (
     <div className="mb-20 w-full">
       {canShowDiff && (
-        <div className="flex items-center space-x-2 mb-3 pb-2 border-b border-border">
-          <Switch
-            id={`show-diff-${threadIndex}`}
-            checked={showDiff}
-            onCheckedChange={onToggleDiff}
-          />
-          <Label htmlFor={`show-diff-${threadIndex}`} className="text-sm text-muted-foreground">
-            Show Changes
-          </Label>
-          <button onClick={() => toggleDiffHelp()}>
-          <CircleQuestionMark className="-ml-1 h-4 w-4 text-muted-foreground"  />
-          </button>
+        <div className="flex items-center justify-between mb-3 pb-2 border-b border-border">
+          <div className="flex items-center space-x-2">
+            <Switch
+              id={`show-diff-${threadIndex}`}
+              checked={showDiff}
+              onCheckedChange={onToggleDiff}
+            />
+            <Label htmlFor={`show-diff-${threadIndex}`} className="text-sm text-muted-foreground">
+              Show Changes
+            </Label>
+            <button onClick={() => toggleDiffHelp()}>
+              <CircleQuestionMark className="-ml-1 h-4 w-4 text-muted-foreground"  />
+            </button>
+          </div>
+          <div className="flex items-center gap-3 text-xs">
+            <div className="flex items-center gap-1">
+              <span className="bg-green-200 text-green-800 px-1 rounded">added</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="bg-red-200/60 text-red-800 px-1 rounded line-through">removed</span>
+            </div>
+          </div>
         </div>
       )}
       
