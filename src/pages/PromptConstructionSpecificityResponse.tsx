@@ -12,8 +12,11 @@ import SectionFlag from "@/components/SectionFlag";
 import ChatPrompt from "@/components/ChatPrompt";
 import LearningProgressBar from "@/components/LearningProgressBar";
 import { set } from "zod";
+import { useLanguage } from "@/contexts/LanguageContext";
+
 export default function SpecificityResponse() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [bias, setBias] = useState("");
   const [appliedBias, setAppliedBias] = useState("");
   const [context, setContext] = useState("");

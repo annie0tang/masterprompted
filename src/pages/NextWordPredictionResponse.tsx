@@ -13,8 +13,11 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronDown, Info, InfoIcon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useLanguage } from "@/contexts/LanguageContext";
+
 export default function HeadlineResponse() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
   const [currentSentence, setCurrentSentence] = useState(["European", "Union", "Unites", "On", "Historic", "AI", "Ethics", "Framework,", "Charting", "Path", "For", "Responsible", "Technology", "Development"]);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -205,17 +208,17 @@ export default function HeadlineResponse() {
     id: "word-union",
     trigger: "[data-word-union]",
     content: <div className="space-y-2">
-      <h3 className="font-semibold text-sm">Interactive Word Selection</h3>
+      <h3 className="font-semibold text-sm">{t('nextWord.response.interactiveTitle')}</h3>
       <p className="text-sm leading-relaxed">
-        Click on the highlighted words to select a different option. Try and find the word combination that leads to a factual inaccuracy.
+        {t('nextWord.response.interactiveDesc')}
       </p>
     </div>
   }];
   return <div className="min-h-screen bg-background">
     {showMiniTask && (
       <MiniTask
-        title="Mini Task: Find the factual inaccuracy"
-        description="Click on the green highlighted words to try out different combinations – each combination will generate a different outcome."
+        title={t('nextWord.response.miniTaskTitle')}
+        description={t('nextWord.response.miniTaskDescription')}
         onStartTask={() => setShowMiniTask(false)}
       />
     )}
@@ -279,9 +282,9 @@ export default function HeadlineResponse() {
                                              onMouseLeave={() => setSecondProbTooltipOpen(false)}
                                            />
                                          </TooltipTrigger>
-                                         <TooltipContent side="top" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
-                                           <p className="text-sm leading-relaxed">These are example probabilities that could be assigned to a word that weights words to be selected by the LLM.</p>
-                                         </TooltipContent>
+                                          <TooltipContent side="top" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
+                                            <p className="text-sm leading-relaxed">{t('nextWord.response.probTooltip')}</p>
+                                          </TooltipContent>
                                        </Tooltip>
                                      </TooltipProvider>
                                    </span>
@@ -310,9 +313,9 @@ export default function HeadlineResponse() {
                                                onMouseLeave={() => setDropdownProbTooltips(prev => ({...prev, [`second-${option.word}`]: false}))}
                                              />
                                            </TooltipTrigger>
-                                           <TooltipContent side="right" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
-                                             <p className="text-sm leading-relaxed">These are example probabilities that could be assigned to a word that weights words to be selected by the LLM.</p>
-                                           </TooltipContent>
+                                            <TooltipContent side="right" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
+                                              <p className="text-sm leading-relaxed">{t('nextWord.response.probTooltip')}</p>
+                                            </TooltipContent>
                                          </Tooltip>
                                        </TooltipProvider>
                                      </span>
@@ -354,9 +357,9 @@ export default function HeadlineResponse() {
                                                onMouseLeave={() => setThirdProbTooltipOpen(false)}
                                              />
                                            </TooltipTrigger>
-                                           <TooltipContent side="top" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
-                                             <p className="text-sm leading-relaxed">These are example probabilities that could be assigned to a word that weights words to be selected by the LLM.</p>
-                                           </TooltipContent>
+                                      <TooltipContent side="top" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
+                                        <p className="text-sm leading-relaxed">{t('nextWord.response.probTooltip')}</p>
+                                      </TooltipContent>
                                          </Tooltip>
                                        </TooltipProvider>
                                      </span>
@@ -385,9 +388,9 @@ export default function HeadlineResponse() {
                                                  onMouseLeave={() => setDropdownProbTooltips(prev => ({...prev, [`third-${option.word}`]: false}))}
                                                />
                                              </TooltipTrigger>
-                                             <TooltipContent side="right" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
-                                               <p className="text-sm leading-relaxed">These are example probabilities that could be assigned to a word that weights words to be selected by the LLM.</p>
-                                             </TooltipContent>
+                                        <TooltipContent side="right" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
+                                          <p className="text-sm leading-relaxed">{t('nextWord.response.probTooltip')}</p>
+                                        </TooltipContent>
                                            </Tooltip>
                                          </TooltipProvider>
                                        </span>
