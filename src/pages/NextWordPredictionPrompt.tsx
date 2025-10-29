@@ -7,9 +7,11 @@ import LearningProgressBar from "@/components/LearningProgressBar";
 import { PopoverSeries } from "@/components/PopoverSeries";
 import AnimatedTransition from "@/components/AnimatedTransition";
 import ModuleNavigation from "@/components/ModuleNavigation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function NextWordPrediction() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [clickCount, setClickCount] = useState(0);
   const [showPopover, setShowPopover] = useState(false);
   const [showAnimation, setShowAnimation] = useState(false);
@@ -60,7 +62,7 @@ export default function NextWordPrediction() {
           <div className="w-full relative">
           <Chatbox 
             canType={false} 
-            value={"Write a headline for a long form journalistic article about ai ethics agreement reached across the eu"}
+            value={t('nextWord.prompt.input')}
             onChange={() => {}} 
             fileName="EU_AI_Act.pdf"
             submitButtonId="chatbox-submit-button" // Pass the ID here
@@ -72,7 +74,7 @@ export default function NextWordPrediction() {
                 {
                   id: "submit-hint",
                   trigger: "#chatbox-submit-button",
-                  content: "Click here to submit your prompt and see the AI's response!"
+                  content: t('nextWord.prompt.popoverSubmit')
                 }
               ]}
               initialStep={0}

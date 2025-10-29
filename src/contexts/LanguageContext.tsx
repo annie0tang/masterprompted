@@ -113,6 +113,10 @@ const translations = {
         title: 'How do LLMs form responses to user prompts?',
         description: 'LLMs generate text by predicting what word should come next. For each prediction, previous words are analysed to calculate probabilities for all possible next words. The most probable word is selected, added to the text, and then used in this updated context to predict the next word, continuing until complete.',
         continue: 'Continue'
+      },
+      prompt: {
+        input: 'Write a headline for a long form journalistic article about ai ethics agreement reached across the eu',
+        popoverSubmit: "Click here to submit your prompt and see the AI's response!"
       }
     },
     promptConstructionModule: {
@@ -236,6 +240,10 @@ const translations = {
         title: '¿Cómo forman los LLM respuestas a las indicaciones del usuario?',
         description: 'Los LLM generan texto prediciendo qué palabra debe venir a continuación. Para cada predicción, se analizan las palabras anteriores para calcular probabilidades para todas las palabras siguientes posibles. Se selecciona la palabra más probable, se añade al texto y luego se usa en este contexto actualizado para predecir la siguiente palabra, continuando hasta completarse.',
         continue: 'Continuar'
+      },
+      prompt: {
+        input: "Escribe un titular para un artículo periodístico de formato largo sobre el acuerdo de ética de IA alcanzado en toda la UE",
+        popoverSubmit: "Haz clic aquí para enviar tu prompt y ver la respuesta de la IA"
       }
     },
     promptConstructionModule: {
