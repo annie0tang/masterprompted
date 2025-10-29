@@ -5,9 +5,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/Header";
 import VideoLightbox from "@/components/VideoLightbox";
 import { ArrowRight, Play } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Landing = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [isVideoOpen, setIsVideoOpen] = useState(false);
 
   const handleStartSimulator = () => {
@@ -46,11 +48,11 @@ const Landing = () => {
             <div className="max-w-6xl mx-auto space-y-12">
               <div className="space-y-6">
                 <h1 className="text-4xl md:text-6xl font-barlow-semi font-bold leading-tight">
-                  PromptED: Responsible AI use in Journalism
+                  {t('landing.hero.title')}
                 </h1>
 
                 <p className="text-lg md:text-xl text-white/90 max-w-4xl mx-auto leading-relaxed">
-                  A hands-on exploration and practice for journalists to observe how large language models function, their limitations, and how to use them for more trustworthy content production.
+                  {t('landing.hero.subtitle')}
                 </p>
 
                 {/* Watch Trailer Button */}
