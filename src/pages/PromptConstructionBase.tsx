@@ -7,9 +7,11 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
 import starImage from "@/assets/star.png";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function PromptConstruction() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const handleContinue = () => {
     navigate("/module/prompt-construction/specificity");
@@ -52,7 +54,7 @@ export default function PromptConstruction() {
             <CardContent className="p-0 w-full flex flex-col">
               {/* Header with close button */}
               <div className="flex justify-between items-center mb-6">
-                <span className="text-gray-500 text-sm">Learning 2: Prompt construction</span>
+                <span className="text-gray-500 text-sm">{t('promptConstructionModule.intro.label')}</span>
                 <Button 
                   variant="ghost" 
                   size="icon"
@@ -65,12 +67,12 @@ export default function PromptConstruction() {
 
               {/* Main heading */}
               <h1 className="text-3xl font-bold text-gray-900 leading-tight" style={{ marginBottom: '10px' }}>
-                How does my input affect the quality of the LLM's output?
+                {t('promptConstructionModule.intro.title')}
               </h1>
 
               {/* Description */}
               <p className="text-gray-600 text-lg leading-relaxed mb-8 flex-grow">
-                Your prompt directly shapes an LLM's response. Large language models use the wording, specificity, and context in your wording to help decide how to reply, meaning the quality of the output can depend heavily on how you phrase it. Explore how real LLM generated responses change with different prompt constructions
+                {t('promptConstructionModule.intro.description')}
               </p>
 
               {/* Continue button */}
@@ -97,7 +99,7 @@ export default function PromptConstruction() {
                   lineHeight: '28px'
                 }}
               >
-                Continue
+                {t('promptConstructionModule.intro.continue')}
                 <svg width="10" height="8" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 5H11M11 5L7 1M11 5L7 9" stroke="#1F1F1F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>

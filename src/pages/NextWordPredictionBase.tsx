@@ -4,8 +4,10 @@ import Breadcrumb from "@/components/Breadcrumb";
 import LearningProgressBar from "@/components/LearningProgressBar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useLanguage } from "@/contexts/LanguageContext";
 const NextWordPredictionIntro = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const handleContinue = () => {
     navigate("/module/next-word-prediction/prompt");
   };
@@ -36,7 +38,7 @@ const NextWordPredictionIntro = () => {
             <CardContent className="p-0 w-full flex flex-col">
               {/* Learning label */}
               <div className="flex items-center justify-between w-full mb-6">
-                <span className="text-gray-500 text-sm">Learning 1: Next word prediction</span>
+                <span className="text-gray-500 text-sm">{t('nextWord.intro.label')}</span>
                 <button className="text-gray-400 hover:text-gray-600 transition-colors">
                   
                 </button>
@@ -46,12 +48,12 @@ const NextWordPredictionIntro = () => {
               <h1 className="text-[40px] font-barlow-semi font-bold text-gray-900 leading-tight" style={{
               marginBottom: '10px'
             }}>
-                How do LLMs form responses to user prompts?
+                {t('nextWord.intro.title')}
               </h1>
 
               {/* Description */}
               <p className="text-gray-600 text-lg leading-relaxed mb-8">
-                LLMs generate text by predicting what word should come next. For each prediction, previous words are analysed to calculate probabilities for all possible next words. The most probable word is selected, added to the text, and then used in this updated context to predict the next word, continuing until complete.
+                {t('nextWord.intro.description')}
               </p>
 
               {/* Continue button */}
@@ -74,7 +76,7 @@ const NextWordPredictionIntro = () => {
               fontSize: '16px',
               lineHeight: '24px'
             }}>
-                Continue
+                {t('nextWord.intro.continue')}
                 <svg width="10" height="8" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 5H11M11 5L7 1M11 5L7 9" stroke="#1F1F1F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
