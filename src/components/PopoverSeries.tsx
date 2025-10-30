@@ -3,6 +3,7 @@ import { createPortal } from "react-dom"
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
 import { Button } from "@/components/ui/button"
 import { X } from "lucide-react"
+import { useLanguage } from "@/contexts/LanguageContext"
 
 // MODIFICATION 1: Updated Step type
 type Step = {
@@ -43,6 +44,7 @@ const FakeTrigger = forwardRef<HTMLDivElement, { rect: DOMRect | null }>(({ rect
 });
 
 export function PopoverSeries({ steps, initialStep = 0, onClose }: PopoverSeriesProps) {
+  const { t } = useLanguage();
   const [currentStep, setCurrentStep] = useState<number | null>(initialStep)
   const [rect, setRect] = useState<DOMRect | null>(null)
   const [borderRadius, setBorderRadius] = useState<string>('0px')
@@ -169,23 +171,23 @@ export function PopoverSeries({ steps, initialStep = 0, onClose }: PopoverSeries
                   disabled={currentStep === 0}
                   variant="secondary"
                 >
-                  Previous
+                  {t('popoverSeries.previous')}
                 </Button>
                 {currentStep === steps.length - 1 ? (
-                  <Button onClick={close}>Done</Button>
+                  <Button onClick={close}>{t('popoverSeries.done')}</Button>
                 ) : (
                   <Button
                     onClick={() => goToStep(currentStep + 1)}
                     disabled={currentStep === steps.length - 1}
                   >
-                    Next
+                    {t('popoverSeries.next')}
                   </Button>
                 )}
               </div>
             </div>
           ) : (
             <div className="flex justify-end">
-              <Button onClick={close}>Got it</Button>
+              <Button onClick={close}>{t('popoverSeries.gotIt')}</Button>
             </div>
           )}
         </PopoverContent>

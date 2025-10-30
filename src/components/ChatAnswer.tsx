@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useLayoutEffect, useRef } from "react";
 import RichText from "@/components/RichText.tsx";
 import { diffWordsWithNewlineProtection, DiffPart } from "@/lib/diff";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type ChatAnswerProps = {
   text: string;
@@ -36,6 +37,7 @@ const ChatAnswer = ({
   onCommentClick,
   toggleDiffHelp
 }: ChatAnswerProps) => {
+  const { t } = useLanguage();
   const markerRefs = useRef<Map<string, HTMLElement | null>>(new Map());
   const formattedText = text.replace(/\\n/g, '\n');
 
@@ -121,7 +123,7 @@ const ChatAnswer = ({
               onCheckedChange={onToggleDiff}
             />
             <Label htmlFor={`show-diff-${threadIndex}`} className="text-sm text-muted-foreground">
-              Show Changes
+              {t('chatAnswer.showChanges')}
             </Label>
             <button onClick={() => toggleDiffHelp()}>
               <CircleQuestionMark className="-ml-1 h-4 w-4 text-muted-foreground"  />
@@ -129,10 +131,10 @@ const ChatAnswer = ({
           </div>
           <div className="flex items-center gap-3 text-xs">
             <div className="flex items-center gap-1">
-              <span className="bg-green-200 text-green-800 px-1 rounded">added</span>
+              <span className="bg-green-200 text-green-800 px-1 rounded">{t('chatAnswer.added')}</span>
             </div>
             <div className="flex items-center gap-1">
-              <span className="bg-red-200/60 text-red-800 px-1 rounded line-through">removed</span>
+              <span className="bg-red-200/60 text-red-800 px-1 rounded line-through">{t('chatAnswer.removed')}</span>
             </div>
           </div>
         </div>

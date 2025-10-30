@@ -137,17 +137,17 @@ const translations = {
         nextTask: 'Next Task →'
       }
     },
-    promptConstructionModule: {
-      intro: {
-        label: 'Learning 2: Prompt construction',
-        title: "How does my input affect the quality of the LLM's output?",
-        description: "Your prompt directly shapes an LLM's response. Large language models use the wording, specificity, and context in your wording to help decide how to reply, meaning the quality of the output can depend heavily on how you phrase it. Explore how real LLM generated responses change with different prompt constructions",
-        continue: 'Continue'
-      },
-      specificity: {
-        input: 'Summarize the main points of the EU AI Act, including its risk categories and rules for high-risk AI systems.',
-        popoverSubmit: "Click here to submit your prompt and see the AI's response!"
-      },
+      promptConstructionModule: {
+        intro: {
+          label: 'Learning 2: Prompt construction',
+          title: "How does my input affect the quality of the LLM's output?",
+          description: "Your prompt directly shapes an LLM's response. Large language models use the wording, specificity, and context in your wording to help decide how to reply, meaning the quality of the output can depend heavily on how you phrase it. Explore how real LLM generated responses change with different prompt constructions",
+          continue: 'Continue'
+        },
+        specificity: {
+          input: 'Give me a summary of the main points in the AI Act.',
+          popoverSubmit: "Click here to submit your prompt and see the AI's response!"
+        },
       summarize: {
         addDocument: 'Add document',
         documentAttached: 'Document attached',
@@ -539,7 +539,24 @@ const translations = {
         interactionStyleInfo: 'El estilo de conversación es la manera en que le das prompts a tu LLM. Puedes interactuar como si fuera humano, pero esto no es necesario.',
         contextInfo: 'El contexto es la información adicional que le das al LLM para ayudarlo a responder lo mejor posible. Esto puede incluir antecedentes de tu prompt',
         biasInfo: 'El sesgo de confirmación es cuando la forma en que formulas un prompt afecta la perspectiva que produce el LLM'
-      }
+      },
+      promptConstructionModule: {
+        specificity: {
+          popoverSubmit: 'Haz clic aquí para enviar tu prompt',
+          input: 'Dame un resumen de los puntos principales de la Ley de IA.',
+        },
+      },
+      chatAnswer: {
+        showChanges: 'Mostrar cambios',
+        added: 'añadido',
+        removed: 'eliminado',
+      },
+      popoverSeries: {
+        previous: 'Anterior',
+        next: 'Siguiente',
+        done: 'Hecho',
+        gotIt: '¡Entendido!',
+      },
     }
   }
 };
