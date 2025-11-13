@@ -310,11 +310,9 @@ export default function HeadlineResponse() {
                                 </button>
                               </DropdownMenuTrigger>
                                <DropdownMenuContent className="bg-white border border-gray-200 shadow-lg rounded-md z-[9999] min-w-[120px]">
-                                 {options.map(option => <DropdownMenuItem key={option.word} onClick={() => handleWordSelection(option.word, index)} className="cursor-pointer hover:bg-gray-100 flex justify-between items-center gap-2">
-                                     <span className="inline-flex items-center gap-2">
-                                        <span className={option.word === "Unites" ? "text-red-600 font-semibold" : ""}>
-                                          {option.word}
-                                        </span>
+                                 {options.map(option => <DropdownMenuItem key={option.word} onClick={() => handleWordSelection(option.word, index)} className={`cursor-pointer flex justify-between items-center gap-2 ${option.word === "Unites" ? "bg-red-100 hover:bg-red-200" : "hover:bg-gray-100"}`}>
+                                      <span className="inline-flex items-center gap-2">
+                                        {option.word}
                                       </span>
                                       <span className="flex items-center gap-1 text-xs text-gray-500">
                                         {option.probability}
@@ -371,11 +369,9 @@ export default function HeadlineResponse() {
                                   </button>
                                 </DropdownMenuTrigger>
                                  <DropdownMenuContent className="bg-white border border-gray-200 shadow-lg rounded-md z-[9999] min-w-[120px]">
-                                   {options.map(option => <DropdownMenuItem key={option.word} onClick={() => handleWordSelection(option.word, index)} className="cursor-pointer hover:bg-gray-100 flex justify-between items-center gap-2">
-                                       <span className="inline-flex items-center gap-2">
-                                          <span className={option.word === "Unites" ? "text-red-600 font-semibold" : ""}>
-                                            {option.word}
-                                          </span>
+                                   {options.map(option => <DropdownMenuItem key={option.word} onClick={() => handleWordSelection(option.word, index)} className={`cursor-pointer flex justify-between items-center gap-2 ${option.word === "Around" ? "bg-red-100 hover:bg-red-200" : "hover:bg-gray-100"}`}>
+                                        <span className="inline-flex items-center gap-2">
+                                          {option.word}
                                         </span>
                                         <span className="flex items-center gap-1 text-xs text-gray-500">
                                           {option.probability}
