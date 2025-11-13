@@ -30,6 +30,10 @@ export default function HeadlineResponse() {
   const [secondProbTooltipOpen, setSecondProbTooltipOpen] = useState(false);
   const [thirdProbTooltipOpen, setThirdProbTooltipOpen] = useState(false);
   const [dropdownProbTooltips, setDropdownProbTooltips] = useState<{[key: string]: boolean}>({});
+  
+  const toggleDropdownTooltip = (key: string, value: boolean) => {
+    setDropdownProbTooltips(prev => ({ ...prev, [key]: value }));
+  };
 
   const getWordOptions = (position: 'second' | 'third', currentIndex?: number) => {
     let options: { word: string; probability: string }[] = [];
@@ -297,15 +301,32 @@ export default function HeadlineResponse() {
                                      onClick={() => handleWordSelection(option.word, index)}
                                      className="cursor-pointer hover:bg-gray-100 flex justify-between items-center gap-2"
                                    >
-                                     <span className="inline-flex items-center gap-2">
-                                       {option.word}
-                                       {option.word === "Unites" && (
-                                         <CheckCircle className="h-3 w-3 text-red-600" />
-                                       )}
-                                     </span>
-                                     <span className="flex items-center gap-1 text-xs text-gray-500">
-                                       {option.probability}
-                                     </span>
+                                      <span className="inline-flex items-center gap-2">
+                                        {option.word}
+                                        {option.word === "Unites" && (
+                                          <CheckCircle className="h-3 w-3 text-red-600" />
+                                        )}
+                                      </span>
+                                      <span className="flex items-center gap-1 text-xs text-gray-500">
+                                        {option.probability}
+                                        <TooltipProvider>
+                                          <Tooltip open={dropdownProbTooltips[`second-${option.word}`]} onOpenChange={(open) => toggleDropdownTooltip(`second-${option.word}`, open)}>
+                                            <TooltipTrigger asChild>
+                                              <Info 
+                                                className="h-3 w-3 cursor-pointer" 
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                }}
+                                                onMouseEnter={() => toggleDropdownTooltip(`second-${option.word}`, true)}
+                                                onMouseLeave={() => toggleDropdownTooltip(`second-${option.word}`, false)}
+                                              />
+                                            </TooltipTrigger>
+                                            <TooltipContent side="top" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
+                                              <p className="text-sm leading-relaxed">{t('nextWord.response.probTooltip')}</p>
+                                            </TooltipContent>
+                                          </Tooltip>
+                                        </TooltipProvider>
+                                      </span>
                                    </DropdownMenuItem>
                                  ))}
                                </DropdownMenuContent>
@@ -359,15 +380,32 @@ export default function HeadlineResponse() {
                                        onClick={() => handleWordSelection(option.word, index)}
                                        className="cursor-pointer hover:bg-gray-100 flex justify-between items-center gap-2"
                                      >
-                                       <span className="inline-flex items-center gap-2">
-                                         {option.word}
-                                         {option.word === "Around" && (
-                                           <CheckCircle className="h-3 w-3 text-red-600" />
-                                         )}
-                                       </span>
-                                       <span className="flex items-center gap-1 text-xs text-gray-500">
-                                         {option.probability}
-                                       </span>
+                                        <span className="inline-flex items-center gap-2">
+                                          {option.word}
+                                          {option.word === "Around" && (
+                                            <CheckCircle className="h-3 w-3 text-red-600" />
+                                          )}
+                                        </span>
+                                        <span className="flex items-center gap-1 text-xs text-gray-500">
+                                          {option.probability}
+                                          <TooltipProvider>
+                                            <Tooltip open={dropdownProbTooltips[`third-${option.word}`]} onOpenChange={(open) => toggleDropdownTooltip(`third-${option.word}`, open)}>
+                                              <TooltipTrigger asChild>
+                                                <Info 
+                                                  className="h-3 w-3 cursor-pointer" 
+                                                  onClick={(e) => {
+                                                    e.stopPropagation();
+                                                  }}
+                                                  onMouseEnter={() => toggleDropdownTooltip(`third-${option.word}`, true)}
+                                                  onMouseLeave={() => toggleDropdownTooltip(`third-${option.word}`, false)}
+                                                />
+                                              </TooltipTrigger>
+                                              <TooltipContent side="top" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
+                                                <p className="text-sm leading-relaxed">{t('nextWord.response.probTooltip')}</p>
+                                              </TooltipContent>
+                                            </Tooltip>
+                                          </TooltipProvider>
+                                        </span>
                                      </DropdownMenuItem>
                                    ))}
                                  </DropdownMenuContent>
