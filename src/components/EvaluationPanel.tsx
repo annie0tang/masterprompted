@@ -1,4 +1,4 @@
-import { CheckCircle, Target, Mic, Scale, Copy, ChevronDown, ListChevronsUpDown, ListChevronsDownUp } from "lucide-react";
+import { ListChecks, Target, Mic, Scale, Copy, ChevronDown, ListChevronsUpDown, ListChevronsDownUp } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -18,7 +18,7 @@ export default function EvaluationPanel({ initialIsOpen = true, canClose = false
     {
       id: "factual_accuracy",
       label: t('components.evaluationPanel.criteria.factualAccuracy.label'),
-      icon: CheckCircle,
+      icon: ListChecks,
       description: t('components.evaluationPanel.criteria.factualAccuracy.description')
     },
     {
