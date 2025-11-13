@@ -14,10 +14,11 @@ import { ArrowRight, ChevronDown, Info, InfoIcon, CheckCircle } from "lucide-rea
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useLanguage } from "@/contexts/LanguageContext";
-
 export default function HeadlineResponse() {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const {
+    t
+  } = useLanguage();
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
   const [currentSentence, setCurrentSentence] = useState(["European", "Union", "Unites", "On", "Historic", "AI", "Ethics", "Framework,", "Charting", "Path", "For", "Responsible", "Technology", "Development"]);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -29,52 +30,75 @@ export default function HeadlineResponse() {
   const [showMiniTask, setShowMiniTask] = useState(true);
   const [secondProbTooltipOpen, setSecondProbTooltipOpen] = useState(false);
   const [thirdProbTooltipOpen, setThirdProbTooltipOpen] = useState(false);
-  const [dropdownProbTooltips, setDropdownProbTooltips] = useState<{[key: string]: boolean}>({});
-  
+  const [dropdownProbTooltips, setDropdownProbTooltips] = useState<{
+    [key: string]: boolean;
+  }>({});
   const toggleDropdownTooltip = (key: string, value: boolean) => {
-    setDropdownProbTooltips(prev => ({ ...prev, [key]: value }));
+    setDropdownProbTooltips(prev => ({
+      ...prev,
+      [key]: value
+    }));
   };
-
   const getWordOptions = (position: 'second' | 'third', currentIndex?: number) => {
-    let options: { word: string; probability: string }[] = [];
-
+    let options: {
+      word: string;
+      probability: string;
+    }[] = [];
     if (position === 'second') {
-      options = [
-        { word: "Unites", probability: "0.67" },
-        { word: "Reaches", probability: "0.24" },
-        { word: "Finalizes", probability: "0.09" }
-      ];
-    } else { // third position
+      options = [{
+        word: "Unites",
+        probability: "0.67"
+      }, {
+        word: "Reaches",
+        probability: "0.24"
+      }, {
+        word: "Finalizes",
+        probability: "0.09"
+      }];
+    } else {
+      // third position
       const secondWord = currentSentence[2];
       if (secondWord === "Unites") {
-        options = [
-          { word: "On", probability: "0.73" },
-          { word: "Around", probability: "0.42" },
-          { word: "Behind", probability: "0.12" }
-        ];
+        options = [{
+          word: "On",
+          probability: "0.73"
+        }, {
+          word: "Around",
+          probability: "0.42"
+        }, {
+          word: "Behind",
+          probability: "0.12"
+        }];
       } else if (secondWord === "Reaches") {
-        options = [
-          { word: "Consensus", probability: "0.65" },
-          { word: "Agreement", probability: "0.28" },
-          { word: "Milestone", probability: "0.07" }
-        ];
+        options = [{
+          word: "Consensus",
+          probability: "0.65"
+        }, {
+          word: "Agreement",
+          probability: "0.28"
+        }, {
+          word: "Milestone",
+          probability: "0.07"
+        }];
       } else if (secondWord.toLowerCase() === "finalizes") {
-        options = [
-          { word: "Landmark", probability: "0.58" },
-          { word: "Sweeping", probability: "0.31" },
-          { word: "Pioneering", probability: "0.11" }
-        ];
+        options = [{
+          word: "Landmark",
+          probability: "0.58"
+        }, {
+          word: "Sweeping",
+          probability: "0.31"
+        }, {
+          word: "Pioneering",
+          probability: "0.11"
+        }];
       }
     }
 
     // Filter out only the currently selected word from its own dropdown
     if (currentIndex !== undefined) {
       const currentWord = currentSentence[currentIndex];
-      return options.filter(option =>
-        option.word.toLowerCase() !== currentWord.toLowerCase().replace(/[,.]/g, '')
-      );
+      return options.filter(option => option.word.toLowerCase() !== currentWord.toLowerCase().replace(/[,.]/g, ''));
     }
-
     return options;
   };
 
@@ -84,7 +108,8 @@ export default function HeadlineResponse() {
     newSentence[position] = newWord;
 
     // Update the rest of the sentence based on the selection
-    if (position === 2) { // Second column selection
+    if (position === 2) {
+      // Second column selection
       // Handle specific sentence switches for Reaches and Finalizes
       if (newWord === "Reaches") {
         setCurrentSentence(["European", "Union", "Reaches", "Consensus", "on", "Historic", "AI", "Ethics", "Framework,", "Paving", "the", "Way", "for", "Responsible", "Tech", "Innovation"]);
@@ -96,13 +121,16 @@ export default function HeadlineResponse() {
         // Reset third position and beyond for Unites
         const baseWords = ["European", "Union", newWord];
         // IMPORTANT: compute third options based on the newly selected second word (not the old sentence)
-        const thirdOptions = newWord === "Unites"
-          ? [
-            { word: "On", probability: "0.73" },
-            { word: "Around", probability: "0.42" },
-            { word: "Behind", probability: "0.12" },
-          ]
-          : getWordOptions('third', 3);
+        const thirdOptions = newWord === "Unites" ? [{
+          word: "On",
+          probability: "0.73"
+        }, {
+          word: "Around",
+          probability: "0.42"
+        }, {
+          word: "Behind",
+          probability: "0.12"
+        }] : getWordOptions('third', 3);
         if (thirdOptions.length > 0) {
           baseWords.push(thirdOptions[0].word); // Default to first option
         }
@@ -119,7 +147,8 @@ export default function HeadlineResponse() {
           }
         }
       }
-    } else if (position === 3) { // Third column selection
+    } else if (position === 3) {
+      // Third column selection
       const pathKey = currentSentence.slice(0, 3).join(" ");
       const progressionData = wordProgressions[pathKey as keyof typeof wordProgressions];
       if (progressionData) {
@@ -132,21 +161,17 @@ export default function HeadlineResponse() {
     }
 
     // Show factual inaccuracy tooltip for specific combinations
-    if ((currentSentence[2] === "Unites" && newWord === "Behind") ||
-      (newWord === "Unites" && currentSentence[3] === "Behind")) {
+    if (currentSentence[2] === "Unites" && newWord === "Behind" || newWord === "Unites" && currentSentence[3] === "Behind") {
       setShowFactualInaccuracyTooltip(true);
     }
   };
-
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
       if (showMiniTask) {
         setShowMiniTask(false);
       }
     };
-
     document.addEventListener("click", handleClick);
-
     return () => {
       document.removeEventListener("click", handleClick);
     };
@@ -187,7 +212,7 @@ export default function HeadlineResponse() {
     const pathKey = currentPath.slice(0, 3).join(" ");
     const progressionData = wordProgressions[pathKey as keyof typeof wordProgressions];
     if (progressionData && currentPath.length === 3) {
-      return Object.keys(progressionData).map((key) => ({
+      return Object.keys(progressionData).map(key => ({
         word: key.charAt(0).toUpperCase() + key.slice(1),
         completion: progressionData[key as keyof typeof progressionData]
       }));
@@ -219,13 +244,7 @@ export default function HeadlineResponse() {
     </div>
   }];
   return <div className="min-h-screen bg-background">
-    {showMiniTask && (
-      <MiniTask
-        title={t('nextWord.response.miniTaskTitle')}
-        description={t('nextWord.response.miniTaskDescription')}
-        onStartTask={() => setShowMiniTask(false)}
-      />
-    )}
+    {showMiniTask && <MiniTask title={t('nextWord.response.miniTaskTitle')} description={t('nextWord.response.miniTaskDescription')} onStartTask={() => setShowMiniTask(false)} />}
     <Header />
 
     {/* MiniTask - render at top for immediate visibility */}
@@ -264,27 +283,23 @@ export default function HeadlineResponse() {
                       if (index === 2 && (word === "Unites" || word === "Reaches" || word === "Finalizes" || word === "finalizes")) {
                         const options = getWordOptions('second', index);
                         const rawOptions = getWordOptions('second');
-                        return (
-                          <span key={index}>
+                        return <span key={index}>
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                 <button data-word-union data-word={word.toLowerCase()} className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg inline-flex items-center gap-1">
                                   {word}
                                   <ChevronDown className="h-3 w-3" />
-                                   <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap flex items-center gap-1" style={{ pointerEvents: 'auto' }}>
+                                   <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap flex items-center gap-1" style={{
+                                  pointerEvents: 'auto'
+                                }}>
                                      {rawOptions.find(opt => opt.word === word)?.probability || rawOptions[0]?.probability || "0.67"}
                                      <TooltipProvider>
                                        <Tooltip open={secondProbTooltipOpen} onOpenChange={setSecondProbTooltipOpen}>
                                          <TooltipTrigger asChild>
-                                           <Info 
-                                             className="h-3 w-3 cursor-pointer" 
-                                             onClick={(e) => {
-                                               e.stopPropagation();
-                                               setSecondProbTooltipOpen(!secondProbTooltipOpen);
-                                             }}
-                                             onMouseEnter={() => setSecondProbTooltipOpen(true)}
-                                             onMouseLeave={() => setSecondProbTooltipOpen(false)}
-                                           />
+                                           <Info className="h-3 w-3 cursor-pointer" onClick={e => {
+                                          e.stopPropagation();
+                                          setSecondProbTooltipOpen(!secondProbTooltipOpen);
+                                        }} onMouseEnter={() => setSecondProbTooltipOpen(true)} onMouseLeave={() => setSecondProbTooltipOpen(false)} />
                                          </TooltipTrigger>
                                           <TooltipContent side="top" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
                                             <p className="text-sm leading-relaxed">{t('nextWord.response.probTooltip')}</p>
@@ -295,31 +310,19 @@ export default function HeadlineResponse() {
                                 </button>
                               </DropdownMenuTrigger>
                                <DropdownMenuContent className="bg-white border border-gray-200 shadow-lg rounded-md z-[9999] min-w-[120px]">
-                                 {options.map((option) => (
-                                   <DropdownMenuItem
-                                     key={option.word}
-                                     onClick={() => handleWordSelection(option.word, index)}
-                                     className="cursor-pointer hover:bg-gray-100 flex justify-between items-center gap-2"
-                                   >
+                                 {options.map(option => <DropdownMenuItem key={option.word} onClick={() => handleWordSelection(option.word, index)} className="cursor-pointer hover:bg-gray-100 flex justify-between items-center gap-2">
                                       <span className="inline-flex items-center gap-2">
                                         {option.word}
-                                        {option.word === "Unites" && (
-                                          <CheckCircle className="h-3 w-3 text-red-600" />
-                                        )}
+                                        {option.word === "Unites" && <CheckCircle className="h-3 w-3 text-red-600" />}
                                       </span>
                                       <span className="flex items-center gap-1 text-xs text-gray-500">
                                         {option.probability}
                                         <TooltipProvider>
-                                          <Tooltip open={dropdownProbTooltips[`second-${option.word}`]} onOpenChange={(open) => toggleDropdownTooltip(`second-${option.word}`, open)}>
+                                          <Tooltip open={dropdownProbTooltips[`second-${option.word}`]} onOpenChange={open => toggleDropdownTooltip(`second-${option.word}`, open)}>
                                             <TooltipTrigger asChild>
-                                              <Info 
-                                                className="h-3 w-3 cursor-pointer" 
-                                                onClick={(e) => {
-                                                  e.stopPropagation();
-                                                }}
-                                                onMouseEnter={() => toggleDropdownTooltip(`second-${option.word}`, true)}
-                                                onMouseLeave={() => toggleDropdownTooltip(`second-${option.word}`, false)}
-                                              />
+                                              <Info className="h-3 w-3 cursor-pointer" onClick={e => {
+                                          e.stopPropagation();
+                                        }} onMouseEnter={() => toggleDropdownTooltip(`second-${option.word}`, true)} onMouseLeave={() => toggleDropdownTooltip(`second-${option.word}`, false)} />
                                             </TooltipTrigger>
                                             <TooltipContent side="top" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
                                               <p className="text-sm leading-relaxed">{t('nextWord.response.probTooltip')}</p>
@@ -327,13 +330,11 @@ export default function HeadlineResponse() {
                                           </Tooltip>
                                         </TooltipProvider>
                                       </span>
-                                   </DropdownMenuItem>
-                                 ))}
+                                   </DropdownMenuItem>)}
                                </DropdownMenuContent>
                             </DropdownMenu>
                             {index < currentSentence.length - 1 && " "}
-                          </span>
-                        );
+                          </span>;
                       }
 
                       // Handle dropdown for third position (On/Around/Behind/landmark/etc.)
@@ -341,29 +342,24 @@ export default function HeadlineResponse() {
                         const rawOptions = getWordOptions('third');
                         const options = getWordOptions('third', index);
                         const isValidThirdWord = rawOptions.some(opt => opt.word === word);
-
                         if (isValidThirdWord) {
-                          return (
-                            <span key={index}>
+                          return <span key={index}>
                               <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                   <button data-word={word.toLowerCase()} className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg inline-flex items-center gap-1">
                                     {word}
                                     <ChevronDown className="h-3 w-3" />
-                                     <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap flex items-center gap-1" style={{ pointerEvents: 'auto' }}>
+                                     <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap flex items-center gap-1" style={{
+                                    pointerEvents: 'auto'
+                                  }}>
                                        {rawOptions.find(opt => opt.word === word)?.probability || rawOptions[0]?.probability || "0.73"}
                                        <TooltipProvider>
                                          <Tooltip open={thirdProbTooltipOpen} onOpenChange={setThirdProbTooltipOpen}>
                                            <TooltipTrigger asChild>
-                                             <Info 
-                                               className="h-3 w-3 cursor-pointer" 
-                                               onClick={(e) => {
-                                                 e.stopPropagation();
-                                                 setThirdProbTooltipOpen(!thirdProbTooltipOpen);
-                                               }}
-                                               onMouseEnter={() => setThirdProbTooltipOpen(true)}
-                                               onMouseLeave={() => setThirdProbTooltipOpen(false)}
-                                             />
+                                             <Info className="h-3 w-3 cursor-pointer" onClick={e => {
+                                            e.stopPropagation();
+                                            setThirdProbTooltipOpen(!thirdProbTooltipOpen);
+                                          }} onMouseEnter={() => setThirdProbTooltipOpen(true)} onMouseLeave={() => setThirdProbTooltipOpen(false)} />
                                            </TooltipTrigger>
                                       <TooltipContent side="top" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
                                         <p className="text-sm leading-relaxed">{t('nextWord.response.probTooltip')}</p>
@@ -374,31 +370,19 @@ export default function HeadlineResponse() {
                                   </button>
                                 </DropdownMenuTrigger>
                                  <DropdownMenuContent className="bg-white border border-gray-200 shadow-lg rounded-md z-[9999] min-w-[120px]">
-                                   {options.map((option) => (
-                                     <DropdownMenuItem
-                                       key={option.word}
-                                       onClick={() => handleWordSelection(option.word, index)}
-                                       className="cursor-pointer hover:bg-gray-100 flex justify-between items-center gap-2"
-                                     >
+                                   {options.map(option => <DropdownMenuItem key={option.word} onClick={() => handleWordSelection(option.word, index)} className="cursor-pointer hover:bg-gray-100 flex justify-between items-center gap-2">
                                         <span className="inline-flex items-center gap-2">
                                           {option.word}
-                                          {option.word === "Around" && (
-                                            <CheckCircle className="h-3 w-3 text-red-600" />
-                                          )}
+                                          {option.word === "Around"}
                                         </span>
                                         <span className="flex items-center gap-1 text-xs text-gray-500">
                                           {option.probability}
                                           <TooltipProvider>
-                                            <Tooltip open={dropdownProbTooltips[`third-${option.word}`]} onOpenChange={(open) => toggleDropdownTooltip(`third-${option.word}`, open)}>
+                                            <Tooltip open={dropdownProbTooltips[`third-${option.word}`]} onOpenChange={open => toggleDropdownTooltip(`third-${option.word}`, open)}>
                                               <TooltipTrigger asChild>
-                                                <Info 
-                                                  className="h-3 w-3 cursor-pointer" 
-                                                  onClick={(e) => {
-                                                    e.stopPropagation();
-                                                  }}
-                                                  onMouseEnter={() => toggleDropdownTooltip(`third-${option.word}`, true)}
-                                                  onMouseLeave={() => toggleDropdownTooltip(`third-${option.word}`, false)}
-                                                />
+                                                <Info className="h-3 w-3 cursor-pointer" onClick={e => {
+                                            e.stopPropagation();
+                                          }} onMouseEnter={() => toggleDropdownTooltip(`third-${option.word}`, true)} onMouseLeave={() => toggleDropdownTooltip(`third-${option.word}`, false)} />
                                               </TooltipTrigger>
                                               <TooltipContent side="top" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
                                                 <p className="text-sm leading-relaxed">{t('nextWord.response.probTooltip')}</p>
@@ -406,13 +390,11 @@ export default function HeadlineResponse() {
                                             </Tooltip>
                                           </TooltipProvider>
                                         </span>
-                                     </DropdownMenuItem>
-                                   ))}
+                                     </DropdownMenuItem>)}
                                  </DropdownMenuContent>
                               </DropdownMenu>
                               {index < currentSentence.length - 1 && " "}
-                            </span>
-                          );
+                            </span>;
                         }
                       }
 
@@ -430,20 +412,16 @@ export default function HeadlineResponse() {
                           ,{index < currentSentence.length - 1 && " "}
                         </span>;
                       }
-
-                      return (
-                        <span key={index}>
+                      return <span key={index}>
                           {word}
                           {index < currentSentence.length - 1 && " "}
-                        </span>
-                      );
+                        </span>;
                     })}
                   </h1>
                 </div>
 
                 {/* Factual Inaccuracy Tooltip for New Form */}
-                {showFactualInaccuracyTooltip && (
-                  <div className="absolute left-full top-0 ml-4 z-50">
+                {showFactualInaccuracyTooltip && <div className="absolute left-full top-0 ml-4 z-50">
                     <div className="bg-emerald-500 text-white px-6 py-3 rounded-lg shadow-lg max-w-md w-80">
                       <p className="text-sm leading-relaxed mb-2 font-medium">
                         You found the factual inaccuracy!
@@ -451,22 +429,13 @@ export default function HeadlineResponse() {
                       <p className="text-sm leading-relaxed mb-4">
                         The EU has not "united behind" the AI Act. While there is broad support, the process involved negotiations, compromises, and some member states had reservations about certain provisions.
                       </p>
-                      <button
-                        onClick={() => setShowFactualInaccuracyTooltip(false)}
-                        className="bg-white text-emerald-500 px-4 py-2 rounded text-sm font-medium hover:bg-gray-100 transition-colors"
-                      >
+                      <button onClick={() => setShowFactualInaccuracyTooltip(false)} className="bg-white text-emerald-500 px-4 py-2 rounded text-sm font-medium hover:bg-gray-100 transition-colors">
                         Continue
                       </button>
                     </div>
-                  </div>
-                )}
+                  </div>}
 
-                <GuidanceTooltip
-                  text="Journalistic Evaluation Checklist: For more information on the flagged content, expand the relevant term according to the icon. This checklist is designed to help you apply your journalistic expertise effectively to LLM outputs. With LLM-specific criteria, it guides you to keep your reporting reliable."
-                  isVisible={showCharterTooltip}
-                  onClose={() => setShowCharterTooltip(false)}
-                  className="fixed right-80 top-1/2 transform -translate-y-1/2 z-50"
-                />
+                <GuidanceTooltip text="Journalistic Evaluation Checklist: For more information on the flagged content, expand the relevant term according to the icon. This checklist is designed to help you apply your journalistic expertise effectively to LLM outputs. With LLM-specific criteria, it guides you to keep your reporting reliable." isVisible={showCharterTooltip} onClose={() => setShowCharterTooltip(false)} className="fixed right-80 top-1/2 transform -translate-y-1/2 z-50" />
 
               </div>
 
@@ -506,17 +475,10 @@ export default function HeadlineResponse() {
     </div>}
 
     <div className="mt-8">
-      <LearningProgressBar 
-        module="next-word-prediction"
-        currentStep="main"
-        baseRoute="/module/next-word-prediction"
-      />
+      <LearningProgressBar module="next-word-prediction" currentStep="main" baseRoute="/module/next-word-prediction" />
     </div>
 
-    <ModuleNavigation
-      previousRoute="/module/next-word-prediction/prompt"
-      nextRoute="/module/next-word-prediction/takeaways"
-    />
+    <ModuleNavigation previousRoute="/module/next-word-prediction/prompt" nextRoute="/module/next-word-prediction/takeaways" />
     <div className="mt-6 text-sm text-gray-500 max-w-7xl mx-auto">
       LLMs have been used in the following places:<br />
       The creation of prompt output examples in the Guided Exploration<br />
