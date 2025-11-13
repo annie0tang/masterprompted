@@ -311,9 +311,10 @@ export default function HeadlineResponse() {
                               </DropdownMenuTrigger>
                                <DropdownMenuContent className="bg-white border border-gray-200 shadow-lg rounded-md z-[9999] min-w-[120px]">
                                  {options.map(option => <DropdownMenuItem key={option.word} onClick={() => handleWordSelection(option.word, index)} className="cursor-pointer hover:bg-gray-100 flex justify-between items-center gap-2">
-                                      <span className="inline-flex items-center gap-2">
-                                        {option.word}
-                                        {option.word === "Unites"}
+                                     <span className="inline-flex items-center gap-2">
+                                        <span className={option.word === "Unites" ? "text-red-600 font-semibold" : ""}>
+                                          {option.word}
+                                        </span>
                                       </span>
                                       <span className="flex items-center gap-1 text-xs text-gray-500">
                                         {option.probability}
@@ -371,9 +372,10 @@ export default function HeadlineResponse() {
                                 </DropdownMenuTrigger>
                                  <DropdownMenuContent className="bg-white border border-gray-200 shadow-lg rounded-md z-[9999] min-w-[120px]">
                                    {options.map(option => <DropdownMenuItem key={option.word} onClick={() => handleWordSelection(option.word, index)} className="cursor-pointer hover:bg-gray-100 flex justify-between items-center gap-2">
-                                        <span className="inline-flex items-center gap-2">
-                                          {option.word}
-                                          {option.word === "Around"}
+                                       <span className="inline-flex items-center gap-2">
+                                          <span className={option.word === "Unites" ? "text-red-600 font-semibold" : ""}>
+                                            {option.word}
+                                          </span>
                                         </span>
                                         <span className="flex items-center gap-1 text-xs text-gray-500">
                                           {option.probability}
