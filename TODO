@@ -2,6 +2,8 @@ TODO:
 - align theming with greater AI-Code design philosophy
 - look into scraping data from google sheets
 - NWP: add info button for minitask
+- PROMPT CONTSTRUCTION:
+  - replace dummy prompt controls with real component
 - PROMPT PLAYGROUND:
   - add upload
     - implement upload_rag endpoint

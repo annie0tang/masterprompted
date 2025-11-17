@@ -26,7 +26,6 @@ import LLMTraining from "./pages/LLMTraining";
 import PromptPlayground from "./pages/PromptPlayground";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
-import ComponentLibrary from "./pages/ComponentLibrary";
 import Imprint from "./pages/Imprint";
 import Takeaways from "./pages/NextWordPredictionTakeaways";
 import NotFound from "./pages/NotFound";
@@ -46,7 +45,6 @@ const App = () => (
           <Route path="/playground" element={<PromptPlayground />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/components" element={<ComponentLibrary />} />
           <Route path="/imprint" element={<Imprint />} />
 
           {/* INTRO MODULE */}

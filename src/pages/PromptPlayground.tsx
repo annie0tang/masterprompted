@@ -455,8 +455,7 @@ const PromptPlayground = () => {
                 enableContext, 
                 enableStyle, 
                 chatAnimationKey: optimizePulse, 
-                waitingforOptimization,
-                isChatResizeable: true
+                waitingforOptimization
               }} />
             </div>
           </div>

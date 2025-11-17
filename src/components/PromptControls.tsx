@@ -132,7 +132,6 @@ interface PromptControlsProps {
     onChatSubmit?: (value: string) => void;
     chatSubmitButtonId?: string;
     chatAnimationKey?: number;
-    isChatResizeable?: boolean;
 }
 
 export default function PromptControls({
@@ -157,8 +156,7 @@ export default function PromptControls({
     disableSend,
     disableOptimize,
     chatAnimationKey,
-    waitingforOptimization = false,
-    isChatResizeable = false
+    waitingforOptimization = false
 }: PromptControlsProps) {
     const { t } = useLanguage();
     const handleResetClick = () => {
@@ -176,9 +174,9 @@ export default function PromptControls({
     const isAnyParameterSet = Object.values(parameters).some(p => p !== "");
 
     return (
-        <Card className="bg-card border border-border rounded-lg max-w-sm h-full">
-            <CardContent className="p-4 h-full flex flex-col gap-2">
-                {/* Chatbox: allow it to size naturally when resizeable, otherwise keep full height */}
+        <Card className="bg-card border border-border rounded-lg max-w-sm h-full min-w-[300px]">
+            <CardContent className="p-2 h-full flex flex-col gap-1">
+                {/* Chatbox */}
                 <div className="z-50">
                     <Chatbox
                         value={chatValue}
@@ -186,15 +184,13 @@ export default function PromptControls({
                         onSubmit={onChatSubmit}
                         submitButtonId={chatSubmitButtonId}
                         disableSend={disableSend}
-                        fullHeight={!isChatResizeable}
                         animationKey={chatAnimationKey}
                         waitingforOptimization={waitingforOptimization}
-                        resizeable={isChatResizeable}
                     />
                 </div>
 
                 {/* Parameters area: make this the flexible scrollable region so it shrinks/scrolls when the chatbox grows */}
-                <div className="flex-1 flex flex-col min-h-0">
+                <div className="flex-1 flex flex-col justify-end min-h-0">
                     <h3 className="font-semibold text-card-foreground text-center whitespace-nowrap">{t('components.promptControls.title')}</h3>
                     <Separator/>
                     <div id='parameters' className="relative overflow-auto">

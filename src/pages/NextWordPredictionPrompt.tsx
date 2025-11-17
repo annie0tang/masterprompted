@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
-import Chatbox from "@/components/ChatBox";
+import ChatboxDummy from "@/components/ChatBoxDummy";
 import Breadcrumb from "@/components/Breadcrumb";
 import LearningProgressBar from "@/components/LearningProgressBar";
 import { PopoverSeries } from "@/components/PopoverSeries";
@@ -60,12 +60,9 @@ export default function NextWordPrediction() {
         <div className="mb-5"></div>
         <div className="max-w-2xl mx-auto flex items-center justify-center min-h-[calc(100vh-300px)]">
           <div className="w-full relative">
-          <Chatbox 
-            canType={false} 
+          <ChatboxDummy 
             value={t('nextWord.prompt.input')}
-            onChange={() => {}} 
-            fileName="EU_AI_Act.pdf"
-            submitButtonId="chatbox-submit-button" // Pass the ID here
+            submitButtonId="chatbox-submit-button"
             onSubmit={handleSubmit}
           />
           {showPopover && (

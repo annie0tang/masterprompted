@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { SendHorizontal } from "lucide-react";
 import { PopoverSeries } from "@/components/PopoverSeries";
-import Chatbox from "@/components/ChatBox";
+import ChatboxDummy from "@/components/ChatBoxDummy";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Specificity() {
@@ -62,12 +62,9 @@ export default function Specificity() {
 
       <div className="max-w-2xl mx-auto flex items-center justify-center min-h-[calc(100vh-300px)]">
         <div className="w-full relative">
-          <Chatbox
-            canType={false}
+          <ChatboxDummy
             value={t('promptConstructionModule.specificity.input')}
-            onChange={() => { }}
-            fileName="EU_AI_Act.pdf"
-            submitButtonId="chatbox-submit-button" // Pass the ID here
+            submitButtonId="chatbox-submit-button"
             onSubmit={handleSubmit}
           />
           {showPopover && (

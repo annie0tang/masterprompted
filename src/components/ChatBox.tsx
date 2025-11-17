@@ -2,7 +2,7 @@
 
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Paperclip, SendHorizontal, Upload } from "lucide-react";
+import { Paperclip, SendHorizontal } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -22,86 +22,26 @@ function SubmitButton({ onClick, id, disableSend }: { onClick?: (e?: React.Mouse
   );
 };
 
-// UploadFile component
-function UploadFile({ onClick, fileName }: { onClick?: () => void; fileName?: string }) {
-  return (
-    <div className="flex items-center gap-2">
-      {/* **temporarily disabled** */}
-      <Button variant="ghost" size="icon" className="rounded-full h-6 w-6" onClick={onClick} disabled={true}>
-        <Paperclip className="h-4 w-4 text-muted-foreground" />
-      </Button>
-      {fileName && (
-        <span className="text-sm text-muted-foreground overflow-hidden text-ellipsis max-w-[100px]">
-          {fileName}
-        </span>
-      )}
-    </div>
-  );
-}
-
 type ChatboxProps = {
-  canType?: boolean;
   // Controlled-only API
   value: string;
   onChange: (value: string) => void;
   onSubmit?: (value: string) => void; // Function to lift state up
-  onUpload?: () => void;
-  fileName?: string;
   submitButtonId?: string;
-  showUpload?: boolean;
   disableSend?: boolean;
   // A numeric key that increments when an external event wants the chatbox to animate
   animationKey?: number;
-  // When true, the chatbox will expand to fill its parent's height
-  fullHeight?: boolean;
-  // When true, the whole chatbox container can be resized by dragging its corner
-  resizeable?: boolean;
   id?: string;
   waitingforOptimization?: boolean;
+  onUpload?: () => void;
+  fileName?: string;
 };
 
-const Chatbox = ({ canType = true, value, onChange, onSubmit, onUpload, showUpload = false, fileName, submitButtonId, id = 'chatbox', fullHeight = false, disableSend = false, animationKey, waitingforOptimization, resizeable = false }: ChatboxProps) => {
+const Chatbox = ({ value, onChange, onSubmit, submitButtonId, id = 'chatbox', disableSend = false, animationKey, waitingforOptimization, onUpload, fileName }: ChatboxProps) => {
   // Controlled-only component: `value` drives the textarea and `onChange` must be provided.
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [stretchVertical, setStretchVertical] = useState(false);
-  // Detect if parent container is taller than this component so we can stretch vertically
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const parent = el.parentElement;
-    if (!parent) return;
-
-    const check = () => {
-      try {
-        const parentRect = parent.getBoundingClientRect();
-        const selfRect = el.getBoundingClientRect();
-        // If parent is noticeably taller than the chatbox, enable stretch
-        setStretchVertical(parentRect.height > selfRect.height + 2);
-      } catch (e) {
-        // ignore
-      }
-    };
-
-    // Initial check
-    check();
-
-    // Observe parent size changes
-    let ro: ResizeObserver | null = null;
-    try {
-      ro = new ResizeObserver(check);
-      ro.observe(parent);
-    } catch (e) {
-      // If ResizeObserver not available, fallback to window resize
-      window.addEventListener('resize', check);
-    }
-
-    return () => {
-      if (ro) ro.disconnect();
-      else window.removeEventListener('resize', check);
-    };
-  }, [containerRef, resizeable]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange(e.target.value);
@@ -183,31 +123,37 @@ const Chatbox = ({ canType = true, value, onChange, onSubmit, onUpload, showUplo
     };
   }, [animationKey]);
 
+  const UploadFile = ({ onClick, fileName }: { onClick?: () => void; fileName?: string }) => (
+    <div className="flex items-center gap-2">
+      <Button variant="ghost" size="icon" className="rounded-full h-8 w-8" onClick={onClick} disabled={!onClick}>
+        <Paperclip className="h-4 w-4 text-muted-foreground" />
+      </Button>
+      {fileName && (
+        <span className="text-sm text-muted-foreground overflow-hidden text-ellipsis max-w-[150px]">
+          {fileName}
+        </span>
+      )}
+    </div>
+  );
+
   return (
     <div
       ref={containerRef}
       id={id}
-      className={`relative bg-card border border-border rounded-2xl shadow-lg min-h-24 ${(fullHeight || stretchVertical || resizeable) ? 'h-full flex flex-col' : 'max-w-3xl'} ${isBouncing ? 'bounce-once' : ''}`}
-      // Allow the user to resize the whole chatbox by dragging the corner when enabled
-      style={resizeable ? { resize: 'both', overflow: 'auto', minWidth: 250, maxWidth: 350, maxHeight: 385, minHeight: 175 } : undefined}
-      aria-roledescription={resizeable ? 'Resizable chatbox' : undefined}
+      className={`relative bg-card border border-border rounded-2xl shadow-sm w-full h-full min-w-[250px] min-h-[220px] flex flex-col ${isBouncing ? 'bounce-once' : ''}`}
+      // Allow the user to resize while still honoring parent-provided dimensions.
+      style={{ resize: 'both', overflow: 'auto' }}
+      aria-roledescription="Resizable chatbox"
     >
       {/* Submit button - positioned in top right */}
-      <div className="absolute top-4 right-4 z-10">
+      <div className="absolute top-2 right-2 z-10">
         <SubmitButton onClick={handleSubmit} id={submitButtonId} disableSend={disableSend} />
       </div>
-      {showUpload && (
-        <div className="absolute bottom-1 left-1 z-10">
-          <UploadFile onClick={() => { if (onUpload) onUpload }} fileName={fileName} />
-        </div>
-      )}
-
       {/* Text area - takes up most of the space */}
       {!waitingforOptimization && (
         <Textarea
           placeholder="Type your message here..."
-          className={`border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 px-6 py-4 ${showUpload ? 'mb-8' : 'mb-4'} pr-16 leading-relaxed text-card-foreground font-['Manrope'] ${resizeable ? 'text-md' : 'text-lg'} ${(fullHeight || stretchVertical || resizeable) ? 'flex-1 h-full min-h-0 resize-none overflow-y-auto' : 'min-h-[100px] resize-none'}`}
-          disabled={!canType}
+          className="border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 px-2 py-2 mt-2 mb-6 pr-12 leading-relaxed text-card-foreground font-['Manrope'] text-md flex-1 h-full min-h-[140px] resize-none overflow-y-auto"
           value={value}
           onChange={handleInputChange}
           ref={textareaRef}
@@ -225,11 +171,14 @@ const Chatbox = ({ canType = true, value, onChange, onSubmit, onUpload, showUplo
       )}
       {waitingforOptimization && (
         <div
-          className={`border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 px-6 py-4 pr-16 text-lg leading-relaxed text-card-foreground font-['Manrope'] ${(fullHeight || stretchVertical || resizeable) ? 'flex-1 h-full min-h-0 resize-none overflow-y-auto' : 'min-h-[100px] resize-none'}`}>
+          className="border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 px-6 py-4 pr-16 text-lg leading-relaxed text-card-foreground font-['Manrope'] flex-1 h-full min-h-[140px] resize-none overflow-y-auto">
           <Skeleton className="mt-2 h-4 w-[180px]" />
           <Skeleton className="mt-2 h-4 w-[150px]" />
         </div>
       )}
+      <div className="absolute bottom-1 left-1 flex items-center gap-2">
+        <UploadFile onClick={onUpload} fileName={fileName} />
+      </div>
     </div>
   );
 };

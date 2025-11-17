@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Chatbox from "@/components/ChatBox";
 import ChatPrompt from "@/components/ChatPrompt";
 import LoadingDots from "@/components/LoadingDots";
 import TypewriterText from "@/components/TypewriterText";
