@@ -2,7 +2,7 @@
 
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Paperclip, SendHorizontal } from "lucide-react";
+import { Paperclip, SendHorizontal, Upload } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -48,6 +48,7 @@ type ChatboxProps = {
   onUpload?: () => void;
   fileName?: string;
   submitButtonId?: string;
+  showUpload?: boolean;
   disableSend?: boolean;
   // A numeric key that increments when an external event wants the chatbox to animate
   animationKey?: number;
@@ -59,7 +60,7 @@ type ChatboxProps = {
   waitingforOptimization?: boolean;
 };
 
-const Chatbox = ({ canType = true, value, onChange, onSubmit, onUpload, fileName, submitButtonId, id = 'chatbox', fullHeight = false, disableSend = false, animationKey, waitingforOptimization, resizeable = false }: ChatboxProps) => {
+const Chatbox = ({ canType = true, value, onChange, onSubmit, onUpload, showUpload = false, fileName, submitButtonId, id = 'chatbox', fullHeight = false, disableSend = false, animationKey, waitingforOptimization, resizeable = false }: ChatboxProps) => {
   // Controlled-only component: `value` drives the textarea and `onChange` must be provided.
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -195,12 +196,17 @@ const Chatbox = ({ canType = true, value, onChange, onSubmit, onUpload, fileName
       <div className="absolute top-4 right-4 z-10">
         <SubmitButton onClick={handleSubmit} id={submitButtonId} disableSend={disableSend} />
       </div>
+      {showUpload && (
+        <div className="absolute bottom-1 left-1 z-10">
+          <UploadFile onClick={() => { if (onUpload) onUpload }} fileName={fileName} />
+        </div>
+      )}
 
       {/* Text area - takes up most of the space */}
       {!waitingforOptimization && (
         <Textarea
           placeholder="Type your message here..."
-          className={`border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 px-6 py-4 mb-4 pr-16 leading-relaxed text-card-foreground font-['Manrope'] ${resizeable ? 'text-md' : 'text-lg'} ${(fullHeight || stretchVertical || resizeable) ? 'flex-1 h-full min-h-0 resize-none overflow-y-auto' : 'min-h-[100px] resize-none'}`}
+          className={`border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 px-6 py-4 ${showUpload ? 'mb-8' : 'mb-4'} pr-16 leading-relaxed text-card-foreground font-['Manrope'] ${resizeable ? 'text-md' : 'text-lg'} ${(fullHeight || stretchVertical || resizeable) ? 'flex-1 h-full min-h-0 resize-none overflow-y-auto' : 'min-h-[100px] resize-none'}`}
           disabled={!canType}
           value={value}
           onChange={handleInputChange}
