@@ -300,7 +300,7 @@ const PromptPlayground = () => {
 
   const handleReset = () => {
     setFullReset(true);
-    setParameters({ specificity: "", style: "", context: "", bias: "" });
+    setParameters({ specificity: "", style: "", context:   "", bias: "" });
   };
 
   const submitAnswerForThreadVersion = useCallback(async (threadIndex: number, versionIndex: number, promptText: string) => {

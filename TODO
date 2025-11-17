@@ -1,10 +1,8 @@
 TODO:
 - align theming with greater AI-Code design philosophy
 - look into scraping data from google sheets
-- NWP: add info to minitask
+- NWP: add info button for minitask
 - PROMPT PLAYGROUND:
-  - close journalistic eval by default
-  - remove optimize-before-send
   - add upload
     - implement upload_rag endpoint
     - implement answer_rag endpoint
