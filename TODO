@@ -5,9 +5,10 @@ TODO:
 - PROMPT CONTSTRUCTION:
   - replace dummy prompt controls with real component
 - PROMPT PLAYGROUND:
-  - add upload
-    - implement upload_rag endpoint
-    - implement answer_rag endpoint
+  - upon submitting a new prompt, smooth scroll to new prompt.
+  - upload:
+    - implement remove_doc endpoint
+    - test answer_rag endpoint
   - BACKEND:
     - change optimize to use system prompt
     - make answer_rag use HF external inference
@@ -15,6 +16,7 @@ TODO:
     - user needs to be able to upload any PDFs, regardless of metadata
   - DIFF: 
     - add shove button to insert/remove all sidebar text at once
+    - show changes legend should only appear if show changes is active
     - some way to show the user which prompts are being compared in diff
     - allow user to choose which prompt/outputs they are comparing
     - richtext beyond newline doesn't work with diff because it's too hard to create a custom less-stringent diff using jsdiff. probably need to switch diff tools?
