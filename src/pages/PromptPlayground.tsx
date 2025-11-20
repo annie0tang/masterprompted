@@ -1,17 +1,11 @@
 // src/pages/PromptPlayground.tsx
 
 import Header from "@/components/Header";
-import EvaluationPanel from "@/components/EvaluationPanel";
 import PromptControls from "@/components/PromptControls";
-import ChatPrompt from "@/components/ChatPrompt";
-import { useState, useRef, useEffect, useCallback, useMemo, memo } from "react";
-import ChatAnswer from "@/components/ChatAnswer";
+import { useState, useEffect, useCallback } from "react";
 import { PopoverSeries } from "@/components/PopoverSeries";
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Skeleton } from "@/components/ui/skeleton";
-import { CircleQuestionMark, Minus } from "lucide-react";
-import RemovedTextSidebar from "@/components/RemovedTextSidebar";
-import { diffWordsWithNewlineProtection } from "@/lib/diff";
+import ChatBody from "@/components/ChatBody";
 
 export type Parameters = {
   specificity: string;
@@ -19,105 +13,15 @@ export type Parameters = {
   context: string;
   bias: string;
 };
-
-type ThreadVersion = { prompt: string; answer?: string; parameters?: Parameters };
-type Thread = { versions: ThreadVersion[]; currentIndex: number };
-type RemovedComment = { id: string; value: string };
+export type ThreadVersion = { prompt: string; answer?: string; parameters?: Parameters };
+export type Thread = { versions: ThreadVersion[]; currentIndex: number; showDiff?: boolean };
 
 type AttachedFile = {
   name: string;
+  isUploading?: boolean;
   // id?: string; // reserved for future backend IDs
 };
-
-// Memoizing ChatBody to prevent unnecessary re-renders
-const ChatBody = memo(function ChatBody({
-  threads,
-  onPrevVersion,
-  onNextVersion,
-  showDiff,
-  onToggleDiff,
-  onHoverComment,
-  scrollContainerRef,
-  onUpdateCommentPosition,
-  inlineCommentIds,
-  onCommentClick,
-  toggleDiffHelp
-}: {
-  threads: Thread[];
-  onPrevVersion: (threadIndex: number) => void;
-  onNextVersion: (threadIndex: number) => void;
-  showDiff: boolean;
-  onToggleDiff: (checked: boolean) => void;
-  onHoverComment: (id: string | null) => void;
-  scrollContainerRef: React.RefObject<HTMLDivElement>;
-  onUpdateCommentPosition: (id: string, top: number) => void;
-  inlineCommentIds: Set<string>;
-  onCommentClick: (id: string) => void;
-  toggleDiffHelp: () => void;
-}) {
-  return (
-    <div className="mt-6 space-y-4">
-      {threads.map((thread, threadIndex) => {
-        const current = thread.versions[thread.currentIndex];
-        return (
-          <div key={threadIndex}>
-            <ChatPrompt
-              text={current.prompt}
-              parameters={current.parameters}
-              versionIndex={thread.currentIndex}
-              versionCount={thread.versions.length}
-              onPrevVersion={() => onPrevVersion(threadIndex)}
-              onNextVersion={() => onNextVersion(threadIndex)}
-            />
-            {!current.answer && (
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-[500px]" />
-                <Skeleton className="h-4 w-[300px]" />
-              </div>
-            )}
-            {current.answer && (
-              <ChatAnswer
-                text={current.answer}
-                answerArray={thread.versions.map(v => v.answer ?? "")}
-                currentIndex={thread.currentIndex}
-                threadIndex={threadIndex}
-                showDiff={showDiff}
-                onToggleDiff={onToggleDiff}
-                onHoverComment={onHoverComment}
-                scrollContainerRef={scrollContainerRef}
-                onUpdateCommentPosition={onUpdateCommentPosition}
-                inlineCommentIds={inlineCommentIds}
-                onCommentClick={onCommentClick}
-                toggleDiffHelp={toggleDiffHelp}
-              />
-            )}
-          </div>
-        );
-      })}
-    </div>
-  );
-});
-
-
-const isElementInView = (container: HTMLElement, target: HTMLElement): boolean => {
-  const containerRect = container.getBoundingClientRect();
-  const targetRect = target.getBoundingClientRect();
-  const isTopInView = targetRect.top >= containerRect.top;
-  const isBottomInView = targetRect.bottom <= containerRect.bottom;
-  return isTopInView && isBottomInView;
-};
-
 const PromptPlayground = () => {
-  const chatEndRef = useRef<HTMLDivElement>(null);
-  const sidebarRef = useRef<HTMLDivElement>(null);
-  const lastHoveredId = useRef<string | null>(null);
-  const isHoverScrolling = useRef(false);
-
-  // --- REFS FOR SMOOTH SCROLLING ---
-  const sidebarScrollTarget = useRef(0);
-  const isFrameScheduled = useRef(false);
-  const animationFrameId = useRef<number | null>(null);
-
   const [threads, setThreads] = useState<Thread[]>([]);
   const [parameters, setParameters] = useState<Parameters>({ specificity: "", style: "", context: "", bias: "" });
   const [sessionId] = useState<string>(() => {
@@ -141,162 +45,21 @@ const PromptPlayground = () => {
   const [fullReset, setFullReset] = useState<boolean>(false);
   const LOCALSTORAGE_POPKEY = "promptPlayground.popoverSeen";
   const [showControlPanelPopover, setShowControlPanelPopover] = useState<boolean>(false);
-  const [showDiffPopover, setShowDiffPopover] = useState<boolean>(false);
   const { t } = useLanguage();
   const [waitingforOptimization, setWaitingForOptimization] = useState<boolean>(false);
 
-  const [showDiff, setShowDiff] = useState(false);
   // Track current page language (forwarded from Header -> LanguageSwitcher)
   const [pageLanguage, setPageLanguage] = useState<'en' | 'es'>('en');
-  const [commentPositions, setCommentPositions] = useState<Record<string, number>>({});
-  const [inlineCommentIds, setInlineCommentIds] = useState(() => new Set<string>());
 
-  const activeComments = useMemo<RemovedComment[]>(() => {
-    if (!showDiff) return [];
-    const allComments: RemovedComment[] = [];
-    threads.forEach((thread, threadIndex) => {
-      if (thread.currentIndex > 0) {
-        const currentAnswer = thread.versions[thread.currentIndex].answer?.replace(/\\n/g, '\n') ?? "";
-        const originalAnswer = thread.versions[0].answer?.replace(/\\n/g, '\n') ?? "";
-        const diffResult = diffWordsWithNewlineProtection(originalAnswer, currentAnswer);
-        diffResult.forEach((part, index) => {
-          if (part.removed) {
-            allComments.push({
-              id: `comment-${threadIndex}-${thread.currentIndex}-${index}`,
-              value: part.value,
-            });
-          }
-        });
+  const handleThreadDiffToggle = useCallback((threadIndex: number, checked: boolean) => {
+    setThreads(prev => {
+      const next = [...prev];
+      if (!next[threadIndex]) {
+        return prev;
       }
+      next[threadIndex] = { ...next[threadIndex], showDiff: checked };
+      return next;
     });
-    return allComments;
-  }, [threads, showDiff]);
-
-  const handleToggleDiff = (checked: boolean) => {
-    if (!checked) {
-      setCommentPositions({});
-      setInlineCommentIds(new Set());
-    }
-    setShowDiff(checked);
-  };
-
-  const toggleDiffHelp = () => {
-    setShowDiffPopover(true);
-  }
-
-  const handleUpdateCommentPosition = useCallback((id: string, top: number) => {
-    setCommentPositions(prev => {
-      if (prev[id] === top) return prev;
-      return { ...prev, [id]: top };
-    });
-  }, []);
-
-  const handleCommentClick = (id: string) => {
-    setInlineCommentIds(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(id)) newSet.delete(id);
-      else newSet.add(id);
-      return newSet;
-    });
-  };
-
-  const handleHoverComment = useCallback((id: string | null) => {
-    const HIGHLIGHT_COMMENT_CLASSES = ['bg-red-200'];
-    const HIGHLIGHT_ICON_CLASSES = ['bg-red-600', 'text-white'];
-
-    if (lastHoveredId.current) {
-      const lastIconEl = document.getElementById(lastHoveredId.current);
-      const lastSidebarEl = document.getElementById(`sidebar-${lastHoveredId.current}`);
-      lastIconEl?.classList.remove(...HIGHLIGHT_ICON_CLASSES);
-      lastSidebarEl?.classList.remove(...HIGHLIGHT_COMMENT_CLASSES);
-    }
-
-    if (id) {
-      const chatIconEl = document.getElementById(id);
-      const sidebarCommentEl = document.getElementById(`sidebar-${id}`);
-
-      chatIconEl?.classList.add(...HIGHLIGHT_ICON_CLASSES);
-      sidebarCommentEl?.classList.add(...HIGHLIGHT_COMMENT_CLASSES);
-
-      lastHoveredId.current = id;
-
-      if (sidebarRef.current && sidebarCommentEl && !isElementInView(sidebarRef.current, sidebarCommentEl)) {
-        isHoverScrolling.current = true;
-        const sidebarRect = sidebarRef.current.getBoundingClientRect();
-        const commentRect = sidebarCommentEl.getBoundingClientRect();
-
-        let targetScrollTop;
-        if (commentRect.top < sidebarRect.top) {
-          targetScrollTop = sidebarCommentEl.offsetTop;
-        } else {
-          targetScrollTop = sidebarCommentEl.offsetTop + commentRect.height - sidebarRect.height;
-        }
-
-        // When hover-scrolling, update the target and let the animation frame handle it for smoothness
-        sidebarScrollTarget.current = targetScrollTop;
-        if (!isFrameScheduled.current) {
-          isFrameScheduled.current = true;
-          animationFrameId.current = requestAnimationFrame(() => {
-            if (sidebarRef.current) {
-              sidebarRef.current.scrollTop = sidebarScrollTarget.current;
-            }
-            isFrameScheduled.current = false;
-          });
-        }
-      }
-    } else {
-      lastHoveredId.current = null;
-      isHoverScrolling.current = false;
-    }
-  }, []);
-
-  useEffect(() => {
-    const chatContainer = chatEndRef.current;
-    if (!chatContainer) return;
-
-    // This function runs in the animation frame, ensuring a smooth update.
-    const updateSidebarScroll = () => {
-      if (sidebarRef.current) {
-        sidebarRef.current.scrollTop = sidebarScrollTarget.current;
-      }
-      // Reset the flag so the next scroll event can schedule a new frame.
-      isFrameScheduled.current = false;
-      animationFrameId.current = null;
-    };
-
-    const handleScroll = () => {
-      if (isHoverScrolling.current) {
-        isHoverScrolling.current = false;
-      }
-
-      if (!sidebarRef.current) return;
-
-      const { scrollTop, scrollHeight, clientHeight } = chatContainer;
-      // Prevent division by zero if content is not scrollable.
-      const scrollRatio = (scrollHeight - clientHeight > 0) ? scrollTop / (scrollHeight - clientHeight) : 0;
-
-      const sidebar = sidebarRef.current;
-      const sidebarScrollHeight = sidebar.scrollHeight;
-      const sidebarClientHeight = sidebar.clientHeight;
-
-      // Update the target scroll position.
-      sidebarScrollTarget.current = scrollRatio * (sidebarScrollHeight - sidebarClientHeight);
-
-      // Schedule an update for the next frame if one isn't already scheduled.
-      if (!isFrameScheduled.current) {
-        isFrameScheduled.current = true;
-        animationFrameId.current = requestAnimationFrame(updateSidebarScroll);
-      }
-    };
-
-    chatContainer.addEventListener('scroll', handleScroll, { passive: true });
-
-    return () => {
-      chatContainer.removeEventListener('scroll', handleScroll);
-      if (animationFrameId.current) {
-        cancelAnimationFrame(animationFrameId.current);
-      }
-    };
   }, []);
 
   useEffect(() => {
@@ -319,6 +82,14 @@ const PromptPlayground = () => {
     const fileArray = Array.from(files);
     if (!fileArray.length) return;
 
+    const newAttachments: AttachedFile[] = fileArray.map(file => ({
+      name: file.name,
+      isUploading: true,
+    }));
+    const startIndex = attachedFiles.length;
+
+    setAttachedFiles(prev => [...prev, ...newAttachments]);
+
     const formData = new FormData();
     for (const file of fileArray) {
       formData.append("files", file);
@@ -339,12 +110,19 @@ const PromptPlayground = () => {
       const data = await response.json();
       console.log("upload_rag response:", data);
 
-      setAttachedFiles(prev => [
-        ...prev,
-        ...fileArray.map(file => ({ name: file.name }))
-      ]);
+      setAttachedFiles(prev =>
+        prev.map((file, index) => {
+          if (index >= startIndex && index < startIndex + newAttachments.length) {
+            return { ...file, isUploading: false };
+          }
+          return file;
+        })
+      );
     } catch (error) {
       console.error("uploadRagFiles error:", error);
+      setAttachedFiles(prev =>
+        prev.filter((_, index) => index < startIndex || index >= startIndex + newAttachments.length)
+      );
     }
   };
 
@@ -379,8 +157,12 @@ const PromptPlayground = () => {
 
       setThreads(prev => {
         const copy = [...prev];
-        if (!copy[threadIndex]?.versions[versionIndex]) return prev;
-        copy[threadIndex].versions[versionIndex].answer = data.answer;
+        const thread = copy[threadIndex];
+        if (!thread?.versions[versionIndex]) return prev;
+        const versions = thread.versions.map((version, idx) =>
+          idx === versionIndex ? { ...version, answer: data.answer } : version
+        );
+        copy[threadIndex] = { ...thread, versions };
         return copy;
       });
     },
@@ -439,7 +221,7 @@ const PromptPlayground = () => {
 
   const createNewThreadAndFetch = async (submittedText: string) => {
     const newThreadIndex = threads.length;
-    setThreads(prev => [...prev, { versions: [{ prompt: submittedText }], currentIndex: 0 }]);
+    setThreads(prev => [...prev, { versions: [{ prompt: submittedText }], currentIndex: 0, showDiff: false }]);
     await submitAnswerForThreadVersion(newThreadIndex, 0, submittedText);
   };
 
@@ -451,9 +233,15 @@ const PromptPlayground = () => {
       const newVersionIndex = threads[threadIndex].versions.length;
       setThreads(prev => {
         const copy = [...prev];
-        const t = copy[threadIndex];
-        t.versions = [...t.versions, { prompt: promptText, answer: undefined, parameters }];
-        t.currentIndex = newVersionIndex;
+        const targetThread = copy[threadIndex];
+        if (!targetThread) {
+          return prev;
+        }
+        copy[threadIndex] = {
+          ...targetThread,
+          versions: [...targetThread.versions, { prompt: promptText, answer: undefined, parameters }],
+          currentIndex: newVersionIndex,
+        };
         return copy;
       });
       await submitAnswerForThreadVersion(threadIndex, newVersionIndex, promptText);
@@ -472,13 +260,7 @@ const PromptPlayground = () => {
     if (threads.length === 0 || hasManualEdit) {
       await createNewThreadAndFetch(submittedText);
     } else {
-      let temp = false;
-      if (showDiff) {
-        setShowDiff(false);
-        temp = true;
-      }
       await submitAnswerForLatestVersion(submittedText);
-      if (temp) setShowDiff(true);
     }
   };
 
@@ -495,10 +277,31 @@ const PromptPlayground = () => {
     setEnableSpecificity(!isEmpty); setEnableBias(!isEmpty); setEnableContext(!isEmpty); setEnableStyle(!isEmpty);
   };
 
-  useEffect(() => { if (chatEndRef.current) chatEndRef.current.scrollTop = chatEndRef.current.scrollHeight; }, [threads.length]);
+  const handlePrevVersion = useCallback((threadIndex: number) => {
+    setThreads(prev => {
+      const copy = [...prev];
+      const thread = copy[threadIndex];
+      if (!thread) return prev;
+      copy[threadIndex] = {
+        ...thread,
+        currentIndex: Math.max(0, thread.currentIndex - 1),
+      };
+      return copy;
+    });
+  }, []);
 
-  const handlePrevVersion = useCallback((threadIndex: number) => setThreads(prev => { const c = [...prev]; c[threadIndex].currentIndex = Math.max(0, c[threadIndex].currentIndex - 1); return c; }), []);
-  const handleNextVersion = useCallback((threadIndex: number) => setThreads(prev => { const c = [...prev]; c[threadIndex].currentIndex = Math.min(c[threadIndex].versions.length - 1, c[threadIndex].currentIndex + 1); return c; }), []);
+  const handleNextVersion = useCallback((threadIndex: number) => {
+    setThreads(prev => {
+      const copy = [...prev];
+      const thread = copy[threadIndex];
+      if (!thread) return prev;
+      copy[threadIndex] = {
+        ...thread,
+        currentIndex: Math.min(thread.versions.length - 1, thread.currentIndex + 1),
+      };
+      return copy;
+    });
+  }, []);
 
   return (
     <div className="min-h-screen max-h-screen bg-background">
@@ -530,22 +333,13 @@ const PromptPlayground = () => {
               }} />
             </div>
           </div>
-          <div className="flex-1 min-w-0 flex flex-col h-[calc(100vh-8rem)] relative">
-            <div className='flex-1 overflow-y-auto' ref={chatEndRef}>
-              <ChatBody {...{ threads, onPrevVersion: handlePrevVersion, onNextVersion: handleNextVersion, showDiff, onToggleDiff: handleToggleDiff, onHoverComment: handleHoverComment, scrollContainerRef: chatEndRef, onUpdateCommentPosition: handleUpdateCommentPosition, inlineCommentIds, onCommentClick: handleCommentClick, toggleDiffHelp }} />
-            </div>
-          </div>
-          <div className="flex-none w-[calc(18rem+2.5rem)] h-full flex">
-            <div id="removed-text-sidebar" className="flex-1 h-full overflow-y-hidden" ref={sidebarRef}>
-              {showDiff && <RemovedTextSidebar {...{ comments: activeComments, positions: commentPositions, onHover: handleHoverComment, inlineCommentIds, onCommentClick: handleCommentClick }} />}
-            </div>
-            <div className="w-[2.5rem] flex-none flex flex-col items-end gap-4 relative">
-              <button className="p-2 rounded-full hover:bg-muted/50" onClick={() => setShowControlPanelPopover(true)}>
-                <CircleQuestionMark className="h-6 w-6 text-muted-foreground" />
-              </button>
-              <EvaluationPanel initialIsOpen={!showDiff} canClose={true} />
-            </div>
-          </div>
+          <ChatBody
+            threads={threads}
+            onPrevVersion={handlePrevVersion}
+            onNextVersion={handleNextVersion}
+            onToggleThreadDiff={handleThreadDiffToggle}
+            onRequestControlPanelHelp={() => setShowControlPanelPopover(true)}
+          />
         </div>
       </main>
       {showControlPanelPopover && (
@@ -559,47 +353,6 @@ const PromptPlayground = () => {
             try { localStorage.setItem(LOCALSTORAGE_POPKEY, "true"); } catch (e) { /* ignore */ }
             setShowControlPanelPopover(false);
           }}
-        />
-      )}
-      {showDiffPopover && (
-        <PopoverSeries
-          steps={[
-            { id: "diff-hint", trigger: "#chat-body", content: t('components.popoverSeries.diff.step1') },
-            {
-              id: "diff-hint-2",
-              trigger: "#chat-body",
-              content: (
-                <span>
-                  <span className="bg-green-200 text-green-900 px-1.5 py-0.5 rounded-md">
-                    {t('components.popoverSeries.diff.greenText')}
-                  </span>
-                  {` ${t('components.popoverSeries.diff.addedNote')} `}
-                  <button
-                    className="inline-flex items-center justify-center align-middle h-[1.25em] w-[1.25em] mx-0.5 border-2 rounded-sm border-red-600 text-red-700 hover:bg-red-600 hover:text-white transition-colors"
-                    aria-label={t('components.popoverSeries.diff.showRemovedAria')}
-                  >
-                    <Minus className="h-3.5 w-3.5" />
-                  </button>
-                  {` ${t('components.popoverSeries.diff.removedNote')}`}
-                </span>
-              )
-            },
-            {
-              id: "controls-hint",
-              trigger: "#removed-text-sidebar",
-              side: "left",
-              content: (
-                <span>
-                  <span className="text-red-900 line-through px-1.5 py-0.5 rounded-md border border-red-200">
-                    {t('components.popoverSeries.diff.removedTextLabel')}
-                  </span>
-                  {` ${t('components.popoverSeries.diff.removedTextNote')}`}
-                </span>
-              )
-            }
-          ]}
-          initialStep={0}
-          onClose={() => setShowDiffPopover(false)}
         />
       )}
       <div className="mt-6 text-sm text-gray-500 max-w-7xl mx-auto">

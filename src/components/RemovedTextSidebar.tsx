@@ -11,6 +11,7 @@ type RemovedTextSidebarProps = {
   onHover: (id: string | null) => void;
   inlineCommentIds: Set<string>;
   onCommentClick: (id: string) => void;
+  minHeight?: number; // New prop
 };
 
 const PADDING_BETWEEN_COMMENTS = 8;
@@ -21,7 +22,8 @@ export default function RemovedTextSidebar({
   positions, 
   onHover, 
   inlineCommentIds, 
-  onCommentClick 
+  onCommentClick,
+  minHeight = 0,
 }: RemovedTextSidebarProps) {
   const sidebarComments = comments.filter(c => !inlineCommentIds.has(c.id));
 
@@ -50,17 +52,18 @@ export default function RemovedTextSidebar({
   });
 
   return (
-    <div className="relative h-full">
+    // Changed h-full to min-h-full and added style for explicit height
+    <div 
+      className="relative min-h-full" 
+      style={{ height: minHeight }}
+    >
       {sortedComments.map((comment) => (
         <div
-          // Prefixed ID for uniqueness, crucial for DOM manipulation
           id={`sidebar-${comment.id}`}
           key={comment.id}
           onClick={() => onCommentClick(comment.id)}
-          // Hovering now only triggers highlighting, not scrolling
           onMouseEnter={() => onHover(comment.id)}
           onMouseLeave={() => onHover(null)}
-          // className is now static
           className="absolute w-full p-1 rounded transition-colors duration-200 text-sm text-red-800 cursor-pointer line-through border border-red-200"
           style={{ 
             top: `${positionedComments.get(comment.id) ?? 0}px`,
@@ -72,4 +75,3 @@ export default function RemovedTextSidebar({
     </div>
   );
 }
-

@@ -133,7 +133,7 @@ interface PromptControlsProps {
     onFileUpload?: () => void;
     chatSubmitButtonId?: string;
     chatAnimationKey?: number;
-    files?: { name: string }[];
+    files?: { name: string; isUploading?: boolean }[];
     onUploadFiles?: (files: FileList | File[]) => void;
     onRemoveFile?: (index: number) => void;
 }

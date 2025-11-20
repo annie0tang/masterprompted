@@ -2,7 +2,7 @@
 
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Paperclip, SendHorizontal } from "lucide-react";
+import { Loader2, Paperclip, SendHorizontal } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -34,7 +34,7 @@ type ChatboxProps = {
   id?: string;
   waitingforOptimization?: boolean;
   onUploadFiles?: (files: FileList | File[]) => void;
-  files?: { name: string }[];
+  files?: { name: string; isUploading?: boolean }[];
   onRemoveFile?: (index: number) => void;
 };
 
@@ -167,14 +167,18 @@ const Chatbox = ({
             className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-muted text-xs text-muted-foreground max-w-[100%] overflow-hidden"
           >
             <span className="truncate">{file.name}</span>
-            <button
-              type="button"
-              className="ml-0.5 text-[10px] leading-none text-muted-foreground/80 hover:text-foreground"
-              // Boilerplate for future remove endpoint; currently no-op
-              // onClick={() => onRemoveFile?.(index)}
-            >
-              x
-            </button>
+            {file.isUploading ? (
+              <Loader2 className="h-3 w-3 text-muted-foreground animate-spin" />
+            ) : (
+              <button
+                type="button"
+                className="ml-0.5 text-[10px] leading-none text-muted-foreground/80 hover:text-foreground"
+                // Boilerplate for future remove endpoint; currently no-op
+                // onClick={() => onRemoveFile?.(index)}
+              >
+                x
+              </button>
+            )}
           </div>
         ))}
       </div>

@@ -116,7 +116,7 @@ const ChatAnswer = ({
     <div className="mb-20 w-full">
       {canShowDiff && (
         <div className="flex items-center justify-between mb-3 pb-2 border-b border-border">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2" id='show-diff-switch'>
             <Switch
               id={`show-diff-${threadIndex}`}
               checked={showDiff}
