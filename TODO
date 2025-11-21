@@ -1,9 +1,8 @@
 TODO:
 - align theming with greater AI-Code design philosophy
 - look into scraping data from google sheets
+- fix sizing issues across the whole website
 - NWP: add info button for minitask
-- PROMPT CONTSTRUCTION:
-  - replace dummy prompt controls with real component
 - PROMPT PLAYGROUND:
   - upon submitting a new prompt, smooth scroll to new prompt.
   - upload:
@@ -16,10 +15,8 @@ TODO:
     - user needs to be able to upload any PDFs, regardless of metadata
   - DIFF: 
     - add shove button to insert/remove all sidebar text at once
-    - show changes legend should only appear if show changes is active
     - some way to show the user which prompts are being compared in diff
     - allow user to choose which prompt/outputs they are comparing
     - richtext beyond newline doesn't work with diff because it's too hard to create a custom less-stringent diff using jsdiff. probably need to switch diff tools?
       - do that and then add richtext support during diff
       - still some minor newline gore issues, need to remove trailing/leading newlines from the span
-    - itemize down to one-diff-per-thread
