@@ -6,7 +6,8 @@ import ModuleNavigation from "@/components/ModuleNavigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import EvaluationPanel from "@/components/EvaluationPanel";
-import PromptControlsWithPrompt from "@/components/PromptControlsWithPrompt";
+import PromptControls from "@/components/PromptControls";
+import { Parameters } from "@/pages/PromptPlayground";
 import TextFlag from "@/components/TextFlag";
 import SectionFlag from "@/components/SectionFlag";
 import ChatPrompt from "@/components/ChatPrompt";
@@ -66,6 +67,13 @@ export default function SpecificityResponse() {
     setSentPrompt(inputPrompt);
   };
 
+  const handleParameterChange = (key: keyof Parameters, value: string) => {
+    if (key === 'bias') setBias(value);
+    if (key === 'context') setContext(value);
+    if (key === 'style') setStyle(value);
+    if (key === 'specificity') setSpecificity(value);
+  };
+
   // Check if there are unapplied changes
   const hasUnappliedChanges = bias !== appliedBias || context !== appliedContext || style !== appliedStyle || specificity !== appliedSpecificity;
 
@@ -79,22 +87,24 @@ export default function SpecificityResponse() {
         {/* Left Sidebar - Sent Prompt and Controls */}
         <div className="w-80 flex-shrink-0 space-y-6">
           {/* Prompt Controls with Sent Prompt */}
-          <PromptControlsWithPrompt
-            promptText={inputPrompt}
+          <PromptControls
+            chatValue={inputPrompt}
             showSpecificity={true}
             showStyle={true}
             showContext={true}
             showBias={true}
-            bias={bias}
-            context={context}
-            style={style}
-            specificity={specificity}
-            onBiasChange={setBias}
-            onContextChange={setContext}
-            onStyleChange={setStyle}
-            onSpecificityChange={setSpecificity}
-            onSubmit={handleApplyChanges}
-            hasUnappliedChanges={hasUnappliedChanges}
+            parameters={{
+              bias,
+              context,
+              style,
+              specificity
+            }}
+            onParameterChange={handleParameterChange}
+            onOptimize={handleApplyChanges}
+            readOnly={true}
+            disableOptimize={!hasUnappliedChanges}
+            disableSend={true}
+            files={[{ name: "EU_AI_Act.pdf" }]}
           />
         </div>
 

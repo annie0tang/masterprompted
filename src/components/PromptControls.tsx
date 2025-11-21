@@ -36,11 +36,11 @@ function Parameter({
     infoText
 }: ParameterProps) {
     const [tooltipOpen, setTooltipOpen] = useState(false);
-    
+
     if (!showParameter) {
         return null;
     }
-    
+
     // Determine the selected value - default to NO_CHANGE_VALUE if empty or invalid
     let selectedValue = currentValue;
     if (!selectedValue || (selectedValue !== leftParameter && selectedValue !== rightParameter)) {
@@ -56,7 +56,7 @@ function Parameter({
     };
 
     return (
-        <fieldset 
+        <fieldset
             className={`my-2 p-0 px-1 border border-border rounded-lg ${!enabled && 'opacity-60 pointer-events-none'}`}
             disabled={!enabled}
         >
@@ -66,8 +66,8 @@ function Parameter({
                     <TooltipProvider>
                         <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen} delayDuration={300}>
                             <TooltipTrigger asChild>
-                                <Info 
-                                    className="w-3 h-3 cursor-pointer" 
+                                <Info
+                                    className="w-3 h-3 cursor-pointer"
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         setTooltipOpen(!tooltipOpen);
@@ -81,11 +81,11 @@ function Parameter({
                     </TooltipProvider>
                 )}
             </legend>
-            
-            <RadioGroup 
-                value={selectedValue} 
-                onValueChange={handleValueChange} 
-                orientation="horizontal" 
+
+            <RadioGroup
+                value={selectedValue}
+                onValueChange={handleValueChange}
+                orientation="horizontal"
                 className="relative flex w-full justify-between gap-0 p-1"
             >
                 <div className="pointer-events-none absolute top-[12px] left-[calc(16.666%+14px)] w-[calc(33.333%-26px)] h-px bg-gray-300" />
@@ -94,12 +94,12 @@ function Parameter({
                     <RadioGroupItem value={leftParameter} id={`${parameterTitle}-r1`} />
                     <Label htmlFor={`${parameterTitle}-r1`} className="text-[10px] font-normal whitespace-nowrap px-1">{leftParameter}</Label>
                 </div>
-                
+
                 <div className="flex flex-1 flex-col items-center gap-1 w-1/4">
                     <RadioGroupItem value={NO_CHANGE_VALUE} id={`${parameterTitle}-r2`} />
                     <Label htmlFor={`${parameterTitle}-r2`} className="text-[10px] font-normal whitespace-nowrap px-1">{useLanguage().t('components.promptControls.original')}</Label>
                 </div>
-                
+
                 <div className="flex flex-1 flex-col items-center gap-1 w-1/4">
                     <RadioGroupItem value={rightParameter} id={`${parameterTitle}-r3`} />
                     <Label htmlFor={`${parameterTitle}-r3`} className="text-[10px] font-normal whitespace-nowrap px-1">{rightParameter}</Label>
@@ -136,6 +136,8 @@ interface PromptControlsProps {
     files?: { name: string; isUploading?: boolean }[];
     onUploadFiles?: (files: FileList | File[]) => void;
     onRemoveFile?: (index: number) => void;
+    readOnly?: boolean;
+    className?: string;
 }
 
 export default function PromptControls({
@@ -164,17 +166,19 @@ export default function PromptControls({
     files,
     onUploadFiles,
     onRemoveFile,
-    waitingforOptimization = false
+    waitingforOptimization = false,
+    readOnly = false,
+    className
 }: PromptControlsProps) {
     const { t } = useLanguage();
     const handleResetClick = () => {
         if (onReset) onReset();
     };
-    
+
     const handleSubmitClick = () => {
         if (onOptimize) onOptimize();
     };
-    
+
     const handleUndoClick = () => {
         if (onUndo && undoEnabled) onUndo();
     };
@@ -182,83 +186,83 @@ export default function PromptControls({
     const isAnyParameterSet = Object.values(parameters).some(p => p !== "");
 
     return (
-        <Card className="bg-card border border-border rounded-lg max-w-sm h-full min-w-[300px]">
+        <Card className={`bg-card border border-border rounded-lg max-w-sm h-[calc(100vh-160px)] min-w-[300px] ${className}`}>
             <CardContent className="p-2 h-full flex flex-col gap-1">
                 {/* Chatbox */}
-                <div className="z-50">
-                    <Chatbox
-                        value={chatValue}
-                        onChange={onChatChange ?? (() => {})}
-                        onSubmit={onChatSubmit}
-                        submitButtonId={chatSubmitButtonId}
-                        disableSend={disableSend}
-                        animationKey={chatAnimationKey}
-                        waitingforOptimization={waitingforOptimization}
-                        onUploadFiles={onUploadFiles}
-                        files={files}
-                        onRemoveFile={onRemoveFile}
-                    />
-                </div>
+                <Chatbox
+                    value={chatValue}
+                    onChange={onChatChange ?? (() => { })}
+                    onSubmit={onChatSubmit}
+                    submitButtonId={chatSubmitButtonId}
+                    disableSend={disableSend}
+                    animationKey={chatAnimationKey}
+                    waitingforOptimization={waitingforOptimization}
+                    onUploadFiles={onUploadFiles}
+                    files={files}
+                    onRemoveFile={onRemoveFile}
+                    readOnly={readOnly}
+                    className="z-50 flex-auto min-h-0"
+                />
 
                 {/* Parameters area: make this the flexible scrollable region so it shrinks/scrolls when the chatbox grows */}
-                <div className="flex-1 flex flex-col justify-end min-h-0">
+                <div className="flex-initial flex flex-col justify-end min-h-0 overflow-y-auto">
                     <h3 className="font-semibold text-card-foreground text-center whitespace-nowrap">{t('components.promptControls.title')}</h3>
-                    <Separator/>
+                    <Separator />
                     <div id='parameters' className="relative overflow-auto">
-                        <Parameter 
+                        <Parameter
                             parameterTitle={t('components.promptControls.specificity.title')}
-                            parameterKey="specificity" 
+                            parameterKey="specificity"
                             leftParameter={t('components.promptControls.specificity.left')}
                             rightParameter={t('components.promptControls.specificity.right')}
-                            showParameter={showSpecificity} 
-                            enabled={enableSpecificity} 
-                            currentValue={parameters.specificity} 
+                            showParameter={showSpecificity}
+                            enabled={enableSpecificity}
+                            currentValue={parameters.specificity}
                             onParameterChange={onParameterChange}
                             infoText={t('components.promptControls.specificity.info')}
                         />
-                        <Parameter 
+                        <Parameter
                             parameterTitle={t('components.promptControls.conversationStyle.title')}
-                            parameterKey="style" 
+                            parameterKey="style"
                             leftParameter={t('components.promptControls.conversationStyle.left')}
                             rightParameter={t('components.promptControls.conversationStyle.right')}
-                            showParameter={showStyle} 
-                            enabled={enableStyle} 
-                            currentValue={parameters.style} 
+                            showParameter={showStyle}
+                            enabled={enableStyle}
+                            currentValue={parameters.style}
                             onParameterChange={onParameterChange}
                             infoText={t('components.promptControls.conversationStyle.info')}
                         />
-                        <Parameter 
+                        <Parameter
                             parameterTitle={t('components.promptControls.context.title')}
-                            parameterKey="context" 
+                            parameterKey="context"
                             leftParameter={t('components.promptControls.context.left')}
                             rightParameter={t('components.promptControls.context.right')}
-                            showParameter={showContext} 
-                            enabled={enableContext} 
-                            currentValue={parameters.context} 
+                            showParameter={showContext}
+                            enabled={enableContext}
+                            currentValue={parameters.context}
                             onParameterChange={onParameterChange}
                             infoText={t('components.promptControls.context.info')}
                         />
-                        <Parameter 
+                        <Parameter
                             parameterTitle={t('components.promptControls.bias.title')}
-                            parameterKey="bias" 
+                            parameterKey="bias"
                             leftParameter={t('components.promptControls.bias.left')}
                             rightParameter={t('components.promptControls.bias.right')}
-                            showParameter={showBias} 
-                            enabled={enableBias} 
-                            currentValue={parameters.bias} 
+                            showParameter={showBias}
+                            enabled={enableBias}
+                            currentValue={parameters.bias}
                             onParameterChange={onParameterChange}
                             infoText={t('components.promptControls.bias.info')}
                         />
                     </div>
 
                     <div className="flex py-2 items-stretch">
-                        <Button 
-                            onClick={handleSubmitClick} 
-                            variant="default" 
-                            size="sm" 
+                        <Button
+                            onClick={handleSubmitClick}
+                            variant="default"
+                            size="sm"
                             className="flex-1 min-h-[48px] leading-tight rounded-full whitespace-normal text-center"
                             disabled={disableOptimize}
-                        > 
+                        >
                             {t('components.promptControls.sendOptimizedPrompt')}
                         </Button>
                     </div>

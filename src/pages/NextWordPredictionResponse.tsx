@@ -3,7 +3,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import EvaluationPanel from "@/components/EvaluationPanel";
 import ChatPrompt from "@/components/ChatPrompt";
 import LearningProgressBar from "@/components/LearningProgressBar";
-import { MiniTask } from "@/components/MiniTask";
+import { PopoverSeries } from "@/components/PopoverSeries";
 import TextFlag from "@/components/TextFlag";
 import ModuleNavigation from "@/components/ModuleNavigation";
 import GuidanceTooltip from "@/components/GuidanceTooltip";
@@ -27,7 +27,7 @@ export default function HeadlineResponse() {
   const [factualTooltipShown, setFactualTooltipShown] = useState(false);
   const [showCharterTooltip, setShowCharterTooltip] = useState(false);
   const [charterTooltipShown, setCharterTooltipShown] = useState(false);
-  const [showMiniTask, setShowMiniTask] = useState(true);
+  const [showIntroPopover, setShowIntroPopover] = useState(true);
   const [secondProbTooltipOpen, setSecondProbTooltipOpen] = useState(false);
   const [thirdProbTooltipOpen, setThirdProbTooltipOpen] = useState(false);
   const [dropdownProbTooltips, setDropdownProbTooltips] = useState<{
@@ -165,17 +165,6 @@ export default function HeadlineResponse() {
       setShowFactualInaccuracyTooltip(true);
     }
   };
-  useEffect(() => {
-    const handleClick = (event: MouseEvent) => {
-      if (showMiniTask) {
-        setShowMiniTask(false);
-      }
-    };
-    document.addEventListener("click", handleClick);
-    return () => {
-      document.removeEventListener("click", handleClick);
-    };
-  }, []);
 
   // Word progression data from the table
   const wordProgressions = {
@@ -243,8 +232,18 @@ export default function HeadlineResponse() {
       </p>
     </div>
   }];
+
+  // Define intro popover steps replacing MiniTask
+  const introPopoverSteps = [{
+    id: "mini-task-intro",
+    trigger: "[data-mini-task-target]",
+    content: <div className="space-y-2">
+      <h3 className="font-semibold text-lg">{t('nextWord.response.miniTaskTitle')}</h3>
+      <p className="text-sm leading-relaxed">{t('nextWord.response.miniTaskDescription')}</p>
+    </div>
+  }];
   return <div className="min-h-screen bg-background">
-    {showMiniTask && <MiniTask title={t('nextWord.response.miniTaskTitle')} description={t('nextWord.response.miniTaskDescription')} onStartTask={() => setShowMiniTask(false)} />}
+    {showIntroPopover && <PopoverSeries steps={introPopoverSteps} onClose={() => setShowIntroPopover(false)} />}
     <Header />
 
     {/* MiniTask - render at top for immediate visibility */}
@@ -279,121 +278,127 @@ export default function HeadlineResponse() {
                     lineHeight: '1.8'
                   }}>
                     {currentSentence.map((word, index) => {
-                      // Handle dropdown for second position (Unites/Reaches/Finalizes/finalizes)
+                      // Skip index 3 as it's included in the wrapper at index 2
+                      if (index === 3) return null;
+
+                      // Handle dropdown for second position (Unites/Reaches/Finalizes/finalizes) and wrap with third
                       if (index === 2 && (word === "Unites" || word === "Reaches" || word === "Finalizes" || word === "finalizes")) {
                         const options = getWordOptions('second', index);
                         const rawOptions = getWordOptions('second');
-                        return <span key={index}>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <button data-word-union data-word={word.toLowerCase()} className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg inline-flex items-center gap-1">
-                                  {word}
-                                  <ChevronDown className="h-3 w-3" />
-                                   <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap flex items-center gap-1" style={{
+                        const thirdWord = currentSentence[3];
+                        const rawOptionsThird = getWordOptions('third');
+                        const optionsThird = getWordOptions('third', 3);
+                        const isValidThirdWord = rawOptionsThird.some(opt => opt.word === thirdWord);
+
+                        const dropdown1 = <span key={2}>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <button data-word-union data-word={word.toLowerCase()} className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg inline-flex items-center gap-1">
+                                {word}
+                                <ChevronDown className="h-3 w-3" />
+                                <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap flex items-center gap-1" style={{
                                   pointerEvents: 'auto'
                                 }}>
-                                     {rawOptions.find(opt => opt.word === word)?.probability || rawOptions[0]?.probability || "0.67"}
-                                     <TooltipProvider>
-                                       <Tooltip open={secondProbTooltipOpen} onOpenChange={setSecondProbTooltipOpen}>
-                                         <TooltipTrigger asChild>
-                                           <Info className="h-3 w-3 cursor-pointer" onClick={e => {
+                                  {rawOptions.find(opt => opt.word === word)?.probability || rawOptions[0]?.probability || "0.67"}
+                                  <TooltipProvider>
+                                    <Tooltip open={secondProbTooltipOpen} onOpenChange={setSecondProbTooltipOpen}>
+                                      <TooltipTrigger asChild>
+                                        <Info className="h-3 w-3 cursor-pointer" onClick={e => {
                                           e.stopPropagation();
                                           setSecondProbTooltipOpen(!secondProbTooltipOpen);
                                         }} onMouseEnter={() => setSecondProbTooltipOpen(true)} onMouseLeave={() => setSecondProbTooltipOpen(false)} />
-                                         </TooltipTrigger>
-                                          <TooltipContent side="top" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
-                                            <p className="text-sm leading-relaxed">{t('nextWord.response.probTooltip')}</p>
-                                          </TooltipContent>
-                                       </Tooltip>
-                                     </TooltipProvider>
-                                   </span>
-                                </button>
-                              </DropdownMenuTrigger>
-                               <DropdownMenuContent className="bg-white border border-gray-200 shadow-lg rounded-md z-[9999] min-w-[120px]">
-                                 {options.map(option => <DropdownMenuItem key={option.word} onClick={() => handleWordSelection(option.word, index)} className={`cursor-pointer flex justify-between items-center gap-2 ${option.word === "Unites" ? "bg-red-100 hover:bg-red-200" : "hover:bg-gray-100"}`}>
-                                      <span className="inline-flex items-center gap-2">
-                                        {option.word}
-                                      </span>
-                                      <span className="flex items-center gap-1 text-xs text-gray-500">
-                                        {option.probability}
-                                        <TooltipProvider>
-                                          <Tooltip open={dropdownProbTooltips[`second-${option.word}`]} onOpenChange={open => toggleDropdownTooltip(`second-${option.word}`, open)}>
-                                            <TooltipTrigger asChild>
-                                              <Info className="h-3 w-3 cursor-pointer" onClick={e => {
-                                          e.stopPropagation();
-                                        }} onMouseEnter={() => toggleDropdownTooltip(`second-${option.word}`, true)} onMouseLeave={() => toggleDropdownTooltip(`second-${option.word}`, false)} />
-                                            </TooltipTrigger>
-                                            <TooltipContent side="top" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
-                                              <p className="text-sm leading-relaxed">{t('nextWord.response.probTooltip')}</p>
-                                            </TooltipContent>
-                                          </Tooltip>
-                                        </TooltipProvider>
-                                      </span>
-                                   </DropdownMenuItem>)}
-                               </DropdownMenuContent>
-                            </DropdownMenu>
-                            {index < currentSentence.length - 1 && " "}
-                          </span>;
-                      }
-
-                      // Handle dropdown for third position (On/Around/Behind/landmark/etc.)
-                      if (index === 3) {
-                        const rawOptions = getWordOptions('third');
-                        const options = getWordOptions('third', index);
-                        const isValidThirdWord = rawOptions.some(opt => opt.word === word);
-                        if (isValidThirdWord) {
-                          return <span key={index}>
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <button data-word={word.toLowerCase()} className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg inline-flex items-center gap-1">
-                                    {word}
-                                    <ChevronDown className="h-3 w-3" />
-                                     <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap flex items-center gap-1" style={{
-                                    pointerEvents: 'auto'
-                                  }}>
-                                       {rawOptions.find(opt => opt.word === word)?.probability || rawOptions[0]?.probability || "0.73"}
-                                       <TooltipProvider>
-                                         <Tooltip open={thirdProbTooltipOpen} onOpenChange={setThirdProbTooltipOpen}>
-                                           <TooltipTrigger asChild>
-                                             <Info className="h-3 w-3 cursor-pointer" onClick={e => {
-                                            e.stopPropagation();
-                                            setThirdProbTooltipOpen(!thirdProbTooltipOpen);
-                                          }} onMouseEnter={() => setThirdProbTooltipOpen(true)} onMouseLeave={() => setThirdProbTooltipOpen(false)} />
-                                           </TooltipTrigger>
+                                      </TooltipTrigger>
                                       <TooltipContent side="top" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
                                         <p className="text-sm leading-relaxed">{t('nextWord.response.probTooltip')}</p>
                                       </TooltipContent>
-                                         </Tooltip>
-                                       </TooltipProvider>
-                                     </span>
-                                  </button>
-                                </DropdownMenuTrigger>
-                                 <DropdownMenuContent className="bg-white border border-gray-200 shadow-lg rounded-md z-[9999] min-w-[120px]">
-                                   {options.map(option => <DropdownMenuItem key={option.word} onClick={() => handleWordSelection(option.word, index)} className={`cursor-pointer flex justify-between items-center gap-2 ${option.word === "Around" ? "bg-red-100 hover:bg-red-200" : "hover:bg-gray-100"}`}>
-                                        <span className="inline-flex items-center gap-2">
-                                          {option.word}
-                                        </span>
-                                        <span className="flex items-center gap-1 text-xs text-gray-500">
-                                          {option.probability}
-                                          <TooltipProvider>
-                                            <Tooltip open={dropdownProbTooltips[`third-${option.word}`]} onOpenChange={open => toggleDropdownTooltip(`third-${option.word}`, open)}>
-                                              <TooltipTrigger asChild>
-                                                <Info className="h-3 w-3 cursor-pointer" onClick={e => {
-                                            e.stopPropagation();
-                                          }} onMouseEnter={() => toggleDropdownTooltip(`third-${option.word}`, true)} onMouseLeave={() => toggleDropdownTooltip(`third-${option.word}`, false)} />
-                                              </TooltipTrigger>
-                                              <TooltipContent side="top" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
-                                                <p className="text-sm leading-relaxed">{t('nextWord.response.probTooltip')}</p>
-                                              </TooltipContent>
-                                            </Tooltip>
-                                          </TooltipProvider>
-                                        </span>
-                                     </DropdownMenuItem>)}
-                                 </DropdownMenuContent>
-                              </DropdownMenu>
-                              {index < currentSentence.length - 1 && " "}
-                            </span>;
-                        }
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                </span>
+                              </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="bg-white border border-gray-200 shadow-lg rounded-md z-[9999] min-w-[120px]">
+                              {options.map(option => <DropdownMenuItem key={option.word} onClick={() => handleWordSelection(option.word, index)} className={`cursor-pointer flex justify-between items-center gap-2 ${option.word === "Unites" ? "bg-red-100 hover:bg-red-200" : "hover:bg-gray-100"}`}>
+                                <span className="inline-flex items-center gap-2">
+                                  {option.word}
+                                </span>
+                                <span className="flex items-center gap-1 text-xs text-gray-500">
+                                  {option.probability}
+                                  <TooltipProvider>
+                                    <Tooltip open={dropdownProbTooltips[`second-${option.word}`]} onOpenChange={open => toggleDropdownTooltip(`second-${option.word}`, open)}>
+                                      <TooltipTrigger asChild>
+                                        <Info className="h-3 w-3 cursor-pointer" onClick={e => {
+                                          e.stopPropagation();
+                                        }} onMouseEnter={() => toggleDropdownTooltip(`second-${option.word}`, true)} onMouseLeave={() => toggleDropdownTooltip(`second-${option.word}`, false)} />
+                                      </TooltipTrigger>
+                                      <TooltipContent side="top" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
+                                        <p className="text-sm leading-relaxed">{t('nextWord.response.probTooltip')}</p>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                </span>
+                              </DropdownMenuItem>)}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                          {2 < currentSentence.length - 1 && " "}
+                        </span>;
+
+                        const dropdown2 = isValidThirdWord ? <span key={3}>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <button data-word={thirdWord.toLowerCase()} className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg inline-flex items-center gap-1">
+                                {thirdWord}
+                                <ChevronDown className="h-3 w-3" />
+                                <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap flex items-center gap-1" style={{
+                                  pointerEvents: 'auto'
+                                }}>
+                                  {rawOptionsThird.find(opt => opt.word === thirdWord)?.probability || rawOptionsThird[0]?.probability || "0.73"}
+                                  <TooltipProvider>
+                                    <Tooltip open={thirdProbTooltipOpen} onOpenChange={setThirdProbTooltipOpen}>
+                                      <TooltipTrigger asChild>
+                                        <Info className="h-3 w-3 cursor-pointer" onClick={e => {
+                                          e.stopPropagation();
+                                          setThirdProbTooltipOpen(!thirdProbTooltipOpen);
+                                        }} onMouseEnter={() => setThirdProbTooltipOpen(true)} onMouseLeave={() => setThirdProbTooltipOpen(false)} />
+                                      </TooltipTrigger>
+                                      <TooltipContent side="top" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
+                                        <p className="text-sm leading-relaxed">{t('nextWord.response.probTooltip')}</p>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                </span>
+                              </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="bg-white border border-gray-200 shadow-lg rounded-md z-[9999] min-w-[120px]">
+                              {optionsThird.map(option => <DropdownMenuItem key={option.word} onClick={() => handleWordSelection(option.word, 3)} className={`cursor-pointer flex justify-between items-center gap-2 ${option.word === "Around" ? "bg-red-100 hover:bg-red-200" : "hover:bg-gray-100"}`}>
+                                <span className="inline-flex items-center gap-2">
+                                  {option.word}
+                                </span>
+                                <span className="flex items-center gap-1 text-xs text-gray-500">
+                                  {option.probability}
+                                  <TooltipProvider>
+                                    <Tooltip open={dropdownProbTooltips[`third-${option.word}`]} onOpenChange={open => toggleDropdownTooltip(`third-${option.word}`, open)}>
+                                      <TooltipTrigger asChild>
+                                        <Info className="h-3 w-3 cursor-pointer" onClick={e => {
+                                          e.stopPropagation();
+                                        }} onMouseEnter={() => toggleDropdownTooltip(`third-${option.word}`, true)} onMouseLeave={() => toggleDropdownTooltip(`third-${option.word}`, false)} />
+                                      </TooltipTrigger>
+                                      <TooltipContent side="top" align="center" sideOffset={6} className="max-w-sm overflow-visible whitespace-normal text-white text-left">
+                                        <p className="text-sm leading-relaxed">{t('nextWord.response.probTooltip')}</p>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                </span>
+                              </DropdownMenuItem>)}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                          {3 < currentSentence.length - 1 && " "}
+                        </span> : null;
+
+                        return <>
+                          <div data-mini-task-target className="h-[66px] w-[220px] tran absolute inline-block" />
+                          {dropdown1}
+                          {dropdown2}
+                        </>
                       }
 
                       // Handle TextFlag for "Charter," in new form too
@@ -411,27 +416,27 @@ export default function HeadlineResponse() {
                         </span>;
                       }
                       return <span key={index}>
-                          {word}
-                          {index < currentSentence.length - 1 && " "}
-                        </span>;
+                        {word}
+                        {index < currentSentence.length - 1 && " "}
+                      </span>;
                     })}
                   </h1>
                 </div>
 
                 {/* Factual Inaccuracy Tooltip for New Form */}
                 {showFactualInaccuracyTooltip && <div className="absolute left-full top-0 ml-4 z-50">
-                    <div className="bg-emerald-500 text-white px-6 py-3 rounded-lg shadow-lg max-w-md w-80">
-                      <p className="text-sm leading-relaxed mb-2 font-medium">
-                        You found the factual inaccuracy!
-                      </p>
-                      <p className="text-sm leading-relaxed mb-4">
-                        The EU has not "united behind" the AI Act. While there is broad support, the process involved negotiations, compromises, and some member states had reservations about certain provisions.
-                      </p>
-                      <button onClick={() => setShowFactualInaccuracyTooltip(false)} className="bg-white text-emerald-500 px-4 py-2 rounded text-sm font-medium hover:bg-gray-100 transition-colors">
-                        Continue
-                      </button>
-                    </div>
-                  </div>}
+                  <div className="bg-emerald-500 text-white px-6 py-3 rounded-lg shadow-lg max-w-md w-80">
+                    <p className="text-sm leading-relaxed mb-2 font-medium">
+                      You found the factual inaccuracy!
+                    </p>
+                    <p className="text-sm leading-relaxed mb-4">
+                      The EU has not "united behind" the AI Act. While there is broad support, the process involved negotiations, compromises, and some member states had reservations about certain provisions.
+                    </p>
+                    <button onClick={() => setShowFactualInaccuracyTooltip(false)} className="bg-white text-emerald-500 px-4 py-2 rounded text-sm font-medium hover:bg-gray-100 transition-colors">
+                      Continue
+                    </button>
+                  </div>
+                </div>}
 
                 <GuidanceTooltip text="Journalistic Evaluation Checklist: For more information on the flagged content, expand the relevant term according to the icon. This checklist is designed to help you apply your journalistic expertise effectively to LLM outputs. With LLM-specific criteria, it guides you to keep your reporting reliable." isVisible={showCharterTooltip} onClose={() => setShowCharterTooltip(false)} className="fixed right-80 top-1/2 transform -translate-y-1/2 z-50" />
 

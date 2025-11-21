@@ -36,6 +36,8 @@ type ChatboxProps = {
   onUploadFiles?: (files: FileList | File[]) => void;
   files?: { name: string; isUploading?: boolean }[];
   onRemoveFile?: (index: number) => void;
+  readOnly?: boolean;
+  className?: string;
 };
 
 const Chatbox = ({
@@ -50,6 +52,8 @@ const Chatbox = ({
   onUploadFiles,
   files = [],
   onRemoveFile,
+  readOnly = false,
+  className = "",
 }: ChatboxProps) => {
   // Controlled-only component: `value` drives the textarea and `onChange` must be provided.
 
@@ -173,8 +177,8 @@ const Chatbox = ({
               <button
                 type="button"
                 className="ml-0.5 text-[10px] leading-none text-muted-foreground/80 hover:text-foreground"
-                // Boilerplate for future remove endpoint; currently no-op
-                // onClick={() => onRemoveFile?.(index)}
+              // Boilerplate for future remove endpoint; currently no-op
+              // onClick={() => onRemoveFile?.(index)}
               >
                 x
               </button>
@@ -189,13 +193,13 @@ const Chatbox = ({
     <div
       ref={containerRef}
       id={id}
-      className={`relative bg-card border border-border rounded-2xl shadow-sm w-full h-full min-w-[250px] min-h-[220px] flex flex-col ${isBouncing ? 'bounce-once' : ''}`}
+      className={`relative bg-card border border-border rounded-2xl shadow-sm w-full flex flex-col ${isBouncing ? 'bounce-once' : ''} ${className}`}
       // Allow the user to resize while still honoring parent-provided dimensions.
       style={{
         resize: 'both',
         overflow: 'auto',
         minWidth: '280px',
-        minHeight: '190px',
+        minHeight: '150px',
         maxWidth: '100%',
         maxHeight: '400px',
       }}
@@ -209,7 +213,7 @@ const Chatbox = ({
       {!waitingforOptimization && (
         <Textarea
           placeholder="Type your message here..."
-          className="border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 px-2 py-2 mt-2 mb-2 pr-12 leading-relaxed text-card-foreground font-['Manrope'] text-md flex-1 h-full min-h-[140px] resize-none overflow-y-auto"
+          className="border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 px-2 py-2 mt-2 mb-2 pr-12 leading-relaxed text-card-foreground font-['Manrope'] text-md flex-1 h-full min-h-0 resize-none overflow-y-auto"
           value={value}
           onChange={handleInputChange}
           ref={textareaRef}
@@ -223,6 +227,7 @@ const Chatbox = ({
               }
             }
           }}
+          readOnly={readOnly}
         />
       )}
       {waitingforOptimization && (
