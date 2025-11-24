@@ -274,7 +274,7 @@ const PromptPlayground = () => {
     const isEmpty = !input.trim();
     setDisableSend(isEmpty);
     setDisableOptimize(true);
-    setEnableSpecificity(!isEmpty); setEnableBias(!isEmpty); setEnableContext(!isEmpty); setEnableStyle(!isEmpty);
+    setEnableSpecificity(false); setEnableBias(false); setEnableContext(false); setEnableStyle(false);
   };
 
   const handlePrevVersion = useCallback((threadIndex: number) => {
