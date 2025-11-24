@@ -45,7 +45,7 @@ const ChatBody = memo(function ChatBody({
   const [commentPositions, setCommentPositions] = useState<Record<string, number>>({});
   const [inlineCommentIds, setInlineCommentIds] = useState<Set<string>>(() => new Set());
   const [showDiffPopover, setShowDiffPopover] = useState(false);
-  
+
   // New state to track the scrollHeight of the main chat
   const [chatHeight, setChatHeight] = useState(0);
 
@@ -104,8 +104,25 @@ const ChatBody = memo(function ChatBody({
   }, [activeComments]);
 
   useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    if (threads.length > 0) {
+      // Use requestAnimationFrame to ensure the DOM has updated
+      requestAnimationFrame(() => {
+        const lastThreadIndex = threads.length - 1;
+        const lastThreadElement = document.getElementById(`thread-${lastThreadIndex}`);
+        const container = chatContainerRef.current;
+
+        if (lastThreadElement && container) {
+          // Calculate the position relative to the container
+          const elementTop = lastThreadElement.offsetTop;
+          const containerTop = container.offsetTop;
+          const targetScrollTop = elementTop - containerTop;
+
+          container.scrollTo({
+            top: targetScrollTop,
+            behavior: "smooth"
+          });
+        }
+      });
     }
   }, [threads.length]);
 
@@ -123,7 +140,7 @@ const ChatBody = memo(function ChatBody({
     });
 
     observer.observe(content);
-    
+
     // Initial set
     setChatHeight(container.scrollHeight);
 
@@ -147,7 +164,7 @@ const ChatBody = memo(function ChatBody({
       if (!sidebar) return;
 
       const { scrollTop } = chatContainer;
-      
+
       // CHANGED: Use direct 1:1 mapping instead of ratio calculation.
       // This ensures the sidebar stays geometrically aligned with the text.
       sidebarScrollTarget.current = scrollTop;
@@ -238,7 +255,7 @@ const ChatBody = memo(function ChatBody({
               {threads.map((thread, threadIndex) => {
                 const current = thread.versions[thread.currentIndex];
                 return (
-                  <div key={threadIndex}>
+                  <div key={threadIndex} id={`thread-${threadIndex}`}>
                     <ChatPrompt
                       text={current.prompt}
                       parameters={current.parameters}
@@ -273,6 +290,8 @@ const ChatBody = memo(function ChatBody({
                 );
               })}
             </div>
+            {/* Spacer to allow scrolling the last item to the top */}
+            <div className="h-[60vh] flex-none" />
           </div>
         </div>
         <div className="flex-none w-[calc(18rem+2.5rem)] h-full flex">
