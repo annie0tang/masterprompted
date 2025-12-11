@@ -213,7 +213,7 @@ export function WordTreeDiagram({
     }, 180);
   };
 
-  const nodeHeight = 48;
+  const nodeHeight = 44;
   const levelGap = 85;
   const containerHeight = 600;
 
@@ -340,7 +340,7 @@ export function WordTreeDiagram({
                   transform: 'translateX(-50%)',
                 }}
                 className={cn(
-                  "relative px-5 py-3 rounded-lg text-base font-medium transition-all duration-200 border-2 min-w-[120px] h-12",
+                  "relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 border-2 min-w-[100px] h-11",
                   level === 0 
                     ? "bg-primary text-primary-foreground border-primary cursor-default"
                     : isSelected 
@@ -468,14 +468,13 @@ export function WordTreeDiagram({
             </React.Fragment>
           ))}
 
-          {/* Headline display - shows selected words dynamically */}
-          {currentPath.length > 1 && (
+          {/* Final connector to headline - only when complete */}
+          {headline && (
             <>
               <div className="flex items-center w-6" style={{ height: containerHeight }}>
                 <svg className="w-full h-full" viewBox={`0 0 24 ${containerHeight}`} preserveAspectRatio="none">
                   {(() => {
-                    const lastSelectedLevel = currentPath.length - 1;
-                    const y = getSelectedYAtLevel(lastSelectedLevel);
+                    const y = getSelectedYAtLevel(6);
                     return (
                       <path
                         d={`M 0 ${y} L 24 ${y}`}
@@ -488,28 +487,19 @@ export function WordTreeDiagram({
                 </svg>
               </div>
 
-              {/* Dynamic headline based on selections */}
+              {/* Headline completion */}
               <div className="relative" style={{ height: containerHeight }}>
                 <div 
-                  className="absolute bg-muted/50 border border-border rounded-lg p-4 animate-fade-in min-w-[320px]"
+                  className="absolute bg-muted/50 border border-border rounded-lg p-3 animate-fade-in max-w-[220px]"
                   style={{ 
-                    top: getSelectedYAtLevel(currentPath.length - 1) - 50,
+                    top: getSelectedYAtLevel(6) - 40,
                     left: 0 
                   }}
                 >
-                  <p className="text-xs text-muted-foreground mb-1">Current headline:</p>
-                  <p className="text-base font-medium text-foreground leading-relaxed whitespace-nowrap">
-                    {currentPath.join(" ")}
-                    {!headline && <span className="text-muted-foreground">...</span>}
+                  <p className="text-[10px] text-muted-foreground mb-1">Headline ending:</p>
+                  <p className="text-xs text-foreground leading-relaxed">
+                    {headline}
                   </p>
-                  {headline && (
-                    <>
-                      <p className="text-xs text-muted-foreground mt-2 mb-1">Ending:</p>
-                      <p className="text-sm text-muted-foreground italic">
-                        {headline}
-                      </p>
-                    </>
-                  )}
                 </div>
               </div>
             </>
