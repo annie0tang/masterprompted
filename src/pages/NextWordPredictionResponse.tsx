@@ -35,6 +35,9 @@ export default function HeadlineResponse() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [animatedWord, setAnimatedWord] = useState<string | null>(null);
   const [showHighlightPulse, setShowHighlightPulse] = useState(false);
+  const [isAnimatingThird, setIsAnimatingThird] = useState(false);
+  const [animatedThirdWord, setAnimatedThirdWord] = useState<string | null>(null);
+  const [showHighlightPulseThird, setShowHighlightPulseThird] = useState(false);
   
   const toggleDropdownTooltip = (key: string, value: boolean) => {
     setDropdownProbTooltips(prev => ({
@@ -69,6 +72,46 @@ export default function HeadlineResponse() {
           setShowHighlightPulse(false);
           setAnimatedWord(null);
           setIsAnimating(false);
+        }, 2000);
+      }
+    }, 200);
+  };
+
+  // Animation for third word selection
+  const playThirdWordAnimation = () => {
+    if (isAnimatingThird) return;
+    setIsAnimatingThird(true);
+    
+    // Get options based on current second word
+    const secondWord = currentSentence[2];
+    let options: string[] = [];
+    if (secondWord === "Unites") {
+      options = ["Behind", "Around", "On"];
+    } else if (secondWord === "Reaches") {
+      options = ["Milestone", "Agreement", "Consensus"];
+    } else if (secondWord === "Finalizes") {
+      options = ["Pioneering", "Sweeping", "Landmark"];
+    }
+    
+    let currentIndex = 0;
+    const cycleCount = 8;
+    let cycles = 0;
+    
+    const interval = setInterval(() => {
+      setAnimatedThirdWord(options[currentIndex % options.length]);
+      currentIndex++;
+      cycles++;
+      
+      if (cycles >= cycleCount) {
+        clearInterval(interval);
+        // Land on highest probability word
+        setAnimatedThirdWord(options[options.length - 1]);
+        setShowHighlightPulseThird(true);
+        
+        setTimeout(() => {
+          setShowHighlightPulseThird(false);
+          setAnimatedThirdWord(null);
+          setIsAnimatingThird(false);
         }, 2000);
       }
     }, 200);
@@ -403,17 +446,30 @@ export default function HeadlineResponse() {
                           {2 < currentSentence.length - 1 && " "}
                         </span>;
 
+                        const displayThirdWord = animatedThirdWord || thirdWord;
+                        const isThirdHighlighted = showHighlightPulseThird && animatedThirdWord;
+
                         const dropdown2 = isValidThirdWord ? <span key={3}>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <button data-word={thirdWord.toLowerCase()} className="relative group cursor-pointer transition-colors duration-200 bg-green-200 hover:bg-green-300 px-1 rounded-lg inline-flex items-center gap-1">
-                                {thirdWord}
+                              <button data-word={thirdWord.toLowerCase()} className={`relative group cursor-pointer transition-all duration-200 px-1 rounded-lg inline-flex items-center gap-1 ${
+                                isThirdHighlighted 
+                                  ? "bg-primary text-primary-foreground animate-pulse ring-4 ring-primary/50" 
+                                  : isAnimatingThird && animatedThirdWord 
+                                    ? "bg-yellow-200" 
+                                    : "bg-green-200 hover:bg-green-300"
+                              }`}>
+                                {displayThirdWord}
                                 <ChevronDown className="h-3 w-3" />
-                                <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 text-xs px-2 py-1 rounded transition-opacity duration-200 whitespace-nowrap flex items-center gap-1" style={{
+                                <span className={`absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs px-2 py-1 rounded transition-all duration-200 whitespace-nowrap flex items-center gap-1 ${
+                                  isThirdHighlighted 
+                                    ? "bg-primary text-primary-foreground scale-110" 
+                                    : "bg-green-200 text-green-800"
+                                }`} style={{
                                   pointerEvents: 'auto'
                                 }}>
-                                  {rawOptionsThird.find(opt => opt.word === thirdWord)?.probability || rawOptionsThird[0]?.probability || "0.73"}
-                                  <TooltipProvider>
+                                  {isThirdHighlighted ? `${rawOptionsThird.find(opt => opt.word === animatedThirdWord)?.probability || "0.73"} ✓ Highest!` : (rawOptionsThird.find(opt => opt.word === thirdWord)?.probability || rawOptionsThird[0]?.probability || "0.73")}
+                                  {!isThirdHighlighted && <TooltipProvider>
                                     <Tooltip open={thirdProbTooltipOpen} onOpenChange={setThirdProbTooltipOpen}>
                                       <TooltipTrigger asChild>
                                         <Info className="h-3 w-3 cursor-pointer" onClick={e => {
@@ -425,7 +481,21 @@ export default function HeadlineResponse() {
                                         <p className="text-sm leading-relaxed">{t('nextWord.response.probTooltip')}</p>
                                       </TooltipContent>
                                     </Tooltip>
-                                  </TooltipProvider>
+                                  </TooltipProvider>}
+                                  {/* Computer choice button */}
+                                  {!isThirdHighlighted && <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      playThirdWordAnimation();
+                                    }}
+                                    disabled={isAnimatingThird}
+                                    className={`p-0.5 rounded-full bg-primary/20 hover:bg-primary/30 text-primary transition-all disabled:opacity-50 ${
+                                      isAnimatingThird ? 'animate-spin' : ''
+                                    }`}
+                                    title="Watch LLM select word"
+                                  >
+                                    <Cpu className="h-3 w-3" />
+                                  </button>}
                                 </span>
                               </button>
                             </DropdownMenuTrigger>
