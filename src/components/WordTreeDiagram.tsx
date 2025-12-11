@@ -96,13 +96,28 @@ export function WordTreeDiagram({
   onPathChange,
   className
 }: WordTreeDiagramProps) {
-  // Initialize with first complete path
-  const [currentPath, setCurrentPath] = useState<string[]>(treePaths[0].words);
+  // Track unlocked level (0 = only root + first choices visible)
+  const [unlockedLevel, setUnlockedLevel] = useState(1);
+  // Track selected words at each level
+  const [selections, setSelections] = useState<(string | null)[]>([treePaths[0].words[0], null, null, null, null, null, null]);
   
   // Animation states per level
   const [animatingLevel, setAnimatingLevel] = useState<number | null>(null);
   const [animatedWord, setAnimatedWord] = useState<string | null>(null);
   const [showPulse, setShowPulse] = useState(false);
+
+  // Get the current partial path based on selections
+  const currentPath = useMemo(() => {
+    const path = [treePaths[0].words[0]]; // Always start with "European Union"
+    for (let i = 1; i <= 6; i++) {
+      if (selections[i]) {
+        path.push(selections[i]!);
+      } else {
+        break;
+      }
+    }
+    return path;
+  }, [selections]);
 
   // Get options at each level based on current path
   const getOptionsAtLevel = (level: number): { word: string; probability: number }[] => {
@@ -127,27 +142,36 @@ export function WordTreeDiagram({
       .sort((a, b) => b.probability - a.probability);
   };
 
-  // Get headline for current path
-  const getCurrentHeadline = (): string => {
+  // Get headline for current path (only when complete)
+  const getCurrentHeadline = (): string | null => {
+    if (currentPath.length < 7) return null;
     const match = treePaths.find(p => 
       p.words.every((word, i) => word === currentPath[i])
     );
-    return match?.headline || "";
+    return match?.headline || null;
   };
 
-  // Handle word selection
+  // Handle word selection - unlock next level
   const handleWordClick = (level: number, word: string) => {
-    const newPath = [...currentPath.slice(0, level), word];
-    
-    // Find a valid continuation
-    const matchingPaths = treePaths.filter(p =>
-      newPath.every((w, i) => p.words[i] === w)
-    );
-    
-    if (matchingPaths.length > 0) {
-      setCurrentPath(matchingPaths[0].words);
-      onPathChange(matchingPaths[0].words);
+    const newSelections = [...selections];
+    // Clear all selections from this level onwards
+    for (let i = level; i <= 6; i++) {
+      newSelections[i] = null;
     }
+    newSelections[level] = word;
+    setSelections(newSelections);
+    
+    // Unlock next level
+    if (level < 6) {
+      setUnlockedLevel(level + 1);
+    }
+    
+    // Notify parent
+    const newPath = [treePaths[0].words[0]];
+    for (let i = 1; i <= level; i++) {
+      if (newSelections[i]) newPath.push(newSelections[i]!);
+    }
+    onPathChange(newPath);
   };
 
   // Play animation for a level
@@ -191,33 +215,19 @@ export function WordTreeDiagram({
     return startOffset + idx * (nodeHeight + levelGap) + nodeHeight / 2;
   };
 
-  // Get all possible options at a level (not filtered by current path)
-  const getAllOptionsAtLevel = (level: number): { word: string; probability: number }[] => {
-    if (level === 0) return [{ word: "European Union", probability: 1 }];
-    
-    const uniqueOptions = new Map<string, number>();
-    treePaths.forEach(p => {
-      const word = p.words[level];
-      const prob = p.probabilities[level];
-      if (!uniqueOptions.has(word)) {
-        uniqueOptions.set(word, prob);
-      }
-    });
-    
-    return Array.from(uniqueOptions.entries())
-      .map(([word, probability]) => ({ word, probability }));
-  };
-
-  // Render a level column - show ALL options at this level
+  // Render a level column - only show if unlocked
   const renderLevel = (level: number) => {
-    const options = getAllOptionsAtLevel(level);
-    const activeOptions = getOptionsAtLevel(level);
+    if (level > unlockedLevel) return null;
+    
+    const options = getOptionsAtLevel(level);
     if (options.length === 0) return null;
+
+    const isSelectable = level === unlockedLevel && !selections[level];
 
     return (
       <div key={level} className="flex flex-col" style={{ height: containerHeight }}>
-        {/* Monitor button - only for levels 1-6 */}
-        {level > 0 && (
+        {/* Monitor button - only for unlocked selectable levels */}
+        {level > 0 && isSelectable && (
           <div className="flex justify-center mb-1">
             <TooltipProvider>
               <Tooltip>
@@ -242,32 +252,30 @@ export function WordTreeDiagram({
             </TooltipProvider>
           </div>
         )}
+        {/* Spacer if no button */}
+        {(level === 0 || !isSelectable) && level > 0 && <div className="h-6 mb-1" />}
         
         {/* Word buttons */}
         <div className="flex flex-col justify-center gap-8 flex-1">
           {options.map((option) => {
-            const isActive = currentPath[level] === option.word;
-            const isReachable = activeOptions.some(o => o.word === option.word);
+            const isSelected = selections[level] === option.word;
             const isAnimated = animatingLevel === level && animatedWord === option.word;
             const isPulsing = showPulse && animatingLevel === level && animatedWord === option.word;
-            
-            // Get the probability from the active options if reachable
-            const displayProb = activeOptions.find(o => o.word === option.word)?.probability || option.probability;
             
             return (
               <button
                 key={option.word}
-                onClick={() => isReachable && handleWordClick(level, option.word)}
-                disabled={!isReachable && level > 0}
+                onClick={() => isSelectable && handleWordClick(level, option.word)}
+                disabled={!isSelectable && level > 0}
                 className={cn(
                   "relative px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 border-2 min-w-[80px] h-9",
                   level === 0 
                     ? "bg-primary text-primary-foreground border-primary cursor-default"
-                    : isActive 
+                    : isSelected 
                       ? "bg-green-200 border-green-400 text-green-900 shadow-md scale-105" 
-                      : isReachable
-                        ? "bg-card border-border hover:border-primary/50 hover:bg-muted"
-                        : "bg-muted/30 border-muted text-muted-foreground/40 cursor-not-allowed",
+                      : isSelectable
+                        ? "bg-card border-border hover:border-primary/50 hover:bg-muted cursor-pointer"
+                        : "bg-muted/50 border-muted text-muted-foreground/60 cursor-not-allowed",
                   isAnimated && !isPulsing && "ring-2 ring-primary ring-offset-1 bg-primary/10",
                   isPulsing && "ring-4 ring-green-400 ring-offset-1 bg-green-200 border-green-400 text-green-900 animate-pulse scale-110"
                 )}
@@ -276,9 +284,9 @@ export function WordTreeDiagram({
                 {level > 0 && (
                   <span className={cn(
                     "absolute -top-4 left-1/2 -translate-x-1/2 text-[10px] px-1.5 py-0.5 rounded",
-                    isActive ? "bg-green-200 text-green-800" : isReachable ? "bg-muted text-muted-foreground" : "bg-muted/20 text-muted-foreground/40"
+                    isSelected ? "bg-green-200 text-green-800" : "bg-muted text-muted-foreground"
                   )}>
-                    {displayProb.toFixed(2)}
+                    {option.probability.toFixed(2)}
                   </span>
                 )}
               </button>
@@ -290,54 +298,78 @@ export function WordTreeDiagram({
   };
 
 
-
-  // Render connector lines between levels - showing ALL branches
+  // Render connector lines - show many branches fanning out from selected node
   const renderConnector = (fromLevel: number, toLevel: number) => {
-    const fromOptions = getAllOptionsAtLevel(fromLevel);
-    const toOptions = getAllOptionsAtLevel(toLevel);
+    // Only show connector if this transition is relevant
+    if (toLevel > unlockedLevel) return null;
+    if (fromLevel > 0 && !selections[fromLevel]) return null;
+    
+    const fromOptions = getOptionsAtLevel(fromLevel);
+    const toOptions = getOptionsAtLevel(toLevel);
     
     if (fromOptions.length === 0 || toOptions.length === 0) return null;
 
-    // Get currently selected indices
-    const activeFromWord = currentPath[fromLevel];
-    const activeToWord = currentPath[toLevel];
+    const selectedFromWord = selections[fromLevel] || fromOptions[0]?.word;
+    const selectedFromIdx = fromOptions.findIndex(o => o.word === selectedFromWord);
+    const fromY = getNodeY(selectedFromIdx >= 0 ? selectedFromIdx : 0, fromOptions.length);
+
+    // Draw many varied curves from selected "from" node to ALL "to" options
+    // Add extra ghost lines to show branching complexity
+    const ghostLineCount = Math.min(8, toOptions.length * 3); // Many ghost branches
 
     return (
-      <div key={`conn-${fromLevel}-${toLevel}`} className="flex items-center w-12" style={{ height: containerHeight }}>
-        <svg className="w-full h-full" viewBox={`0 0 48 ${containerHeight}`} preserveAspectRatio="none">
-          {/* Draw ALL possible connections from every node to every node */}
-          {fromOptions.map((fromOpt, fromIdx) => {
-            const fromY = getNodeY(fromIdx, fromOptions.length);
+      <div key={`conn-${fromLevel}-${toLevel}`} className="flex items-center w-16" style={{ height: containerHeight }}>
+        <svg className="w-full h-full" viewBox={`0 0 64 ${containerHeight}`} preserveAspectRatio="none">
+          {/* Ghost lines to show complexity - fan out wildly */}
+          {Array.from({ length: ghostLineCount }).map((_, ghostIdx) => {
+            // Distribute ghost lines across vertical space with variance
+            const targetY = (containerHeight / (ghostLineCount + 1)) * (ghostIdx + 1);
+            const curveVariance = (ghostIdx % 3 - 1) * 15;
+            const midX1 = 20 + curveVariance;
+            const midX2 = 44 - curveVariance;
             
-            return toOptions.map((toOpt, toIdx) => {
-              const toY = getNodeY(toIdx, toOptions.length);
-              const isActivePath = fromOpt.word === activeFromWord && toOpt.word === activeToWord;
-              
-              // Add slight curve variations for visual chaos
-              const curveOffset = (fromIdx + toIdx) % 3 * 4 - 4;
-              
-              return (
-                <path
-                  key={`${fromOpt.word}-${toOpt.word}`}
-                  d={`M 0 ${fromY} C ${18 + curveOffset} ${fromY}, ${30 + curveOffset} ${toY}, 48 ${toY}`}
-                  fill="none"
-                  stroke={isActivePath ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"}
-                  strokeWidth={isActivePath ? 2.5 : 0.75}
-                  strokeOpacity={isActivePath ? 1 : 0.15}
-                />
-              );
-            });
+            return (
+              <path
+                key={`ghost-${ghostIdx}`}
+                d={`M 0 ${fromY} C ${midX1} ${fromY + (ghostIdx % 2 ? 10 : -10)}, ${midX2} ${targetY}, 64 ${targetY}`}
+                fill="none"
+                stroke="hsl(var(--muted-foreground))"
+                strokeWidth={0.5}
+                strokeOpacity={0.08}
+              />
+            );
+          })}
+          
+          {/* Real option lines - varied curves */}
+          {toOptions.map((toOpt, toIdx) => {
+            const toY = getNodeY(toIdx, toOptions.length);
+            const isSelected = selections[toLevel] === toOpt.word;
+            
+            // Varied curve control points for organic look
+            const curveOffset = ((toIdx * 7) % 5 - 2) * 8;
+            const vertOffset = ((toIdx * 3) % 3 - 1) * 6;
+            
+            return (
+              <path
+                key={`real-${toOpt.word}`}
+                d={`M 0 ${fromY} C ${22 + curveOffset} ${fromY + vertOffset}, ${42 - curveOffset} ${toY - vertOffset}, 64 ${toY}`}
+                fill="none"
+                stroke={isSelected ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"}
+                strokeWidth={isSelected ? 2.5 : 1}
+                strokeOpacity={isSelected ? 1 : 0.3}
+              />
+            );
           })}
         </svg>
       </div>
     );
   };
 
-  const fullHeadline = currentPath.slice(0, 7).join(" ") + ", " + getCurrentHeadline();
+  const headline = getCurrentHeadline();
 
   return (
     <div className={cn("relative overflow-x-auto", className)}>
-      <div className="min-w-[1100px] p-4">
+      <div className="min-w-[900px] p-4">
         {/* Tree container */}
         <div className="flex items-start gap-1">
           {/* Level 0: Root */}
@@ -351,34 +383,38 @@ export function WordTreeDiagram({
             </React.Fragment>
           ))}
 
-          {/* Final connector to headline */}
-          <div className="flex items-center w-6" style={{ height: containerHeight }}>
-            <svg className="w-full h-full" viewBox={`0 0 24 ${containerHeight}`} preserveAspectRatio="none">
-              {(() => {
-                const options = getOptionsAtLevel(6);
-                const idx = options.findIndex(o => o.word === currentPath[6]);
-                const y = getNodeY(idx >= 0 ? idx : 0, options.length);
-                return (
-                  <path
-                    d={`M 0 ${y} L 24 ${y}`}
-                    fill="none"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth={2.5}
-                  />
-                );
-              })()}
-            </svg>
-          </div>
+          {/* Final connector to headline - only when complete */}
+          {headline && (
+            <>
+              <div className="flex items-center w-6" style={{ height: containerHeight }}>
+                <svg className="w-full h-full" viewBox={`0 0 24 ${containerHeight}`} preserveAspectRatio="none">
+                  {(() => {
+                    const options = getOptionsAtLevel(6);
+                    const idx = options.findIndex(o => o.word === selections[6]);
+                    const y = getNodeY(idx >= 0 ? idx : 0, options.length);
+                    return (
+                      <path
+                        d={`M 0 ${y} L 24 ${y}`}
+                        fill="none"
+                        stroke="hsl(var(--primary))"
+                        strokeWidth={2.5}
+                      />
+                    );
+                  })()}
+                </svg>
+              </div>
 
-          {/* Headline completion */}
-          <div className="flex flex-col justify-center max-w-[220px]" style={{ height: containerHeight }}>
-            <div className="bg-muted/50 border border-border rounded-lg p-3 animate-fade-in">
-              <p className="text-[10px] text-muted-foreground mb-1">Headline ending:</p>
-              <p className="text-xs text-foreground leading-relaxed">
-                {getCurrentHeadline()}
-              </p>
-            </div>
-          </div>
+              {/* Headline completion */}
+              <div className="flex flex-col justify-center max-w-[220px]" style={{ height: containerHeight }}>
+                <div className="bg-muted/50 border border-border rounded-lg p-3 animate-fade-in">
+                  <p className="text-[10px] text-muted-foreground mb-1">Headline ending:</p>
+                  <p className="text-xs text-foreground leading-relaxed">
+                    {headline}
+                  </p>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
