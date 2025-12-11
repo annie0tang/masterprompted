@@ -1,365 +1,349 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { Monitor } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 /**
  * WordTreeDiagram - Visualizes word prediction paths as a horizontal tree diagram
- * @param selectedPath - Currently selected path through the tree
- * @param onPathChange - Callback when user selects a different path
+ * Updated with 7-level deep tree structure based on EU AI headline data
  */
 
-interface TreeNode {
-  word: string;
-  probability?: string;
-  children?: TreeNode[];
-  completion?: string;
+interface TreePath {
+  words: string[];
+  probabilities: number[];
+  headline: string;
 }
+
+// Parse the provided data into tree paths
+const treePaths: TreePath[] = [
+  { words: ["European Union", "Unites", "On", "Historic", "AI", "Ethics", "Framework"], probabilities: [1, 0.34, 0.28, 0.41, 0.52, 0.67, 0.45], headline: "Charting Path for Responsible Technology Development" },
+  { words: ["European Union", "Unites", "On", "Historic", "AI", "Ethics", "Charter"], probabilities: [1, 0.34, 0.28, 0.41, 0.52, 0.67, 0.33], headline: "Amid Growing Concerns Over Digital Rights" },
+  { words: ["European Union", "Unites", "On", "Historic", "AI", "Governance", "Framework"], probabilities: [1, 0.34, 0.28, 0.41, 0.52, 0.19, 0.58], headline: "As Industry Leaders Push Back" },
+  { words: ["European Union", "Unites", "On", "Historic", "AI", "Governance", "Charter"], probabilities: [1, 0.34, 0.28, 0.41, 0.52, 0.19, 0.42], headline: "Following Years of Contentious Negotiations" },
+  { words: ["European Union", "Unites", "On", "Historic", "Technology", "Ethics", "Framework"], probabilities: [1, 0.34, 0.28, 0.41, 0.23, 0.61, 0.39], headline: "Signaling Shift in Global Regulatory Approach" },
+  { words: ["European Union", "Unites", "On", "Historic", "Technology", "Ethics", "Charter"], probabilities: [1, 0.34, 0.28, 0.41, 0.23, 0.61, 0.29], headline: "Despite Pressure from Silicon Valley Giants" },
+  { words: ["European Union", "Unites", "On", "Historic", "Technology", "Governance", "Framework"], probabilities: [1, 0.34, 0.28, 0.41, 0.23, 0.26, 0.52], headline: "In Response to Public Outcry" },
+  { words: ["European Union", "Unites", "On", "Historic", "Technology", "Governance", "Charter"], probabilities: [1, 0.34, 0.28, 0.41, 0.23, 0.26, 0.48], headline: "Marking End to Decade of Debate" },
+  { words: ["European Union", "Unites", "On", "Sweeping", "AI", "Ethics", "Framework"], probabilities: [1, 0.34, 0.28, 0.33, 0.56, 0.69, 0.38], headline: "Setting New Global Standards" },
+  { words: ["European Union", "Unites", "On", "Sweeping", "AI", "Ethics", "Charter"], probabilities: [1, 0.34, 0.28, 0.33, 0.56, 0.69, 0.44], headline: "With Implications for Global Markets" },
+  { words: ["European Union", "Unites", "On", "Sweeping", "AI", "Governance", "Framework"], probabilities: [1, 0.34, 0.28, 0.33, 0.56, 0.17, 0.63], headline: "That Could Reshape Digital Economy" },
+  { words: ["European Union", "Unites", "On", "Sweeping", "AI", "Governance", "Charter"], probabilities: [1, 0.34, 0.28, 0.33, 0.56, 0.17, 0.37], headline: "Challenging American Tech Dominance" },
+  { words: ["European Union", "Unites", "On", "Sweeping", "Technology", "Ethics", "Framework"], probabilities: [1, 0.34, 0.28, 0.33, 0.29, 0.58, 0.47], headline: "After Marathon Brussels Summit" },
+  { words: ["European Union", "Unites", "On", "Sweeping", "Technology", "Ethics", "Charter"], probabilities: [1, 0.34, 0.28, 0.33, 0.29, 0.58, 0.53], headline: "Breaking Deadlock on Controversial Provisions" },
+  { words: ["European Union", "Unites", "On", "Sweeping", "Technology", "Governance", "Framework"], probabilities: [1, 0.34, 0.28, 0.33, 0.29, 0.31, 0.41], headline: "Defying Skeptics Who Predicted Failure" },
+  { words: ["European Union", "Unites", "On", "Sweeping", "Technology", "Governance", "Charter"], probabilities: [1, 0.34, 0.28, 0.33, 0.29, 0.31, 0.59], headline: "As China Watches Closely" },
+  { words: ["European Union", "Unites", "Around", "Historic", "AI", "Ethics", "Framework"], probabilities: [1, 0.34, 0.38, 0.52, 0.48, 0.64, 0.51], headline: "Setting Standards for Responsible Innovation" },
+  { words: ["European Union", "Unites", "Around", "Historic", "AI", "Ethics", "Charter"], probabilities: [1, 0.34, 0.38, 0.52, 0.48, 0.64, 0.36], headline: "In Move That Surprises Tech Analysts" },
+  { words: ["European Union", "Unites", "Around", "Historic", "AI", "Governance", "Framework"], probabilities: [1, 0.34, 0.38, 0.52, 0.48, 0.24, 0.55], headline: "Bridging Divides Between Member States" },
+  { words: ["European Union", "Unites", "Around", "Historic", "AI", "Governance", "Charter"], probabilities: [1, 0.34, 0.38, 0.52, 0.48, 0.24, 0.45], headline: "Overcoming French and German Objections" },
+  { words: ["European Union", "Unites", "Around", "Historic", "Technology", "Ethics", "Framework"], probabilities: [1, 0.34, 0.38, 0.52, 0.31, 0.57, 0.44], headline: "Seeking to Rival US Influence" },
+  { words: ["European Union", "Unites", "Around", "Historic", "Technology", "Ethics", "Charter"], probabilities: [1, 0.34, 0.38, 0.52, 0.31, 0.57, 0.43], headline: "With Eye Toward 2030 Goals" },
+  { words: ["European Union", "Unites", "Around", "Historic", "Technology", "Governance", "Framework"], probabilities: [1, 0.34, 0.38, 0.52, 0.31, 0.29, 0.62], headline: "Putting Privacy First" },
+  { words: ["European Union", "Unites", "Around", "Historic", "Technology", "Governance", "Charter"], probabilities: [1, 0.34, 0.38, 0.52, 0.31, 0.29, 0.38], headline: "As Scandals Mount Worldwide" },
+  { words: ["European Union", "Unites", "Around", "Sweeping", "AI", "Ethics", "Framework"], probabilities: [1, 0.34, 0.38, 0.41, 0.54, 0.71, 0.35], headline: "Establishing Blueprint for Responsible Development" },
+  { words: ["European Union", "Unites", "Around", "Sweeping", "AI", "Ethics", "Charter"], probabilities: [1, 0.34, 0.38, 0.41, 0.54, 0.71, 0.49], headline: "Pioneering International Tech Policy Standards" },
+  { words: ["European Union", "Unites", "Around", "Sweeping", "AI", "Governance", "Framework"], probabilities: [1, 0.34, 0.38, 0.41, 0.54, 0.21, 0.68], headline: "With Billions in Funding Attached" },
+  { words: ["European Union", "Unites", "Around", "Sweeping", "AI", "Governance", "Charter"], probabilities: [1, 0.34, 0.38, 0.41, 0.54, 0.21, 0.32], headline: "Reflecting New Parliamentary Coalition" },
+  { words: ["European Union", "Unites", "Around", "Sweeping", "Technology", "Ethics", "Framework"], probabilities: [1, 0.34, 0.38, 0.41, 0.27, 0.66, 0.46], headline: "As Public Demand Reaches Fever Pitch" },
+  { words: ["European Union", "Unites", "Around", "Sweeping", "Technology", "Ethics", "Charter"], probabilities: [1, 0.34, 0.38, 0.41, 0.27, 0.66, 0.54], headline: "Before Upcoming Elections" },
+  { words: ["European Union", "Unites", "Around", "Sweeping", "Technology", "Governance", "Framework"], probabilities: [1, 0.34, 0.38, 0.41, 0.27, 0.23, 0.57], headline: "Drawing Praise from Civil Society" },
+  { words: ["European Union", "Unites", "Around", "Sweeping", "Technology", "Governance", "Charter"], probabilities: [1, 0.34, 0.38, 0.41, 0.27, 0.23, 0.43], headline: "Though Critics Warn of Overreach" },
+  { words: ["European Union", "Reaches", "On", "Historic", "AI", "Ethics", "Framework"], probabilities: [1, 0.42, 0.52, 0.36, 0.59, 0.72, 0.49], headline: "Paving the Way for Responsible Tech Innovation" },
+  { words: ["European Union", "Reaches", "On", "Historic", "AI", "Ethics", "Charter"], probabilities: [1, 0.42, 0.52, 0.36, 0.59, 0.72, 0.28], headline: "After Intense All-Night Negotiations" },
+  { words: ["European Union", "Reaches", "On", "Historic", "AI", "Governance", "Framework"], probabilities: [1, 0.42, 0.52, 0.36, 0.59, 0.16, 0.67], headline: "Balancing Innovation with Protection" },
+  { words: ["European Union", "Reaches", "On", "Historic", "AI", "Governance", "Charter"], probabilities: [1, 0.42, 0.52, 0.36, 0.59, 0.16, 0.33], headline: "Threatening Tech Giants with Heavy Fines" },
+  { words: ["European Union", "Reaches", "On", "Historic", "Technology", "Ethics", "Framework"], probabilities: [1, 0.42, 0.52, 0.36, 0.34, 0.53, 0.56], headline: "Addressing Algorithmic Bias Head-On" },
+  { words: ["European Union", "Reaches", "On", "Historic", "Technology", "Ethics", "Charter"], probabilities: [1, 0.42, 0.52, 0.36, 0.34, 0.53, 0.44], headline: "In Wake of Cambridge Analytica Fallout" },
+  { words: ["European Union", "Reaches", "On", "Historic", "Technology", "Governance", "Framework"], probabilities: [1, 0.42, 0.52, 0.36, 0.34, 0.38, 0.48], headline: "Requiring Transparency from Developers" },
+  { words: ["European Union", "Reaches", "On", "Historic", "Technology", "Governance", "Charter"], probabilities: [1, 0.42, 0.52, 0.36, 0.34, 0.38, 0.52], headline: "With Enforcement Starting 2026" },
+  { words: ["European Union", "Reaches", "On", "Sweeping", "AI", "Ethics", "Framework"], probabilities: [1, 0.42, 0.52, 0.44, 0.61, 0.68, 0.42], headline: "Mandating Human Oversight Requirements" },
+  { words: ["European Union", "Reaches", "On", "Sweeping", "AI", "Ethics", "Charter"], probabilities: [1, 0.42, 0.52, 0.44, 0.61, 0.68, 0.58], headline: "Creating New Regulatory Body" },
+  { words: ["European Union", "Reaches", "On", "Sweeping", "AI", "Governance", "Framework"], probabilities: [1, 0.42, 0.52, 0.44, 0.61, 0.22, 0.71], headline: "Banning Certain High-Risk Applications" },
+  { words: ["European Union", "Reaches", "On", "Sweeping", "AI", "Governance", "Charter"], probabilities: [1, 0.42, 0.52, 0.44, 0.61, 0.22, 0.29], headline: "Ahead of G7 Summit" },
+  { words: ["European Union", "Reaches", "On", "Sweeping", "Technology", "Ethics", "Framework"], probabilities: [1, 0.42, 0.52, 0.44, 0.26, 0.63, 0.51], headline: "Protecting Workers from Automation" },
+  { words: ["European Union", "Reaches", "On", "Sweeping", "Technology", "Ethics", "Charter"], probabilities: [1, 0.42, 0.52, 0.44, 0.26, 0.63, 0.37], headline: "Winning Support from Labor Unions" },
+  { words: ["European Union", "Reaches", "On", "Sweeping", "Technology", "Governance", "Framework"], probabilities: [1, 0.42, 0.52, 0.44, 0.26, 0.27, 0.59], headline: "Closing Loopholes Exploited by Firms" },
+  { words: ["European Union", "Reaches", "On", "Sweeping", "Technology", "Governance", "Charter"], probabilities: [1, 0.42, 0.52, 0.44, 0.26, 0.27, 0.41], headline: "While Markets React Nervously" },
+  { words: ["European Union", "Reaches", "Around", "Historic", "AI", "Ethics", "Framework"], probabilities: [1, 0.42, 0.23, 0.48, 0.46, 0.65, 0.54], headline: "Laying Groundwork for Safe Tech Development" },
+  { words: ["European Union", "Reaches", "Around", "Historic", "AI", "Ethics", "Charter"], probabilities: [1, 0.42, 0.23, 0.48, 0.46, 0.65, 0.35], headline: "Uniting Divided Northern and Southern Blocs" },
+  { words: ["European Union", "Reaches", "Around", "Historic", "AI", "Governance", "Framework"], probabilities: [1, 0.42, 0.23, 0.48, 0.46, 0.27, 0.61], headline: "Satisfying Both Progressives and Conservatives" },
+  { words: ["European Union", "Reaches", "Around", "Historic", "AI", "Governance", "Charter"], probabilities: [1, 0.42, 0.23, 0.48, 0.46, 0.27, 0.39], headline: "Rejecting Industry Lobbying Efforts" },
+  { words: ["European Union", "Reaches", "Around", "Historic", "Technology", "Ethics", "Framework"], probabilities: [1, 0.42, 0.23, 0.48, 0.39, 0.59, 0.47], headline: "Cementing Brussels as Regulatory Leader" },
+  { words: ["European Union", "Reaches", "Around", "Historic", "Technology", "Ethics", "Charter"], probabilities: [1, 0.42, 0.23, 0.48, 0.39, 0.59, 0.41], headline: "Sending Shockwaves Through Silicon Valley" },
+  { words: ["European Union", "Reaches", "Around", "Historic", "Technology", "Governance", "Framework"], probabilities: [1, 0.42, 0.23, 0.48, 0.39, 0.32, 0.64], headline: "Following Whistleblower Revelations" },
+  { words: ["European Union", "Reaches", "Around", "Historic", "Technology", "Governance", "Charter"], probabilities: [1, 0.42, 0.23, 0.48, 0.39, 0.32, 0.36], headline: "Under New Commission Leadership" },
+  { words: ["European Union", "Reaches", "Around", "Sweeping", "AI", "Ethics", "Framework"], probabilities: [1, 0.42, 0.23, 0.37, 0.57, 0.74, 0.39], headline: "Transforming Global Governance Landscape" },
+  { words: ["European Union", "Reaches", "Around", "Sweeping", "AI", "Ethics", "Charter"], probabilities: [1, 0.42, 0.23, 0.37, 0.57, 0.74, 0.52], headline: "Securing Cross-Party Parliamentary Support" },
+  { words: ["European Union", "Reaches", "Around", "Sweeping", "AI", "Governance", "Framework"], probabilities: [1, 0.42, 0.23, 0.37, 0.57, 0.18, 0.69], headline: "Establishing Unprecedented Accountability Measures" },
+  { words: ["European Union", "Reaches", "Around", "Sweeping", "AI", "Governance", "Charter"], probabilities: [1, 0.42, 0.23, 0.37, 0.57, 0.18, 0.31], headline: "Sparking Debate Over Sovereignty" },
+  { words: ["European Union", "Reaches", "Around", "Sweeping", "Technology", "Ethics", "Framework"], probabilities: [1, 0.42, 0.23, 0.37, 0.32, 0.62, 0.53], headline: "Empowering Citizens with New Rights" },
+  { words: ["European Union", "Reaches", "Around", "Sweeping", "Technology", "Ethics", "Charter"], probabilities: [1, 0.42, 0.23, 0.37, 0.32, 0.62, 0.48], headline: "Promising Enforcement Within 18 Months" },
+  { words: ["European Union", "Reaches", "Around", "Sweeping", "Technology", "Governance", "Framework"], probabilities: [1, 0.42, 0.23, 0.37, 0.32, 0.29, 0.66], headline: "Demanding Algorithmic Explainability" },
+  { words: ["European Union", "Reaches", "Around", "Sweeping", "Technology", "Governance", "Charter"], probabilities: [1, 0.42, 0.23, 0.37, 0.32, 0.29, 0.34], headline: "Positioning Europe as Democratic Alternative" },
+];
+
 interface WordTreeDiagramProps {
   selectedPath: string[];
   onPathChange: (path: string[]) => void;
   className?: string;
 }
 
-// Tree data structure for word predictions
-const treeData: TreeNode = {
-  word: "European Union",
-  children: [{
-    word: "Unites",
-    probability: "0.67",
-    children: [{
-      word: "On",
-      probability: "0.73",
-      completion: "Historic AI Ethics Framework, Charting Path for Responsible Technology Development"
-    }, {
-      word: "Around",
-      probability: "0.42",
-      completion: "Sweeping AI Ethics Charter, Pioneering International Tech Policy Standards"
-    }, {
-      word: "Behind",
-      probability: "0.12",
-      completion: "Historic AI Ethics Framework, Setting Standards for Responsible Innovation"
-    }]
-  }, {
-    word: "Reaches",
-    probability: "0.24",
-    children: [{
-      word: "Consensus",
-      probability: "0.65",
-      completion: "on Historic AI Ethics Framework, Paving the Way for Responsible Tech Innovation"
-    }, {
-      word: "Agreement",
-      probability: "0.28",
-      completion: "on Historic AI Ethics Framework, Laying Groundwork for Safe Tech Development"
-    }, {
-      word: "Milestone",
-      probability: "0.07",
-      completion: "in AI Ethics, Advancing a Unified Vision for Responsible Innovation"
-    }]
-  }, {
-    word: "Finalizes",
-    probability: "0.09",
-    children: [{
-      word: "Landmark",
-      probability: "0.58",
-      completion: "AI Ethics Agreement, Setting Global Benchmark for Safe Technology Development"
-    }, {
-      word: "Sweeping",
-      probability: "0.31",
-      completion: "AI Ethics Agreement, Establishing New Norms for Responsible Tech"
-    }, {
-      word: "Pioneering",
-      probability: "0.11",
-      completion: "AI Ethics Framework, Guiding the Future of Safe Innovation"
-    }]
-  }]
-};
+// Level labels for context
+const levelLabels = ["Root", "Verb", "Prep", "Adj", "Topic", "Aspect", "Type"];
 
 export function WordTreeDiagram({
   selectedPath,
   onPathChange,
   className
 }: WordTreeDiagramProps) {
-  const [hoveredNode, setHoveredNode] = useState<string | null>(null);
+  // Initialize with first complete path
+  const [currentPath, setCurrentPath] = useState<string[]>(treePaths[0].words);
   
-  // Animation states for Level 1
-  const [isAnimatingL1, setIsAnimatingL1] = useState(false);
-  const [animatedWordL1, setAnimatedWordL1] = useState<string | null>(null);
-  const [showPulseL1, setShowPulseL1] = useState(false);
-  
-  // Animation states for Level 2
-  const [isAnimatingL2, setIsAnimatingL2] = useState(false);
-  const [animatedWordL2, setAnimatedWordL2] = useState<string | null>(null);
-  const [showPulseL2, setShowPulseL2] = useState(false);
+  // Animation states per level
+  const [animatingLevel, setAnimatingLevel] = useState<number | null>(null);
+  const [animatedWord, setAnimatedWord] = useState<string | null>(null);
+  const [showPulse, setShowPulse] = useState(false);
 
-  const playLevel1Animation = () => {
-    if (isAnimatingL1) return;
-    setIsAnimatingL1(true);
+  // Get options at each level based on current path
+  const getOptionsAtLevel = (level: number): { word: string; probability: number }[] => {
+    if (level === 0) return [{ word: "European Union", probability: 1 }];
     
-    const options = treeData.children?.map(c => c.word) || [];
-    let currentIndex = 0;
-    const cycleCount = 8;
-    let cycles = 0;
-    
-    const interval = setInterval(() => {
-      setAnimatedWordL1(options[currentIndex % options.length]);
-      currentIndex++;
-      cycles++;
-      
-      if (cycles >= cycleCount) {
-        clearInterval(interval);
-        // Land on highest probability (Unites = 0.67)
-        setAnimatedWordL1("Unites");
-        setShowPulseL1(true);
-        
-        setTimeout(() => {
-          setShowPulseL1(false);
-          setAnimatedWordL1(null);
-          setIsAnimatingL1(false);
-        }, 2000);
-      }
-    }, 200);
-  };
-
-  const playLevel2Animation = () => {
-    if (isAnimatingL2) return;
-    setIsAnimatingL2(true);
-    
-    const selectedSecond = treeData.children?.find(c => c.word.toLowerCase() === (selectedPath[2] || "Unites").toLowerCase());
-    const options = selectedSecond?.children?.map(c => c.word) || [];
-    const highestProb = selectedSecond?.children?.reduce((a, b) => 
-      parseFloat(a.probability || "0") > parseFloat(b.probability || "0") ? a : b
+    const pathPrefix = currentPath.slice(0, level);
+    const matchingPaths = treePaths.filter(p => 
+      pathPrefix.every((word, i) => p.words[i] === word)
     );
     
+    const uniqueOptions = new Map<string, number>();
+    matchingPaths.forEach(p => {
+      const word = p.words[level];
+      const prob = p.probabilities[level];
+      if (!uniqueOptions.has(word) || uniqueOptions.get(word)! < prob) {
+        uniqueOptions.set(word, prob);
+      }
+    });
+    
+    return Array.from(uniqueOptions.entries())
+      .map(([word, probability]) => ({ word, probability }))
+      .sort((a, b) => b.probability - a.probability);
+  };
+
+  // Get headline for current path
+  const getCurrentHeadline = (): string => {
+    const match = treePaths.find(p => 
+      p.words.every((word, i) => word === currentPath[i])
+    );
+    return match?.headline || "";
+  };
+
+  // Handle word selection
+  const handleWordClick = (level: number, word: string) => {
+    const newPath = [...currentPath.slice(0, level), word];
+    
+    // Find a valid continuation
+    const matchingPaths = treePaths.filter(p =>
+      newPath.every((w, i) => p.words[i] === w)
+    );
+    
+    if (matchingPaths.length > 0) {
+      setCurrentPath(matchingPaths[0].words);
+      onPathChange(matchingPaths[0].words);
+    }
+  };
+
+  // Play animation for a level
+  const playAnimation = (level: number) => {
+    if (animatingLevel !== null) return;
+    setAnimatingLevel(level);
+    
+    const options = getOptionsAtLevel(level);
     let currentIndex = 0;
     const cycleCount = 8;
     let cycles = 0;
     
     const interval = setInterval(() => {
-      setAnimatedWordL2(options[currentIndex % options.length]);
+      setAnimatedWord(options[currentIndex % options.length].word);
       currentIndex++;
       cycles++;
       
       if (cycles >= cycleCount) {
         clearInterval(interval);
-        setAnimatedWordL2(highestProb?.word || options[0]);
-        setShowPulseL2(true);
+        const highest = options[0].word;
+        setAnimatedWord(highest);
+        setShowPulse(true);
         
         setTimeout(() => {
-          setShowPulseL2(false);
-          setAnimatedWordL2(null);
-          setIsAnimatingL2(false);
-        }, 2000);
+          setShowPulse(false);
+          setAnimatedWord(null);
+          setAnimatingLevel(null);
+          handleWordClick(level, highest);
+        }, 1500);
       }
-    }, 200);
+    }, 180);
   };
-  const isInPath = (level: number, word: string) => {
-    if (level === 0) return true; // Root always selected
-    if (level === 1) return selectedPath[2]?.toLowerCase() === word.toLowerCase();
-    if (level === 2) return selectedPath[3]?.toLowerCase() === word.toLowerCase();
-    return false;
-  };
-  const handleNodeClick = (level: number, node: TreeNode, parentWord?: string) => {
-    if (level === 1) {
-      // Selecting second word (Unites/Reaches/Finalizes)
-      const firstChild = node.children?.[0];
-      if (firstChild) {
-        onPathChange(["European", "Union", node.word, firstChild.word]);
-      }
-    } else if (level === 2 && parentWord) {
-      // Selecting third word
-      onPathChange(["European", "Union", parentWord, node.word]);
-    }
-  };
-  const getSelectedSecondWord = () => selectedPath[2] || "Unites";
-  const getSelectedThirdWord = () => selectedPath[3] || "On";
-  const selectedSecondNode = treeData.children?.find(c => c.word.toLowerCase() === getSelectedSecondWord().toLowerCase());
-  const selectedThirdNode = selectedSecondNode?.children?.find(c => c.word.toLowerCase() === getSelectedThirdWord().toLowerCase());
-  // Calculate node positions for accurate line drawing
-  const nodeHeight = 40;
-  const level1Gap = 48; // gap-12 = 48px
-  const level2Gap = 40; // gap-10 = 40px
-  const level1Count = treeData.children?.length || 3;
-  const level2Count = selectedSecondNode?.children?.length || 3;
-  
-  const level1TotalHeight = level1Count * nodeHeight + (level1Count - 1) * level1Gap;
-  const level2TotalHeight = level2Count * nodeHeight + (level2Count - 1) * level2Gap;
-  
-  const containerHeight = Math.max(level1TotalHeight, level2TotalHeight) + 80;
-  
-  const getLevel1Y = (idx: number) => {
-    const startOffset = (containerHeight - level1TotalHeight) / 2;
-    return startOffset + idx * (nodeHeight + level1Gap) + nodeHeight / 2;
-  };
-  
-  const getLevel2Y = (idx: number) => {
-    const startOffset = (containerHeight - level2TotalHeight) / 2;
-    return startOffset + idx * (nodeHeight + level2Gap) + nodeHeight / 2;
-  };
-  
-  const rootY = containerHeight / 2;
 
-  return <div className={cn("relative overflow-x-auto", className)}>
-      <div className="min-w-[900px] p-6">
+  const nodeHeight = 36;
+  const levelGap = 32;
+  const containerHeight = 320;
+
+  const getNodeY = (idx: number, count: number) => {
+    const totalHeight = count * nodeHeight + (count - 1) * levelGap;
+    const startOffset = (containerHeight - totalHeight) / 2;
+    return startOffset + idx * (nodeHeight + levelGap) + nodeHeight / 2;
+  };
+
+  // Render a level column
+  const renderLevel = (level: number) => {
+    const options = getOptionsAtLevel(level);
+    if (options.length === 0) return null;
+
+    return (
+      <div key={level} className="flex flex-col" style={{ height: containerHeight }}>
+        {/* Monitor button - only for levels 1-6 */}
+        {level > 0 && (
+          <div className="flex justify-center mb-1">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => playAnimation(level)}
+                    disabled={animatingLevel !== null}
+                    className={cn(
+                      "p-1 rounded-md transition-all duration-200",
+                      animatingLevel === level
+                        ? "bg-primary/20 text-primary animate-pulse"
+                        : "bg-muted hover:bg-primary/10 text-muted-foreground hover:text-primary"
+                    )}
+                  >
+                    <Monitor className="h-3.5 w-3.5" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Watch LLM select word</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        )}
+        
+        {/* Word buttons */}
+        <div className="flex flex-col justify-center gap-8 flex-1">
+          {options.map((option) => {
+            const isActive = currentPath[level] === option.word;
+            const isAnimated = animatingLevel === level && animatedWord === option.word;
+            const isPulsing = showPulse && animatingLevel === level && animatedWord === option.word;
+            
+            return (
+              <button
+                key={option.word}
+                onClick={() => handleWordClick(level, option.word)}
+                className={cn(
+                  "relative px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 border-2 min-w-[80px] h-9",
+                  level === 0 
+                    ? "bg-primary text-primary-foreground border-primary cursor-default"
+                    : isActive 
+                      ? "bg-green-200 border-green-400 text-green-900 shadow-md scale-105" 
+                      : "bg-card border-border hover:border-primary/50 hover:bg-muted",
+                  isAnimated && !isPulsing && "ring-2 ring-primary ring-offset-1 bg-primary/10",
+                  isPulsing && "ring-4 ring-green-400 ring-offset-1 bg-green-200 border-green-400 text-green-900 animate-pulse scale-110"
+                )}
+              >
+                {option.word}
+                {level > 0 && (
+                  <span className={cn(
+                    "absolute -top-4 left-1/2 -translate-x-1/2 text-[10px] px-1.5 py-0.5 rounded",
+                    isActive ? "bg-green-200 text-green-800" : "bg-muted text-muted-foreground"
+                  )}>
+                    {option.probability.toFixed(2)}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  // Render connector lines between levels
+  const renderConnector = (fromLevel: number, toLevel: number) => {
+    const fromOptions = getOptionsAtLevel(fromLevel);
+    const toOptions = getOptionsAtLevel(toLevel);
+    
+    if (fromOptions.length === 0 || toOptions.length === 0) return null;
+
+    const fromIdx = fromOptions.findIndex(o => o.word === currentPath[fromLevel]);
+    const fromY = getNodeY(fromIdx >= 0 ? fromIdx : 0, fromOptions.length);
+
+    return (
+      <div key={`conn-${fromLevel}-${toLevel}`} className="flex items-center w-10" style={{ height: containerHeight }}>
+        <svg className="w-full h-full" viewBox={`0 0 40 ${containerHeight}`} preserveAspectRatio="none">
+          {toOptions.map((option, idx) => {
+            const toY = getNodeY(idx, toOptions.length);
+            const isActive = currentPath[toLevel] === option.word;
+            return (
+              <path
+                key={option.word}
+                d={`M 0 ${fromY} C 20 ${fromY}, 20 ${toY}, 40 ${toY}`}
+                fill="none"
+                stroke={isActive ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"}
+                strokeWidth={isActive ? 2.5 : 1}
+                strokeOpacity={isActive ? 1 : 0.3}
+              />
+            );
+          })}
+        </svg>
+      </div>
+    );
+  };
+
+  const fullHeadline = currentPath.slice(0, 7).join(" ") + ", " + getCurrentHeadline();
+
+  return (
+    <div className={cn("relative overflow-x-auto", className)}>
+      <div className="min-w-[1100px] p-4">
         {/* Tree container */}
-        <div className="flex items-start gap-2">
+        <div className="flex items-start gap-1">
           {/* Level 0: Root */}
-          <div className="flex flex-col items-center justify-center" style={{ height: containerHeight }}>
-            <div className="bg-primary text-primary-foreground px-4 py-3 rounded-lg font-semibold text-sm shadow-md">
-              European Union
-            </div>
-          </div>
+          {renderLevel(0)}
+          
+          {/* Levels 1-6 with connectors */}
+          {[1, 2, 3, 4, 5, 6].map(level => (
+            <React.Fragment key={level}>
+              {renderConnector(level - 1, level)}
+              {renderLevel(level)}
+            </React.Fragment>
+          ))}
 
-          {/* Connector lines to Level 1 */}
-          <div className="flex flex-col items-center justify-center w-16" style={{ height: containerHeight }}>
-            <svg className="w-full h-full" viewBox={`0 0 64 ${containerHeight}`} preserveAspectRatio="none">
-              {treeData.children?.map((_, idx) => {
-                const startY = rootY;
-                const endY = getLevel1Y(idx);
-                const isActive = isInPath(1, treeData.children![idx].word);
-                return <path key={idx} d={`M 0 ${startY} C 32 ${startY}, 32 ${endY}, 64 ${endY}`} fill="none" stroke={isActive ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"} strokeWidth={isActive ? 3 : 1.5} strokeOpacity={isActive ? 1 : 0.4} />;
-              })}
-            </svg>
-          </div>
-
-          {/* Level 1: Second words */}
-          <div className="flex flex-col" style={{ height: containerHeight }}>
-            {/* Monitor button above */}
-            <div className="flex justify-center mb-2 pt-2">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      onClick={playLevel1Animation}
-                      disabled={isAnimatingL1}
-                      className={cn(
-                        "p-1.5 rounded-md transition-all duration-200",
-                        isAnimatingL1 
-                          ? "bg-primary/20 text-primary animate-pulse" 
-                          : "bg-muted hover:bg-primary/10 text-muted-foreground hover:text-primary"
-                      )}
-                    >
-                      <Monitor className="h-4 w-4" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Watch LLM select word</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-            {/* Word buttons */}
-            <div className="flex flex-col justify-center gap-12 flex-1">
-              {treeData.children?.map(node => {
-                const isActive = isInPath(1, node.word);
-                const isAnimated = animatedWordL1 === node.word;
-                const isPulsing = showPulseL1 && animatedWordL1 === node.word;
-                return <button 
-                  key={node.word} 
-                  onClick={() => handleNodeClick(1, node)} 
-                  onMouseEnter={() => setHoveredNode(`l1-${node.word}`)} 
-                  onMouseLeave={() => setHoveredNode(null)} 
-                  className={cn(
-                    "relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 border-2 min-w-[100px] h-10",
-                    isActive ? "bg-green-200 border-green-400 text-green-900 shadow-md scale-105" : "bg-card border-border hover:border-primary/50 hover:bg-muted",
-                    isAnimated && !isPulsing && "ring-2 ring-primary ring-offset-2 bg-primary/10",
-                    isPulsing && "ring-4 ring-green-400 ring-offset-2 bg-green-200 border-green-400 text-green-900 animate-pulse scale-110"
-                  )}>
-                  {node.word}
-                  <span className={cn("absolute -top-5 left-1/2 -translate-x-1/2 text-xs px-2 py-0.5 rounded", isActive ? "bg-green-200 text-green-800" : "bg-muted text-muted-foreground")}>
-                    {node.probability}
-                  </span>
-                </button>;
-              })}
-            </div>
-          </div>
-
-          {/* Connector lines to Level 2 */}
-          <div className="flex flex-col items-center justify-center w-20" style={{ height: containerHeight }}>
-            <svg className="w-full h-full" viewBox={`0 0 80 ${containerHeight}`} preserveAspectRatio="none">
-              {selectedSecondNode?.children?.map((child, idx) => {
-                const parentIdx = treeData.children?.findIndex(c => c.word.toLowerCase() === getSelectedSecondWord().toLowerCase()) ?? 0;
-                const startY = getLevel1Y(parentIdx);
-                const endY = getLevel2Y(idx);
-                const isActive = isInPath(2, child.word);
-                return <path key={idx} d={`M 0 ${startY} C 40 ${startY}, 40 ${endY}, 80 ${endY}`} fill="none" stroke={isActive ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"} strokeWidth={isActive ? 3 : 1.5} strokeOpacity={isActive ? 1 : 0.4} />;
-              })}
-            </svg>
-          </div>
-
-          {/* Level 2: Third words */}
-          <div className="flex flex-col" style={{ height: containerHeight }}>
-            {/* Monitor button above */}
-            <div className="flex justify-center mb-2 pt-2">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      onClick={playLevel2Animation}
-                      disabled={isAnimatingL2}
-                      className={cn(
-                        "p-1.5 rounded-md transition-all duration-200",
-                        isAnimatingL2 
-                          ? "bg-primary/20 text-primary animate-pulse" 
-                          : "bg-muted hover:bg-primary/10 text-muted-foreground hover:text-primary"
-                      )}
-                    >
-                      <Monitor className="h-4 w-4" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Watch LLM select word</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-            {/* Word buttons */}
-            <div className="flex flex-col justify-center gap-10 flex-1">
-              {selectedSecondNode?.children?.map(node => {
-                const isActive = isInPath(2, node.word);
-                const isAnimated = animatedWordL2 === node.word;
-                const isPulsing = showPulseL2 && animatedWordL2 === node.word;
-                return <button 
-                  key={node.word} 
-                  onClick={() => handleNodeClick(2, node, selectedSecondNode.word)} 
-                  onMouseEnter={() => setHoveredNode(`l2-${node.word}`)} 
-                  onMouseLeave={() => setHoveredNode(null)} 
-                  className={cn(
-                    "relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 border-2 min-w-[100px] h-10",
-                    isActive ? "bg-green-200 border-green-400 text-green-900 shadow-md scale-105" : "bg-card border-border hover:border-primary/50 hover:bg-muted",
-                    isAnimated && !isPulsing && "ring-2 ring-primary ring-offset-2 bg-primary/10",
-                    isPulsing && "ring-4 ring-green-400 ring-offset-2 bg-green-200 border-green-400 text-green-900 animate-pulse scale-110"
-                  )}>
-                  {node.word}
-                  <span className={cn("absolute -top-5 left-1/2 -translate-x-1/2 text-xs px-2 py-0.5 rounded", isActive ? "bg-green-200 text-green-800" : "bg-muted text-muted-foreground")}>
-                    {node.probability}
-                  </span>
-                </button>;
-              })}
-            </div>
-          </div>
-
-          {/* Connector to completion */}
-          <div className="flex flex-col items-center justify-center w-8" style={{ height: containerHeight }}>
-            <svg className="w-full h-full" viewBox={`0 0 32 ${containerHeight}`} preserveAspectRatio="none">
-              {selectedThirdNode && (() => {
-                const thirdIdx = selectedSecondNode?.children?.findIndex(c => c.word.toLowerCase() === getSelectedThirdWord().toLowerCase()) ?? 0;
-                const lineY = getLevel2Y(thirdIdx);
-                return <path d={`M 0 ${lineY} L 32 ${lineY}`} fill="none" stroke="hsl(var(--primary))" strokeWidth={3} />;
+          {/* Final connector to headline */}
+          <div className="flex items-center w-6" style={{ height: containerHeight }}>
+            <svg className="w-full h-full" viewBox={`0 0 24 ${containerHeight}`} preserveAspectRatio="none">
+              {(() => {
+                const options = getOptionsAtLevel(6);
+                const idx = options.findIndex(o => o.word === currentPath[6]);
+                const y = getNodeY(idx >= 0 ? idx : 0, options.length);
+                return (
+                  <path
+                    d={`M 0 ${y} L 24 ${y}`}
+                    fill="none"
+                    stroke="hsl(var(--primary))"
+                    strokeWidth={2.5}
+                  />
+                );
               })()}
             </svg>
           </div>
 
-          {/* Completion text */}
-          <div className="flex flex-col justify-center max-w-[300px]" style={{ height: containerHeight }}>
-            {selectedThirdNode && <div className="bg-muted/50 border border-border rounded-lg p-4 animate-fade-in">
-                <p className="text-xs text-muted-foreground mb-1">Completion:</p>
-                <p className="text-sm text-foreground leading-relaxed">
-                  {selectedThirdNode.completion}
-                </p>
-              </div>}
+          {/* Headline completion */}
+          <div className="flex flex-col justify-center max-w-[220px]" style={{ height: containerHeight }}>
+            <div className="bg-muted/50 border border-border rounded-lg p-3 animate-fade-in">
+              <p className="text-[10px] text-muted-foreground mb-1">Headline ending:</p>
+              <p className="text-xs text-foreground leading-relaxed">
+                {getCurrentHeadline()}
+              </p>
+            </div>
           </div>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 }
