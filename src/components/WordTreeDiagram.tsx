@@ -181,19 +181,9 @@ export function WordTreeDiagram({
     setSelections(newSelections);
     
     // Unlock next level
+    const nextLevel = level + 1;
     if (level < 6) {
-      setUnlockedLevel(level + 1);
-      
-      // Auto-scroll to the next level after a short delay
-      setTimeout(() => {
-        const nextLevelEl = levelRefs.current[level + 1];
-        if (nextLevelEl && containerRef.current) {
-          const containerRect = containerRef.current.getBoundingClientRect();
-          const levelRect = nextLevelEl.getBoundingClientRect();
-          const scrollLeft = containerRef.current.scrollLeft + levelRect.left - containerRect.left - 100;
-          containerRef.current.scrollTo({ left: scrollLeft, behavior: 'smooth' });
-        }
-      }, 100);
+      setUnlockedLevel(nextLevel);
     }
     
     // Notify parent
@@ -203,6 +193,22 @@ export function WordTreeDiagram({
     }
     onPathChange(newPath);
   };
+  
+  // Auto-scroll when unlocked level changes
+  useEffect(() => {
+    if (unlockedLevel > 1 && containerRef.current) {
+      // Wait for the new level to render
+      requestAnimationFrame(() => {
+        const levelEl = levelRefs.current[unlockedLevel];
+        if (levelEl && containerRef.current) {
+          const containerRect = containerRef.current.getBoundingClientRect();
+          const levelRect = levelEl.getBoundingClientRect();
+          const scrollLeft = containerRef.current.scrollLeft + levelRect.left - containerRect.left - 100;
+          containerRef.current.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+        }
+      });
+    }
+  }, [unlockedLevel]);
 
   // Play animation for a level
   const playAnimation = (level: number) => {
@@ -322,7 +328,7 @@ export function WordTreeDiagram({
           const isAnimated = animatingLevel === level && animatedWord === option.word;
           const isPulsing = showPulse && animatingLevel === level && animatedWord === option.word;
           // Check if this is a past selection (already chosen and moved past)
-          const isPastSelection = isSelected && level < unlockedLevel - 1;
+          const isPastSelection = isSelected && level > 0 && level < unlockedLevel;
           
           // Calculate Y position centered around previous selection
           const nodeY = getNodeY(idx, options.length, level > 0 ? prevSelectedY : undefined);
