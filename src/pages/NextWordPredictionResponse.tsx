@@ -7,10 +7,11 @@ import TextFlag from "@/components/TextFlag";
 import ModuleNavigation from "@/components/ModuleNavigation";
 import GuidanceTooltip from "@/components/GuidanceTooltip";
 import { WordTreeDiagram } from "@/components/WordTreeDiagram";
+import { BranchTreeDiagram } from "@/components/BranchTreeDiagram";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ChevronDown, Info, InfoIcon, Monitor, GitBranch } from "lucide-react";
+import { ArrowRight, ChevronDown, Info, InfoIcon, Monitor, GitBranch, Network } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Switch } from "@/components/ui/switch";
@@ -42,6 +43,7 @@ export default function HeadlineResponse() {
   const [animatedThirdWord, setAnimatedThirdWord] = useState<string | null>(null);
   const [showHighlightPulseThird, setShowHighlightPulseThird] = useState(false);
   const [showTreeView, setShowTreeView] = useState(false);
+  const [showBranchView, setShowBranchView] = useState(false);
   
   const toggleDropdownTooltip = (key: string, value: boolean) => {
     setDropdownProbTooltips(prev => ({
@@ -352,17 +354,36 @@ export default function HeadlineResponse() {
                   Here is a possible headline for a long-form journalistic article about an AI ethics agreement reached across the EU:
                 </p>
                 
-                {/* Tree View Toggle */}
-                <div className="flex items-center gap-2 ml-4 shrink-0">
-                  <GitBranch className="h-4 w-4 text-muted-foreground" />
-                  <Label htmlFor="tree-view" className="text-sm text-muted-foreground cursor-pointer">
-                    Tree View
-                  </Label>
-                  <Switch
-                    id="tree-view"
-                    checked={showTreeView}
-                    onCheckedChange={setShowTreeView}
-                  />
+                {/* View Toggles */}
+                <div className="flex items-center gap-4 ml-4 shrink-0">
+                  <div className="flex items-center gap-2">
+                    <GitBranch className="h-4 w-4 text-muted-foreground" />
+                    <Label htmlFor="tree-view" className="text-sm text-muted-foreground cursor-pointer">
+                      Tree View
+                    </Label>
+                    <Switch
+                      id="tree-view"
+                      checked={showTreeView}
+                      onCheckedChange={(checked) => {
+                        setShowTreeView(checked);
+                        if (checked) setShowBranchView(false);
+                      }}
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Network className="h-4 w-4 text-muted-foreground" />
+                    <Label htmlFor="branch-view" className="text-sm text-muted-foreground cursor-pointer">
+                      Branch View
+                    </Label>
+                    <Switch
+                      id="branch-view"
+                      checked={showBranchView}
+                      onCheckedChange={(checked) => {
+                        setShowBranchView(checked);
+                        if (checked) setShowTreeView(false);
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -387,6 +408,16 @@ export default function HeadlineResponse() {
                       };
                       const completion = completions[thirdWord] || completions["On"];
                       setCurrentSentence(["European", "Union", secondWord, thirdWord, ...completion]);
+                    }
+                  }}
+                />
+              ) : showBranchView ? (
+                <BranchTreeDiagram
+                  selectedPath={currentSentence}
+                  onPathChange={(path) => {
+                    // Update current sentence based on branch selection
+                    if (path.length >= 7) {
+                      setCurrentSentence(path);
                     }
                   }}
                 />
