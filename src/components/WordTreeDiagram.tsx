@@ -101,8 +101,6 @@ export function WordTreeDiagram({
   const [unlockedLevel, setUnlockedLevel] = useState(1);
   // Track selected words at each level
   const [selections, setSelections] = useState<(string | null)[]>([treePaths[0].words[0], null, null, null, null, null, null]);
-  // Track previously selected words (words that were once selected but are no longer)
-  const [previousSelections, setPreviousSelections] = useState<Map<number, string>>(new Map());
   
   // Animation states per level
   const [animatingLevel, setAnimatingLevel] = useState<number | null>(null);
@@ -117,7 +115,6 @@ export function WordTreeDiagram({
   const handleReset = () => {
     setUnlockedLevel(1);
     setSelections([treePaths[0].words[0], null, null, null, null, null, null]);
-    setPreviousSelections(new Map());
     onPathChange([treePaths[0].words[0]]);
   };
 
@@ -176,18 +173,13 @@ export function WordTreeDiagram({
   // Handle word selection - unlock next level
   const handleWordClick = (level: number, word: string) => {
     const newSelections = [...selections];
-    const newPreviousSelections = new Map(previousSelections);
     
-    // Track words being cleared as previous selections
+    // Clear all selections from this level onwards
     for (let i = level; i <= 6; i++) {
-      if (selections[i] && selections[i] !== word) {
-        newPreviousSelections.set(i, selections[i]!);
-      }
       newSelections[i] = null;
     }
     newSelections[level] = word;
     setSelections(newSelections);
-    setPreviousSelections(newPreviousSelections);
     
     // Unlock next level
     const nextLevel = level + 1;
@@ -337,8 +329,6 @@ export function WordTreeDiagram({
           const isSelected = selections[level] === option.word;
           const isAnimated = animatingLevel === level && animatedWord === option.word;
           const isPulsing = showPulse && animatingLevel === level && animatedWord === option.word;
-          // Check if this word was previously selected but is no longer (user changed their path)
-          const wasPreviouslySelected = previousSelections.get(level) === option.word && !isSelected;
           
           // Calculate Y position centered around previous selection
           const nodeY = getNodeY(idx, options.length, level > 0 ? prevSelectedY : undefined);
@@ -380,17 +370,6 @@ export function WordTreeDiagram({
                 </div>
               )}
               
-              {/* Ghost outline for words that were previously selected but no longer are */}
-              {wasPreviouslySelected && (
-                <div 
-                  className="absolute inset-0 rounded-lg border-2 border-dashed border-green-300/40 pointer-events-none"
-                  style={{ 
-                    width: level === 0 ? 140 : 100,
-                    height: 44,
-                  }}
-                />
-              )}
-              
               <button
                 onClick={() => canSelect && handleWordClick(level, option.word)}
                 disabled={!canSelect}
@@ -402,11 +381,9 @@ export function WordTreeDiagram({
                     ? "bg-primary text-primary-foreground border-primary cursor-default"
                     : isSelected 
                       ? "bg-green-200 border-green-400 text-green-900 shadow-md scale-105 cursor-pointer" 
-                      : wasPreviouslySelected
-                        ? "bg-green-50/60 border-green-200/60 text-green-700/70 cursor-pointer"
-                        : canSelect
-                          ? "bg-card border-border hover:border-primary/50 hover:bg-muted cursor-pointer"
-                          : "bg-muted/50 border-muted text-muted-foreground/60 cursor-not-allowed",
+                      : canSelect
+                        ? "bg-card border-border hover:border-primary/50 hover:bg-muted cursor-pointer"
+                        : "bg-muted/50 border-muted text-muted-foreground/60 cursor-not-allowed",
                   isAnimated && !isPulsing && "ring-2 ring-primary ring-offset-1 bg-primary/10",
                   isPulsing && "ring-4 ring-green-400 ring-offset-1 bg-green-200 border-green-400 text-green-900 animate-pulse scale-110"
                 )}
