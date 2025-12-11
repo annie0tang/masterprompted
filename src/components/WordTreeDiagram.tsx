@@ -295,56 +295,56 @@ export function WordTreeDiagram({
     const prevSelectedY = level > 0 ? getSelectedYAtLevel(level - 1) : containerHeight / 2;
 
     return (
-      <div key={level} className="flex flex-col relative" style={{ height: containerHeight }}>
-        {/* Monitor button - only for current frontier */}
-        {level > 0 && isCurrentFrontier && (
-          <div className="flex justify-center mb-1">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    onClick={() => playAnimation(level)}
-                    disabled={animatingLevel !== null}
-                    className={cn(
-                      "p-1 rounded-md transition-all duration-200",
-                      animatingLevel === level
-                        ? "bg-primary/20 text-primary animate-pulse"
-                        : "bg-muted hover:bg-primary/10 text-muted-foreground hover:text-primary"
-                    )}
-                  >
-                    <Monitor className="h-3.5 w-3.5" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Watch LLM select word</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        )}
-        {/* Spacer if no button */}
-        {(level === 0 || !isCurrentFrontier) && <div className="h-6 mb-1" />}
-        
-        {/* Word buttons - positioned relative to previous selection */}
-        <div className="relative flex-1">
-          {options.map((option, idx) => {
-            const isSelected = selections[level] === option.word;
-            const isAnimated = animatingLevel === level && animatedWord === option.word;
-            const isPulsing = showPulse && animatingLevel === level && animatedWord === option.word;
-            
-            // Calculate Y position centered around previous selection
-            const nodeY = getNodeY(idx, options.length, level > 0 ? prevSelectedY : undefined);
-            
-            return (
+      <div key={level} className="relative" style={{ height: containerHeight, minWidth: level === 0 ? 140 : 110 }}>
+        {/* Word buttons - positioned absolutely */}
+        {options.map((option, idx) => {
+          const isSelected = selections[level] === option.word;
+          const isAnimated = animatingLevel === level && animatedWord === option.word;
+          const isPulsing = showPulse && animatingLevel === level && animatedWord === option.word;
+          
+          // Calculate Y position centered around previous selection
+          const nodeY = getNodeY(idx, options.length, level > 0 ? prevSelectedY : undefined);
+          
+          return (
+            <div
+              key={option.word}
+              style={{
+                position: 'absolute',
+                top: nodeY - nodeHeight / 2,
+                left: 0,
+                right: 0,
+              }}
+            >
+              {/* Monitor button - above first option at frontier */}
+              {level > 0 && isCurrentFrontier && idx === 0 && (
+                <div className="absolute -top-8 left-1/2 -translate-x-1/2">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          onClick={() => playAnimation(level)}
+                          disabled={animatingLevel !== null}
+                          className={cn(
+                            "p-1 rounded-md transition-all duration-200",
+                            animatingLevel === level
+                              ? "bg-primary/20 text-primary animate-pulse"
+                              : "bg-muted hover:bg-primary/10 text-muted-foreground hover:text-primary"
+                          )}
+                        >
+                          <Monitor className="h-3.5 w-3.5" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Watch LLM select word</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              )}
+              
               <button
-                key={option.word}
                 onClick={() => canSelect && handleWordClick(level, option.word)}
                 disabled={!canSelect}
-                style={{
-                  position: 'absolute',
-                  top: nodeY - nodeHeight / 2,
-                  left: 0,
-                }}
                 className={cn(
                   "relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 border-2 whitespace-nowrap",
                   level === 0 ? "min-w-[140px]" : "min-w-[100px]",
@@ -370,9 +370,9 @@ export function WordTreeDiagram({
                   </span>
                 )}
               </button>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
     );
   };
@@ -448,8 +448,8 @@ export function WordTreeDiagram({
   const headline = getCurrentHeadline();
 
   return (
-    <div className={cn("relative overflow-x-auto", className)}>
-      <div className="min-w-[1200px] p-6">
+    <div className={cn("relative overflow-x-auto scroll-smooth", className)}>
+      <div className="min-w-[1600px] p-6 pr-[320px]">
         {/* Current headline display - above tree */}
         <div className="mb-6 p-4 bg-muted/30 rounded-lg flex items-center justify-between">
           <div>
@@ -506,12 +506,12 @@ export function WordTreeDiagram({
               </div>
 
               {/* Headline completion */}
-              <div className="relative" style={{ height: containerHeight }}>
+              <div className="relative" style={{ height: containerHeight, minWidth: 280 }}>
                 <div 
-                  className="absolute bg-muted/30 rounded-lg p-4 animate-fade-in max-w-[280px]"
+                  className="absolute bg-muted/30 rounded-lg p-4 animate-fade-in w-[260px]"
                   style={{ 
-                    top: getSelectedYAtLevel(6) - 50,
-                    left: 0 
+                    top: Math.max(20, getSelectedYAtLevel(6) - nodeHeight / 2),
+                    left: 16 
                   }}
                 >
                   <p className="text-[10px] text-muted-foreground mb-2 uppercase tracking-wide">Completion:</p>
