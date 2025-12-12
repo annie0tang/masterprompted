@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { RotateCcw, Monitor, ZoomIn, ZoomOut } from "lucide-react";
+import { RotateCcw, Monitor } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
@@ -282,8 +282,7 @@ export function BranchTreeDiagram({
               checked={closeUpView}
               onCheckedChange={setCloseUpView}
             />
-            <Label htmlFor="closeup-branch" className="text-xs text-muted-foreground flex items-center gap-1">
-              {closeUpView ? <ZoomOut className="h-3 w-3" /> : <ZoomIn className="h-3 w-3" />}
+            <Label htmlFor="closeup-branch" className="text-xs text-muted-foreground">
               Close-up
             </Label>
           </div>
@@ -326,7 +325,7 @@ export function BranchTreeDiagram({
                 
                 // Calculate Y positions based on view mode
                 const baseY = svgHeight / 2;
-                const spread = closeUpView ? 140 : 180;
+                const spread = closeUpView ? 300 : 180;
                 
                 // Progressive Y calculation
                 const y1 = baseY + (level1Group - 0.5) * spread;
@@ -384,7 +383,7 @@ export function BranchTreeDiagram({
                 const x = levelXPositions[level];
                 // Recalculate Y based on view mode
                 const baseY = svgHeight / 2;
-                const spread = closeUpView ? 140 : 180;
+                const spread = closeUpView ? 300 : 180;
                 
                 const level1Group = selectedFullPath.words[1] === "Unites" ? 0 : 1;
                 const level2Group = selectedFullPath.words[2] === "On" ? 0 : 1;
@@ -456,7 +455,7 @@ export function BranchTreeDiagram({
         {/* Word selection panel on the right */}
         <div className="w-64 border-l border-border pl-6">
           <div className="sticky top-4">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2 mb-3">
               <h3 className="text-sm font-medium text-foreground">
                 {currentLevel <= 6 ? `Select Word ${currentLevel}:` : "Complete!"}
               </h3>
@@ -466,7 +465,7 @@ export function BranchTreeDiagram({
                   size="sm"
                   onClick={playAnimation}
                   disabled={isAnimating}
-                  className="h-7 gap-1.5 text-xs"
+                  className="h-6 w-6 p-0"
                   title="Watch computer select"
                 >
                   <Monitor className={cn(
