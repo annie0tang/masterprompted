@@ -242,7 +242,7 @@ export function BranchTreeDiagram({
 
   const levelXPositions = closeUpView ? [80, 240, 400, 560, 720, 880, 1040] : [20, 100, 180, 260, 340, 420, 500];
   const svgWidth = closeUpView ? 1200 : 600;
-  const svgHeight = closeUpView ? 320 : 400;
+  const svgHeight = closeUpView ? 640 : 400;
 
   // Build current headline
   const buildHeadline = (): string => {
@@ -308,7 +308,7 @@ export function BranchTreeDiagram({
           <div className={cn("p-4", closeUpView ? "min-w-[1200px]" : "min-w-[600px]")}>
             {/* SVG branch lines - proper tree structure */}
             <svg 
-              className={cn("w-full", closeUpView ? "h-[320px]" : "h-[400px]")} 
+              className={cn("w-full", closeUpView ? "h-[640px]" : "h-[400px]")} 
               viewBox={`0 0 ${svgWidth} ${svgHeight}`} 
               preserveAspectRatio="xMidYMid meet"
             >
