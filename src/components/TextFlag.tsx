@@ -30,10 +30,15 @@ const textFlagVariants = cva(
         error: "[&>a]:decoration-destructive [&>span]:decoration-destructive",
         warning: "[&>a]:decoration-yellow-600 [&>span]:decoration-yellow-600",
         info: "[&>a]:decoration-blue-500 [&>span]:decoration-blue-500"
+      },
+      noUnderline: {
+        true: "[&>span]:no-underline [&>a]:no-underline",
+        false: ""
       }
     },
     defaultVariants: {
-      severity: "error"
+      severity: "error",
+      noUnderline: false
     }
   }
 );
@@ -73,7 +78,8 @@ export default function TextFlag({
   explanation, 
   className = "", 
   href,
-  severity 
+  severity,
+  noUnderline
 }: TextFlagProps) {
   const Icon = iconMap[evaluationFactor];
   const label = labelMap[evaluationFactor];
@@ -113,7 +119,7 @@ export default function TextFlag({
     <HoverCard open={hoverCardOpen} onOpenChange={setHoverCardOpen}>
       <HoverCardTrigger asChild>
         <span 
-          className={cn(textFlagVariants({ severity }), className)}
+          className={cn(textFlagVariants({ severity, noUnderline }), className)}
           onClick={(e) => {
             e.stopPropagation();
             setHoverCardOpen(!hoverCardOpen);

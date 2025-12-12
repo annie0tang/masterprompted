@@ -503,7 +503,7 @@ export function BranchTreeDiagram({
                             evaluationFactor="factual_accuracy"
                             explanation="The EU AI Act is officially called the 'AI Act' or 'Artificial Intelligence Act', not a 'Charter'. Using 'Charter' is factually inaccurate."
                             severity="error"
-                            className="no-underline"
+                            noUnderline={true}
                           />
                         ) : word}
                       </div>

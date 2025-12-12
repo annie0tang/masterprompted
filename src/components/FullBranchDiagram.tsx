@@ -361,10 +361,11 @@ export function FullBranchDiagram({
                         width={wordWidth}
                         height={36}
                         rx={6}
-                        fill="hsl(var(--primary))"
+                        fill={word === "Charter" ? "hsl(var(--destructive))" : "hsl(var(--primary))"}
                         className={cn(
                           "drop-shadow-md transition-all duration-200",
-                          isClickable && "hover:fill-[hsl(var(--primary)/0.8)]"
+                          isClickable && word !== "Charter" && "hover:fill-[hsl(var(--primary)/0.8)]",
+                          isClickable && word === "Charter" && "hover:fill-[hsl(var(--destructive)/0.8)]"
                         )}
                       />
                       <text
@@ -539,7 +540,7 @@ export function FullBranchDiagram({
                         evaluationFactor="factual_accuracy"
                         explanation="The EU AI Act is officially called the 'AI Act' or 'Artificial Intelligence Act', not a 'Charter'. Using 'Charter' is factually inaccurate."
                         severity="error"
-                        className="no-underline"
+                        noUnderline={true}
                       />
                     ) : option.word}
                   </span>
