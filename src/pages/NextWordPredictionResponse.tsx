@@ -10,6 +10,7 @@ import { WordTreeDiagram } from "@/components/WordTreeDiagram";
 import { BranchTreeDiagram } from "@/components/BranchTreeDiagram";
 import { FullBranchDiagram } from "@/components/FullBranchDiagram";
 import React, { useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronDown, Info, InfoIcon, Monitor, GitBranch, Network, List } from "lucide-react";
@@ -335,11 +336,14 @@ export default function HeadlineResponse() {
         <Breadcrumb />
       </div>
 
-      <div className="w-full">
+      <div className={cn("w-full", !evaluationPanelOpen && "flex justify-center")}>
         {/* Two-column layout */}
-        <div className="flex flex-col justify-between lg:flex-row gap-8 items-start">
+        <div className={cn(
+          "flex flex-col lg:flex-row gap-8 items-start",
+          evaluationPanelOpen ? "justify-between" : "justify-center"
+        )}>
           {/* Left column - Main content */}
-          <div className="flex-1 min-w-0 max-w-4xl">
+          <div className={cn("flex-1 min-w-0 max-w-4xl", !evaluationPanelOpen && "mx-auto")}>
             {/* Original Prompt */}
             <div className="mb-8">
               <ChatPrompt text="Write a headline for a long form journalistic article about ai ethics agreement reached across the eu" fileName="EU_AI_Act.pdf" />
