@@ -21,7 +21,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const panelVariants = cva(
-  "bg-card border border-border rounded-lg shadow-sm px-4 py-4 absolute top-0 right-0 z-10",
+  "bg-card border border-border rounded-lg shadow-sm px-4 py-4 sticky top-6 z-10",
   {
     variants: {
       size: {
