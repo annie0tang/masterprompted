@@ -523,9 +523,9 @@ export function FullBranchDiagram({
       </div>
 
       {/* Branch visualization */}
-      <div ref={scrollContainerRef} className="overflow-x-auto mb-6">
+      <div ref={scrollContainerRef} className="overflow-x-auto">
         <div className={cn("p-4", closeUpView ? "min-w-[700px]" : "min-w-[1050px]")}>
-          <svg className={cn("w-full", closeUpView ? "h-[200px]" : "h-[300px]")} viewBox={closeUpView ? `0 0 700 200` : `0 0 ${svgWidth} 300`} preserveAspectRatio="xMidYMid meet">
+          <svg className={cn("w-full", closeUpView ? "h-[200px]" : "h-[380px]")} viewBox={closeUpView ? `0 0 700 200` : `0 0 ${svgWidth} 380`} preserveAspectRatio="xMidYMid meet">
             {closeUpView ? <>
                 {/* Close-up view: Show all branches but zoomed in on 3 words */}
                 {/* Draw all branch paths */}
@@ -642,59 +642,76 @@ export function FullBranchDiagram({
                       {selectedFullPath.headline}
                     </text>
                   </g>}
+
+                {/* Word selection controls inside SVG - only in normal view */}
+                {currentLevel <= 6 && (
+                  <foreignObject x={getLevelX(currentLevel) - 100} y={260} width={200} height={120}>
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="text-xs text-muted-foreground">Select next word:</p>
+                        <Button variant="ghost" size="sm" onClick={playAnimation} disabled={isAnimating} className="h-6 gap-1 text-[10px] px-2" title="Watch computer select">
+                          <Monitor className={cn("h-3 w-3", isAnimating ? "text-primary animate-pulse" : "text-muted-foreground")} />
+                          Auto
+                        </Button>
+                      </div>
+                      
+                      {/* LLM Selection Message */}
+                      {showSelectionMessage && animatedWord && selectedProbability !== null && (
+                        <div className="flex items-center gap-1.5 py-1.5 px-3 bg-primary/10 border border-primary/30 rounded-md animate-fade-in">
+                          <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                          <span className="text-xs font-medium text-primary">
+                            "{animatedWord}" ({(selectedProbability * 100).toFixed(0)}%)
+                          </span>
+                        </div>
+                      )}
+                      
+                      {!showSelectionMessage && (
+                        <div className="flex gap-2">
+                          {levelOptions[currentLevel].map(option => {
+                            const isAnimated = animatedWord === option.word;
+                            const isCharter = option.word === "Charter";
+                            return (
+                              <Button
+                                key={option.word}
+                                variant="outline"
+                                onClick={() => handleWordSelect(option.word)}
+                                disabled={isAnimating}
+                                className={cn(
+                                  "h-10 min-w-[80px] flex flex-col gap-0 px-3 text-xs transition-all duration-200",
+                                  isCharter && "border-destructive bg-destructive/10 hover:bg-destructive/20 text-destructive",
+                                  isAnimated && "ring-2 ring-primary ring-offset-1 animate-pulse bg-primary/10"
+                                )}
+                              >
+                                <span className={cn("text-xs font-medium", isCharter && "text-destructive")}>
+                                  {option.word}
+                                </span>
+                                <span className="text-[10px] text-muted-foreground">
+                                  {(option.prob * 100).toFixed(0)}%
+                                </span>
+                              </Button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  </foreignObject>
+                )}
+
+                {/* Completion controls inside SVG */}
+                {currentLevel > 6 && (
+                  <foreignObject x={getLevelX(6) - 50} y={260} width={200} height={60}>
+                    <div className="flex flex-col items-center gap-2">
+                      <p className="text-xs text-muted-foreground">Complete!</p>
+                      <Button variant="outline" size="sm" onClick={handleReset} className="h-7 gap-1.5 text-xs">
+                        <RotateCcw className="h-3 w-3" />
+                        Start Over
+                      </Button>
+                    </div>
+                  </foreignObject>
+                )}
               </>}
           </svg>
         </div>
       </div>
-
-      {/* Single word selection at bottom */}
-      {currentLevel <= 6 && <div className="border-t border-border pt-4">
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-sm text-muted-foreground">
-              Select the next word:
-            </p>
-            <Button variant="ghost" size="sm" onClick={playAnimation} disabled={isAnimating} className="h-7 gap-1.5 text-xs" title="Watch computer select">
-              <Monitor className={cn("h-3.5 w-3.5", isAnimating ? "text-primary animate-pulse" : "text-muted-foreground")} />
-              Auto-select
-            </Button>
-          </div>
-          
-          {/* LLM Selection Message */}
-          {showSelectionMessage && animatedWord && selectedProbability !== null && <div className="flex justify-center mb-3">
-              <div style={{
-          width: 'calc(280px + 1rem)'
-        }} className="flex items-center gap-2 py-2.5 bg-primary/10 border border-primary/30 rounded-lg animate-fade-in px-[18px]">
-              <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              <span className="text-sm font-medium text-primary">
-                "{animatedWord}" selected ({(selectedProbability * 100).toFixed(0)}%)
-              </span>
-              </div>
-            </div>}
-          
-          <div className="flex gap-4 justify-center">
-            {levelOptions[currentLevel].map(option => {
-          const isAnimated = animatedWord === option.word;
-          const isHighestProb = showSelectionMessage && isAnimated;
-          const isCharter = option.word === "Charter";
-          return <Button key={option.word} variant="outline" onClick={() => handleWordSelect(option.word)} disabled={isAnimating} className={cn("h-12 min-w-[140px] flex flex-col gap-0.5 px-6 transition-all duration-200", isCharter && !isHighestProb && "border-destructive bg-destructive/10 hover:bg-destructive/20 text-destructive", isAnimated && !isHighestProb && "ring-2 ring-primary ring-offset-2 animate-pulse bg-primary/10", isHighestProb && "ring-4 ring-primary ring-offset-2 scale-110 bg-primary text-primary-foreground border-primary shadow-lg")}>
-                  <span className={cn("text-sm font-medium", isCharter && !isHighestProb && "text-destructive", isHighestProb && "text-primary-foreground")}>
-                    {isCharter && !isHighestProb ? <TextFlag text="Charter" evaluationFactor="factual_accuracy" explanation="The EU AI Act is officially called the 'AI Act' or 'Artificial Intelligence Act', not a 'Charter'. Using 'Charter' is factually inaccurate." severity="error" noUnderline={true} /> : option.word}
-                  </span>
-                  <span className={cn("text-xs", isHighestProb ? "text-primary-foreground/80" : "text-muted-foreground")}>
-                    {(option.prob * 100).toFixed(0)}%
-                  </span>
-                </Button>;
-        })}
-          </div>
-        </div>}
-
-      {/* Completion message */}
-      {currentLevel > 6 && <div className="border-t border-border pt-4 text-center">
-          <p className="text-sm text-muted-foreground mb-2">Headline complete!</p>
-          <Button variant="outline" size="sm" onClick={handleReset} className="gap-1.5">
-            <RotateCcw className="h-3.5 w-3.5" />
-            Start Over
-          </Button>
-        </div>}
     </div>;
 }
