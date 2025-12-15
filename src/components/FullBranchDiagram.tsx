@@ -181,7 +181,7 @@ export function FullBranchDiagram({
           setShowSelectionMessage(false);
           setSelectedProbability(null);
           setIsAnimating(false);
-        }, 1500);
+        }, 2500);
       }
     }, 150);
   };
@@ -528,10 +528,10 @@ export function FullBranchDiagram({
           {showSelectionMessage && animatedWord && selectedProbability !== null && (
             <div className="flex justify-center mb-3">
               <div className="flex items-center gap-2 px-4 py-2.5 bg-primary/10 border border-primary/30 rounded-lg animate-fade-in" style={{ width: 'calc(280px + 1rem)' }}>
-                <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                <span className="text-sm font-medium text-primary">
-                  LLM selected "{animatedWord}" — highest probability at {(selectedProbability * 100).toFixed(0)}%
-                </span>
+              <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+              <span className="text-sm font-medium text-primary">
+                "{animatedWord}" selected ({(selectedProbability * 100).toFixed(0)}%)
+              </span>
               </div>
             </div>
           )}
