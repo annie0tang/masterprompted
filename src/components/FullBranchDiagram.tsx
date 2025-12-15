@@ -608,7 +608,16 @@ export function FullBranchDiagram({
 
                 {/* Completion text */}
                 {selections.length === 7 && selectedFullPath && <g>
-                    <text x={getLevelX(7) + 10} y={getPathY(selectedFullPath, 6) + 4} textAnchor="start" className="text-[10px] font-medium fill-primary pointer-events-none select-none">
+                    <rect 
+                      x={getLevelX(7) + 8} 
+                      y={getPathY(selectedFullPath, 6) - 14} 
+                      width={Math.min(selectedFullPath.headline.length * 7, 280)} 
+                      height={28} 
+                      rx={6} 
+                      fill="hsl(var(--primary))" 
+                      className="drop-shadow-md"
+                    />
+                    <text x={getLevelX(7) + 16} y={getPathY(selectedFullPath, 6) + 5} textAnchor="start" className="text-[13px] font-semibold fill-primary-foreground pointer-events-none select-none">
                       {selectedFullPath.headline}
                     </text>
                   </g>}
