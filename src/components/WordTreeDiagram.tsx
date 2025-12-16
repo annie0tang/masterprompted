@@ -104,9 +104,9 @@ export function WordTreeDiagram({
   const [selections, setSelections] = useState<(string | null)[]>([treePaths[0].words[0], null, null, null, null, null, null]);
   
   // Track history of selections - words that were selected before user went back and chose differently
-  // Each entry: { level, word, pathPrefix (the path that led to this selection) }
-  const [selectionHistory, setSelectionHistory] = useState<Array<{ level: number; word: string; pathPrefix: string[] }>>([]);
-  
+  // Each entry: { level, word, pathPrefix, yPosition (exact position when selected) }
+  const [selectionHistory, setSelectionHistory] = useState<Array<{ level: number; word: string; pathPrefix: string[]; yPosition: number }>>([]);
+
   // Animation states per level
   const [animatingLevel, setAnimatingLevel] = useState<number | null>(null);
   const [animatedWord, setAnimatedWord] = useState<string | null>(null);
@@ -184,12 +184,14 @@ export function WordTreeDiagram({
     
     // Save current selections from this level onwards to history before clearing
     // Only if there are selections to save (user is going back)
-    const historyToAdd: Array<{ level: number; word: string; pathPrefix: string[] }> = [];
+    const historyToAdd: Array<{ level: number; word: string; pathPrefix: string[]; yPosition: number }> = [];
     for (let i = level; i <= 6; i++) {
       if (newSelections[i]) {
         // Build the path prefix that led to this selection
         const pathPrefix = newSelections.slice(0, i).filter(Boolean) as string[];
-        historyToAdd.push({ level: i, word: newSelections[i]!, pathPrefix });
+        // Calculate the Y position this word was at when selected
+        const yPosition = getSelectedYAtLevel(i);
+        historyToAdd.push({ level: i, word: newSelections[i]!, pathPrefix, yPosition });
       }
     }
     
@@ -467,9 +469,8 @@ export function WordTreeDiagram({
 
         {/* Ghost words from history - previous selections that were replaced */}
         {historyItems.map((historyItem, histIdx) => {
-          // Position ghosts offset from center, spread out vertically below current options
-          const baseOffset = options.length > 0 ? (options.length * (nodeHeight + levelGap)) / 2 + 60 : 60;
-          const ghostY = prevSelectedY + baseOffset + (histIdx * (nodeHeight + 30));
+          // Use the stored Y position where this word was originally selected
+          const ghostY = historyItem.yPosition;
           
           return (
             <div
