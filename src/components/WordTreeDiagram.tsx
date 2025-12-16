@@ -103,6 +103,10 @@ export function WordTreeDiagram({
   // Track selected words at each level
   const [selections, setSelections] = useState<(string | null)[]>([treePaths[0].words[0], null, null, null, null, null, null]);
   
+  // Track history of selections - words that were selected before user went back and chose differently
+  // Each entry: { level, word, pathPrefix (the path that led to this selection) }
+  const [selectionHistory, setSelectionHistory] = useState<Array<{ level: number; word: string; pathPrefix: string[] }>>([]);
+  
   // Animation states per level
   const [animatingLevel, setAnimatingLevel] = useState<number | null>(null);
   const [animatedWord, setAnimatedWord] = useState<string | null>(null);
@@ -118,6 +122,7 @@ export function WordTreeDiagram({
   const handleReset = () => {
     setUnlockedLevel(1);
     setSelections([treePaths[0].words[0], null, null, null, null, null, null]);
+    setSelectionHistory([]); // Clear history on reset
     onPathChange([treePaths[0].words[0]]);
   };
 
@@ -176,6 +181,21 @@ export function WordTreeDiagram({
   // Handle word selection - unlock next level
   const handleWordClick = (level: number, word: string) => {
     const newSelections = [...selections];
+    
+    // Save current selections from this level onwards to history before clearing
+    // Only if there are selections to save (user is going back)
+    const historyToAdd: Array<{ level: number; word: string; pathPrefix: string[] }> = [];
+    for (let i = level; i <= 6; i++) {
+      if (newSelections[i]) {
+        // Build the path prefix that led to this selection
+        const pathPrefix = newSelections.slice(0, i).filter(Boolean) as string[];
+        historyToAdd.push({ level: i, word: newSelections[i]!, pathPrefix });
+      }
+    }
+    
+    if (historyToAdd.length > 0) {
+      setSelectionHistory(prev => [...prev, ...historyToAdd]);
+    }
     
     // Clear all selections from this level onwards
     for (let i = level; i <= 6; i++) {
@@ -311,16 +331,20 @@ export function WordTreeDiagram({
       .sort((a, b) => b.probability - a.probability);
   };
 
-  // Render a level column - show all levels, with ghost options for passed levels
-  const renderLevel = (level: number) => {
-    // For future levels (beyond unlocked), don't render
-    if (level > unlockedLevel) return null;
-    
-    const options = getOptionsAtLevelWithPrevPath(level);
-    if (options.length === 0) return null;
+  // Get history items at a specific level
+  const getHistoryAtLevel = (level: number) => {
+    return selectionHistory.filter(h => h.level === level);
+  };
 
-    // Determine if this is a "passed" level (selection made and moved on)
-    const isPastLevel = level < unlockedLevel && selections[level] !== null;
+  // Render a level column
+  const renderLevel = (level: number) => {
+    // For future levels (beyond unlocked), don't render active options
+    const options = level <= unlockedLevel ? getOptionsAtLevelWithPrevPath(level) : [];
+    const historyItems = getHistoryAtLevel(level);
+
+    // If no options and no history, skip
+    if (options.length === 0 && historyItems.length === 0) return null;
+
     // Allow selection if: level is unlocked AND (no selection yet OR can change existing selection)
     const canSelect = level > 0 && level <= unlockedLevel;
     const isCurrentFrontier = level === unlockedLevel && !selections[level];
@@ -335,14 +359,11 @@ export function WordTreeDiagram({
         className="relative" 
         style={{ height: containerHeight, minWidth: level === 0 ? 140 : 110 }}
       >
-        {/* Word buttons - positioned absolutely */}
+        {/* Current active word buttons */}
         {options.map((option, idx) => {
           const isSelected = selections[level] === option.word;
           const isAnimated = animatingLevel === level && animatedWord === option.word;
           const isPulsing = showPulse && animatingLevel === level && animatedWord === option.word;
-          
-          // Ghost styling: show unselected options at passed levels as faded
-          const isGhost = isPastLevel && !isSelected;
           
           // Calculate Y position centered around previous selection
           const nodeY = getNodeY(idx, options.length, level > 0 ? prevSelectedY : undefined);
@@ -395,28 +416,25 @@ export function WordTreeDiagram({
               )}
               
               <button
-                onClick={() => canSelect && !isGhost && handleWordClick(level, option.word)}
-                disabled={!canSelect || isGhost}
+                onClick={() => canSelect && handleWordClick(level, option.word)}
+                disabled={!canSelect}
                 className={cn(
                   "relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 border-2 whitespace-nowrap",
                   level === 0 ? "min-w-[140px]" : "min-w-[100px]",
                   "h-11",
-                  // Ghost styling - faded appearance for unselected options at past levels
-                  isGhost
-                    ? "bg-muted/20 border-muted/30 text-muted-foreground/30 cursor-default opacity-40"
-                    : level === 0 
-                      ? "bg-primary text-primary-foreground border-primary cursor-default"
-                      : option.word === "Charter"
-                        ? isSelected
-                          ? "bg-destructive/30 border-destructive text-destructive shadow-md scale-105 cursor-pointer"
-                          : canSelect
-                            ? "bg-destructive/10 border-destructive/50 text-destructive hover:border-destructive hover:bg-destructive/20 cursor-pointer"
-                            : "bg-muted/50 border-muted text-muted-foreground/60 cursor-not-allowed"
-                        : isSelected 
-                          ? "bg-green-200 border-green-400 text-green-900 shadow-md scale-105 cursor-pointer" 
-                          : canSelect
-                            ? "bg-card border-border hover:border-primary/50 hover:bg-muted cursor-pointer"
-                            : "bg-muted/50 border-muted text-muted-foreground/60 cursor-not-allowed",
+                  level === 0 
+                    ? "bg-primary text-primary-foreground border-primary cursor-default"
+                    : option.word === "Charter"
+                      ? isSelected
+                        ? "bg-destructive/30 border-destructive text-destructive shadow-md scale-105 cursor-pointer"
+                        : canSelect
+                          ? "bg-destructive/10 border-destructive/50 text-destructive hover:border-destructive hover:bg-destructive/20 cursor-pointer"
+                          : "bg-muted/50 border-muted text-muted-foreground/60 cursor-not-allowed"
+                      : isSelected 
+                        ? "bg-green-200 border-green-400 text-green-900 shadow-md scale-105 cursor-pointer" 
+                        : canSelect
+                          ? "bg-card border-border hover:border-primary/50 hover:bg-muted cursor-pointer"
+                          : "bg-muted/50 border-muted text-muted-foreground/60 cursor-not-allowed",
                   isAnimated && !isPulsing && "ring-2 ring-primary ring-offset-1 bg-primary/10",
                   isPulsing && "ring-4 ring-primary ring-offset-2 bg-primary text-primary-foreground border-primary shadow-lg scale-110"
                 )}
@@ -430,7 +448,7 @@ export function WordTreeDiagram({
                     noUnderline={true}
                   />
                 ) : option.word}
-                {level > 0 && !isGhost && (
+                {level > 0 && (
                   <span className={cn(
                     "absolute -top-4 left-1/2 -translate-x-1/2 text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap",
                     isPulsing
@@ -442,13 +460,40 @@ export function WordTreeDiagram({
                     {option.probability.toFixed(2)}
                   </span>
                 )}
-                {/* Ghost probability badge - more faded */}
-                {level > 0 && isGhost && (
-                  <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap bg-muted/20 text-muted-foreground/30">
-                    {option.probability.toFixed(2)}
-                  </span>
-                )}
               </button>
+            </div>
+          );
+        })}
+
+        {/* Ghost words from history - previous selections that were replaced */}
+        {historyItems.map((historyItem, histIdx) => {
+          // Position ghosts offset from center, spread out vertically below current options
+          const baseOffset = options.length > 0 ? (options.length * (nodeHeight + levelGap)) / 2 + 60 : 60;
+          const ghostY = prevSelectedY + baseOffset + (histIdx * (nodeHeight + 30));
+          
+          return (
+            <div
+              key={`ghost-${historyItem.word}-${histIdx}`}
+              style={{
+                position: 'absolute',
+                top: ghostY - nodeHeight / 2,
+                left: 0,
+                right: 0,
+              }}
+            >
+              <div
+                className={cn(
+                  "relative px-4 py-2 rounded-lg text-sm font-medium border-2 whitespace-nowrap",
+                  "min-w-[100px] h-11",
+                  "bg-muted/10 border-muted/20 text-muted-foreground/40 opacity-50",
+                  "border-dashed"
+                )}
+              >
+                {historyItem.word}
+                <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-[9px] px-1.5 py-0.5 rounded whitespace-nowrap bg-muted/10 text-muted-foreground/30">
+                  (previous)
+                </span>
+              </div>
             </div>
           );
         })}
