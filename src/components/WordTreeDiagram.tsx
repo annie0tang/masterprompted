@@ -114,9 +114,28 @@ export function WordTreeDiagram({
   const [showSelectionMessage, setShowSelectionMessage] = useState(false);
   const [selectedProbability, setSelectedProbability] = useState<number | null>(null);
   
+  // Intro animation state
+  const [showIntroAnimation, setShowIntroAnimation] = useState(true);
+  
   // Ref for auto-scroll
   const containerRef = useRef<HTMLDivElement>(null);
   const levelRefs = useRef<(HTMLDivElement | null)[]>([]);
+  
+  // Intro animation - pulse the first word selection options
+  useEffect(() => {
+    if (showIntroAnimation) {
+      const timer = setTimeout(() => {
+        setShowIntroAnimation(false);
+      }, 4000); // Stop after 4 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [showIntroAnimation]);
+  
+  // Stop intro animation on first interaction
+  const handleWordClickWithIntro = (level: number, word: string) => {
+    setShowIntroAnimation(false);
+    handleWordClick(level, word);
+  };
 
   // Reset to initial state
   const handleReset = () => {
@@ -441,7 +460,7 @@ export function WordTreeDiagram({
               )}
               
               <button
-                onClick={() => canSelect && handleWordClick(level, option.word)}
+                onClick={() => canSelect && handleWordClickWithIntro(level, option.word)}
                 disabled={!canSelect}
                 className={cn(
                   "relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 border-2 whitespace-nowrap",
@@ -461,7 +480,9 @@ export function WordTreeDiagram({
                           ? "bg-card border-border hover:border-primary/50 hover:bg-muted cursor-pointer"
                           : "bg-muted/50 border-muted text-muted-foreground/60 cursor-not-allowed",
                   isAnimated && !isPulsing && "ring-2 ring-primary ring-offset-1 bg-primary/10",
-                  isPulsing && "ring-4 ring-primary ring-offset-2 bg-primary text-primary-foreground border-primary shadow-lg scale-110"
+                  isPulsing && "ring-4 ring-primary ring-offset-2 bg-primary text-primary-foreground border-primary shadow-lg scale-110",
+                  // Intro animation for level 1 (first word choice)
+                  showIntroAnimation && level === 1 && !isSelected && "animate-pulse ring-2 ring-primary/60 ring-offset-1"
                 )}
               >
                 {option.word === "Charter" && !isPulsing ? (
@@ -567,6 +588,13 @@ export function WordTreeDiagram({
             {headline && <span className="bg-green-200 text-green-900 px-1 rounded ml-1">{headline}</span>}
             {!headline && displayHeadline && <span className="text-muted-foreground/50">...</span>}
           </p>
+          {/* Intro instruction */}
+          {showIntroAnimation && unlockedLevel === 1 && (
+            <p className="text-sm text-primary mt-2 animate-fade-in flex items-center gap-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-primary animate-pulse" />
+              Select "Unites" or "Reaches" to create your own headline
+            </p>
+          )}
         </div>
         {/* Reset button */}
         {unlockedLevel > 1 && (
