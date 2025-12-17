@@ -476,7 +476,7 @@ export function BranchTreeDiagram({
   const currentOptions = currentLevel <= 6 ? getOptionsAtLevel(currentLevel) : [];
   return <div className={cn("relative space-y-6", className)}>
     {/* Current headline display - card style */}
-    <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
+    <div className="bg-card rounded-xl p-6 shadow-sm">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
           <p className="text-sm font-medium text-muted-foreground mb-3">Generated Headline</p>
@@ -513,7 +513,7 @@ export function BranchTreeDiagram({
     {/* Main layout: tree above, selection panel below */}
     <div className="flex flex-col gap-4">
       {/* Branch visualization - card style */}
-      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-card rounded-xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto" ref={scrollContainerRef}>
           <div className={cn("p-6", closeUpView ? "min-w-[1600px]" : "min-w-[600px]")}>
             <svg 
@@ -644,7 +644,7 @@ export function BranchTreeDiagram({
 
       {/* Word selection panel - below tree */}
       <div className="w-full">
-        <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
+        <div className="bg-card rounded-xl p-4 shadow-sm">
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-3">
               <h3 className="text-sm font-semibold text-foreground">
