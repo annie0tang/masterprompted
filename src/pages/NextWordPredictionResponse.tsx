@@ -45,6 +45,7 @@ export default function HeadlineResponse() {
   const [showHighlightPulseThird, setShowHighlightPulseThird] = useState(false);
   const [viewMode, setViewMode] = useState<"dropdown" | "tree" | "branch" | "full">("tree");
   const [evaluationPanelOpen, setEvaluationPanelOpen] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   // Watch for "Charter" word specifically in the sentence to expand evaluation panel
   useEffect(() => {
@@ -395,6 +396,7 @@ export default function HeadlineResponse() {
                   onPathChange={(path) => {
                     // Update sentence with the path - this triggers Charter detection
                     setCurrentSentence(path);
+                    setHasInteracted(true);
                   }}
                 />
               ) : viewMode === "full" ? (
@@ -402,6 +404,7 @@ export default function HeadlineResponse() {
                   selectedPath={currentSentence}
                   onPathChange={(path) => {
                     setCurrentSentence(path);
+                    setHasInteracted(true);
                   }}
                 />
               ) : viewMode === "branch" ? (
@@ -409,6 +412,7 @@ export default function HeadlineResponse() {
                   selectedPath={currentSentence}
                   onPathChange={(path) => {
                     setCurrentSentence(path);
+                    setHasInteracted(true);
                   }}
                 />
               ) : (
@@ -644,13 +648,15 @@ export default function HeadlineResponse() {
               </div>
               )}
 
-              {/* Takeaways Button */}
-              <div className="mt-8">
-                <Button variant="secondary" onClick={() => navigate("/module/next-word-prediction/takeaways")} className="rounded-full px-6 py-3">
-                  {t('components.breadcrumb.takeaways')}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
+              {/* Takeaways Button - only show after user interaction */}
+              {hasInteracted && (
+                <div className="mt-8">
+                  <Button variant="secondary" onClick={() => navigate("/module/next-word-prediction/takeaways")} className="rounded-full px-6 py-3">
+                    {t('components.breadcrumb.takeaways')}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -679,7 +685,7 @@ export default function HeadlineResponse() {
       </div>
     </div>}
 
-    <ModuleNavigation previousRoute="/module/next-word-prediction/prompt" nextRoute="/module/next-word-prediction/takeaways" />
+    <ModuleNavigation previousRoute="/module/next-word-prediction/prompt" nextRoute={hasInteracted ? "/module/next-word-prediction/takeaways" : undefined} />
     <div className="mt-6 text-sm text-gray-500 max-w-7xl mx-auto">
       LLMs have been used in the following places:<br />
       The creation of prompt output examples in the Guided Exploration<br />
