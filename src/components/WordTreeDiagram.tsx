@@ -726,7 +726,7 @@ export function WordTreeDiagram({
       
       {/* Start your own overlay - centered over entire component */}
       {isIntroComplete && !isInteractive && (
-        <div className="absolute inset-0 flex items-center justify-center animate-fade-in z-10">
+        <div className="absolute inset-0 flex items-center justify-center animate-fade-in z-10" style={{ marginTop: '-40px' }}>
           <div className="bg-card border border-border rounded-xl p-6 shadow-lg text-center max-w-sm">
             <p className="text-sm text-muted-foreground mb-4">
               The system selected words to form this headline. Now it's your turn!
