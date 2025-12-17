@@ -610,7 +610,7 @@ export function BranchTreeDiagram({
                   setCurrentLevel(level);
                   onPathChange(newSelections.filter(Boolean) as string[]);
                 };
-                const displayWord = word === "European Union" ? "EU" : word;
+                const displayWord = word;
                 const wordWidth = Math.max(70, displayWord.length * 10 + 16);
                 const rectHeight = 28;
                 const probability = selectedFullPath.probabilities[level];
