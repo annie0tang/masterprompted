@@ -48,7 +48,10 @@ export default function HeadlineResponse() {
   const [hasInteracted, setHasInteracted] = useState(false);
 
   // Watch for "Charter" word specifically in the sentence to expand evaluation panel
+  // Only trigger after user has interacted (not during intro animation)
   useEffect(() => {
+    if (!hasInteracted) return;
+    
     const hasCharter = currentSentence.some(word => {
       if (!word) return false;
       const cleanWord = word.toLowerCase().replace(/[,.]$/g, '');
@@ -57,7 +60,7 @@ export default function HeadlineResponse() {
     if (hasCharter) {
       setEvaluationPanelOpen(true);
     }
-  }, [currentSentence]);
+  }, [currentSentence, hasInteracted]);
   
   const toggleDropdownTooltip = (key: string, value: boolean) => {
     setDropdownProbTooltips(prev => ({

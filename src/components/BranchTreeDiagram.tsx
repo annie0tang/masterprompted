@@ -856,19 +856,14 @@ export function BranchTreeDiagram({
     
     {/* Start your own overlay - centered over entire component */}
     {isIntroComplete && !isInteractive && (
-      <div className="absolute inset-0 flex items-center justify-center animate-fade-in z-10" style={{ marginTop: '-40px' }}>
-        <div className="bg-card border border-border rounded-xl p-6 shadow-lg text-center max-w-sm">
-          <p className="text-sm text-muted-foreground mb-4">
-            The system selected words to form this headline. Now it's your turn!
-          </p>
-          <Button 
-            onClick={handleStartOwn}
-            className="gap-2"
-          >
-            <RotateCcw className="h-4 w-4" />
-            Start Your Own Headline
-          </Button>
-        </div>
+      <div className="absolute inset-0 flex items-center justify-center animate-fade-in z-10" style={{ marginTop: '-100px' }}>
+        <Button 
+          onClick={handleStartOwn}
+          className="gap-2"
+        >
+          <RotateCcw className="h-4 w-4" />
+          Start Your Own Headline
+        </Button>
       </div>
     )}
   </div>;
