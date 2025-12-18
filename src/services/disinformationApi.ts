@@ -62,9 +62,12 @@ export async function checkDisinformation(text: string): Promise<DisinformationS
 
     const data: DisinformationResponse = await response.json();
 
-    // Extract spans from the FALLACY signals
-    const fallacySignal = data.signals?.find(s => s.name === "FALLACY");
-    return fallacySignal?.spans ?? [];
+    // Extract all spans from all signals named "FALLACY"
+    const fallacySpans = data.signals
+      ?.filter(s => s.name === "FALLACY")
+      .flatMap(s => s.spans) ?? [];
+
+    return fallacySpans;
   } catch (error) {
     console.error("checkDisinformation error:", error);
     return null;

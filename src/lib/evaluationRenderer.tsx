@@ -6,6 +6,7 @@
 
 import React from "react";
 import TextFlag from "@/components/TextFlag";
+import RichText from "@/components/RichText.tsx";
 import { DisinformationSpan, getFallacyExplanation } from "@/services/disinformationApi";
 
 interface TextSegment {
@@ -70,11 +71,11 @@ export function renderTextWithFlags(
   // Render segments to React nodes
   return segments.map((segment, index) => {
     if (segment.type === "text") {
-      return <React.Fragment key={index}>{segment.content}</React.Fragment>;
+      return <RichText key={index} text={segment.content} inline />;
     }
 
     const explanation = getFallacyExplanation(segment.span!.value);
-    
+
     return (
       <TextFlag
         key={index}

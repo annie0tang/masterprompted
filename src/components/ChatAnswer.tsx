@@ -113,11 +113,11 @@ const ChatAnswer = ({
 
   const canShowDiff = answerArray.length > 1 && currentIndex > 0;
   const originalAnswer = canShowDiff ? answerArray[0].replace(/\\n/g, '\n') : "";
-  
-  const diffResult: DiffPart[] = showDiff && canShowDiff 
-    ? diffWordsWithNewlineProtection(originalAnswer, formattedText) 
+
+  const diffResult: DiffPart[] = showDiff && canShowDiff
+    ? diffWordsWithNewlineProtection(originalAnswer, formattedText)
     : [];
-  
+
   useLayoutEffect(() => {
     if (showDiff && scrollContainerRef.current) {
       const scrollContainerTop = scrollContainerRef.current.getBoundingClientRect().top;
@@ -195,23 +195,26 @@ const ChatAnswer = ({
     <div className={cn(answerVariants({ variant }))}>
       <div className="flex items-center justify-between mb-3 pb-2 border-b border-border">
         <div className="flex items-center gap-4">
-          {canShowDiff && (
-            <div className="flex items-center space-x-2" id='show-diff-switch'>
-              <Switch
-                id={`show-diff-${threadIndex}`}
-                checked={showDiff}
-                onCheckedChange={onToggleDiff}
-                disabled={showEvaluation}
-              />
-              <Label htmlFor={`show-diff-${threadIndex}`} className="text-sm text-muted-foreground">
-                {t('components.chatAnswer.showChanges')}
-              </Label>
-              <button onClick={() => toggleDiffHelp()}>
-                <CircleQuestionMark className="-ml-1 h-4 w-4 text-muted-foreground" />
-              </button>
-            </div>
-          )}
-          
+          <div className="flex items-center space-x-2" id='show-diff-switch'>
+            <Switch
+              id={`show-diff-${threadIndex}`}
+              checked={showDiff}
+              onCheckedChange={onToggleDiff}
+              disabled={!canShowDiff || showEvaluation}
+            />
+            <Label
+              htmlFor={`show-diff-${threadIndex}`}
+              className={cn("text-sm text-muted-foreground flex items-center gap-1", !canShowDiff && "opacity-50")}
+            >
+              {t('components.chatAnswer.showChanges')}
+              {canShowDiff && (
+                <button onClick={(e) => { e.preventDefault(); toggleDiffHelp(); }} className="flex-shrink-0">
+                  <CircleQuestionMark className="h-4 w-4 text-muted-foreground" />
+                </button>
+              )}
+            </Label>
+          </div>
+
           <div className="flex items-center space-x-2">
             <Switch
               id={`show-evaluation-${threadIndex}`}
@@ -225,7 +228,7 @@ const ChatAnswer = ({
             </Label>
           </div>
         </div>
-        
+
         {showDiff && canShowDiff && (
           <div className="flex items-center gap-3 text-xs px-2">
             <div className="flex items-center gap-1">
@@ -237,7 +240,7 @@ const ChatAnswer = ({
           </div>
         )}
       </div>
-      
+
       <div id="chat-body" className="prose max-w-none text-foreground leading-relaxed">
         {showEvaluation ? (
           renderEvaluation()
