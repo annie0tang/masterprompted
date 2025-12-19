@@ -101,15 +101,18 @@ export function WordTreeDiagram({
   // Default complete path: "European Union Reaches On Historic AI Ethics Framework"
   const defaultSelections: (string | null)[] = ["European Union", "Reaches", "On", "Historic", "AI", "Ethics", "Framework"];
   
-  // Intro animation states
-  const [isIntroAnimating, setIsIntroAnimating] = useState(true);
+  // Intro animation states - DISABLED: Set to skip intro and start interactive immediately
+  // To re-enable intro animation, change these initial values:
+  // - isIntroAnimating: true, isIntroComplete: false, isInteractive: false
+  // - unlockedLevel: 0, selections: ["European Union", null, null, null, null, null, null]
+  const [isIntroAnimating, setIsIntroAnimating] = useState(false);
   const [introLevel, setIntroLevel] = useState(0);
   const [isIntroComplete, setIsIntroComplete] = useState(false);
-  const [isInteractive, setIsInteractive] = useState(false);
+  const [isInteractive, setIsInteractive] = useState(true);
   
-  // Track unlocked level (starts at 0 during intro, then 7 after)
-  const [unlockedLevel, setUnlockedLevel] = useState(0);
-  // Track selected words at each level (starts empty during intro)
+  // Track unlocked level (starts at 1 for immediate interactivity)
+  const [unlockedLevel, setUnlockedLevel] = useState(1);
+  // Track selected words at each level (starts with root only for immediate interactivity)
   const [selections, setSelections] = useState<(string | null)[]>(["European Union", null, null, null, null, null, null]);
   
   // Track history of selections - words that were selected before user went back and chose differently
