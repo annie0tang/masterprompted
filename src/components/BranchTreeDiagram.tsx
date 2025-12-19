@@ -324,6 +324,43 @@ export function BranchTreeDiagram({
   const [currentLevel, setCurrentLevel] = useState(1);
   // Track if user has made their first selection (to show greyed hint state initially)
   const [hasUserSelected, setHasUserSelected] = useState(false);
+
+  // Sync internal selections with incoming selectedPath prop
+  useEffect(() => {
+    if (selectedPath && selectedPath.length > 0) {
+      // Try to find a matching path in treePaths
+      const matchingPath = treePaths.find(tp => {
+        // Check if selectedPath matches the start of this tree path
+        for (let i = 0; i < Math.min(selectedPath.length, tp.words.length); i++) {
+          // Handle "European Union" vs ["European", "Union"] mismatch
+          if (i === 0 && (selectedPath[0] === "European" || selectedPath[0] === "European Union")) {
+            continue; // Skip root comparison, always matches
+          }
+          // For tree paths, index maps differently due to "European Union" being one word
+          const treeIdx = i;
+          const selectedIdx = selectedPath[0] === "European" ? i + 1 : i;
+          if (selectedIdx >= selectedPath.length) break;
+          if (tp.words[treeIdx]?.toLowerCase() !== selectedPath[selectedIdx]?.toLowerCase()?.replace(/[,.]$/g, '')) {
+            return false;
+          }
+        }
+        return true;
+      });
+
+      if (matchingPath) {
+        const newSelections: (string | null)[] = [null, null, null, null, null, null, null];
+        // Calculate how many levels are selected
+        const pathLength = selectedPath[0] === "European" ? selectedPath.length - 1 : selectedPath.length;
+        
+        for (let i = 0; i < Math.min(pathLength, 7); i++) {
+          newSelections[i] = matchingPath.words[i];
+        }
+        setSelections(newSelections);
+        setCurrentLevel(Math.min(pathLength, 7));
+        if (pathLength > 1) setHasUserSelected(true);
+      }
+    }
+  }, []);
   const [isAnimating, setIsAnimating] = useState(false);
   const [animatedWord, setAnimatedWord] = useState<string | null>(null);
   const [showSelectionMessage, setShowSelectionMessage] = useState(false);
