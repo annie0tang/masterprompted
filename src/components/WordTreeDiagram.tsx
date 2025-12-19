@@ -112,8 +112,10 @@ export function WordTreeDiagram({
   
   // Track unlocked level (starts at 1 for immediate interactivity)
   const [unlockedLevel, setUnlockedLevel] = useState(1);
-  // Track selected words at each level (starts with root only for immediate interactivity)
-  const [selections, setSelections] = useState<(string | null)[]>(["European Union", null, null, null, null, null, null]);
+  // Track selected words at each level - starts with full sentence visible but greyed
+  const [selections, setSelections] = useState<(string | null)[]>(defaultSelections);
+  // Track if user has made their first selection (to show greyed hint state initially)
+  const [hasUserSelected, setHasUserSelected] = useState(false);
   
   // Track history of selections - words that were selected before user went back and chose differently
   // Each entry: { level, word, pathPrefix, yPosition (exact position when selected) }
@@ -246,6 +248,11 @@ export function WordTreeDiagram({
 
   // Handle word selection - unlock next level
   const handleWordClick = (level: number, word: string) => {
+    // Mark that user has made their first selection
+    if (!hasUserSelected) {
+      setHasUserSelected(true);
+    }
+    
     const newSelections = [...selections];
     
     // Save current selections from this level onwards to history before clearing
@@ -619,13 +626,13 @@ export function WordTreeDiagram({
         <div className="mb-4 p-4 bg-muted/30 rounded-lg flex items-center justify-between">
           <div className="min-w-0 flex-1">
             <p className="text-xs text-muted-foreground mb-2 uppercase tracking-wide">
-              {isIntroAnimating ? "System generating headline:" : "Current Headline:"}
+              {isIntroAnimating ? "System generating headline:" : hasUserSelected ? "Current Headline:" : "Select words from the tree below to build your headline:"}
             </p>
             <p className="text-xl font-medium text-foreground">
               {(() => {
-                const words = (displayHeadline || "European Union").split(" ");
                 // During intro animation, highlight the word being selected
                 if (isIntroAnimating && introLevel > 0) {
+                  const words = (displayHeadline || "European Union").split(" ");
                   return words.map((word, idx) => (
                     <span key={idx}>
                       {idx > 0 && " "}
@@ -637,7 +644,25 @@ export function WordTreeDiagram({
                     </span>
                   ));
                 }
-                // Normal display logic
+                
+                // Show full sentence with greyed-out selectable words when user hasn't selected yet
+                if (!hasUserSelected && isInteractive) {
+                  // Show the default sentence with "European Union" normal and rest greyed
+                  const defaultWords = defaultSelections.filter(Boolean) as string[];
+                  return defaultWords.map((word, idx) => (
+                    <span key={idx}>
+                      {idx > 0 && " "}
+                      <span className={cn(
+                        idx === 0 ? "" : "text-muted-foreground/50"
+                      )}>
+                        {word}
+                      </span>
+                    </span>
+                  ));
+                }
+                
+                // Normal display logic after user has made selections
+                const words = (displayHeadline || "European Union").split(" ");
                 if (!headline && !isIntroComplete) {
                   const lastWord = words.pop();
                   const prefix = words.join(" ");
@@ -650,8 +675,8 @@ export function WordTreeDiagram({
                 }
                 return words.join(" ");
               })()}
-              {headline && !isIntroAnimating && <span className={cn("px-1 rounded ml-1", isInteractive ? "bg-green-200 text-green-900" : "")}>{headline}</span>}
-              {!headline && displayHeadline && !isIntroAnimating && <span className="text-muted-foreground/50">...</span>}
+              {headline && !isIntroAnimating && hasUserSelected && <span className={cn("px-1 rounded ml-1", isInteractive ? "bg-green-200 text-green-900" : "")}>{headline}</span>}
+              {!headline && displayHeadline && !isIntroAnimating && hasUserSelected && <span className="text-muted-foreground/50">...</span>}
             </p>
           </div>
           {/* Reset button - only show when interactive */}
