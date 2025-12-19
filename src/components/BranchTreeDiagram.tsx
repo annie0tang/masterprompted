@@ -319,9 +319,11 @@ export function BranchTreeDiagram({
   const [isIntroComplete, setIsIntroComplete] = useState(false);
   const [isInteractive, setIsInteractive] = useState(true);
   
-  // Track selections at each level (starts with root only for immediate interactivity)
-  const [selections, setSelections] = useState<(string | null)[]>(["European Union", null, null, null, null, null, null]);
+  // Track selections at each level - starts with full sentence visible but greyed
+  const [selections, setSelections] = useState<(string | null)[]>(defaultSelections);
   const [currentLevel, setCurrentLevel] = useState(1);
+  // Track if user has made their first selection (to show greyed hint state initially)
+  const [hasUserSelected, setHasUserSelected] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [animatedWord, setAnimatedWord] = useState<string | null>(null);
   const [showSelectionMessage, setShowSelectionMessage] = useState(false);
@@ -428,6 +430,11 @@ export function BranchTreeDiagram({
   // Handle word selection
   const handleWordClick = (level: number, word: string) => {
     if (!isInteractive) return;
+    
+    // Mark that user has made their first selection
+    if (!hasUserSelected) {
+      setHasUserSelected(true);
+    }
     
     const newSelections = [...selections];
 
@@ -560,13 +567,13 @@ export function BranchTreeDiagram({
       <div className="flex items-center justify-between bg-card rounded-lg px-4 py-3 border border-border/50">
         <div className="flex-1 min-w-0">
           <p className="text-xs text-muted-foreground mb-2 uppercase tracking-wide">
-            {isIntroAnimating ? "System generating headline:" : "Current Headline:"}
+            {isIntroAnimating ? "System generating headline:" : hasUserSelected ? "Current Headline:" : "Select words from the tree below to build your headline:"}
           </p>
           <p className="text-xl font-medium text-foreground">
             {(() => {
-              const words = (displayHeadline || "European Union").split(" ");
               // During intro animation, highlight the word being selected
               if (isIntroAnimating && introLevel > 0) {
+                const words = (displayHeadline || "European Union").split(" ");
                 return words.map((word, idx) => (
                   <span key={idx}>
                     {idx > 0 && " "}
@@ -578,7 +585,25 @@ export function BranchTreeDiagram({
                   </span>
                 ));
               }
-              // Normal display logic
+              
+              // Show full sentence with greyed-out selectable words when user hasn't selected yet
+              if (!hasUserSelected && isInteractive) {
+                // Show the default sentence with "European Union" normal and rest greyed
+                const defaultWords = defaultSelections.filter(Boolean) as string[];
+                return defaultWords.map((word, idx) => (
+                  <span key={idx}>
+                    {idx > 0 && " "}
+                    <span className={cn(
+                      idx === 0 ? "" : "text-muted-foreground/50"
+                    )}>
+                      {word}
+                    </span>
+                  </span>
+                ));
+              }
+              
+              // Normal display logic after user has made selections
+              const words = (displayHeadline || "European Union").split(" ");
               if (!completeHeadline && !isIntroComplete) {
                 const lastWord = words.pop();
                 const prefix = words.join(" ");
@@ -591,8 +616,8 @@ export function BranchTreeDiagram({
               }
               return words.join(" ");
             })()}
-            {completeHeadline && !isIntroAnimating && <span className={cn("px-1 rounded ml-1", isInteractive ? "bg-green-200 text-green-900" : "")}>{completeHeadline}</span>}
-            {!completeHeadline && displayHeadline && !isIntroAnimating && <span className="text-muted-foreground/50">...</span>}
+            {completeHeadline && !isIntroAnimating && hasUserSelected && <span className={cn("px-1 rounded ml-1", isInteractive ? "bg-green-200 text-green-900" : "")}>{completeHeadline}</span>}
+            {!completeHeadline && displayHeadline && !isIntroAnimating && hasUserSelected && <span className="text-muted-foreground/50">...</span>}
           </p>
         </div>
         {/* Reset button - only show when interactive */}
