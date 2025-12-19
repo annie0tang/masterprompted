@@ -310,13 +310,16 @@ export function BranchTreeDiagram({
   // Default complete path: "European Union Reaches On Historic AI Ethics Framework"
   const defaultSelections: (string | null)[] = ["European Union", "Reaches", "On", "Historic", "AI", "Ethics", "Framework"];
   
-  // Intro animation states
-  const [isIntroAnimating, setIsIntroAnimating] = useState(true);
+  // Intro animation states - DISABLED: Set to skip intro and start interactive immediately
+  // To re-enable intro animation, change these initial values:
+  // - isIntroAnimating: true, isIntroComplete: false, isInteractive: false
+  // - currentLevel: 1
+  const [isIntroAnimating, setIsIntroAnimating] = useState(false);
   const [introLevel, setIntroLevel] = useState(0);
   const [isIntroComplete, setIsIntroComplete] = useState(false);
-  const [isInteractive, setIsInteractive] = useState(false);
+  const [isInteractive, setIsInteractive] = useState(true);
   
-  // Track selections at each level (starts with root only during intro)
+  // Track selections at each level (starts with root only for immediate interactivity)
   const [selections, setSelections] = useState<(string | null)[]>(["European Union", null, null, null, null, null, null]);
   const [currentLevel, setCurrentLevel] = useState(1);
   const [isAnimating, setIsAnimating] = useState(false);
