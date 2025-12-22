@@ -548,25 +548,27 @@ export function WordTreeDiagram({
     if (unlockedLevel > 1 && containerRef.current) {
       // Wait for the new level to render
       requestAnimationFrame(() => {
-        const currentLevelEl = levelRefs.current[unlockedLevel - 1];
-        if (currentLevelEl && containerRef.current) {
-          const containerRect = containerRef.current.getBoundingClientRect();
-          const levelRect = currentLevelEl.getBoundingClientRect();
-          
-          // Horizontal scroll - show previous level and current level
-          if (unlockedLevel > 2) {
-            const prevLevelEl = levelRefs.current[unlockedLevel - 1];
-            if (prevLevelEl) {
-              const scrollLeft = containerRef.current.scrollLeft + levelRect.left - containerRect.left - 50;
-              containerRef.current.scrollTo({
-                left: scrollLeft,
-                behavior: 'smooth'
-              });
-            }
+        if (!containerRef.current) return;
+        const containerRect = containerRef.current.getBoundingClientRect();
+        
+        // Horizontal scroll - show previous level and current level
+        if (unlockedLevel > 2) {
+          const prevLevelEl = levelRefs.current[unlockedLevel - 1];
+          if (prevLevelEl) {
+            const levelRect = prevLevelEl.getBoundingClientRect();
+            const scrollLeft = containerRef.current.scrollLeft + levelRect.left - containerRect.left - 50;
+            containerRef.current.scrollTo({
+              left: scrollLeft,
+              behavior: 'smooth'
+            });
           }
-          
-          // Vertical scroll - find the selected node and scroll to keep it visible
-          const selectedNode = currentLevelEl.querySelector('[data-selected="true"]');
+        }
+        
+        // Vertical scroll - look at the most recently selected level to find its selected node
+        const lastSelectedLevel = unlockedLevel - 1;
+        const lastSelectedLevelEl = levelRefs.current[lastSelectedLevel];
+        if (lastSelectedLevelEl) {
+          const selectedNode = lastSelectedLevelEl.querySelector('[data-selected="true"]');
           if (selectedNode) {
             const nodeRect = selectedNode.getBoundingClientRect();
             const containerTop = containerRect.top;
@@ -575,13 +577,31 @@ export function WordTreeDiagram({
             const nodeBottom = nodeRect.bottom;
             
             // If node is above or below the visible area, scroll to center it
-            if (nodeTop < containerTop + 50 || nodeBottom > containerBottom - 50) {
+            if (nodeTop < containerTop + 80 || nodeBottom > containerBottom - 80) {
               const scrollTop = containerRef.current.scrollTop + (nodeTop - containerTop) - (containerRect.height / 2) + (nodeRect.height / 2);
               containerRef.current.scrollTo({
                 top: Math.max(0, scrollTop),
                 behavior: 'smooth'
               });
             }
+          }
+        }
+        
+        // Also check the current frontier level options
+        const frontierLevelEl = levelRefs.current[unlockedLevel];
+        if (frontierLevelEl) {
+          const frontierRect = frontierLevelEl.getBoundingClientRect();
+          const containerTop = containerRect.top;
+          const containerBottom = containerRect.bottom;
+          
+          // Check if any part of the frontier level is cut off
+          if (frontierRect.top < containerTop + 50 || frontierRect.bottom > containerBottom - 50) {
+            // Center the frontier level vertically
+            const scrollTop = containerRef.current.scrollTop + (frontierRect.top + frontierRect.height / 2 - containerTop) - (containerRect.height / 2);
+            containerRef.current.scrollTo({
+              top: Math.max(0, scrollTop),
+              behavior: 'smooth'
+            });
           }
         }
       });
@@ -621,7 +641,7 @@ export function WordTreeDiagram({
   };
   const nodeHeight = 44;
   const levelGap = 85;
-  const containerHeight = 540;
+  const containerHeight = 700; // Increased to ensure all branching paths are visible
 
   // Get Y position for a node, optionally centered around a reference Y
   const getNodeY = (idx: number, count: number, centerY?: number) => {

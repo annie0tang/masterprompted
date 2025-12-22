@@ -607,7 +607,7 @@ export function BranchTreeDiagram({
     : [20, 100, 180, 260, 340, 420, 500];   // Normal compact view
   const baseSpread = 180; // Keep constant for consistent branch shape
   const svgWidth = closeUpView ? 1400 : 600;
-  const svgHeight = 400;
+  const svgHeight = 500; // Increased to ensure all branching paths are visible
 
   // Build current headline
   const buildHeadline = (): string => {
@@ -721,10 +721,10 @@ export function BranchTreeDiagram({
       <div className="flex flex-col gap-4">
         {/* Branch visualization - card style */}
         <div className="bg-card rounded-xl shadow-sm overflow-hidden">
-        <div className="overflow-x-auto overflow-y-auto max-h-[400px]" ref={scrollContainerRef}>
+        <div className="overflow-x-auto overflow-y-auto max-h-[500px]" ref={scrollContainerRef}>
           <div className={cn("p-6", closeUpView ? "min-w-[1600px]" : "min-w-[600px]")}>
             <svg 
-              className={cn("w-full", closeUpView ? "h-[320px]" : "h-[320px]")} 
+              className={cn("w-full", closeUpView ? "h-[420px]" : "h-[420px]")}
               viewBox={closeUpView ? `0 0 1400 ${svgHeight}` : `0 0 ${svgWidth} ${svgHeight}`} 
               preserveAspectRatio="xMidYMid meet"
             >
