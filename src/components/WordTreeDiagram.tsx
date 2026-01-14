@@ -552,31 +552,33 @@ export function WordTreeDiagram({
   };
 
   // Auto-scroll when unlocked level changes (and selections update)
-  // Ensures the newly unlocked options (and the last selection) stay visible both horizontally and vertically.
+  // Only scroll horizontally within the container, not the full page
   // Only scroll after user has made their first selection (not during intro animation)
   useEffect(() => {
     if (unlockedLevel < 1) return;
     if (!hasUserSelected) return; // Don't auto-scroll during intro or before user interaction
+    if (!containerRef.current) return;
 
     requestAnimationFrame(() => {
       const targetLevel = Math.min(unlockedLevel, 6);
       const levelEl = levelRefs.current[targetLevel];
       if (!levelEl) return;
 
-      // Prefer scrolling to the newly unlocked options (frontier) so the user can continue.
-      const optionButtons = Array.from(
-        levelEl.querySelectorAll<HTMLButtonElement>('button[data-word]')
-      );
-
-      const isFrontier = selections[targetLevel] == null;
-      const target = isFrontier
-        ? optionButtons[optionButtons.length - 1] ?? optionButtons[0] ?? levelEl
-        : (levelEl.querySelector<HTMLElement>('[data-selected="true"]') ?? levelEl);
-
-      (target as HTMLElement).scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-        inline: 'center',
+      // Only scroll horizontally within the tree container, not the page
+      const container = containerRef.current;
+      if (!container) return;
+      
+      const levelRect = levelEl.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+      
+      // Calculate scroll position to center the target level horizontally
+      const levelCenterX = levelRect.left + levelRect.width / 2;
+      const containerCenterX = containerRect.left + containerRect.width / 2;
+      const scrollOffset = levelCenterX - containerCenterX;
+      
+      container.scrollBy({
+        left: scrollOffset,
+        behavior: 'smooth'
       });
     });
   }, [unlockedLevel, selections, hasUserSelected]);
