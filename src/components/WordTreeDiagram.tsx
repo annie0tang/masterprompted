@@ -901,7 +901,7 @@ export function WordTreeDiagram({
           </div>
         ))}
 
-        {/* "+N more" badge at the bottom */}
+        {/* "+N more" badge with explanation at the bottom */}
         {level > 0 && level <= unlockedLevel && (
           <div
             style={{
@@ -912,8 +912,13 @@ export function WordTreeDiagram({
               pointerEvents: "none",
             }}
           >
-            <div className="text-[10px] text-muted-foreground/40 whitespace-nowrap">
-              +{moreCount} more
+            <div className="flex flex-col items-center gap-0.5">
+              <div className="text-[10px] text-muted-foreground/50 whitespace-nowrap">
+                +{moreCount} more
+              </div>
+              <div className="text-[9px] text-muted-foreground/30 whitespace-nowrap italic">
+                LLM considers many candidates
+              </div>
             </div>
           </div>
         )}
