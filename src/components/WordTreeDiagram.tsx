@@ -353,6 +353,13 @@ export function WordTreeDiagram({
     yPosition: number;
   }>>([]);
 
+  // Ghost tooltip hover state - tracks mouse position
+  const [ghostTooltip, setGhostTooltip] = useState<{ visible: boolean; x: number; y: number }>({
+    visible: false,
+    x: 0,
+    y: 0,
+  });
+
   // Animation states per level
   const [animatingLevel, setAnimatingLevel] = useState<number | null>(null);
   const [animatedWord, setAnimatedWord] = useState<string | null>(null);
@@ -756,7 +763,7 @@ export function WordTreeDiagram({
         {/* Ghost elements container - wraps all ghost UI with hover detection */}
         {level > 0 && level <= unlockedLevel && (
           <div
-            className="group/ghost cursor-default"
+            className="cursor-default"
             style={{
               position: "absolute",
               top: 0,
@@ -768,6 +775,9 @@ export function WordTreeDiagram({
           >
             {/* Invisible hover target spanning ghost elements */}
             <div
+              onMouseEnter={(e) => setGhostTooltip({ visible: true, x: e.clientX, y: e.clientY })}
+              onMouseMove={(e) => setGhostTooltip({ visible: true, x: e.clientX, y: e.clientY })}
+              onMouseLeave={() => setGhostTooltip({ visible: false, x: 0, y: 0 })}
               style={{
                 position: "absolute",
                 top: dotAboveTops[1] - 8,
@@ -790,9 +800,9 @@ export function WordTreeDiagram({
                 }}
               >
                 <div
-                  className="px-3 py-1.5 rounded-md text-xs border border-dashed whitespace-nowrap transition-opacity duration-200 group-hover/ghost:opacity-60"
+                  className="px-3 py-1.5 rounded-md text-xs border border-dashed whitespace-nowrap transition-opacity duration-200"
                   style={{
-                    opacity: 0.35,
+                    opacity: ghostTooltip.visible ? 0.6 : 0.35,
                     borderColor: "hsl(var(--muted-foreground))",
                     color: "hsl(var(--muted-foreground))",
                   }}
@@ -814,11 +824,11 @@ export function WordTreeDiagram({
                 }}
               >
                 <div
-                  className="rounded-full bg-muted-foreground transition-opacity duration-200 group-hover/ghost:opacity-50"
+                  className="rounded-full bg-muted-foreground transition-opacity duration-200"
                   style={{
                     width: dotSizes[idx],
                     height: dotSizes[idx],
-                    opacity: Math.max(0.08, 0.26 - idx * 0.1),
+                    opacity: ghostTooltip.visible ? 0.5 : Math.max(0.08, 0.26 - idx * 0.1),
                   }}
                 />
               </div>
@@ -836,9 +846,9 @@ export function WordTreeDiagram({
                 }}
               >
                 <div
-                  className="px-3 py-1.5 rounded-md text-xs border border-dashed whitespace-nowrap transition-opacity duration-200 group-hover/ghost:opacity-60"
+                  className="px-3 py-1.5 rounded-md text-xs border border-dashed whitespace-nowrap transition-opacity duration-200"
                   style={{
-                    opacity: 0.35,
+                    opacity: ghostTooltip.visible ? 0.6 : 0.35,
                     borderColor: "hsl(var(--muted-foreground))",
                     color: "hsl(var(--muted-foreground))",
                   }}
@@ -860,11 +870,11 @@ export function WordTreeDiagram({
                 }}
               >
                 <div
-                  className="rounded-full bg-muted-foreground transition-opacity duration-200 group-hover/ghost:opacity-50"
+                  className="rounded-full bg-muted-foreground transition-opacity duration-200"
                   style={{
                     width: dotSizes[idx],
                     height: dotSizes[idx],
-                    opacity: Math.max(0.08, 0.26 - idx * 0.1),
+                    opacity: ghostTooltip.visible ? 0.5 : Math.max(0.08, 0.26 - idx * 0.1),
                   }}
                 />
               </div>
@@ -880,14 +890,13 @@ export function WordTreeDiagram({
               }}
             >
               <div className="flex flex-col items-center gap-1">
-                <div className="text-[10px] text-muted-foreground/50 whitespace-nowrap transition-all duration-200 group-hover/ghost:text-muted-foreground/80">
+                <div
+                  className="text-[10px] whitespace-nowrap transition-all duration-200"
+                  style={{
+                    color: ghostTooltip.visible ? "hsl(var(--muted-foreground) / 0.8)" : "hsl(var(--muted-foreground) / 0.5)",
+                  }}
+                >
                   +{moreCount} more
-                </div>
-                {/* Hover explanation - appears on hover */}
-                <div className="opacity-0 group-hover/ghost:opacity-100 transition-opacity duration-300 max-w-[160px]">
-                  <div className="text-[9px] text-muted-foreground/70 text-center leading-tight px-2 py-1.5 bg-muted/90 rounded-md border border-border/50">
-                    At each step, the LLM evaluates thousands of possible next tokens and assigns a probability to each one
-                  </div>
                 </div>
               </div>
             </div>
@@ -1173,5 +1182,22 @@ export function WordTreeDiagram({
             Start Your Own Headline
           </Button>
         </div>}
+      
+      {/* Floating tooltip for ghost elements - follows mouse */}
+      {ghostTooltip.visible && (
+        <div
+          className="fixed z-50 pointer-events-none animate-fade-in"
+          style={{
+            left: ghostTooltip.x + 16,
+            top: ghostTooltip.y + 16,
+          }}
+        >
+          <div className="bg-card border border-border shadow-lg rounded-lg px-4 py-3 max-w-[280px]">
+            <p className="text-sm text-foreground leading-relaxed">
+              At each step, the LLM evaluates <strong>thousands of possible next tokens</strong> and assigns a probability to each one. Only the top candidates are shown here.
+            </p>
+          </div>
+        </div>
+      )}
     </div>;
 }
