@@ -1125,8 +1125,9 @@ export function WordTreeDiagram({
               return (
                 <React.Fragment key={level}>
                   {renderConnector(level - 1, level)}
+                  {renderLevel(level)}
                   
-                  {/* Monitor button column - between connector and frontier level */}
+                  {/* Monitor button column - after the frontier level word selections */}
                   {isCurrentFrontier && (
                     <div 
                       className="relative flex items-center justify-center" 
@@ -1160,8 +1161,6 @@ export function WordTreeDiagram({
                       </div>
                     </div>
                   )}
-                  
-                  {renderLevel(level)}
                 </React.Fragment>
               );
             })}
