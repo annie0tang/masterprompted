@@ -610,9 +610,9 @@ export function BranchTreeDiagram({
     : [leftPadding, leftPadding + 120, leftPadding + 240, leftPadding + 360, leftPadding + 480, leftPadding + 600, leftPadding + 720];
   const baseSpread = 320; // Increased for better separation of branches
   // Dynamic height that increases with each selection level
-  const baseHeight = 400;
+  const baseHeight = 460;
   const heightPerLevel = 60;
-  const svgHeight = baseHeight + (currentLevel * heightPerLevel); // Grows from 460 to 820 as levels are selected
+  const svgHeight = baseHeight + (currentLevel * heightPerLevel); // Starts at 520 (level 1), grows to 880 (level 7)
 
   const isComplete = selections.filter(Boolean).length >= 7;
 
