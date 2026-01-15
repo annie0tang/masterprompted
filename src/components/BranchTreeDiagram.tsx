@@ -609,12 +609,27 @@ export function BranchTreeDiagram({
 
   const isComplete = selections.filter(Boolean).length >= 7;
 
-  // Extra canvas room for the completion text shown at the end of the tree
-  const completionBoxWidth = closeUpView ? 520 : 420;
-  const completionBoxHeight = 74;
-  const completionBoxGap = closeUpView ? 120 : 80;
+  // Get current level options
+  const currentOptions = currentLevel <= 6 ? getOptionsAtLevel(currentLevel) : [];
+  // Get complete headline match
+  const completeHeadline = currentLevel === 7 
+    ? treePaths.find(p => p.words.every((word, i) => word === selections[i]))?.headline 
+    : null;
 
-  const svgWidth = (closeUpView ? 1400 : 860) + (isComplete ? completionBoxGap + completionBoxWidth : 0);
+  // Dimensions for the last word box (used for positioning the completion callout)
+  const lastWord = selections[6] || "";
+  const lastWordWidth = Math.max(70, lastWord.length * 10 + 16);
+
+  // Completion box sizing - dynamically based on text length (single line, hugging)
+  const completionBoxPaddingX = 16;
+  const completionBoxHeight = 32;
+  const completionLineGap = 8; // gap between last word edge and line start
+  const lineLength = 30; // length of the connecting line
+  const charWidth = 7; // approximate width per character at 12px font
+  const completionTextWidth = completeHeadline ? completeHeadline.length * charWidth : 0;
+  const completionBoxWidth = completionTextWidth + completionBoxPaddingX * 2;
+
+  const svgWidth = (closeUpView ? 1400 : 860) + (isComplete && completeHeadline ? lastWordWidth / 2 + completionLineGap + lineLength + completionBoxWidth + 20 : 0);
 
   // Build current headline
   const buildHeadline = (): string => {
@@ -625,31 +640,6 @@ export function BranchTreeDiagram({
     const match = treePaths.find(p => p.words.every((word, i) => word === selected[i]));
     return match ? `${selected.join(" ")}, ${match.headline}` : selected.join(" ");
   };
-
-  const wrapText = (text: string, maxCharsPerLine: number): string[] => {
-    const words = text.split(/\s+/).filter(Boolean);
-    const lines: string[] = [];
-    let current = "";
-
-    for (const w of words) {
-      const candidate = current ? `${current} ${w}` : w;
-      if (candidate.length <= maxCharsPerLine) {
-        current = candidate;
-      } else {
-        if (current) lines.push(current);
-        current = w;
-      }
-    }
-
-    if (current) lines.push(current);
-    return lines;
-  };
-  // Get current level options
-  const currentOptions = currentLevel <= 6 ? getOptionsAtLevel(currentLevel) : [];
-  // Get complete headline match
-  const completeHeadline = currentLevel === 7 
-    ? treePaths.find(p => p.words.every((word, i) => word === selections[i]))?.headline 
-    : null;
 
   // Build display headline from selections
   const displayHeadline = selections.filter(Boolean).join(" ");
@@ -876,20 +866,18 @@ export function BranchTreeDiagram({
               {isComplete && completeHeadline && selectedFullPath && (() => {
                 const endX = levelXPositions[6];
                 const endY = getSelectedPathY(6);
-                const boxX = endX + completionBoxGap;
+                // Start line after the last word box edge
+                const lineStartX = endX + lastWordWidth / 2 + completionLineGap;
+                const lineEndX = lineStartX + lineLength;
+                const boxX = lineEndX;
                 const boxY = endY - completionBoxHeight / 2;
-                const paddingX = 12;
-                const paddingTop = 26;
-                const lineHeight = 16;
-                const maxChars = closeUpView ? 44 : 34;
-                const lines = wrapText(completeHeadline, maxChars).slice(0, 3);
 
                 return (
                   <g aria-label="Completion">
                     <line
-                      x1={endX + 10}
+                      x1={lineStartX}
                       y1={endY}
-                      x2={boxX}
+                      x2={lineEndX}
                       y2={endY}
                       stroke="hsl(var(--border))"
                       strokeWidth={1}
@@ -900,22 +888,19 @@ export function BranchTreeDiagram({
                       y={boxY}
                       width={completionBoxWidth}
                       height={completionBoxHeight}
-                      rx={10}
+                      rx={6}
                       fill="hsl(var(--card))"
                       stroke="hsl(var(--border))"
                     />
                     <text
-                      x={boxX + paddingX}
-                      y={boxY + paddingTop}
+                      x={boxX + completionBoxPaddingX}
+                      y={endY + 4}
                       textAnchor="start"
+                      dominantBaseline="middle"
                       className="text-[12px] font-medium"
                       fill="hsl(var(--foreground))"
                     >
-                      {lines.map((line, i) => (
-                        <tspan key={i} x={boxX + paddingX} dy={i === 0 ? 0 : lineHeight}>
-                          {line}
-                        </tspan>
-                      ))}
+                      {completeHeadline}
                     </text>
                   </g>
                 );
