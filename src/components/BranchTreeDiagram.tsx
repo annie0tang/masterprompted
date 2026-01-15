@@ -576,12 +576,12 @@ export function BranchTreeDiagram({
     const level4Group = selectedFullPath.words[4] === "AI" ? 0 : 1;
     const level5Group = selectedFullPath.words[5] === "Ethics" ? 0 : 1;
     const level6Group = selectedFullPath.words[6] === "Framework" ? 0 : 1;
-    const y1 = baseY + (level1Group - 0.5) * (spread * 0.5);
-    const y2 = y1 + (level2Group - 0.5) * (spread * 0.35);
-    const y3 = y2 + (level3Group - 0.5) * (spread * 0.25);
-    const y4 = y3 + (level4Group - 0.5) * (spread * 0.18);
-    const y5 = y4 + (level5Group - 0.5) * (spread * 0.12);
-    const y6 = y5 + (level6Group - 0.5) * (spread * 0.08);
+    const y1 = baseY + (level1Group - 0.5) * spread;
+    const y2 = y1 + (level2Group - 0.5) * (spread / 2);
+    const y3 = y2 + (level3Group - 0.5) * (spread / 4);
+    const y4 = y3 + (level4Group - 0.5) * (spread / 8);
+    const y5 = y4 + (level5Group - 0.5) * (spread / 16);
+    const y6 = y5 + (level6Group - 0.5) * (spread / 32);
     const yPositions = [baseY, y1, y2, y3, y4, y5, y6];
     return yPositions[level] || baseY;
   };
@@ -594,12 +594,7 @@ export function BranchTreeDiagram({
     ? [leftPadding, leftPadding + 200, leftPadding + 400, leftPadding + 600, leftPadding + 800, leftPadding + 1000, leftPadding + 1200]
     : [leftPadding, leftPadding + 120, leftPadding + 240, leftPadding + 360, leftPadding + 480, leftPadding + 600, leftPadding + 720];
   const baseSpread = 180; // Keep constant for consistent branch shape
-  
-  // Calculate progressive SVG height based on total vertical spread needed
-  // Total spread = 0.5 + 0.35 + 0.25 + 0.18 + 0.12 + 0.08 = 1.48 * baseSpread per side
-  // Need enough height for full tree expansion with padding
-  const totalSpreadMultiplier = 0.5 + 0.35 + 0.25 + 0.18 + 0.12 + 0.08; // 1.48
-  const svgHeight = Math.max(500, baseSpread * totalSpreadMultiplier * 2 + 120); // ~650px
+  const svgHeight = 500; // Increased to ensure all branching paths are visible
 
   const isComplete = selections.filter(Boolean).length >= 7;
 
@@ -734,9 +729,9 @@ export function BranchTreeDiagram({
         <div className="overflow-x-auto" ref={scrollContainerRef}>
           <div className={cn("p-6", closeUpView ? "min-w-[1600px]" : "min-w-[600px]")}>
             <svg
-              style={{ height: svgHeight }}
+              className="h-[420px]"
               width={closeUpView ? 1400 : svgWidth}
-              height={svgHeight}
+              height={420}
               viewBox={closeUpView ? `0 0 1400 ${svgHeight}` : `0 0 ${svgWidth} ${svgHeight}`}
               preserveAspectRatio="xMinYMid meet"
             >
@@ -752,17 +747,17 @@ export function BranchTreeDiagram({
                 const level5Group = path.words[5] === "Ethics" ? 0 : 1;
                 const level6Group = path.words[6] === "Framework" ? 0 : 1;
 
-                // Calculate Y positions - use progressive expansion for better separation
+                // Calculate Y positions - use constant spread for consistent shape
                 const baseY = svgHeight / 2;
                 const spread = baseSpread;
 
-                // Progressive Y calculation - expanding spread at each level to prevent overlap
-                const y1 = baseY + (level1Group - 0.5) * (spread * 0.5);
-                const y2 = y1 + (level2Group - 0.5) * (spread * 0.35);
-                const y3 = y2 + (level3Group - 0.5) * (spread * 0.25);
-                const y4 = y3 + (level4Group - 0.5) * (spread * 0.18);
-                const y5 = y4 + (level5Group - 0.5) * (spread * 0.12);
-                const y6 = y5 + (level6Group - 0.5) * (spread * 0.08);
+                // Progressive Y calculation
+                const y1 = baseY + (level1Group - 0.5) * spread;
+                const y2 = y1 + (level2Group - 0.5) * (spread / 2);
+                const y3 = y2 + (level3Group - 0.5) * (spread / 4);
+                const y4 = y3 + (level4Group - 0.5) * (spread / 8);
+                const y5 = y4 + (level5Group - 0.5) * (spread / 16);
+                const y6 = y5 + (level6Group - 0.5) * (spread / 32);
                 const points = [{
                   x: levelXPositions[0],
                   y: baseY
@@ -803,7 +798,7 @@ export function BranchTreeDiagram({
               {selectedFullPath && selections.map((word, level) => {
                 if (!word || level > 6) return null;
                 const x = levelXPositions[level];
-                // Recalculate Y - use progressive expansion
+                // Recalculate Y - use constant spread
                 const baseY = svgHeight / 2;
                 const spread = baseSpread;
                 const level1Group = selectedFullPath.words[1] === "Unites" ? 0 : 1;
@@ -811,14 +806,12 @@ export function BranchTreeDiagram({
                 const level3Group = selectedFullPath.words[3] === "Historic" ? 0 : 1;
                 const level4Group = selectedFullPath.words[4] === "AI" ? 0 : 1;
                 const level5Group = selectedFullPath.words[5] === "Ethics" ? 0 : 1;
-                const level6Group = selectedFullPath.words[6] === "Framework" ? 0 : 1;
-                const y1 = baseY + (level1Group - 0.5) * (spread * 0.5);
-                const y2 = y1 + (level2Group - 0.5) * (spread * 0.35);
-                const y3 = y2 + (level3Group - 0.5) * (spread * 0.25);
-                const y4 = y3 + (level4Group - 0.5) * (spread * 0.18);
-                const y5 = y4 + (level5Group - 0.5) * (spread * 0.12);
-                const y6 = y5 + (level6Group - 0.5) * (spread * 0.08);
-                const yPositions = [baseY, y1, y2, y3, y4, y5, y6];
+                const y1 = baseY + (level1Group - 0.5) * spread;
+                const y2 = y1 + (level2Group - 0.5) * (spread / 2);
+                const y3 = y2 + (level3Group - 0.5) * (spread / 4);
+                const y4 = y3 + (level4Group - 0.5) * (spread / 8);
+                const y5 = y4 + (level5Group - 0.5) * (spread / 16);
+                const yPositions = [baseY, y1, y2, y3, y4, y5, y5];
                 const y = yPositions[level] || baseY;
                 const isClickable = level > 0;
                 const handleWordClickOnTree = () => {
@@ -874,49 +867,49 @@ export function BranchTreeDiagram({
                   const hypotheticalSelections = [...selections];
                   hypotheticalSelections[currentLevel] = word;
                   
-                  // Calculate Y using the same progressive expansion logic as the tree paths
+                  // Calculate Y using the same logic as the tree paths
                   let y = baseY;
                   
                   // Level 1 branching
                   if (currentLevel >= 1) {
                     const word1 = currentLevel === 1 ? word : selections[1];
                     const group1 = word1 === "Unites" ? 0 : 1;
-                    y = baseY + (group1 - 0.5) * (spread * 0.5);
+                    y = baseY + (group1 - 0.5) * spread;
                   }
                   
                   // Level 2 branching
                   if (currentLevel >= 2) {
                     const word2 = currentLevel === 2 ? word : selections[2];
                     const group2 = word2 === "On" ? 0 : 1;
-                    y = y + (group2 - 0.5) * (spread * 0.35);
+                    y = y + (group2 - 0.5) * (spread / 2);
                   }
                   
                   // Level 3 branching
                   if (currentLevel >= 3) {
                     const word3 = currentLevel === 3 ? word : selections[3];
                     const group3 = word3 === "Historic" ? 0 : 1;
-                    y = y + (group3 - 0.5) * (spread * 0.25);
+                    y = y + (group3 - 0.5) * (spread / 4);
                   }
                   
                   // Level 4 branching
                   if (currentLevel >= 4) {
                     const word4 = currentLevel === 4 ? word : selections[4];
                     const group4 = word4 === "AI" ? 0 : 1;
-                    y = y + (group4 - 0.5) * (spread * 0.18);
+                    y = y + (group4 - 0.5) * (spread / 8);
                   }
                   
                   // Level 5 branching
                   if (currentLevel >= 5) {
                     const word5 = currentLevel === 5 ? word : selections[5];
                     const group5 = word5 === "Ethics" ? 0 : 1;
-                    y = y + (group5 - 0.5) * (spread * 0.12);
+                    y = y + (group5 - 0.5) * (spread / 16);
                   }
                   
                   // Level 6 branching
                   if (currentLevel >= 6) {
                     const word6 = currentLevel === 6 ? word : selections[6];
                     const group6 = word6 === "Framework" ? 0 : 1;
-                    y = y + (group6 - 0.5) * (spread * 0.08);
+                    y = y + (group6 - 0.5) * (spread / 32);
                   }
                   
                   return y;
