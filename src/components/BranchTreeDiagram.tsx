@@ -626,6 +626,24 @@ export function BranchTreeDiagram({
     return match ? `${selected.join(" ")}, ${match.headline}` : selected.join(" ");
   };
 
+  const wrapText = (text: string, maxCharsPerLine: number): string[] => {
+    const words = text.split(/\s+/).filter(Boolean);
+    const lines: string[] = [];
+    let current = "";
+
+    for (const w of words) {
+      const candidate = current ? `${current} ${w}` : w;
+      if (candidate.length <= maxCharsPerLine) {
+        current = candidate;
+      } else {
+        if (current) lines.push(current);
+        current = w;
+      }
+    }
+
+    if (current) lines.push(current);
+    return lines;
+  };
   // Get current level options
   const currentOptions = currentLevel <= 6 ? getOptionsAtLevel(currentLevel) : [];
   // Get complete headline match
@@ -730,10 +748,12 @@ export function BranchTreeDiagram({
         <div className="bg-card rounded-xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto" ref={scrollContainerRef}>
           <div className={cn("p-6", closeUpView ? "min-w-[1600px]" : "min-w-[600px]")}>
-            <svg 
-              className={cn("w-full", closeUpView ? "h-[420px]" : "h-[420px]")}
-              viewBox={closeUpView ? `0 0 1400 ${svgHeight}` : `0 0 ${svgWidth} ${svgHeight}`} 
-              preserveAspectRatio="xMidYMid meet"
+            <svg
+              className="h-[420px]"
+              width={closeUpView ? 1400 : svgWidth}
+              height={420}
+              viewBox={closeUpView ? `0 0 1400 ${svgHeight}` : `0 0 ${svgWidth} ${svgHeight}`}
+              preserveAspectRatio="xMinYMid meet"
             >
               {/* Draw all paths as branches from a proper tree */}
               {treePaths.map((path, pathIndex) => {
@@ -851,6 +871,55 @@ export function BranchTreeDiagram({
                   </text>
                 </g>;
               })}
+
+              {/* Completion callout rendered directly on the diagram (after final word) */}
+              {isComplete && completeHeadline && selectedFullPath && (() => {
+                const endX = levelXPositions[6];
+                const endY = getSelectedPathY(6);
+                const boxX = endX + completionBoxGap;
+                const boxY = endY - completionBoxHeight / 2;
+                const paddingX = 12;
+                const paddingTop = 26;
+                const lineHeight = 16;
+                const maxChars = closeUpView ? 44 : 34;
+                const lines = wrapText(completeHeadline, maxChars).slice(0, 3);
+
+                return (
+                  <g aria-label="Completion">
+                    <line
+                      x1={endX + 10}
+                      y1={endY}
+                      x2={boxX}
+                      y2={endY}
+                      stroke="hsl(var(--border))"
+                      strokeWidth={1}
+                      opacity={0.9}
+                    />
+                    <rect
+                      x={boxX}
+                      y={boxY}
+                      width={completionBoxWidth}
+                      height={completionBoxHeight}
+                      rx={10}
+                      fill="hsl(var(--card))"
+                      stroke="hsl(var(--border))"
+                    />
+                    <text
+                      x={boxX + paddingX}
+                      y={boxY + paddingTop}
+                      textAnchor="start"
+                      className="text-[12px] font-medium"
+                      fill="hsl(var(--foreground))"
+                    >
+                      {lines.map((line, i) => (
+                        <tspan key={i} x={boxX + paddingX} dy={i === 0 ? 0 : lineHeight}>
+                          {line}
+                        </tspan>
+                      ))}
+                    </text>
+                  </g>
+                );
+              })()}
             </svg>
           </div>
         </div>

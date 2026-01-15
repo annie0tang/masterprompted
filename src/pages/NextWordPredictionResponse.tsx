@@ -43,7 +43,7 @@ export default function HeadlineResponse() {
   const [isAnimatingThird, setIsAnimatingThird] = useState(false);
   const [animatedThirdWord, setAnimatedThirdWord] = useState<string | null>(null);
   const [showHighlightPulseThird, setShowHighlightPulseThird] = useState(false);
-  const [viewMode, setViewMode] = useState<"dropdown" | "tree" | "branch" | "full">("tree");
+  const [viewMode, setViewMode] = useState<"dropdown" | "tree" | "branch" | "full">("branch");
   const [evaluationPanelOpen, setEvaluationPanelOpen] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
 
@@ -70,7 +70,7 @@ export default function HeadlineResponse() {
     setIsAnimatingThird(false);
     setAnimatedThirdWord(null);
     setShowHighlightPulseThird(false);
-    setViewMode("tree");
+    setViewMode("branch");
     setEvaluationPanelOpen(false);
     setHasInteracted(false);
   }, []);
