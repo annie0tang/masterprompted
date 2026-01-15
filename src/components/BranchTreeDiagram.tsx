@@ -410,45 +410,44 @@ export function BranchTreeDiagram({
     return () => clearTimeout(timer);
   }, []);
 
-  // Auto-scroll in close-up view to follow selections (horizontal and vertical)
+  // Auto-scroll horizontally to keep the active selection (and completion) in view
   useEffect(() => {
-    if (scrollContainerRef.current && currentLevel > 1) {
-      requestAnimationFrame(() => {
-        if (!scrollContainerRef.current) return;
-        
-        // Horizontal scroll - calculate scroll position to center on current selection area
-        if (closeUpView) {
-          const scrollX = Math.max(0, (currentLevel - 1) * 200 - 100);
-          scrollContainerRef.current.scrollTo({
-            left: scrollX,
-            behavior: 'smooth'
-          });
-        }
-        
-        // Vertical scroll - find selected path in SVG and scroll to keep it visible
-        const container = scrollContainerRef.current;
-        const containerRect = container.getBoundingClientRect();
-        const svgElement = container.querySelector('svg');
-        if (svgElement) {
-          // Get the selected path element
-          const selectedPath = svgElement.querySelector('path[stroke="rgb(34 197 94)"]');
-          if (selectedPath) {
-            const pathRect = selectedPath.getBoundingClientRect();
-            const pathCenterY = pathRect.top + pathRect.height / 2;
-            const containerCenterY = containerRect.top + containerRect.height / 2;
-            
-            // If the path is too far from center, scroll to it
-            const offset = pathCenterY - containerCenterY;
-            if (Math.abs(offset) > containerRect.height / 4) {
-              container.scrollTo({
-                top: container.scrollTop + offset,
-                behavior: 'smooth'
-              });
-            }
+    const container = scrollContainerRef.current;
+    if (!container || currentLevel <= 1) return;
+
+    requestAnimationFrame(() => {
+      const stepX = closeUpView ? 200 : 120;
+      const isComplete = selections.filter(Boolean).length >= 7;
+
+      // Progressively scroll right as the user advances through levels; once complete, reveal the end.
+      const targetLeft = isComplete
+        ? Math.max(0, container.scrollWidth - container.clientWidth)
+        : Math.max(0, (currentLevel - 2) * stepX);
+
+      container.scrollTo({ left: targetLeft, behavior: "smooth" });
+
+      // Vertical scroll - find selected path in SVG and scroll to keep it visible
+      const containerRect = container.getBoundingClientRect();
+      const svgElement = container.querySelector("svg");
+      if (svgElement) {
+        // Get the selected path element
+        const selectedPath = svgElement.querySelector('path[stroke="rgb(34 197 94)"]');
+        if (selectedPath) {
+          const pathRect = selectedPath.getBoundingClientRect();
+          const pathCenterY = pathRect.top + pathRect.height / 2;
+          const containerCenterY = containerRect.top + containerRect.height / 2;
+
+          // If the path is too far from center, scroll to it
+          const offset = pathCenterY - containerCenterY;
+          if (Math.abs(offset) > containerRect.height / 4) {
+            container.scrollTo({
+              top: container.scrollTop + offset,
+              behavior: "smooth"
+            });
           }
         }
-      });
-    }
+      }
+    });
   }, [currentLevel, closeUpView, selections]);
 
   // Get options at each level based on current selections
@@ -602,12 +601,20 @@ export function BranchTreeDiagram({
   };
 
   // X positions vary based on view mode - close-up spreads words further apart
-  const levelXPositions = closeUpView 
+  const levelXPositions = closeUpView
     ? [40, 240, 440, 640, 840, 1040, 1240] // Wider spacing for close-up (200px apart)
-    : [20, 140, 260, 380, 500, 620, 740];   // Increased spacing for normal view (120px apart)
+    : [20, 140, 260, 380, 500, 620, 740]; // Normal view (120px apart)
   const baseSpread = 180; // Keep constant for consistent branch shape
-  const svgWidth = closeUpView ? 1400 : 860; // Increased width to accommodate new spacing
   const svgHeight = 500; // Increased to ensure all branching paths are visible
+
+  const isComplete = selections.filter(Boolean).length >= 7;
+
+  // Extra canvas room for the completion text shown at the end of the tree
+  const completionBoxWidth = closeUpView ? 520 : 420;
+  const completionBoxHeight = 74;
+  const completionBoxGap = closeUpView ? 120 : 80;
+
+  const svgWidth = (closeUpView ? 1400 : 860) + (isComplete ? completionBoxGap + completionBoxWidth : 0);
 
   // Build current headline
   const buildHeadline = (): string => {
