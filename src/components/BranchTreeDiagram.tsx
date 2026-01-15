@@ -1036,52 +1036,6 @@ export function BranchTreeDiagram({
             </div>}
 
             {currentLevel <= 6 ? <div className="flex items-center gap-3">
-              <div className="flex gap-2">
-                {currentOptions.map(({
-                  word,
-                  probability
-                }) => {
-                const isAnimated = animatedWord === word;
-                const flagConfig = TOKEN_FLAGS[word];
-                const isFlagged = !!flagConfig;
-                const isHighestProb = showSelectionMessage && isAnimated;
-
-                // Determine container styles based on severity
-                const getSeverityStyles = (severity?: string) => {
-                  switch (severity) {
-                    case 'error':
-                      return "border-destructive bg-destructive/5 hover:bg-destructive/10 focus:ring-destructive/50";
-                    case 'warning':
-                      return "border-yellow-500 bg-yellow-50 hover:bg-yellow-100 focus:ring-yellow-500/50";
-                    case 'info':
-                      return "border-blue-500 bg-blue-50 hover:bg-blue-100 focus:ring-blue-500/50";
-                    default:
-                      return "border-destructive bg-destructive/5 hover:bg-destructive/10 focus:ring-destructive/50";
-                  }
-                };
-
-                const flaggedStyles = isFlagged ? getSeverityStyles(flagConfig.props.severity) : "";
-                const defaultStyles = "border-border bg-card hover:border-primary hover:bg-primary/5 focus:ring-primary/50";
-
-                return <button key={word} onClick={() => handleWordClick(currentLevel, word)} disabled={isAnimating || !isInteractive} className={cn("text-left px-4 py-2 rounded-lg border-2 transition-all duration-200", "focus:outline-none focus:ring-2 focus:ring-offset-2", isFlagged ? flaggedStyles : defaultStyles, isAnimated && !isHighestProb && "ring-2 ring-primary ring-offset-2 bg-primary/10 border-primary", isHighestProb && "ring-4 ring-primary ring-offset-2 bg-primary text-primary-foreground border-primary shadow-lg")}>
-                  <div className={cn("font-semibold text-sm", isFlagged && !isHighestProb ? "text-destructive" : "", isHighestProb ? "text-primary-foreground" : "text-foreground")}>
-                    {isFlagged ? (
-                      <TextFlag
-                        text={word}
-                        {...flagConfig.props}
-                        className={cn(
-                          isHighestProb ? "text-primary-foreground no-underline decoration-0" : ""
-                        )}
-                        noUnderline={isHighestProb || flagConfig.props.noUnderline}
-                      />
-                    ) : word}
-                  </div>
-                  <div className={cn("text-xs mt-0.5", isHighestProb ? "text-primary-foreground/80" : "text-muted-foreground")}>
-                    {(probability * 100).toFixed(0)}%
-                  </div>
-                </button>;
-              })}
-              </div>
               {isInteractive && <Button variant="ghost" size="sm" onClick={playAnimation} disabled={isAnimating} className="h-7 gap-1.5 text-xs text-muted-foreground hover:text-foreground" title="Watch LLM select highest probability">
                 <Monitor className={cn("h-3.5 w-3.5", isAnimating && "text-primary animate-pulse")} />
                 Auto-select
