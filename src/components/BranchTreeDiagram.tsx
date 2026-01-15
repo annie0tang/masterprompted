@@ -1138,34 +1138,6 @@ export function BranchTreeDiagram({
               )}
             </div>}
 
-            {/* Selected words trail */}
-            {isInteractive && currentLevel > 1 && currentLevel <= 6 && <div className="flex items-center gap-2 ml-auto">
-              <span className="text-xs font-medium text-muted-foreground">Selected:</span>
-              <div className="flex flex-wrap gap-1.5">
-                {selections.slice(0, currentLevel).filter(Boolean).map((word, i) => {
-                  const flagConfig = TOKEN_FLAGS[word];
-                  const isFlagged = !!flagConfig;
-                  const isDestructive = isFlagged && flagConfig.props.severity === 'error';
-
-                  if (isFlagged) {
-                    return <TextFlag
-                      key={i}
-                      text={word === "European Union" ? "EU" : word}
-                      {...flagConfig.props}
-                      className={cn(
-                        "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium no-underline decoration-0 border-0",
-                        isDestructive ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"
-                      )}
-                      noUnderline={true}
-                    />;
-                  }
-
-                  return <span key={i} className={cn("inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium", isDestructive ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary")}>
-                    {word === "European Union" ? "EU" : word}
-                  </span>;
-                })}
-              </div>
-            </div>}
           </div>
         </div>
       </div>
