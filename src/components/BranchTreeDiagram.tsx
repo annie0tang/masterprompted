@@ -595,9 +595,6 @@ export function BranchTreeDiagram({
     : [leftPadding, leftPadding + 120, leftPadding + 240, leftPadding + 360, leftPadding + 480, leftPadding + 600, leftPadding + 720];
   const baseSpread = 180; // Keep constant for consistent branch shape
   const svgHeight = 500; // Increased to ensure all branching paths are visible
-  
-  // Define baseSvgWidth early so it can be used in getZoomedViewBox
-  const baseSvgWidth = closeUpView ? (leftPadding + 1200 + 100) : (leftPadding + 720 + 100);
 
   // Progressive zoom: calculate viewBox based on current level to prevent option overlap
   const getZoomedViewBox = (): { x: number; y: number; width: number; height: number } => {
@@ -688,6 +685,7 @@ export function BranchTreeDiagram({
   const completionTextWidth = completeHeadline ? completeHeadline.length * charWidth : 0;
   const completionBoxWidth = completionTextWidth + completionBoxPaddingX * 2;
 
+  const baseSvgWidth = closeUpView ? (leftPadding + 1200 + 100) : (leftPadding + 720 + 100);
   const svgWidth = baseSvgWidth + (isComplete && completeHeadline ? lastWordWidth / 2 + completionLineGap + lineLength + completionBoxWidth + 20 : 0);
 
   // Build current headline
@@ -930,13 +928,6 @@ export function BranchTreeDiagram({
                 const baseY = svgHeight / 2;
                 const spread = baseSpread;
                 
-                // Get the position of the last selected word for connector lines
-                const prevLevel = currentLevel - 1;
-                const prevX = levelXPositions[prevLevel];
-                const prevY = prevLevel === 0 ? svgHeight / 2 : getSelectedPathY(prevLevel);
-                const prevWord = selections[prevLevel] || "European Union";
-                const prevWordWidth = Math.max(70, prevWord.length * 10 + 16);
-                
                 // Calculate Y position for each option based on actual branch positions
                 const getOptionY = (word: string): number => {
                   // Build a hypothetical selection with this word
@@ -991,29 +982,7 @@ export function BranchTreeDiagram({
                   return y;
                 };
                 
-                // Render connector lines first (behind the word boxes)
-                const connectorLines = options.map((opt, idx) => {
-                  const optY = getOptionY(opt.word);
-                  const optWordWidth = Math.max(70, opt.word.length * 10 + 16);
-                  
-                  return (
-                    <path
-                      key={`connector-${idx}`}
-                      d={`M ${prevX + prevWordWidth / 2} ${prevY} 
-                          C ${prevX + prevWordWidth / 2 + 30} ${prevY}, 
-                            ${x - optWordWidth / 2 - 30} ${optY}, 
-                            ${x - optWordWidth / 2} ${optY}`}
-                      fill="none"
-                      stroke="hsl(var(--border))"
-                      strokeWidth={1.5}
-                      strokeDasharray="4 2"
-                      opacity={0.6}
-                      className="pointer-events-none"
-                    />
-                  );
-                });
-                
-                const wordNodes = options.map((opt, idx) => {
+                return options.map((opt, idx) => {
                   const optY = getOptionY(opt.word);
                   const optWordWidth = Math.max(70, opt.word.length * 10 + 16);
                   const rectHeight = 28;
@@ -1068,13 +1037,6 @@ export function BranchTreeDiagram({
                     </g>
                   );
                 });
-                
-                return (
-                  <>
-                    {connectorLines}
-                    {wordNodes}
-                  </>
-                );
               })()}
 
               {isComplete && completeHeadline && selectedFullPath && (() => {
