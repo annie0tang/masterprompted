@@ -608,8 +608,8 @@ export function BranchTreeDiagram({
   const levelXPositions = closeUpView
     ? [leftPadding, leftPadding + 200, leftPadding + 400, leftPadding + 600, leftPadding + 800, leftPadding + 1000, leftPadding + 1200]
     : [leftPadding, leftPadding + 120, leftPadding + 240, leftPadding + 360, leftPadding + 480, leftPadding + 600, leftPadding + 720];
-  const baseSpread = 220; // Keep constant for consistent branch shape
-  const svgHeight = 580; // Increased to ensure all branching paths are visible
+  const baseSpread = 320; // Increased for better separation of branches
+  const svgHeight = 800; // Increased to ensure all branching paths are visible without overlap
 
   const isComplete = selections.filter(Boolean).length >= 7;
 
@@ -744,9 +744,9 @@ export function BranchTreeDiagram({
         <div className="overflow-x-auto" ref={scrollContainerRef}>
           <div className={cn("p-6", closeUpView ? "min-w-[1600px]" : "min-w-[600px]")}>
             <svg
-              className="h-[520px]"
+              className="h-[750px]"
               width={closeUpView ? 1400 : svgWidth}
-              height={520}
+              height={750}
               viewBox={closeUpView ? `0 0 1400 ${svgHeight}` : `0 0 ${svgWidth} ${svgHeight}`}
               preserveAspectRatio="xMinYMid meet"
             >
