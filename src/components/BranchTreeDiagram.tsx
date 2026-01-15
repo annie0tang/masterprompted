@@ -852,7 +852,104 @@ export function BranchTreeDiagram({
                 </g>;
               })}
 
-              {/* Completion callout rendered directly on the diagram (after final word) */}
+              {/* Current selection options shown on the diagram */}
+              {currentLevel <= 6 && currentLevel > 0 && isInteractive && (() => {
+                const options = currentOptions;
+                if (options.length === 0) return null;
+                
+                const x = levelXPositions[currentLevel];
+                const baseY = svgHeight / 2;
+                const spread = baseSpread;
+                
+                // Calculate the Y position based on the current selected path
+                let anchorY = baseY;
+                if (currentLevel >= 1 && selections[0]) {
+                  const level1Group = selections[1] === "Unites" ? 0 : (selections[1] === "Reaches" ? 1 : 0.5);
+                  anchorY = baseY + (level1Group - 0.5) * spread;
+                  
+                  if (currentLevel >= 2 && selections[1]) {
+                    const level2Group = selections[2] === "On" ? 0 : 1;
+                    anchorY = anchorY + (level2Group - 0.5) * (spread / 2);
+                    
+                    if (currentLevel >= 3 && selections[2]) {
+                      const level3Group = selections[3] === "Historic" ? 0 : 1;
+                      anchorY = anchorY + (level3Group - 0.5) * (spread / 4);
+                      
+                      if (currentLevel >= 4 && selections[3]) {
+                        const level4Group = selections[4] === "AI" ? 0 : 1;
+                        anchorY = anchorY + (level4Group - 0.5) * (spread / 8);
+                        
+                        if (currentLevel >= 5 && selections[4]) {
+                          const level5Group = selections[5] === "Ethics" ? 0 : 1;
+                          anchorY = anchorY + (level5Group - 0.5) * (spread / 16);
+                        }
+                      }
+                    }
+                  }
+                }
+                
+                // Position options vertically around the anchor point
+                const optionSpacing = 40;
+                const totalHeight = (options.length - 1) * optionSpacing;
+                const startY = anchorY - totalHeight / 2;
+                
+                return options.map((opt, idx) => {
+                  const optY = startY + idx * optionSpacing;
+                  const optWordWidth = Math.max(70, opt.word.length * 10 + 16);
+                  const rectHeight = 28;
+                  const isAnimated = animatedWord === opt.word;
+                  const flagConfig = TOKEN_FLAGS[opt.word];
+                  const isFlagged = !!flagConfig;
+                  const isDestructive = isFlagged && flagConfig.props.severity === 'error';
+                  
+                  return (
+                    <g 
+                      key={`option-${idx}`} 
+                      onClick={() => handleWordClick(currentLevel, opt.word)}
+                      className="cursor-pointer"
+                      style={{ pointerEvents: 'all' }}
+                    >
+                      {/* Probability label above word */}
+                      <text 
+                        x={x} 
+                        y={optY - rectHeight / 2 - 6} 
+                        textAnchor="middle" 
+                        className="text-[10px] font-medium fill-muted-foreground pointer-events-none select-none"
+                      >
+                        {(opt.probability * 100).toFixed(0)}%
+                      </text>
+                      <rect 
+                        x={x - optWordWidth / 2} 
+                        y={optY - rectHeight / 2} 
+                        width={optWordWidth} 
+                        height={rectHeight} 
+                        rx={5} 
+                        fill={isDestructive ? "hsl(var(--destructive))" : isAnimated ? "hsl(var(--primary))" : "hsl(var(--muted))"}
+                        stroke={isDestructive ? "hsl(var(--destructive))" : "hsl(var(--border))"}
+                        strokeWidth={1}
+                        className={cn(
+                          "transition-all duration-200",
+                          !isDestructive && "hover:fill-[hsl(var(--primary))]",
+                          isDestructive && "hover:fill-[hsl(var(--destructive)/0.8)]",
+                          isAnimated && "animate-pulse"
+                        )} 
+                      />
+                      <text 
+                        x={x} 
+                        y={optY + 5} 
+                        textAnchor="middle" 
+                        className={cn(
+                          "text-[12px] font-semibold pointer-events-none select-none",
+                          isAnimated ? "fill-primary-foreground" : "fill-foreground"
+                        )}
+                      >
+                        {opt.word}
+                      </text>
+                    </g>
+                  );
+                });
+              })()}
+
               {isComplete && completeHeadline && selectedFullPath && (() => {
                 const endX = levelXPositions[6];
                 const endY = getSelectedPathY(6);
