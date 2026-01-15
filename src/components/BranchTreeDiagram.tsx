@@ -846,7 +846,7 @@ export function BranchTreeDiagram({
                       {(probability * 100).toFixed(0)}%
                     </text>
                   )}
-                  <rect x={x - wordWidth / 2} y={y - rectHeight / 2} width={wordWidth} height={rectHeight} rx={5} fill={isDestructive ? "hsl(var(--destructive))" : isLatestSelection ? "hsl(var(--primary))" : "hsl(var(--primary))"} className={cn("drop-shadow-sm transition-all duration-200", isClickable && !isDestructive && "hover:fill-[hsl(var(--primary)/0.8)]", isClickable && isDestructive && "hover:fill-[hsl(var(--destructive)/0.8)]")} />
+                  <rect x={x - wordWidth / 2} y={y - rectHeight / 2} width={wordWidth} height={rectHeight} rx={5} fill={isDestructive ? "hsl(var(--destructive))" : isLatestSelection ? "hsl(142 76% 36%)" : "hsl(var(--primary))"} className={cn("drop-shadow-sm transition-all duration-200", isClickable && !isDestructive && !isLatestSelection && "hover:fill-[hsl(var(--primary)/0.8)]", isClickable && isLatestSelection && "hover:fill-[hsl(142_76%_30%)]", isClickable && isDestructive && "hover:fill-[hsl(var(--destructive)/0.8)]")} />
                   <text x={x} y={y + 5} textAnchor="middle" className="text-[12px] font-semibold fill-primary-foreground pointer-events-none select-none">
                     {displayWord}
                   </text>
