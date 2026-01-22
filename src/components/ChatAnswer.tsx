@@ -241,7 +241,7 @@ const ChatAnswer = ({
         )}
       </div>
 
-      <div id="chat-body" className="prose max-w-none text-foreground leading-relaxed">
+      <div id="chat-body" className="prose max-w-none text-foreground leading-relaxed break-words">
         {showEvaluation ? (
           renderEvaluation()
         ) : showDiff && canShowDiff ? (

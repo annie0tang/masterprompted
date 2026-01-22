@@ -102,13 +102,13 @@ export default function TextFlag({
     <HoverCard open={hoverCardOpen} onOpenChange={setHoverCardOpen}>
       <HoverCardTrigger asChild>
         <span
-          className={cn(textFlagVariants({ severity, noUnderline }), "inline-flex items-center gap-0.5 whitespace-nowrap", className)}
+          className={cn(textFlagVariants({ severity, noUnderline }), "inline whitespace-normal", className)}
           onClick={(e) => {
             e.stopPropagation();
             setHoverCardOpen(!hoverCardOpen);
           }}
         >
-          <Icon className="inline-block h-3 w-3 text-destructive flex-shrink-0" />
+          <Icon className="inline-block h-3 w-3 text-destructive align-middle mr-1" />
           {href ? (
             <a
               href={href}

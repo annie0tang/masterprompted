@@ -26,7 +26,7 @@ export function renderTextWithFlags(
   spans: DisinformationSpan[]
 ): React.ReactNode[] {
   if (!spans.length) {
-    return [text];
+    return [<RichText key="text" text={text} inline />];
   }
 
   // Sort spans by start position
