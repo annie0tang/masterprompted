@@ -427,13 +427,59 @@ export function TreeDiagram({
     requestAnimationFrame(() => {
       const stepX = closeUpView ? 200 : 120;
       const isCompleteNow = selections.filter(Boolean).length >= 7;
+      const containerHeight = container.clientHeight;
+      const containerWidth = container.clientWidth;
 
-      // Progressively scroll right as the user advances through levels; once complete, reveal the end.
+      // Calculate the Y positions of the entire selected chain
+      const baseY = container.scrollHeight / 2;
+      const spread = 220; // baseSpread
+      const minSpacing = 60;
+      
+      // Track all Y positions in the chain to find the center
+      const chainYPositions: number[] = [baseY]; // Start with root Y
+      let cumulativeY = baseY;
+      
+      const levelOptions: Record<number, [string, string]> = {
+        1: ["Unites", "Reaches"],
+        2: ["On", "Around"],
+        3: ["Historic", "Sweeping"],
+        4: ["AI", "Technology"],
+        5: ["Ethics", "Governance"],
+        6: ["Framework", "Charter"],
+      };
+      
+      for (let i = 1; i < Math.min(currentLevel, 7); i++) {
+        const word = selections[i];
+        if (!word) break;
+        
+        const options = levelOptions[i];
+        if (options) {
+          const group = word === options[0] ? 0 : 1;
+          const spreadForLevel = Math.max(spread / Math.pow(2, i - 1), minSpacing * (1 + (i - 1) * 0.3));
+          cumulativeY += (group - 0.5) * spreadForLevel;
+          chainYPositions.push(cumulativeY);
+        }
+      }
+      
+      // Find the vertical center of the chain (midpoint between min and max Y)
+      const minY = Math.min(...chainYPositions);
+      const maxY = Math.max(...chainYPositions);
+      const chainCenterY = (minY + maxY) / 2;
+      
+      // Calculate horizontal center of the chain
+      const firstWordWidth = 156; // "European Union" width estimate
+      const leftPadding = firstWordWidth / 2 + 10;
+      const chainStartX = leftPadding;
+      const chainEndX = leftPadding + (currentLevel - 1) * stepX;
+      const chainCenterX = (chainStartX + chainEndX) / 2;
+      
+      // Calculate scroll positions to center the chain
+      const targetTop = Math.max(0, chainCenterY - containerHeight / 2);
       const targetLeft = isCompleteNow
-        ? Math.max(0, container.scrollWidth - container.clientWidth)
-        : Math.max(0, (currentLevel - 2) * stepX);
+        ? Math.max(0, container.scrollWidth - containerWidth)
+        : Math.max(0, chainCenterX - containerWidth / 2);
 
-      container.scrollTo({ left: targetLeft, behavior: "smooth" });
+      container.scrollTo({ left: targetLeft, top: targetTop, behavior: "smooth" });
     });
   }, [currentLevel, closeUpView, selections]);
 
