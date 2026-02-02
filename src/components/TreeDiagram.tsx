@@ -429,15 +429,26 @@ export function TreeDiagram({
       const isCompleteNow = selections.filter(Boolean).length >= 7;
       const containerHeight = container.clientHeight;
       const containerWidth = container.clientWidth;
+      
+      // Calculate the actual SVG height (same logic as calculateSvgHeight)
+      const baseHeight = 400;
+      const minSpacing = 60;
+      let totalSpread = 0;
+      for (let i = 1; i <= Math.min(currentLevel, 6); i++) {
+        totalSpread += minSpacing * (1 + (i - 1) * 0.3);
+      }
+      const actualSvgHeight = Math.max(baseHeight, baseHeight + totalSpread * 2);
+      
+      // Account for padding in the container (p-6 = 24px on each side)
+      const padding = 24;
+      const svgCenterY = padding + actualSvgHeight / 2;
 
       // Calculate the Y positions of the entire selected chain
-      const baseY = container.scrollHeight / 2;
       const spread = 220; // baseSpread
-      const minSpacing = 60;
       
       // Track all Y positions in the chain to find the center
-      const chainYPositions: number[] = [baseY]; // Start with root Y
-      let cumulativeY = baseY;
+      const chainYPositions: number[] = [svgCenterY]; // Start with root Y (center of SVG + padding)
+      let cumulativeY = svgCenterY;
       
       const levelOptions: Record<number, [string, string]> = {
         1: ["Unites", "Reaches"],
@@ -469,15 +480,13 @@ export function TreeDiagram({
       // Calculate horizontal center of the chain
       const firstWordWidth = 156; // "European Union" width estimate
       const leftPadding = firstWordWidth / 2 + 10;
-      const chainStartX = leftPadding;
-      const chainEndX = leftPadding + (currentLevel - 1) * stepX;
-      const chainCenterX = (chainStartX + chainEndX) / 2;
+      const chainEndX = leftPadding + (currentLevel - 1) * stepX + padding;
       
       // Calculate scroll positions to center the chain
       const targetTop = Math.max(0, chainCenterY - containerHeight / 2);
       const targetLeft = isCompleteNow
         ? Math.max(0, container.scrollWidth - containerWidth)
-        : Math.max(0, chainCenterX - containerWidth / 2);
+        : Math.max(0, chainEndX - containerWidth + 150); // Keep latest selection visible with some margin
 
       container.scrollTo({ left: targetLeft, top: targetTop, behavior: "smooth" });
     });
