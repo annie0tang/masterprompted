@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import TextFlag from "@/components/TextFlag";
 
 /**
- * WordTreeDiagram - Visualizes word prediction paths as a horizontal tree diagram
+ * BranchDiagram - Visualizes word prediction paths as a horizontal tree diagram
  * Updated with 7-level deep tree structure based on EU AI headline data
+ * (Previously WordTreeDiagram - renamed to match UI label "Branch")
  */
 
 interface TreePath {
@@ -282,7 +283,7 @@ interface WordTreeDiagramProps {
 
 // Level labels for context
 const levelLabels = ["Root", "Verb", "Prep", "Adj", "Topic", "Aspect", "Type"];
-export function WordTreeDiagram({
+export function BranchDiagram({
   selectedPath,
   onPathChange,
   className

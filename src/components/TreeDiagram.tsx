@@ -7,8 +7,9 @@ import { Label } from "@/components/ui/label";
 import TextFlag from "@/components/TextFlag";
 
 /**
- * BranchTreeDiagram - Shows all possible sentence branches greyed out,
+ * TreeDiagram - Shows all possible sentence branches greyed out,
  * with word selection on the right. Selecting a word highlights the corresponding branch.
+ * (Previously BranchTreeDiagram - renamed to match UI label "Tree")
  */
 
 interface TreePath {
@@ -302,7 +303,7 @@ interface BranchTreeDiagramProps {
   onPathChange: (path: string[]) => void;
   className?: string;
 }
-export function BranchTreeDiagram({
+export function TreeDiagram({
   selectedPath,
   onPathChange,
   className
