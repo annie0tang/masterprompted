@@ -6,8 +6,8 @@ import { PopoverSeries } from "@/components/PopoverSeries";
 import TextFlag from "@/components/TextFlag";
 import ModuleNavigation from "@/components/ModuleNavigation";
 import GuidanceTooltip from "@/components/GuidanceTooltip";
-import { WordTreeDiagram } from "@/components/WordTreeDiagram";
-import { BranchTreeDiagram } from "@/components/BranchTreeDiagram";
+import { BranchDiagram } from "@/components/BranchDiagram";
+import { TreeDiagram } from "@/components/TreeDiagram";
 import { FullBranchDiagram } from "@/components/FullBranchDiagram";
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
@@ -430,7 +430,7 @@ export default function HeadlineResponse() {
               </div>
 
               {viewMode === "tree" ? (
-                <WordTreeDiagram
+                <BranchDiagram
                   selectedPath={currentSentence}
                   onPathChange={(path) => {
                     // Update sentence with the path - this can trigger Charter detection
@@ -447,7 +447,7 @@ export default function HeadlineResponse() {
                   }}
                 />
               ) : viewMode === "branch" ? (
-                <BranchTreeDiagram
+                <TreeDiagram
                   selectedPath={currentSentence}
                   onPathChange={(path) => {
                     setCurrentSentence(path);
