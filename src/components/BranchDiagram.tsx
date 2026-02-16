@@ -954,7 +954,7 @@ export function BranchDiagram({
                 </div>}
                 
                 <button 
-                  onClick={() => canSelect && handleWordClick(level, option.word)} 
+                  onClickCapture={() => canSelect && handleWordClick(level, option.word)} 
                   disabled={!canSelect} 
                   data-word={option.word}
                   data-selected={isSelected ? "true" : "false"}

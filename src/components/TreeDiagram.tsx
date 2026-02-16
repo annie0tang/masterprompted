@@ -1059,7 +1059,7 @@ export function TreeDiagram({
                         <div className="flex justify-center h-full items-center">
                           <Button
                             variant="outline"
-                            onClick={() => handleWordClick(currentLevel, opt.word)}
+                            onClickCapture={() => handleWordClick(currentLevel, opt.word)}
                             disabled={isAnimating}
                             className={cn(
                               "h-10 min-w-[80px] flex flex-col gap-0 px-3 text-xs transition-all duration-200",
