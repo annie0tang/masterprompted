@@ -53,7 +53,7 @@ const Introduction = () => {
               {/* Continue button */}
               <Button 
                 onClick={handleContinue} 
-                className="w-fit px-10 py-6 bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold text-lg rounded-full transition-colors"
+                className="w-fit px-10 py-6 bg-secondary hover:bg-secondary/90 text-foreground font-bold text-lg rounded-full transition-colors"
               >
                 {t('intro.base.startSimulator')}
                 <svg 
