@@ -1016,38 +1016,6 @@ export function BranchDiagram({
     }}>
         <svg className="w-full h-full" viewBox={`0 0 96 ${containerHeight}`} preserveAspectRatio="none">
           
-          {/* Ghost lines above - faded alternatives */}
-          {ghostLinesAbove.map((toY, idx) => {
-            const curveOffset = ((idx + 1) * 11 % 7 - 3) * 6;
-            const vertOffset = ((idx + 1) * 5 % 4 - 2) * 4;
-            const opacity = 0.12 - idx * 0.025;
-            return <path 
-              key={`ghost-above-${idx}`} 
-              d={`M 0 ${fromY} C ${34 + curveOffset} ${fromY + vertOffset}, ${62 - curveOffset} ${toY - vertOffset}, 96 ${toY}`} 
-              fill="none" 
-              stroke="hsl(var(--muted-foreground))" 
-              strokeWidth={0.75} 
-              strokeOpacity={Math.max(0.04, opacity)}
-              strokeDasharray="3 4"
-            />;
-          })}
-          
-          {/* Ghost lines below - faded alternatives */}
-          {ghostLinesBelow.map((toY, idx) => {
-            const curveOffset = ((idx + 2) * 13 % 7 - 3) * 6;
-            const vertOffset = ((idx + 2) * 7 % 4 - 2) * 4;
-            const opacity = 0.12 - idx * 0.025;
-            return <path 
-              key={`ghost-below-${idx}`} 
-              d={`M 0 ${fromY} C ${34 + curveOffset} ${fromY + vertOffset}, ${62 - curveOffset} ${toY - vertOffset}, 96 ${toY}`} 
-              fill="none" 
-              stroke="hsl(var(--muted-foreground))" 
-              strokeWidth={0.75} 
-              strokeOpacity={Math.max(0.04, opacity)}
-              strokeDasharray="3 4"
-            />;
-          })}
-          
           {/* Real option lines - varied curves */}
           {toOptions.map((toOpt, toIdx) => {
           // Calculate toY centered around fromY
