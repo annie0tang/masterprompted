@@ -594,7 +594,7 @@ export function FullBranchDiagram({
                 const y = baseY + offset / 4;
                 d += ` L ${x} ${y}`;
               }
-              return <path key={pathIndex} d={d} fill="none" stroke={isSelected ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"} strokeWidth={isSelected ? 2.5 : 0.5} strokeOpacity={isSelected ? 1 : 0.15} className="transition-all duration-300" />;
+              return <path key={pathIndex} d={d} fill="none" stroke={isSelected ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"} strokeWidth={isSelected ? 1.5 : 0.5} strokeOpacity={isSelected ? 1 : 0.15} className="transition-all duration-300" />;
             })}
 
             {/* Words along the visible portion */}
@@ -662,7 +662,7 @@ export function FullBranchDiagram({
                   d={d}
                   fill="none"
                   stroke={isSelected ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"}
-                  strokeWidth={isSelected ? 2.5 : 0.5}
+                  strokeWidth={isSelected ? 1.5 : 0.5}
                   strokeOpacity={isSelected ? 1 : 0.15}
                   className="transition-all duration-300"
                 />
@@ -711,7 +711,7 @@ export function FullBranchDiagram({
                 d={`M ${getLevelX(6) + 40} ${getPathY(selectedFullPath, 6)} L ${getLevelX(6) + 60} ${getPathY(selectedFullPath, 6)}`}
                 fill="none"
                 stroke="hsl(var(--primary))"
-                strokeWidth={2.5}
+                strokeWidth={1.5}
                 className="transition-all duration-300"
               />
               <rect
