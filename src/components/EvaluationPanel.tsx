@@ -124,7 +124,7 @@ export default function EvaluationPanel({ initialIsOpen = true, canClose = false
   };
 
   return (
-    <div className="sticky top-0 h-screen flex items-center z-10">
+    <div className="z-10">
       {isPanelOpen ? (
         <div className={cn(panelVariants({ size, state: "open" }))}>
           {/* Expand/Minimize button in top-right */}
