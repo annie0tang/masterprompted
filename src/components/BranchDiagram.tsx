@@ -1057,7 +1057,7 @@ export function BranchDiagram({
           // Varied curve control points for organic look
           const curveOffset = (toIdx * 7 % 5 - 2) * 8;
           const vertOffset = (toIdx * 3 % 3 - 1) * 6;
-          return <path key={`real-${toOpt.word}`} d={`M 0 ${fromY} C ${34 + curveOffset} ${fromY + vertOffset}, ${62 - curveOffset} ${toY - vertOffset}, 96 ${toY}`} fill="none" stroke={isSelected ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"} strokeWidth={isSelected ? 2.5 : 1} strokeOpacity={isSelected ? 1 : 0.3} />;
+          return <path key={`real-${toOpt.word}`} d={`M 0 ${fromY} C ${34 + curveOffset} ${fromY + vertOffset}, ${62 - curveOffset} ${toY - vertOffset}, 96 ${toY}`} fill="none" stroke={isSelected ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"} strokeWidth={isSelected ? 1.5 : 0.75} strokeOpacity={isSelected ? 1 : 0.3} />;
         })}
         </svg>
       </div>;
@@ -1195,7 +1195,7 @@ export function BranchDiagram({
                   <svg className="w-full h-full" viewBox={`0 0 24 ${containerHeight}`} preserveAspectRatio="none">
                     {(() => {
                     const y = getSelectedYAtLevel(6);
-                    return <path d={`M 0 ${y} L 24 ${y}`} fill="none" stroke="rgb(74 222 128)" strokeWidth={2.5} />;
+                    return <path d={`M 0 ${y} L 24 ${y}`} fill="none" stroke="rgb(74 222 128)" strokeWidth={1.5} />;
                   })()}
                   </svg>
                 </div>
@@ -1214,7 +1214,7 @@ export function BranchDiagram({
                       d={`M 0 ${getSelectedYAtLevel(6)} C 34 ${getSelectedYAtLevel(6)}, 62 ${Math.max(20, getSelectedYAtLevel(6) - nodeHeight / 2) + nodeHeight / 2}, 96 ${Math.max(20, getSelectedYAtLevel(6) - nodeHeight / 2) + nodeHeight / 2}`}
                       fill="none"
                       stroke="rgb(74 222 128)"
-                      strokeWidth={2.5}
+                      strokeWidth={1.5}
                     />
                   </svg>
                   <div className="absolute animate-fade-in" style={{
