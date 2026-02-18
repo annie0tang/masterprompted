@@ -1174,12 +1174,12 @@ export function BranchDiagram({
                 minWidth: 280
               }}>
                   {/* Connector line to headline */}
-                  <svg className="absolute left-0 w-24" style={{
+                  <svg className="absolute left-0 w-10" style={{
                     top: 0,
                     height: containerHeight
-                  }} viewBox={`0 0 96 ${containerHeight}`} preserveAspectRatio="none">
+                  }} viewBox={`0 0 40 ${containerHeight}`} preserveAspectRatio="none">
                     <path 
-                      d={`M 0 ${getSelectedYAtLevel(6)} C 34 ${getSelectedYAtLevel(6)}, 62 ${Math.max(20, getSelectedYAtLevel(6) - nodeHeight / 2) + nodeHeight / 2}, 96 ${Math.max(20, getSelectedYAtLevel(6) - nodeHeight / 2) + nodeHeight / 2}`}
+                      d={`M 0 ${getSelectedYAtLevel(6)} C 14 ${getSelectedYAtLevel(6)}, 26 ${Math.max(20, getSelectedYAtLevel(6) - nodeHeight / 2) + nodeHeight / 2}, 40 ${Math.max(20, getSelectedYAtLevel(6) - nodeHeight / 2) + nodeHeight / 2}`}
                       fill="none"
                       stroke="rgb(74 222 128)"
                       strokeWidth={1.5}
@@ -1187,7 +1187,7 @@ export function BranchDiagram({
                   </svg>
                   <div className="absolute animate-fade-in" style={{
                     top: Math.max(20, getSelectedYAtLevel(6) - nodeHeight / 2),
-                    left: 96
+                    left: 40
                   }}>
                     <p className="text-sm font-medium text-green-900 leading-relaxed px-4 py-2 rounded-lg border-2 border-green-400 bg-green-200 whitespace-nowrap">
                       ...{headline}
