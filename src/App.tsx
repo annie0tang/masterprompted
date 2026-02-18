@@ -31,6 +31,7 @@ import Imprint from "./pages/Imprint";
 import Takeaways from "./pages/NextWordPredictionTakeaways";
 import NotFound from "./pages/NotFound";
 import DesignSystem from "./pages/DesignSystem";
+import DesignSystemFab from "./components/DesignSystemFab";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,7 @@ const App = () => (
         <EvaluationProvider>
           <Sonner />
           <BrowserRouter>
+            <DesignSystemFab />
             <Routes>
               {/* NAV BAR */}
               <Route path="/" element={<Landing />} />
