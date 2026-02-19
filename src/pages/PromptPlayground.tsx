@@ -364,9 +364,9 @@ const PromptPlayground = () => {
       <Header onLanguageChange={setPageLanguage} />
       <main className="container mx-auto px-6 py-4">
         <div className="flex gap-8 h-[calc(100vh-8rem)]">
-          <div className="shrink-0 w-auto h-full">
-            <div className="sticky top-4 h-[calc(100vh-8rem)]">
-              <PromptControls {...{ 
+          <div className="shrink-0 h-full bg-surface-200 2xl:bg-transparent flex items-start justify-center">
+            <div className="w-auto h-[calc(100vh-8rem)] 2xl:bg-card 2xl:border 2xl:border-border 2xl:rounded-lg 2xl:shadow-sm 2xl:overflow-hidden">
+              <PromptControls {...{
                 parameters, 
                 onParameterChange: handleParameterChange, 
                 onReset: handleReset, 
