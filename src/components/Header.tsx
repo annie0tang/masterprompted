@@ -89,7 +89,7 @@ const Header = ({ transparent = false, onLanguageChange }: HeaderProps) => {
     <header className={`w-full px-6 transition-all duration-200 ${
     transparent ? 'bg-transparent' : `bg-white ${isScrolled ? 'border-b border-border shadow-sm' : ''}`}`
     }>
-      <div className="flex items-center justify-between mx-auto pt-2 mb-[8px]">
+      <div className="mx-auto pt-2 mt-0 flex items-center justify-between py-0">
         <div className="flex items-center gap-12">
           {/* Logo */}
           <div
