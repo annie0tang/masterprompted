@@ -282,7 +282,8 @@ const translations = {
           right: 'More Bias',
           info: 'Explore how neutral or leading prompts can effect and bias LLM output'
         },
-        sendOptimizedPrompt: 'Send Optimized Prompt',
+        promptHistory: 'Prompt history',
+        sendOptimizedPrompt: 'Improve Prompt',
         sendPrompt: 'Send Prompt',
         promptSpecificity: 'Prompt Specificity',
         interactionStyle: 'Interaction Style',
@@ -587,7 +588,8 @@ const translations = {
           right: 'Más sesgo',
           info: 'Explora cómo los prompts neutrales o dirigidos pueden afectar y sesgar la salida del LLM'
         },
-        sendOptimizedPrompt: 'Enviar Prompt Optimizado',
+        promptHistory: 'Historial de prompts',
+        sendOptimizedPrompt: 'Mejorar Prompt',
         sendPrompt: 'Enviar Prompt',
         promptSpecificity: 'Especificidad del Prompt',
         interactionStyle: 'Estilo de Interacción',
