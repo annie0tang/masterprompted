@@ -88,6 +88,8 @@ type ChatboxProps = VariantProps<typeof chatboxVariants> & {
   onRemoveFile?: (index: number) => void;
   /** Makes the textarea read-only */
   readOnly?: boolean;
+  /** Hides the submit button */
+  hideSubmitButton?: boolean;
   /** Additional CSS classes */
   className?: string;
 };
@@ -105,6 +107,7 @@ const Chatbox = ({
   files = [],
   onRemoveFile,
   readOnly = false,
+  hideSubmitButton = false,
   className = "",
   size,
   state
@@ -262,9 +265,11 @@ const Chatbox = ({
       aria-roledescription="Resizable chatbox"
     >
       {/* Submit button - positioned in top right */}
-      <div className="absolute top-2 right-2 z-10">
-        <SubmitButton onClick={handleSubmit} id={submitButtonId} disableSend={disableSend} />
-      </div>
+      {!hideSubmitButton && (
+        <div className="absolute top-2 right-2 z-10">
+          <SubmitButton onClick={handleSubmit} id={submitButtonId} disableSend={disableSend} />
+        </div>
+      )}
       {/* Text area - takes up most of the space */}
       {!waitingforOptimization && (
         <Textarea

@@ -135,6 +135,7 @@ interface PromptControlsProps {
     onUploadFiles?: (files: FileList | File[]) => void;
     onRemoveFile?: (index: number) => void;
     readOnly?: boolean;
+    hideChatSubmitButton?: boolean;
     className?: string;
 }
 
@@ -166,6 +167,7 @@ export default function PromptControls({
     onRemoveFile,
     waitingforOptimization = false,
     readOnly = false,
+    hideChatSubmitButton = false,
     className
 }: PromptControlsProps) {
     const { t } = useLanguage();
@@ -199,6 +201,7 @@ export default function PromptControls({
                     files={files}
                     onRemoveFile={onRemoveFile}
                     readOnly={readOnly}
+                    hideSubmitButton={hideChatSubmitButton}
                     className="z-50 flex-auto min-h-0 w-full"
                 />
 
