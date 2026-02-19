@@ -364,7 +364,7 @@ const PromptPlayground = () => {
       <Header onLanguageChange={setPageLanguage} />
       <main className="container mx-auto px-6 py-4">
         <div className="flex gap-8 h-[calc(100vh-8rem)]">
-          <div className="shrink-0 h-full bg-surface-200 2xl:bg-transparent flex items-start justify-center">
+          <div className="shrink-0 h-full bg-surface-200 2xl:bg-transparent flex items-start justify-start">
             <div className="w-auto h-[calc(100vh-8rem)] 2xl:bg-card 2xl:border 2xl:border-border 2xl:rounded-lg 2xl:shadow-sm 2xl:overflow-hidden">
               <PromptControls {...{
                 parameters, 
@@ -412,10 +412,10 @@ const PromptPlayground = () => {
           }}
         />
       )}
-      <div className="mt-6 text-sm text-gray-500 max-w-7xl mx-auto">
+      <div className="container mx-auto px-6 mt-2 text-sm text-muted-foreground">
         LLMs have been used in the following places:<br />
         The creation of prompt optimizations and generated outputs in the Prompt Playground<br />
-        LLMs used include: Mistral, Claude, Chat GPT & Llama 3.1 8B (open source)
+        LLMs used include: Mistral, Claude, Chat GPT &amp; Llama 3.1 8B (open source)
       </div>
     </div>
   );
