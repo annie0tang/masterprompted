@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Info } from "lucide-react";
 import Chatbox from "./ChatBox";
@@ -55,18 +56,18 @@ function Parameter({
     };
 
     return (
-        <div
-            className={`mb-3 ${!enabled && 'opacity-60 pointer-events-none'}`}
+        <fieldset
+            className={`my-2 p-0 px-1 border border-border rounded-lg ${!enabled && 'opacity-60 pointer-events-none'}`}
+            disabled={!enabled}
         >
-            {/* Parameter title with info icon */}
-            <div className="flex items-center gap-1 mb-1.5">
-                <span className="text-sm font-semibold text-foreground">{parameterTitle}</span>
+            <legend className="text-xs font-medium text-muted-foreground px-2 mx-auto flex items-center gap-1">
+                <span>{parameterTitle}</span>
                 {infoText && (
                     <TooltipProvider>
                         <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen} delayDuration={300}>
                             <TooltipTrigger asChild>
                                 <Info
-                                    className="w-3.5 h-3.5 text-muted-foreground cursor-pointer"
+                                    className="w-3 h-3 cursor-pointer"
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         setTooltipOpen(!tooltipOpen);
@@ -79,35 +80,32 @@ function Parameter({
                         </Tooltip>
                     </TooltipProvider>
                 )}
-            </div>
+            </legend>
 
-            {/* Slider-style radio track */}
             <RadioGroup
                 value={selectedValue}
                 onValueChange={handleValueChange}
                 orientation="horizontal"
-                className="relative flex w-full items-start"
-                disabled={!enabled}
+                className="relative flex w-full justify-between gap-0 p-1"
             >
-                {/* Track line connecting the three radio buttons */}
-                <div className="pointer-events-none absolute top-[9px] left-[calc(16.666%)] right-[calc(16.666%)] h-[2px] bg-muted-foreground/20 rounded-full" />
-
-                <div className="flex flex-1 flex-col items-center gap-1">
-                    <RadioGroupItem value={leftParameter} id={`${parameterTitle}-r1`} className="h-[18px] w-[18px] border-2 border-muted-foreground/30 data-[state=checked]:border-secondary data-[state=checked]:text-secondary bg-background flex-shrink-0" />
-                    <Label htmlFor={`${parameterTitle}-r1`} className="text-[10px] text-muted-foreground font-normal text-center leading-tight">{leftParameter}</Label>
+                <div className="pointer-events-none absolute top-[12px] left-[calc(16.666%+14px)] w-[calc(33.333%-26px)] h-px bg-gray-300" />
+                <div className="pointer-events-none absolute top-[12px] left-[calc(50%+12px)] w-[calc(33.333%-26px)] h-px bg-gray-300" />
+                <div className="flex flex-1 flex-col items-center gap-1 w-1/4">
+                    <RadioGroupItem value={leftParameter} id={`${parameterTitle}-r1`} />
+                    <Label htmlFor={`${parameterTitle}-r1`} className="text-[10px] font-normal whitespace-nowrap px-1">{leftParameter}</Label>
                 </div>
 
-                <div className="flex flex-1 flex-col items-center gap-1">
-                    <RadioGroupItem value={NO_CHANGE_VALUE} id={`${parameterTitle}-r2`} className="h-[18px] w-[18px] border-2 border-muted-foreground/30 data-[state=checked]:border-secondary data-[state=checked]:text-secondary bg-background flex-shrink-0" />
-                    <Label htmlFor={`${parameterTitle}-r2`} className="text-[10px] text-muted-foreground font-normal text-center leading-tight">{useLanguage().t('components.promptControls.original')}</Label>
+                <div className="flex flex-1 flex-col items-center gap-1 w-1/4">
+                    <RadioGroupItem value={NO_CHANGE_VALUE} id={`${parameterTitle}-r2`} />
+                    <Label htmlFor={`${parameterTitle}-r2`} className="text-[10px] font-normal whitespace-nowrap px-1">{useLanguage().t('components.promptControls.original')}</Label>
                 </div>
 
-                <div className="flex flex-1 flex-col items-center gap-1">
-                    <RadioGroupItem value={rightParameter} id={`${parameterTitle}-r3`} className="h-[18px] w-[18px] border-2 border-muted-foreground/30 data-[state=checked]:border-secondary data-[state=checked]:text-secondary bg-background flex-shrink-0" />
-                    <Label htmlFor={`${parameterTitle}-r3`} className="text-[10px] text-muted-foreground font-normal text-center leading-tight">{rightParameter}</Label>
+                <div className="flex flex-1 flex-col items-center gap-1 w-1/4">
+                    <RadioGroupItem value={rightParameter} id={`${parameterTitle}-r3`} />
+                    <Label htmlFor={`${parameterTitle}-r3`} className="text-[10px] font-normal whitespace-nowrap px-1">{rightParameter}</Label>
                 </div>
             </RadioGroup>
-        </div>
+        </fieldset>
     );
 }
 
@@ -188,13 +186,8 @@ export default function PromptControls({
     const isAnyParameterSet = Object.values(parameters).some(p => p !== "");
 
     return (
-        <Card className={`bg-card border border-border rounded-lg max-w-sm h-[calc(100vh-160px)] min-w-[300px] overflow-hidden ${className}`}>
-            <CardContent className="p-4 h-full flex flex-col gap-2 overflow-y-auto overflow-x-hidden">
-                {/* Prompt history label */}
-                <span className="text-secondary-foreground font-semibold text-sm cursor-default">
-                    {t('components.promptControls.promptHistory')}
-                </span>
-
+        <Card className={`bg-card border border-border rounded-lg max-w-sm h-[calc(100vh-160px)] min-w-[300px] ${className}`}>
+            <CardContent className="p-2 h-full flex flex-col gap-1">
                 {/* Chatbox */}
                 <Chatbox
                     value={chatValue}
@@ -211,10 +204,11 @@ export default function PromptControls({
                     className="z-50 flex-auto min-h-0"
                 />
 
-                {/* Parameters area */}
-                <div className="flex-initial flex flex-col justify-end min-h-0">
-                    <h3 className="font-bold text-foreground text-base mb-2">{t('components.promptControls.title')}</h3>
-                    <div id='parameters' className="relative">
+                {/* Parameters area: make this the flexible scrollable region so it shrinks/scrolls when the chatbox grows */}
+                <div className="flex-initial flex flex-col justify-end min-h-0 overflow-y-auto">
+                    <h3 className="font-semibold text-card-foreground text-center whitespace-nowrap">{t('components.promptControls.title')}</h3>
+                    <Separator />
+                    <div id='parameters' className="relative overflow-auto">
                         <Parameter
                             parameterTitle={t('components.promptControls.specificity.title')}
                             parameterKey="specificity"
@@ -261,12 +255,12 @@ export default function PromptControls({
                         />
                     </div>
 
-                    <div className="flex pt-3">
+                    <div className="flex py-2 items-stretch">
                         <Button
                             onClick={handleSubmitClick}
                             variant="default"
                             size="sm"
-                            className="flex-1 min-h-[48px] leading-tight rounded-full whitespace-normal text-center bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold text-sm"
+                            className="flex-1 min-h-[48px] leading-tight rounded-full whitespace-normal text-center"
                             disabled={disableOptimize}
                         >
                             {t('components.promptControls.sendOptimizedPrompt')}
