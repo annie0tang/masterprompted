@@ -365,7 +365,7 @@ const PromptPlayground = () => {
       <main className="container mx-auto px-0 py-0 flex-1 min-h-0">
         <div className="flex gap-8 h-[calc(100vh-8rem)]">
           <div className="shrink-0 h-full bg-surface-200 2xl:bg-transparent flex items-start justify-start">
-            <div className="h-[calc(100vh-8rem)] w-fit 2xl:bg-card 2xl:border 2xl:border-border 2xl:rounded-lg 2xl:shadow-sm 2xl:overflow-hidden 2xl:mt-4">
+            <div className="h-[calc(100vh-8rem)] w-fit 2xl:h-auto 2xl:bg-card 2xl:border 2xl:border-border 2xl:rounded-lg 2xl:shadow-sm 2xl:overflow-hidden 2xl:mt-4">
               <PromptControls {...{
                 parameters,
                 onParameterChange: handleParameterChange,
