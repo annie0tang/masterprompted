@@ -134,7 +134,8 @@ const translations = {
         point2: ' advanced models will produce mistakes, distortions, or unfounded claims.',
         point3Title: 'As a journalist, your critical expertise is essential:',
         point3: ' apply your analytical skills to evaluate AI outputs, filter out misinformation, and prevent LLM falsehoods from entering your reporting.',
-        nextTask: 'Next Task →'
+        nextTask: 'Next Task →',
+        download: 'Download Lessons'
       }
     },
     promptConstructionModule: {
@@ -442,7 +443,8 @@ const translations = {
         point2: ' los modelos avanzados producirán errores, distorsiones o afirmaciones infundadas.',
         point3Title: 'Como periodista, tu experiencia crítica es esencial:',
         point3: ' aplica tus habilidades analíticas para evaluar las salidas de IA, filtrar la desinformación y evitar utilizar contenido generado con errores de sesgo.',
-        nextTask: 'Siguiente Tarea →'
+        nextTask: 'Siguiente Tarea →',
+        download: 'Descargar Lecciones'
       }
     },
     promptConstructionModule: {
