@@ -80,6 +80,12 @@ export default function SpecificityResponse() {
   return <div className="min-h-screen bg-white flex flex-col">
     <Header />
 
+    {/* Breadcrumb row for 2xl bubble mode - left aligned */}
+    <div className="hidden 2xl:block px-6 pt-6">
+      <Breadcrumb />
+      <div className="mb-5"></div>
+    </div>
+
     <main className="flex-1 flex justify-center">
       {/* Left Sidebar - Prompt Controls with grey background extending full height */}
       <div className="w-80 flex-shrink-0 bg-surface-200 2xl:bg-transparent 2xl:pt-16 2xl:pb-4 flex items-start justify-center">
@@ -114,7 +120,7 @@ export default function SpecificityResponse() {
 
       {/* Right content area */}
       <div className="flex-initial flex flex-col px-6 py-6 items-start">
-        <div className="w-full max-w-[1100px]">
+        <div className="w-full max-w-[1100px] 2xl:hidden">
           <Breadcrumb />
           <div className="mb-5"></div>
         </div>
