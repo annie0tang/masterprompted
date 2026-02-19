@@ -115,7 +115,7 @@ const Header = ({ transparent = false, onLanguageChange }: HeaderProps) => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
-                  className={`relative px-4 py-3 transition-colors duration-200 flex items-center gap-1 ${
+                  className={`relative px-4 py-3 text-[15px] tracking-wide transition-colors duration-200 flex items-center gap-1 ${
                   isModuleActive() ?
                   transparent ?
                   'text-white' :
@@ -171,7 +171,7 @@ const Header = ({ transparent = false, onLanguageChange }: HeaderProps) => {
             <button
               key={item.path}
               onClick={() => navigate(item.path)}
-              className={`relative px-4 py-3 transition-colors duration-200 ${
+              className={`relative px-4 py-3 text-[15px] tracking-wide transition-colors duration-200 ${
               isActive(item.path) ?
               transparent ?
               'text-white' :
