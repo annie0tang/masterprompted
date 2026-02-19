@@ -56,10 +56,10 @@ function Parameter({
 
     return (
         <div
-            className={`mb-4 ${!enabled && 'opacity-60 pointer-events-none'}`}
+            className={`mb-3 ${!enabled && 'opacity-60 pointer-events-none'}`}
         >
             {/* Parameter title with info icon */}
-            <div className="flex items-center gap-1 mb-2">
+            <div className="flex items-center gap-1 mb-1.5">
                 <span className="text-sm font-semibold text-foreground">{parameterTitle}</span>
                 {infoText && (
                     <TooltipProvider>
@@ -86,25 +86,25 @@ function Parameter({
                 value={selectedValue}
                 onValueChange={handleValueChange}
                 orientation="horizontal"
-                className="relative flex w-full items-center"
+                className="relative flex w-full items-start"
                 disabled={!enabled}
             >
-                {/* Track line spanning between first and last radio */}
-                <div className="pointer-events-none absolute top-[9px] left-[calc(8.333%)] right-[calc(8.333%)] h-[2px] bg-border rounded-full" />
+                {/* Track line connecting the three radio buttons */}
+                <div className="pointer-events-none absolute top-[9px] left-[calc(16.666%)] right-[calc(16.666%)] h-[2px] bg-muted-foreground/20 rounded-full" />
 
-                <div className="flex flex-1 flex-col items-center gap-1.5">
-                    <RadioGroupItem value={leftParameter} id={`${parameterTitle}-r1`} className="h-[18px] w-[18px] border-2 border-muted-foreground/40 data-[state=checked]:border-secondary data-[state=checked]:text-secondary" />
-                    <Label htmlFor={`${parameterTitle}-r1`} className="text-[11px] text-muted-foreground font-normal whitespace-nowrap">{leftParameter}</Label>
+                <div className="flex flex-1 flex-col items-center gap-1">
+                    <RadioGroupItem value={leftParameter} id={`${parameterTitle}-r1`} className="h-[18px] w-[18px] border-2 border-muted-foreground/30 data-[state=checked]:border-secondary data-[state=checked]:text-secondary bg-background flex-shrink-0" />
+                    <Label htmlFor={`${parameterTitle}-r1`} className="text-[10px] text-muted-foreground font-normal text-center leading-tight">{leftParameter}</Label>
                 </div>
 
-                <div className="flex flex-1 flex-col items-center gap-1.5">
-                    <RadioGroupItem value={NO_CHANGE_VALUE} id={`${parameterTitle}-r2`} className="h-[18px] w-[18px] border-2 border-muted-foreground/40 data-[state=checked]:border-secondary data-[state=checked]:text-secondary" />
-                    <Label htmlFor={`${parameterTitle}-r2`} className="text-[11px] text-muted-foreground font-normal whitespace-nowrap">{useLanguage().t('components.promptControls.original')}</Label>
+                <div className="flex flex-1 flex-col items-center gap-1">
+                    <RadioGroupItem value={NO_CHANGE_VALUE} id={`${parameterTitle}-r2`} className="h-[18px] w-[18px] border-2 border-muted-foreground/30 data-[state=checked]:border-secondary data-[state=checked]:text-secondary bg-background flex-shrink-0" />
+                    <Label htmlFor={`${parameterTitle}-r2`} className="text-[10px] text-muted-foreground font-normal text-center leading-tight">{useLanguage().t('components.promptControls.original')}</Label>
                 </div>
 
-                <div className="flex flex-1 flex-col items-center gap-1.5">
-                    <RadioGroupItem value={rightParameter} id={`${parameterTitle}-r3`} className="h-[18px] w-[18px] border-2 border-muted-foreground/40 data-[state=checked]:border-secondary data-[state=checked]:text-secondary" />
-                    <Label htmlFor={`${parameterTitle}-r3`} className="text-[11px] text-muted-foreground font-normal whitespace-nowrap">{rightParameter}</Label>
+                <div className="flex flex-1 flex-col items-center gap-1">
+                    <RadioGroupItem value={rightParameter} id={`${parameterTitle}-r3`} className="h-[18px] w-[18px] border-2 border-muted-foreground/30 data-[state=checked]:border-secondary data-[state=checked]:text-secondary bg-background flex-shrink-0" />
+                    <Label htmlFor={`${parameterTitle}-r3`} className="text-[10px] text-muted-foreground font-normal text-center leading-tight">{rightParameter}</Label>
                 </div>
             </RadioGroup>
         </div>
@@ -188,8 +188,8 @@ export default function PromptControls({
     const isAnyParameterSet = Object.values(parameters).some(p => p !== "");
 
     return (
-        <Card className={`bg-card border border-border rounded-lg max-w-sm h-[calc(100vh-160px)] min-w-[300px] ${className}`}>
-            <CardContent className="p-4 h-full flex flex-col gap-2">
+        <Card className={`bg-card border border-border rounded-lg max-w-sm h-[calc(100vh-160px)] min-w-[300px] overflow-hidden ${className}`}>
+            <CardContent className="p-4 h-full flex flex-col gap-2 overflow-y-auto overflow-x-hidden">
                 {/* Prompt history label */}
                 <span className="text-secondary-foreground font-semibold text-sm cursor-default">
                     {t('components.promptControls.promptHistory')}
@@ -212,9 +212,9 @@ export default function PromptControls({
                 />
 
                 {/* Parameters area */}
-                <div className="flex-initial flex flex-col justify-end min-h-0 overflow-y-auto">
-                    <h3 className="font-bold text-foreground text-base mb-3">{t('components.promptControls.title')}</h3>
-                    <div id='parameters' className="relative overflow-auto">
+                <div className="flex-initial flex flex-col justify-end min-h-0">
+                    <h3 className="font-bold text-foreground text-base mb-2">{t('components.promptControls.title')}</h3>
+                    <div id='parameters' className="relative">
                         <Parameter
                             parameterTitle={t('components.promptControls.specificity.title')}
                             parameterKey="specificity"
