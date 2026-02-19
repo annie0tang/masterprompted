@@ -263,9 +263,9 @@ export default function PromptControls({
                     <div className="flex py-3 items-stretch">
                         <Button
                             onClick={handleSubmitClick}
-                            variant="default"
-                            size="sm"
-                            className="flex-1 min-h-[48px] leading-tight rounded-full whitespace-normal text-center bg-brand-secondary-500 hover:bg-brand-secondary-600 text-foreground font-semibold"
+                            variant="secondary-outline"
+                            size="lg"
+                            className="flex-1 min-h-[48px] leading-tight whitespace-normal text-center font-semibold"
                             disabled={disableOptimize}
                         >
                             {t('components.promptControls.sendOptimizedPrompt')}
