@@ -99,6 +99,7 @@ export default function SpecificityResponse() {
             onParameterChange={handleParameterChange}
             onOptimize={handleApplyChanges}
             readOnly={true}
+            hideChatSubmitButton={true}
             disableOptimize={!hasUnappliedChanges}
             disableSend={true}
             files={[{ name: "EU_AI_Act.pdf" }]}
