@@ -89,17 +89,17 @@ function Parameter({
             >
                 <div className="pointer-events-none absolute top-[12px] left-[calc(16.666%+14px)] w-[calc(33.333%-26px)] h-[2px] bg-surface-500" />
                 <div className="pointer-events-none absolute top-[12px] left-[calc(50%+12px)] w-[calc(33.333%-26px)] h-[2px] bg-surface-500" />
-                <div className="flex flex-1 flex-col items-center gap-1 w-1/4">
+                <div className="flex flex-1 flex-col items-center gap-1 w-1/3">
                     <RadioGroupItem value={leftParameter} id={`${parameterTitle}-r1`} />
                     <Label htmlFor={`${parameterTitle}-r1`} className="text-[11px] font-normal text-center leading-tight px-0.5 text-muted-foreground">{leftParameter}</Label>
                 </div>
 
-                <div className="flex flex-1 flex-col items-center gap-1 w-1/4">
+                <div className="flex flex-1 flex-col items-center gap-1 w-1/3">
                     <RadioGroupItem value={NO_CHANGE_VALUE} id={`${parameterTitle}-r2`} />
                     <Label htmlFor={`${parameterTitle}-r2`} className="text-[11px] font-normal text-center leading-tight px-0.5 text-muted-foreground">{useLanguage().t('components.promptControls.original')}</Label>
                 </div>
 
-                <div className="flex flex-1 flex-col items-center gap-1 w-1/4">
+                <div className="flex flex-1 flex-col items-center gap-1 w-1/3">
                     <RadioGroupItem value={rightParameter} id={`${parameterTitle}-r3`} />
                     <Label htmlFor={`${parameterTitle}-r3`} className="text-[11px] font-normal text-center leading-tight px-0.5 text-muted-foreground">{rightParameter}</Label>
                 </div>
