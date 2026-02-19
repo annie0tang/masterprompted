@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { Download } from "lucide-react";
 import Header from "@/components/Header";
 import Breadcrumb from "@/components/Breadcrumb";
 import ModuleNavigation from "@/components/ModuleNavigation";
@@ -15,6 +16,30 @@ export default function Takeaways() {
 
   const handleNextTask = () => {
     navigate("/module/prompt-construction");
+  };
+
+  const handleDownload = () => {
+    const title = t('nextWord.takeaways.title');
+    const subtitle = t('nextWord.takeaways.subtitle');
+    const points = [
+      { title: t('nextWord.takeaways.point1Title'), body: t('nextWord.takeaways.point1') },
+      { title: t('nextWord.takeaways.point2Title'), body: t('nextWord.takeaways.point2') },
+      { title: t('nextWord.takeaways.point3Title'), body: t('nextWord.takeaways.point3') },
+    ];
+
+    const content = [
+      `${title} ${subtitle}`,
+      '',
+      ...points.map((p, i) => `${i + 1}. ${p.title}${p.body}`),
+    ].join('\n');
+
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'next-word-prediction-takeaways.txt';
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -65,12 +90,20 @@ export default function Takeaways() {
             </div>
           </div>
           
-          <div className="mt-16">
+          <div className="mt-16 flex items-center gap-4">
             <Button 
               onClick={handleNextTask}
               className="bg-secondary hover:bg-secondary/90 text-foreground font-bold px-8 py-6 rounded-full transition-colors"
             >
               {t('nextWord.takeaways.nextTask')}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handleDownload}
+              className="rounded-full px-6 py-6"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              {t('promptConstructionModule.takeaways.download')}
             </Button>
           </div>
         </div>

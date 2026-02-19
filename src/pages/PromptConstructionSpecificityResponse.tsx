@@ -78,7 +78,7 @@ export default function SpecificityResponse() {
   const hasUnappliedChanges = bias !== appliedBias || context !== appliedContext || style !== appliedStyle || specificity !== appliedSpecificity;
 
   return <div className="min-h-screen bg-white flex flex-col">
-    <Header className="mb-0" />
+    <Header />
 
     <main className="flex-1 flex flex-col">
       <div className="flex-1 flex justify-center">
