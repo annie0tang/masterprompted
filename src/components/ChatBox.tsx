@@ -90,6 +90,8 @@ type ChatboxProps = VariantProps<typeof chatboxVariants> & {
   readOnly?: boolean;
   /** Hides the submit button */
   hideSubmitButton?: boolean;
+  /** Auto-resize textarea height to fit content */
+  autoResize?: boolean;
   /** Additional CSS classes */
   className?: string;
 };
@@ -108,6 +110,7 @@ const Chatbox = ({
   onRemoveFile,
   readOnly = false,
   hideSubmitButton = false,
+  autoResize = false,
   className = "",
   size,
   state
@@ -117,6 +120,15 @@ const Chatbox = ({
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Auto-resize textarea to fit content
+  useEffect(() => {
+    if (autoResize && textareaRef.current) {
+      const el = textareaRef.current;
+      el.style.height = 'auto';
+      el.style.height = el.scrollHeight + 'px';
+    }
+  }, [value, autoResize]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange(e.target.value);
@@ -255,11 +267,12 @@ const Chatbox = ({
           size, 
           state: isBouncing ? "bouncing" : state 
         }),
+        autoResize && "max-h-none min-h-0",
         className
       )}
       style={{
-        resize: 'both',
-        overflow: 'auto',
+        resize: autoResize ? 'none' : 'both',
+        overflow: autoResize ? 'visible' : 'auto',
         maxWidth: '100%',
       }}
       aria-roledescription="Resizable chatbox"
