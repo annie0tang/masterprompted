@@ -114,12 +114,12 @@ export default function SpecificityResponse() {
       </div>
 
       {/* Right content area */}
-      <div className="flex-1 flex flex-col px-6 py-6 items-start">
+      <div className="flex-1 flex flex-col px-6 py-6 items-center">
         <div className="w-full max-w-[1100px]">
           <Breadcrumb />
           <div className="mb-5"></div>
         </div>
-        <div className="flex gap-6 max-w-[1100px] w-full justify-center">
+        <div className="flex gap-6 max-w-[1100px] w-full">
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col">
