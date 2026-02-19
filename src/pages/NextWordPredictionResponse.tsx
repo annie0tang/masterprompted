@@ -690,9 +690,8 @@ export default function HeadlineResponse() {
               {/* Takeaways Button - only show after user interaction */}
               {hasInteracted && (
                 <div className="mt-8">
-                  <Button variant="secondary" onClick={() => navigate("/module/next-word-prediction/takeaways")} className="rounded-full px-6 py-3">
-                    {t('components.breadcrumb.takeaways')}
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                  <Button variant="secondary-outline" size="lg" onClick={() => navigate("/module/next-word-prediction/takeaways")} className="px-10 font-heading font-semibold">
+                    {t('components.breadcrumb.takeaways')} →
                   </Button>
                 </div>
               )}
