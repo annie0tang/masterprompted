@@ -369,7 +369,7 @@ export default function HeadlineResponse() {
     </div>
   }];
 
-  return <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background overflow-x-hidden">
     <Header />
 
 
@@ -379,10 +379,7 @@ export default function HeadlineResponse() {
       </div>
 
       <div className="w-full flex justify-center">
-        {/* Centered content with evaluation panel adjacent */}
-        <div className="flex items-start">
-          {/* Main content */}
-          <div className="min-w-0 max-w-4xl">
+        <div className="max-w-4xl w-full">
             {/* Original Prompt */}
             <div className="mb-8">
               <ChatPrompt text="Write a headline for a long form journalistic article about ai ethics agreement reached across the eu" fileName="EU_AI_Act.pdf" />
@@ -693,12 +690,10 @@ export default function HeadlineResponse() {
               )}
             </div>
           </div>
-
-        </div>
-          {/* Evaluation panel - adjacent to content, expands rightward */}
-          <div className="flex-shrink-0" data-evaluation-panel>
-            <EvaluationPanel initialIsOpen={evaluationPanelOpen} canClose={true} />
-          </div>
+      </div>
+      {/* Evaluation panel - fixed to right side of viewport, doesn't affect layout */}
+      <div className="fixed right-4 top-24 z-10" data-evaluation-panel>
+        <EvaluationPanel initialIsOpen={evaluationPanelOpen} canClose={true} />
       </div>
     </main>
 
