@@ -21,10 +21,10 @@ export type VersionEvaluation = {
   data: DisinformationSpan[] | null;
 };
 
-export type ThreadVersion = { prompt: string; answer?: string; parameters?: Parameters };
-export type Thread = { 
-  versions: ThreadVersion[]; 
-  currentIndex: number; 
+export type ThreadVersion = {prompt: string;answer?: string;parameters?: Parameters;};
+export type Thread = {
+  versions: ThreadVersion[];
+  currentIndex: number;
   showDiff?: boolean;
   showEvaluation?: boolean;
   evaluations?: VersionEvaluation[];
@@ -66,7 +66,7 @@ const PromptPlayground = () => {
   const [pageLanguage, setPageLanguage] = useState<'en' | 'es'>('en');
 
   const handleThreadDiffToggle = useCallback((threadIndex: number, checked: boolean) => {
-    setThreads(prev => {
+    setThreads((prev) => {
       const next = [...prev];
       if (!next[threadIndex]) {
         return prev;
@@ -77,7 +77,7 @@ const PromptPlayground = () => {
   }, []);
 
   const handleThreadEvaluationToggle = useCallback((threadIndex: number, checked: boolean) => {
-    setThreads(prev => {
+    setThreads((prev) => {
       const next = [...prev];
       if (!next[threadIndex]) {
         return prev;
@@ -91,29 +91,29 @@ const PromptPlayground = () => {
     try {
       const seen = localStorage.getItem(LOCALSTORAGE_POPKEY);
       if (!seen) setShowControlPanelPopover(true);
-    } catch (e) { setShowControlPanelPopover(false); }
+    } catch (e) {setShowControlPanelPopover(false);}
   }, []);
 
   const handleParameterChange = (paramKey: keyof Parameters, value: string) => {
-    setParameters(prev => ({ ...prev, [paramKey]: value }));
+    setParameters((prev) => ({ ...prev, [paramKey]: value }));
   };
 
   const handleReset = () => {
     setFullReset(true);
-    setParameters({ specificity: "", style: "", context:   "", bias: "" });
+    setParameters({ specificity: "", style: "", context: "", bias: "" });
   };
 
   const uploadRagFiles = async (files: FileList | File[]) => {
     const fileArray = Array.from(files);
     if (!fileArray.length) return;
 
-    const newAttachments: AttachedFile[] = fileArray.map(file => ({
+    const newAttachments: AttachedFile[] = fileArray.map((file) => ({
       name: file.name,
-      isUploading: true,
+      isUploading: true
     }));
     const startIndex = attachedFiles.length;
 
-    setAttachedFiles(prev => [...prev, ...newAttachments]);
+    setAttachedFiles((prev) => [...prev, ...newAttachments]);
 
     const formData = new FormData();
     for (const file of fileArray) {
@@ -124,7 +124,7 @@ const PromptPlayground = () => {
     try {
       const response = await fetch("https://llm1.hochschule-stralsund.de:8000/upload_rag/", {
         method: "POST",
-        body: formData,
+        body: formData
       });
 
       if (!response.ok) {
@@ -135,18 +135,18 @@ const PromptPlayground = () => {
       const data = await response.json();
       console.log("upload_rag response:", data);
 
-      setAttachedFiles(prev =>
-        prev.map((file, index) => {
-          if (index >= startIndex && index < startIndex + newAttachments.length) {
-            return { ...file, isUploading: false };
-          }
-          return file;
-        })
+      setAttachedFiles((prev) =>
+      prev.map((file, index) => {
+        if (index >= startIndex && index < startIndex + newAttachments.length) {
+          return { ...file, isUploading: false };
+        }
+        return file;
+      })
       );
     } catch (error) {
       console.error("uploadRagFiles error:", error);
-      setAttachedFiles(prev =>
-        prev.filter((_, index) => index < startIndex || index >= startIndex + newAttachments.length)
+      setAttachedFiles((prev) =>
+      prev.filter((_, index) => index < startIndex || index >= startIndex + newAttachments.length)
       );
     }
   };
@@ -159,18 +159,18 @@ const PromptPlayground = () => {
     async (threadIndex: number, versionIndex: number, promptText: string) => {
       const hasRagFiles = attachedFiles.length > 0;
 
-      const url = hasRagFiles
-        ? "https://llm1.hochschule-stralsund.de:8000/answer_rag"
-        : "https://llm1.hochschule-stralsund.de:8000/answer";
+      const url = hasRagFiles ?
+      "https://llm1.hochschule-stralsund.de:8000/answer_rag" :
+      "https://llm1.hochschule-stralsund.de:8000/answer";
 
-      const body = hasRagFiles
-        ? { prompt: promptText, temperature: 0.7, session_id: sessionId }
-        : { prompt: promptText, temperature: 0.7, fileIds: [] };
+      const body = hasRagFiles ?
+      { prompt: promptText, temperature: 0.7, session_id: sessionId } :
+      { prompt: promptText, temperature: 0.7, fileIds: [] };
 
       const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body: JSON.stringify(body)
       });
 
       if (!response.ok) {
@@ -178,46 +178,46 @@ const PromptPlayground = () => {
         throw new Error(`answer request failed: ${response.status} - ${errorText}`);
       }
 
-      const data: { answer: string } = await response.json();
+      const data: {answer: string;} = await response.json();
 
       // Update answer in state
-      setThreads(prev => {
+      setThreads((prev) => {
         const copy = [...prev];
         const thread = copy[threadIndex];
         if (!thread?.versions[versionIndex]) return prev;
         const versions = thread.versions.map((version, idx) =>
-          idx === versionIndex ? { ...version, answer: data.answer } : version
+        idx === versionIndex ? { ...version, answer: data.answer } : version
         );
-        
+
         // Initialize evaluation entry as loading and disable showEvaluation
         const evaluations = [...(thread.evaluations || [])];
         evaluations[versionIndex] = { loading: true, error: false, data: null };
-        
-        copy[threadIndex] = { 
-          ...thread, 
+
+        copy[threadIndex] = {
+          ...thread,
           versions,
           evaluations,
-          showEvaluation: false, // Auto-disable while loading
+          showEvaluation: false // Auto-disable while loading
         };
         return copy;
       });
 
       // Trigger disinformation check
       const evaluationResult = await checkDisinformation(data.answer);
-      
+
       // Update evaluation state
-      setThreads(prev => {
+      setThreads((prev) => {
         const copy = [...prev];
         const thread = copy[threadIndex];
         if (!thread?.evaluations) return prev;
-        
+
         const evaluations = [...thread.evaluations];
         evaluations[versionIndex] = {
           loading: false,
           error: evaluationResult === null,
-          data: evaluationResult,
+          data: evaluationResult
         };
-        
+
         copy[threadIndex] = { ...thread, evaluations };
         return copy;
       });
@@ -234,32 +234,32 @@ const PromptPlayground = () => {
       const response = await fetch("https://llm1.hochschule-stralsund.de:8000/optimize", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt, language: pageLanguage, temperature: 0.7, specificity, communication_mode: style, depth: context, bias, length: "short" }),
+        body: JSON.stringify({ prompt, language: pageLanguage, temperature: 0.7, specificity, communication_mode: style, depth: context, bias, length: "short" })
       });
       const data = await response.json();
       if (data && typeof data.optimized_prompt === "string") {
         setEditingText(data.optimized_prompt);
         setDisableOptimize(false);
-        setOptimizePulse(prev => prev + 1);
+        setOptimizePulse((prev) => prev + 1);
       } else {
         throw new Error("handlePromptOptimize: optimized_prompt missing or not a string");
       }
-    } catch (err) { console.error("handlePromptOptimize failed:", err); }
+    } catch (err) {console.error("handlePromptOptimize failed:", err);}
     setWaitingForOptimization(false);
   }, [pageLanguage]);
 
   useEffect(() => {
     if (!currentPrompt.trim() && !editingText.trim()) return;
-    if (Object.values(parameters).every(p => p === "")) {
+    if (Object.values(parameters).every((p) => p === "")) {
       if (!fullReset) {
         setEditingText(currentPrompt);
         setDisableOptimize(true);
-        setOptimizePulse(prev => prev + 1);
+        setOptimizePulse((prev) => prev + 1);
       }
       setFullReset(false);
       return;
     }
-    if (Object.values(parameters).some(p => p !== "")) {
+    if (Object.values(parameters).some((p) => p !== "")) {
       setDisableSend(true);
       const promptToOptimize = currentPrompt.trim() ? currentPrompt : editingText;
       if (promptToOptimize) {
@@ -277,7 +277,7 @@ const PromptPlayground = () => {
 
   const createNewThreadAndFetch = async (submittedText: string) => {
     const newThreadIndex = threads.length;
-    setThreads(prev => [...prev, { versions: [{ prompt: submittedText }], currentIndex: 0, showDiff: false }]);
+    setThreads((prev) => [...prev, { versions: [{ prompt: submittedText }], currentIndex: 0, showDiff: false }]);
     await submitAnswerForThreadVersion(newThreadIndex, 0, submittedText);
   };
 
@@ -287,7 +287,7 @@ const PromptPlayground = () => {
     const lastVersionPrompt = threads[threadIndex].versions.at(-1)?.prompt;
     if (promptText !== lastVersionPrompt) {
       const newVersionIndex = threads[threadIndex].versions.length;
-      setThreads(prev => {
+      setThreads((prev) => {
         const copy = [...prev];
         const targetThread = copy[threadIndex];
         if (!targetThread) {
@@ -296,7 +296,7 @@ const PromptPlayground = () => {
         copy[threadIndex] = {
           ...targetThread,
           versions: [...targetThread.versions, { prompt: promptText, answer: undefined, parameters }],
-          currentIndex: newVersionIndex,
+          currentIndex: newVersionIndex
         };
         return copy;
       });
@@ -312,7 +312,7 @@ const PromptPlayground = () => {
     setDisableSend(true);
     setDisableOptimize(true);
     setHasManualEdit(false);
-    setEnableSpecificity(true); setEnableBias(true); setEnableContext(true); setEnableStyle(true);
+    setEnableSpecificity(true);setEnableBias(true);setEnableContext(true);setEnableStyle(true);
     if (threads.length === 0 || hasManualEdit) {
       await createNewThreadAndFetch(submittedText);
     } else {
@@ -320,8 +320,8 @@ const PromptPlayground = () => {
     }
   };
 
-  const handleChatSubmit = (submittedText: string) => { void handleSubmit(submittedText, true); };
-  const handleOptimizeSubmit = async () => { if (editingText.trim()) { void handleSubmit(editingText, false); } };
+  const handleChatSubmit = (submittedText: string) => {void handleSubmit(submittedText, true);};
+  const handleOptimizeSubmit = async () => {if (editingText.trim()) {void handleSubmit(editingText, false);}};
   const handleInputChange = (input: string) => {
     setHasManualEdit(true);
     handleReset();
@@ -330,30 +330,30 @@ const PromptPlayground = () => {
     const isEmpty = !input.trim();
     setDisableSend(isEmpty);
     setDisableOptimize(true);
-    setEnableSpecificity(false); setEnableBias(false); setEnableContext(false); setEnableStyle(false);
+    setEnableSpecificity(false);setEnableBias(false);setEnableContext(false);setEnableStyle(false);
   };
 
   const handlePrevVersion = useCallback((threadIndex: number) => {
-    setThreads(prev => {
+    setThreads((prev) => {
       const copy = [...prev];
       const thread = copy[threadIndex];
       if (!thread) return prev;
       copy[threadIndex] = {
         ...thread,
-        currentIndex: Math.max(0, thread.currentIndex - 1),
+        currentIndex: Math.max(0, thread.currentIndex - 1)
       };
       return copy;
     });
   }, []);
 
   const handleNextVersion = useCallback((threadIndex: number) => {
-    setThreads(prev => {
+    setThreads((prev) => {
       const copy = [...prev];
       const thread = copy[threadIndex];
       if (!thread) return prev;
       copy[threadIndex] = {
         ...thread,
-        currentIndex: Math.min(thread.versions.length - 1, thread.currentIndex + 1),
+        currentIndex: Math.min(thread.versions.length - 1, thread.currentIndex + 1)
       };
       return copy;
     });
@@ -362,27 +362,27 @@ const PromptPlayground = () => {
   return (
     <div className="min-h-screen max-h-screen bg-background">
       <Header onLanguageChange={setPageLanguage} />
-      <main className="container mx-auto px-6 py-4">
+      <main className="container mx-auto px-0 py-0">
         <div className="flex gap-8 h-[calc(100vh-8rem)]">
-          <div className="shrink-0 h-full bg-surface-200 2xl:bg-transparent flex items-start justify-start">
-            <div className="w-auto h-[calc(100vh-8rem)] 2xl:bg-card 2xl:border 2xl:border-border 2xl:rounded-lg 2xl:shadow-sm 2xl:overflow-hidden">
+          <div className="flex-none h-full">
+            <div className="sticky top-4 h-[calc(100vh-8rem)]">
               <PromptControls {...{
-                parameters, 
-                onParameterChange: handleParameterChange, 
-                onReset: handleReset, 
-                onOptimize: handleOptimizeSubmit, 
-                onUndo: handleUndo, 
-                chatValue: editingText, 
-                onChatChange: handleInputChange, 
-                onChatSubmit: handleChatSubmit, 
-                chatSubmitButtonId: "prompt-playground-submit", 
-                disableSend, 
-                disableOptimize, 
-                enableBias, 
-                enableSpecificity, 
-                enableContext, 
-                enableStyle, 
-                chatAnimationKey: optimizePulse, 
+                parameters,
+                onParameterChange: handleParameterChange,
+                onReset: handleReset,
+                onOptimize: handleOptimizeSubmit,
+                onUndo: handleUndo,
+                chatValue: editingText,
+                onChatChange: handleInputChange,
+                onChatSubmit: handleChatSubmit,
+                chatSubmitButtonId: "prompt-playground-submit",
+                disableSend,
+                disableOptimize,
+                enableBias,
+                enableSpecificity,
+                enableContext,
+                enableStyle,
+                chatAnimationKey: optimizePulse,
                 waitingforOptimization,
                 files: attachedFiles,
                 onUploadFiles: handleUploadFiles
@@ -395,30 +395,30 @@ const PromptPlayground = () => {
             onNextVersion={handleNextVersion}
             onToggleThreadDiff={handleThreadDiffToggle}
             onToggleThreadEvaluation={handleThreadEvaluationToggle}
-            onRequestControlPanelHelp={() => setShowControlPanelPopover(true)}
-          />
+            onRequestControlPanelHelp={() => setShowControlPanelPopover(true)} />
+
         </div>
       </main>
-      {showControlPanelPopover && (
-        <PopoverSeries
-          steps={[
-            { id: "submit-hint", trigger: "#chatbox", content: t('components.popoverSeries.promptPlayground.submitHint') },
-            { id: "controls-hint", trigger: "#parameters", content: t('components.popoverSeries.promptPlayground.controlsHint') }
-          ]}
-          initialStep={0}
-          onClose={() => {
-            try { localStorage.setItem(LOCALSTORAGE_POPKEY, "true"); } catch (e) { /* ignore */ }
-            setShowControlPanelPopover(false);
-          }}
-        />
-      )}
-      <div className="container mx-auto px-6 mt-2 text-sm text-muted-foreground">
+      {showControlPanelPopover &&
+      <PopoverSeries
+        steps={[
+        { id: "submit-hint", trigger: "#chatbox", content: t('components.popoverSeries.promptPlayground.submitHint') },
+        { id: "controls-hint", trigger: "#parameters", content: t('components.popoverSeries.promptPlayground.controlsHint') }]
+        }
+        initialStep={0}
+        onClose={() => {
+          try {localStorage.setItem(LOCALSTORAGE_POPKEY, "true");} catch (e) {/* ignore */}
+          setShowControlPanelPopover(false);
+        }} />
+
+      }
+      <div className="mt-6 text-sm text-gray-500 max-w-7xl mx-auto">
         LLMs have been used in the following places:<br />
         The creation of prompt optimizations and generated outputs in the Prompt Playground<br />
-        LLMs used include: Mistral, Claude, Chat GPT &amp; Llama 3.1 8B (open source)
+        LLMs used include: Mistral, Claude, Chat GPT & Llama 3.1 8B (open source)
       </div>
-    </div>
-  );
+    </div>);
+
 };
 
 export default PromptPlayground;
