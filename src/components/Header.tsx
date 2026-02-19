@@ -152,8 +152,8 @@ const Header = ({ transparent = false, onLanguageChange }: HeaderProps) => {
                   }>
 
                     {/* Green highlight bar for active item */}
-                    {isActive(item.path) &&
-                  <div className="absolute left-0 top-1 bottom-1 w-1 bg-primary rounded-r" />
+                    {isActive(item.path)
+
                   }
                     
                     {/* Checkmark for active or completed modules */}
