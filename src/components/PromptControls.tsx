@@ -1,10 +1,9 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Info } from "lucide-react";
+import { Info, History } from "lucide-react";
 import Chatbox from "./ChatBox";
 import { Parameters } from "@/pages/PromptPlayground";
 import { useState } from "react";
@@ -56,18 +55,17 @@ function Parameter({
     };
 
     return (
-        <fieldset
-            className={`my-2 p-0 px-1 border border-border rounded-lg ${!enabled && 'opacity-60 pointer-events-none'}`}
-            disabled={!enabled}
+        <div
+            className={`my-3 ${!enabled && 'opacity-60 pointer-events-none'}`}
         >
-            <legend className="text-xs font-medium text-muted-foreground px-2 mx-auto flex items-center gap-1">
-                <span>{parameterTitle}</span>
+            <div className="flex items-center gap-1 mb-2">
+                <span className="text-sm font-bold text-foreground">{parameterTitle}</span>
                 {infoText && (
                     <TooltipProvider>
                         <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen} delayDuration={300}>
                             <TooltipTrigger asChild>
                                 <Info
-                                    className="w-3 h-3 cursor-pointer"
+                                    className="w-3.5 h-3.5 cursor-pointer text-muted-foreground"
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         setTooltipOpen(!tooltipOpen);
@@ -80,32 +78,32 @@ function Parameter({
                         </Tooltip>
                     </TooltipProvider>
                 )}
-            </legend>
+            </div>
 
             <RadioGroup
                 value={selectedValue}
                 onValueChange={handleValueChange}
                 orientation="horizontal"
-                className="relative flex w-full justify-between gap-0 p-1"
+                className="relative flex w-full justify-between gap-0 py-1 px-2"
             >
-                <div className="pointer-events-none absolute top-[12px] left-[calc(16.666%+14px)] w-[calc(33.333%-26px)] h-px bg-gray-300" />
-                <div className="pointer-events-none absolute top-[12px] left-[calc(50%+12px)] w-[calc(33.333%-26px)] h-px bg-gray-300" />
+                <div className="pointer-events-none absolute top-[12px] left-[calc(16.666%+14px)] w-[calc(33.333%-26px)] h-[2px] bg-surface-500" />
+                <div className="pointer-events-none absolute top-[12px] left-[calc(50%+12px)] w-[calc(33.333%-26px)] h-[2px] bg-surface-500" />
                 <div className="flex flex-1 flex-col items-center gap-1 w-1/4">
                     <RadioGroupItem value={leftParameter} id={`${parameterTitle}-r1`} />
-                    <Label htmlFor={`${parameterTitle}-r1`} className="text-[10px] font-normal whitespace-nowrap px-1">{leftParameter}</Label>
+                    <Label htmlFor={`${parameterTitle}-r1`} className="text-[11px] font-normal whitespace-nowrap px-1 text-muted-foreground">{leftParameter}</Label>
                 </div>
 
                 <div className="flex flex-1 flex-col items-center gap-1 w-1/4">
                     <RadioGroupItem value={NO_CHANGE_VALUE} id={`${parameterTitle}-r2`} />
-                    <Label htmlFor={`${parameterTitle}-r2`} className="text-[10px] font-normal whitespace-nowrap px-1">{useLanguage().t('components.promptControls.original')}</Label>
+                    <Label htmlFor={`${parameterTitle}-r2`} className="text-[11px] font-normal whitespace-nowrap px-1 text-muted-foreground">{useLanguage().t('components.promptControls.original')}</Label>
                 </div>
 
                 <div className="flex flex-1 flex-col items-center gap-1 w-1/4">
                     <RadioGroupItem value={rightParameter} id={`${parameterTitle}-r3`} />
-                    <Label htmlFor={`${parameterTitle}-r3`} className="text-[10px] font-normal whitespace-nowrap px-1">{rightParameter}</Label>
+                    <Label htmlFor={`${parameterTitle}-r3`} className="text-[11px] font-normal whitespace-nowrap px-1 text-muted-foreground">{rightParameter}</Label>
                 </div>
             </RadioGroup>
-        </fieldset>
+        </div>
     );
 }
 
@@ -186,8 +184,16 @@ export default function PromptControls({
     const isAnyParameterSet = Object.values(parameters).some(p => p !== "");
 
     return (
-        <Card className={`bg-card border border-border rounded-lg max-w-sm h-[calc(100vh-160px)] min-w-[300px] ${className}`}>
-            <CardContent className="p-2 h-full flex flex-col gap-1">
+        <div className={`bg-surface-100 rounded-xl max-w-sm h-[calc(100vh-160px)] min-w-[300px] flex flex-col ${className}`}>
+            {/* Prompt History Link */}
+            <button
+                className="text-brand-secondary-500 font-semibold text-sm py-3 hover:underline cursor-pointer text-center"
+                onClick={() => {/* Prompt history handler - placeholder */}}
+            >
+                {t('components.promptControls.promptHistory')}
+            </button>
+
+            <div className="px-4 pb-4 flex-1 flex flex-col gap-1 min-h-0">
                 {/* Chatbox */}
                 <Chatbox
                     value={chatValue}
@@ -204,10 +210,9 @@ export default function PromptControls({
                     className="z-50 flex-auto min-h-0"
                 />
 
-                {/* Parameters area: make this the flexible scrollable region so it shrinks/scrolls when the chatbox grows */}
+                {/* Parameters area */}
                 <div className="flex-initial flex flex-col justify-end min-h-0 overflow-y-auto">
-                    <h3 className="font-semibold text-card-foreground text-center whitespace-nowrap">{t('components.promptControls.title')}</h3>
-                    <Separator />
+                    <h3 className="font-bold text-foreground text-lg mt-2 mb-1">{t('components.promptControls.title')}</h3>
                     <div id='parameters' className="relative overflow-auto">
                         <Parameter
                             parameterTitle={t('components.promptControls.specificity.title')}
@@ -220,6 +225,7 @@ export default function PromptControls({
                             onParameterChange={onParameterChange}
                             infoText={t('components.promptControls.specificity.info')}
                         />
+                        <Separator className="my-1" />
                         <Parameter
                             parameterTitle={t('components.promptControls.conversationStyle.title')}
                             parameterKey="style"
@@ -231,6 +237,7 @@ export default function PromptControls({
                             onParameterChange={onParameterChange}
                             infoText={t('components.promptControls.conversationStyle.info')}
                         />
+                        <Separator className="my-1" />
                         <Parameter
                             parameterTitle={t('components.promptControls.context.title')}
                             parameterKey="context"
@@ -242,6 +249,7 @@ export default function PromptControls({
                             onParameterChange={onParameterChange}
                             infoText={t('components.promptControls.context.info')}
                         />
+                        <Separator className="my-1" />
                         <Parameter
                             parameterTitle={t('components.promptControls.bias.title')}
                             parameterKey="bias"
@@ -255,19 +263,19 @@ export default function PromptControls({
                         />
                     </div>
 
-                    <div className="flex py-2 items-stretch">
+                    <div className="flex py-3 items-stretch">
                         <Button
                             onClick={handleSubmitClick}
                             variant="default"
                             size="sm"
-                            className="flex-1 min-h-[48px] leading-tight rounded-full whitespace-normal text-center"
+                            className="flex-1 min-h-[48px] leading-tight rounded-full whitespace-normal text-center bg-brand-secondary-500 hover:bg-brand-secondary-600 text-white"
                             disabled={disableOptimize}
                         >
                             {t('components.promptControls.sendOptimizedPrompt')}
                         </Button>
                     </div>
                 </div>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     );
 }
