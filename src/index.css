@@ -37,8 +37,8 @@ All colors MUST be HSL.
     --accent: 145 62% 80%;
     --accent-foreground: 145 64% 15%;
 
-    /* Destructive: #F44336 (Error 500) -> 3 90% 63% */
-    --destructive: 3 90% 63%;
+    /* Destructive: #E2402E -> 5 78% 53% */
+    --destructive: 5 78% 53%;
     --destructive-foreground: 0 0% 100%;
 
     /* BORDER, INPUT, RING */
