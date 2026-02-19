@@ -202,6 +202,7 @@ export default function PromptControls({
                     onRemoveFile={onRemoveFile}
                     readOnly={readOnly}
                     hideSubmitButton={hideChatSubmitButton}
+                    autoResize={readOnly}
                     className="z-50 flex-auto min-h-0 w-full"
                 />
 
