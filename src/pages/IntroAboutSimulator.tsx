@@ -4,6 +4,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { ArrowRight } from "lucide-react";
 
 /**
  * IntroAboutSimulator - About page explaining the simulator before starting
@@ -20,7 +21,7 @@ const AboutSimulator = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="container mx-auto px-6 py-6">
         <Breadcrumb />
         <div className="max-w-4xl mx-auto flex items-center justify-center min-h-[600px] relative">
@@ -31,7 +32,7 @@ const AboutSimulator = () => {
               alt="What is simulator cone"
               className="w-full md:w-[325px] h-auto flex-shrink-0" />
 
-            
+
             <CardContent className="p-0 w-full flex flex-col">
               {/* About label */}
               <div className="mb-6">
@@ -61,9 +62,7 @@ const AboutSimulator = () => {
                 className="w-fit px-10 py-6 font-heading font-semibold text-lg rounded-full"
               >
                 {t('intro.aboutSimulator.continue')}
-                <svg width="10" height="8" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg" className="ml-3">
-                  <path d="M1 5H11M11 5L7 1M11 5L7 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <ArrowRight className="-mr-2 !h-6 !w-6" />
               </Button>
             </CardContent>
           </Card>

@@ -6,6 +6,7 @@ import ModuleNavigation from "@/components/ModuleNavigation";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { ArrowRight } from "lucide-react";
 
 export default function PromptConstructionSpecificityTakeaways() {
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ export default function PromptConstructionSpecificityTakeaways() {
           <h2 className="text-h2 font-heading text-foreground mb-12">
             {t('promptConstructionModule.takeaways.subtitle')}
           </h2>
-          
+
           <div className="space-y-8">
             {[1, 2, 3].map((n) => (
               <div key={n} className="flex gap-6 items-start">
@@ -74,7 +75,7 @@ export default function PromptConstructionSpecificityTakeaways() {
               </div>
             ))}
           </div>
-          
+
           <div className="mt-16 flex items-center gap-4">
             <Button
               variant="secondary"
@@ -82,9 +83,7 @@ export default function PromptConstructionSpecificityTakeaways() {
               className="font-heading font-semibold px-10 py-6 rounded-full"
             >
               {t('promptConstructionModule.takeaways.promptPlayground')}
-              <svg width="10" height="8" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg" className="ml-3">
-                 <path d="M1 5H11M11 5L7 1M11 5L7 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              <ArrowRight className="ml-2 !h-6 !w-6" />
             </Button>
             <Dialog>
               <DialogTrigger asChild>

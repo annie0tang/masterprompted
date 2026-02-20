@@ -5,6 +5,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import ModuleNavigation from "@/components/ModuleNavigation";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { ArrowRight } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 export default function Takeaways() {
@@ -56,7 +57,7 @@ export default function Takeaways() {
           <h2 className="text-h2 font-heading text-foreground mb-12">
             {t('nextWord.takeaways.subtitle')}
           </h2>
-          
+
           <div className="space-y-8">
             {[1, 2, 3].map((n) => (
               <div key={n} className="flex gap-6 items-start">
@@ -70,14 +71,15 @@ export default function Takeaways() {
               </div>
             ))}
           </div>
-          
+
           <div className="mt-16 flex items-center gap-4">
-            <Button 
+            <Button
               variant="secondary"
               onClick={() => navigate("/module/prompt-construction")}
               className="font-heading font-semibold px-10 py-6 rounded-full"
             >
               {t('nextWord.takeaways.nextTask')}
+              <ArrowRight className="-mr-2 !h-6 !w-6" />
             </Button>
             <Dialog>
               <DialogTrigger asChild>
@@ -113,8 +115,8 @@ export default function Takeaways() {
           </div>
         </div>
       </main>
-      <ModuleNavigation 
-        previousRoute="/module/next-word-prediction/response" 
+      <ModuleNavigation
+        previousRoute="/module/next-word-prediction/response"
         nextRoute="/module/prompt-construction"
       />
     </div>

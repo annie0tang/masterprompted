@@ -4,6 +4,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { ArrowRight } from "lucide-react";
 
 /**
  * IntroBase - Main introduction page for the learning modules
@@ -56,9 +57,7 @@ const Introduction = () => {
                 className="w-fit px-10 py-6 font-heading font-semibold text-lg rounded-full"
               >
                 {t('intro.base.startSimulator')}
-                <svg width="10" height="8" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg" className="ml-3">
-                  <path d="M1 5H11M11 5L7 1M11 5L7 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <ArrowRight className="-mr-2 !h-6 !w-6" />
               </Button>
             </CardContent>
           </Card>

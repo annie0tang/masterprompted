@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
 import starImage from "@/assets/star.png";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { ArrowRight } from "lucide-react";
 
 /**
  * PromptConstructionBase - Introduction page for the Prompt Construction module
@@ -22,7 +23,7 @@ export default function PromptConstruction() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="container mx-auto px-6 py-6">
         <Breadcrumb />
         <div className="mb-5" />
@@ -30,9 +31,9 @@ export default function PromptConstruction() {
           <Card className="flex flex-row items-start gap-10 p-10 bg-card border border-border shadow-lg rounded-2xl">
             {/* Left column - Star image */}
             <div className="flex-shrink-0">
-              <img 
-                src={starImage} 
-                alt="Star illustration" 
+              <img
+                src={starImage}
+                alt="Star illustration"
                 className="w-[325px] h-auto"
               />
             </div>
@@ -44,8 +45,8 @@ export default function PromptConstruction() {
                 <span className="text-muted-foreground text-sm">
                   {t('promptConstructionModule.intro.label')}
                 </span>
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   size="icon"
                   onClick={() => navigate("/modules")}
                   className="h-6 w-6 text-muted-foreground hover:text-foreground"
@@ -65,14 +66,12 @@ export default function PromptConstruction() {
               </p>
 
               {/* Continue button */}
-              <Button 
+              <Button
                 onClick={handleContinue}
                 className="w-fit px-10 py-6 font-heading font-semibold text-lg rounded-full"
               >
                 {t('promptConstructionModule.intro.continue')}
-                <svg width="10" height="8" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg" className="ml-3">
-                  <path d="M1 5H11M11 5L7 1M11 5L7 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <ArrowRight className="-mr-2 !h-6 !w-6" />
               </Button>
             </CardContent>
           </Card>

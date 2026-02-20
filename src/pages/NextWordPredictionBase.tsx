@@ -4,6 +4,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { ArrowRight } from "lucide-react";
 
 /**
  * NextWordPredictionIntro - Introduction page for the Next Word Prediction module
@@ -20,7 +21,7 @@ const NextWordPredictionIntro = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="container mx-auto px-6 py-6">
         <Breadcrumb />
         <div className="max-w-5xl mx-auto py-8">
@@ -31,7 +32,7 @@ const NextWordPredictionIntro = () => {
               alt="Stair blocks"
               className="w-[325px] h-auto flex-shrink-0 mt-2" />
 
-            
+
             <CardContent className="p-0 w-full flex flex-col">
               {/* Learning label */}
               <div className="flex items-center justify-between w-full mb-6">
@@ -56,9 +57,7 @@ const NextWordPredictionIntro = () => {
                 className="w-fit px-10 py-6 font-heading font-semibold text-lg rounded-full"
               >
                 {t('nextWord.intro.continue')}
-                <svg width="10" height="8" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg" className="ml-2">
-                  <path d="M1 5H11M11 5L7 1M11 5L7 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <ArrowRight className="-mr-2 !h-6 !w-6" />
               </Button>
             </CardContent>
           </Card>
