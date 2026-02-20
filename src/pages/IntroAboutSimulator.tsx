@@ -24,13 +24,13 @@ const AboutSimulator = () => {
       <main className="container mx-auto px-6 py-6">
         <Breadcrumb />
         <div className="max-w-4xl mx-auto flex items-center justify-center min-h-[600px] relative">
-          <Card className="w-full max-w-4xl flex flex-col md:flex-row items-start p-8 md:p-10 gap-6 md:gap-8 bg-card border border-border shadow-lg rounded-2xl">
+          <Card className="w-full max-w-4xl flex flex-col md:flex-row items-start p-8 md:p-10 gap-6 md:gap-8 border border-border shadow-lg rounded-2xl bg-white">
             {/* Image inside the popup - aligned to top and smaller */}
-            <img 
-              src="/whatis.png" 
-              alt="What is simulator cone" 
-              className="w-full md:w-[325px] h-auto flex-shrink-0"
-            />
+            <img
+              src="/whatis.png"
+              alt="What is simulator cone"
+              className="w-full md:w-[325px] h-auto flex-shrink-0" />
+
             
             <CardContent className="p-0 w-full flex flex-col">
               {/* About label */}
@@ -56,34 +56,34 @@ const AboutSimulator = () => {
               </p>
 
               {/* Continue button */}
-              <Button 
+              <Button
                 onClick={handleStartSimulator}
-                className="w-fit px-10 py-6 bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold text-lg rounded-full transition-colors"
-              >
+                className="w-fit px-10 py-6 bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold text-lg rounded-full transition-colors">
+
                 {t('intro.aboutSimulator.continue')}
-                <svg 
-                  width="10" 
-                  height="8" 
-                  viewBox="0 0 12 10" 
-                  fill="none" 
+                <svg
+                  width="10"
+                  height="8"
+                  viewBox="0 0 12 10"
+                  fill="none"
                   xmlns="http://www.w3.org/2000/svg"
-                  className="ml-3"
-                >
-                  <path 
-                    d="M1 5H11M11 5L7 1M11 5L7 9" 
-                    stroke="hsl(0 0% 12%)" 
-                    strokeWidth="2" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round"
-                  />
+                  className="ml-3">
+
+                  <path
+                    d="M1 5H11M11 5L7 1M11 5L7 9"
+                    stroke="hsl(0 0% 12%)"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round" />
+
                 </svg>
               </Button>
             </CardContent>
           </Card>
         </div>
       </main>
-    </div>
-  );
+    </div>);
+
 };
 
 export default AboutSimulator;
