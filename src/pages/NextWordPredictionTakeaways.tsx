@@ -90,20 +90,36 @@ export default function Takeaways() {
             </div>
           </div>
           
-          <div className="mt-16 flex items-center gap-4">
+          {/* Download Preview */}
+          <div className="mt-12 border border-border rounded-lg bg-card p-6">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                {t('promptConstructionModule.takeaways.download')} — Preview
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleDownload}
+                className="rounded-full"
+              >
+                <Download className="h-4 w-4 mr-2" />
+                .txt
+              </Button>
+            </div>
+            <div className="font-mono text-sm text-muted-foreground space-y-2 whitespace-pre-line">
+              <p className="font-bold text-foreground">{t('nextWord.takeaways.title')} {t('nextWord.takeaways.subtitle')}</p>
+              <p>1. {t('nextWord.takeaways.point1Title')}{t('nextWord.takeaways.point1')}</p>
+              <p>2. {t('nextWord.takeaways.point2Title')}{t('nextWord.takeaways.point2')}</p>
+              <p>3. {t('nextWord.takeaways.point3Title')}{t('nextWord.takeaways.point3')}</p>
+            </div>
+          </div>
+
+          <div className="mt-8 flex items-center gap-4">
             <Button 
               onClick={handleNextTask}
               className="bg-secondary hover:bg-secondary/90 text-foreground font-bold px-8 py-6 rounded-full transition-colors"
             >
               {t('nextWord.takeaways.nextTask')}
-            </Button>
-            <Button
-              variant="outline"
-              onClick={handleDownload}
-              className="rounded-full px-6 py-6"
-            >
-              <Download className="h-4 w-4 mr-2" />
-              {t('promptConstructionModule.takeaways.download')}
             </Button>
           </div>
         </div>

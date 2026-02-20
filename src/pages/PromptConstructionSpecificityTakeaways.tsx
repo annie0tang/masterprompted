@@ -93,33 +93,44 @@ export default function PromptConstructionSpecificityTakeaways() {
             </div>
           </div>
           
-          <div className="mt-16 flex items-center gap-4">
+          {/* Download Preview */}
+          <div className="mt-12 border border-border rounded-lg bg-card p-6">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                {t('promptConstructionModule.takeaways.download')} — Preview
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleDownload}
+                className="rounded-full"
+              >
+                <Download className="h-4 w-4 mr-2" />
+                .txt
+              </Button>
+            </div>
+            <div className="font-mono text-sm text-muted-foreground space-y-2 whitespace-pre-line">
+              <p className="font-bold text-foreground">{t('promptConstructionModule.takeaways.title')} {t('promptConstructionModule.takeaways.subtitle')}</p>
+              <p>1. {t('promptConstructionModule.takeaways.point1Title')}{t('promptConstructionModule.takeaways.point1')}</p>
+              <p>2. {t('promptConstructionModule.takeaways.point2Title')}{t('promptConstructionModule.takeaways.point2')}</p>
+              <p>3. {t('promptConstructionModule.takeaways.point3Title')}{t('promptConstructionModule.takeaways.point3')}</p>
+              <hr className="border-border my-2" />
+              <p className="font-bold text-foreground">Tips for better prompting:</p>
+              <p>• Be specific – include dates, names, scope, and format expectations.</p>
+              <p>• Provide context – attach relevant documents or background info.</p>
+              <p>• Stay neutral – avoid conversational or leading language.</p>
+              <p>• Iterate – refine your prompt based on the output you receive.</p>
+            </div>
+          </div>
+
+          <div className="mt-8 flex items-center gap-4">
             <Button
               onClick={() => navigate("/playground")}
               className="bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold px-8 py-6 rounded-full transition-colors">
               {t('promptConstructionModule.takeaways.promptPlayground')}
-              <svg
-                width="10"
-                height="8"
-                viewBox="0 0 12 10"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="ml-3">
-                <path
-                  d="M1 5H11M11 5L7 1M11 5L7 9"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round" />
+              <svg width="10" height="8" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg" className="ml-3">
+                <path d="M1 5H11M11 5L7 1M11 5L7 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-            </Button>
-            <Button
-              variant="outline"
-              onClick={handleDownload}
-              className="rounded-full px-6 py-6"
-            >
-              <Download className="h-4 w-4 mr-2" />
-              {t('promptConstructionModule.takeaways.download')}
             </Button>
           </div>
         </div>
