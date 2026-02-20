@@ -32,11 +32,11 @@ export default function PromptConstructionSpecificityTakeaways() {
       '• Iterate – refine your prompt based on the output you receive.',
       '',
       '---',
-      'Practical To-Dos:',
-      '☐ Take a recent story you worked on and draft three progressively more specific prompts for it.',
-      '☐ Attach a source document to a prompt and ask the AI to summarize it – compare with your own summary.',
-      '☐ Rewrite a conversational prompt in neutral, journalistic language and compare outputs.',
-      '☐ Run the same prompt twice with slight wording changes and document how the output differs.',
+      'Workflow Action Items:',
+      '☐ Include specific dates, names, and scope in every prompt you use for research or drafting.',
+      '☐ Attach the original source document when asking AI to summarize or extract information.',
+      '☐ Use neutral, journalistic language in prompts — avoid leading or conversational phrasing.',
+      '☐ Iterate on prompts that produce weak results: refine wording, add constraints, and re-run.',
     ].join('\n');
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
@@ -107,11 +107,11 @@ export default function PromptConstructionSpecificityTakeaways() {
                   <p>• Stay neutral – avoid conversational or leading language.</p>
                   <p>• Iterate – refine your prompt based on the output you receive.</p>
                   <hr className="border-border my-2" />
-                  <p className="font-bold text-foreground">Practical To-Dos:</p>
-                  <p>☐ Take a recent story you worked on and draft three progressively more specific prompts for it.</p>
-                  <p>☐ Attach a source document to a prompt and ask the AI to summarize it – compare with your own summary.</p>
-                  <p>☐ Rewrite a conversational prompt in neutral, journalistic language and compare outputs.</p>
-                  <p>☐ Run the same prompt twice with slight wording changes and document how the output differs.</p>
+                  <p className="font-bold text-foreground">Workflow Action Items:</p>
+                  <p>☐ Include specific dates, names, and scope in every prompt you use for research or drafting.</p>
+                  <p>☐ Attach the original source document when asking AI to summarize or extract information.</p>
+                  <p>☐ Use neutral, journalistic language in prompts — avoid leading or conversational phrasing.</p>
+                  <p>☐ Iterate on prompts that produce weak results: refine wording, add constraints, and re-run.</p>
                 </div>
                 <div className="flex justify-end mt-2">
                   <Button onClick={handleDownload} className="rounded-full">
