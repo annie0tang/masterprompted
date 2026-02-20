@@ -28,7 +28,7 @@ export default function Specificity() {
 
       // Only count clicks that are NOT on the submit button
       if (submitButton && !submitButton.contains(target)) {
-        setClickCount(prev => {
+        setClickCount((prev) => {
           const newCount = prev + 1;
           if (newCount >= 3) {
             setShowPopover(true);
@@ -64,24 +64,24 @@ export default function Specificity() {
           <ChatboxDummy
             value={t('promptConstructionModule.specificity.input')}
             submitButtonId="chatbox-submit-button"
-            onSubmit={handleSubmit}
-          />
-          {showPopover && (
-            <PopoverSeries
-              steps={[
-                {
-                  id: "submit-hint",
-                  trigger: "#chatbox-submit-button",
-                  content: t('promptConstructionModule.specificity.popoverSubmit')
-                }
-              ]}
-              initialStep={0}
-              onClose={() => {
-                setShowPopover(false);
-                setClickCount(0); // Reset click count when popover is closed
-              }}
-            />
-          )}
+            onSubmit={handleSubmit} className="pb-[23px]" />
+
+          {showPopover &&
+          <PopoverSeries
+            steps={[
+            {
+              id: "submit-hint",
+              trigger: "#chatbox-submit-button",
+              content: t('promptConstructionModule.specificity.popoverSubmit')
+            }]
+            }
+            initialStep={0}
+            onClose={() => {
+              setShowPopover(false);
+              setClickCount(0); // Reset click count when popover is closed
+            }} />
+
+          }
         </div>
       </div>
       
