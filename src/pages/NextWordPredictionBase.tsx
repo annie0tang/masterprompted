@@ -12,11 +12,11 @@ import { useLanguage } from "@/contexts/LanguageContext";
 const NextWordPredictionIntro = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  
+
   const handleContinue = () => {
     navigate("/module/next-word-prediction/prompt");
   };
-  
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -24,13 +24,13 @@ const NextWordPredictionIntro = () => {
       <main className="container mx-auto px-6 py-6">
         <Breadcrumb />
         <div className="max-w-5xl mx-auto py-8">
-          <Card className="flex flex-row items-start gap-8 p-10 bg-card border border-border shadow-lg rounded-2xl">
+          <Card className="flex flex-row items-start gap-8 p-10 border border-border shadow-lg rounded-2xl bg-white">
             {/* Image inside the popup - aligned to top */}
-            <img 
-              src="/stair.png" 
-              alt="Stair blocks" 
-              className="w-[325px] h-auto flex-shrink-0 mt-2" 
-            />
+            <img
+              src="/stair.png"
+              alt="Stair blocks"
+              className="w-[325px] h-auto flex-shrink-0 mt-2" />
+
             
             <CardContent className="p-0 w-full flex flex-col">
               {/* Learning label */}
@@ -51,34 +51,34 @@ const NextWordPredictionIntro = () => {
               </p>
 
               {/* Continue button */}
-              <Button 
-                onClick={handleContinue} 
-                className="w-fit px-8 py-6 bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold text-base rounded-full transition-colors"
-              >
+              <Button
+                onClick={handleContinue}
+                className="w-fit px-8 py-6 bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold text-base rounded-full transition-colors">
+
                 {t('nextWord.intro.continue')}
-                <svg 
-                  width="10" 
-                  height="8" 
-                  viewBox="0 0 12 10" 
-                  fill="none" 
+                <svg
+                  width="10"
+                  height="8"
+                  viewBox="0 0 12 10"
+                  fill="none"
                   xmlns="http://www.w3.org/2000/svg"
-                  className="ml-2"
-                >
-                  <path 
-                    d="M1 5H11M11 5L7 1M11 5L7 9" 
-                    stroke="hsl(0 0% 12%)" 
-                    strokeWidth="2" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                  />
+                  className="ml-2">
+
+                  <path
+                    d="M1 5H11M11 5L7 1M11 5L7 9"
+                    stroke="hsl(0 0% 12%)"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round" />
+
                 </svg>
               </Button>
             </CardContent>
           </Card>
         </div>
       </main>
-    </div>
-  );
+    </div>);
+
 };
 
 export default NextWordPredictionIntro;
