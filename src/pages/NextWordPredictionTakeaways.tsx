@@ -20,10 +20,10 @@ export default function Takeaways() {
       { title: t('nextWord.takeaways.point3Title'), body: t('nextWord.takeaways.point3') },
     ];
     const todos = [
-      '☐ Test an AI chatbot and observe how changing one word in your prompt shifts the entire response.',
-      '☐ Compare outputs from two different LLMs using the same prompt to spot prediction differences.',
-      '☐ Rewrite a vague prompt to be more specific and compare the before/after responses.',
-      '☐ Identify one AI-generated text in your daily media consumption and assess its accuracy.',
+      '☐ Before publishing AI-assisted text, verify all facts, quotes, and figures against primary sources.',
+      '☐ Always disclose to editors when AI tools were used in drafting or research.',
+      '☐ Rephrase and rewrite AI-generated drafts in your own voice — never publish raw output.',
+      '☐ Cross-check AI summaries of documents against the original material before citing them.',
     ];
     const content = [
       `${title} ${subtitle}`,
@@ -31,7 +31,7 @@ export default function Takeaways() {
       ...points.map((p, i) => `${i + 1}. ${p.title}${p.body}`),
       '',
       '---',
-      'Practical To-Dos:',
+      'Workflow Action Items:',
       ...todos,
     ].join('\n');
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
@@ -95,11 +95,11 @@ export default function Takeaways() {
                   <p>2. {t('nextWord.takeaways.point2Title')}{t('nextWord.takeaways.point2')}</p>
                   <p>3. {t('nextWord.takeaways.point3Title')}{t('nextWord.takeaways.point3')}</p>
                   <hr className="border-border my-2" />
-                  <p className="font-bold text-foreground">Practical To-Dos:</p>
-                  <p>☐ Test an AI chatbot and observe how changing one word in your prompt shifts the entire response.</p>
-                  <p>☐ Compare outputs from two different LLMs using the same prompt to spot prediction differences.</p>
-                  <p>☐ Rewrite a vague prompt to be more specific and compare the before/after responses.</p>
-                  <p>☐ Identify one AI-generated text in your daily media consumption and assess its accuracy.</p>
+                  <p className="font-bold text-foreground">Workflow Action Items:</p>
+                  <p>☐ Before publishing AI-assisted text, verify all facts, quotes, and figures against primary sources.</p>
+                  <p>☐ Always disclose to editors when AI tools were used in drafting or research.</p>
+                  <p>☐ Rephrase and rewrite AI-generated drafts in your own voice — never publish raw output.</p>
+                  <p>☐ Cross-check AI summaries of documents against the original material before citing them.</p>
                 </div>
                 <div className="flex justify-end mt-2">
                   <Button onClick={handleDownload} className="rounded-full">
