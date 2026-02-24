@@ -794,6 +794,7 @@ export default function SpecificityResponse() {
     >
       <strong>Confirmation Bias</strong>
       <p className="mt-2">Confirmation bias is the tendency to favour information that confirms our existing beliefs. A biased prompt – one that is worded to suggest a particular answer – can lead the model to generate a matching output. By appearing objective or authoritative, such outputs can reinforce our beliefs, strengthening confirmation bias.</p>
+      <p className="mt-3 font-bold">Compare prompt versions now!</p>
     </FeatureHighlight>
 
     <FeatureHighlight
