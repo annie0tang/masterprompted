@@ -32,6 +32,8 @@ export default function SpecificityResponse() {
   const [showBiasHighlight, setShowBiasHighlight] = useState(false);
   const [showBiasPromptHighlight, setShowBiasPromptHighlight] = useState(false);
   const [showLessBiasPromptHighlight, setShowLessBiasPromptHighlight] = useState(false);
+  const [moreBiasPromptShown, setMoreBiasPromptShown] = useState(false);
+  const [lessBiasPromptShown, setLessBiasPromptShown] = useState(false);
 
 
   // Input prompt changes immediately
@@ -130,11 +132,13 @@ export default function SpecificityResponse() {
                     setStyle(key === 'style' ? value : "");
                     setContext(key === 'context' ? value : "");
                     setBias(key === 'bias' ? value : "");
-                    if (key === 'bias' && value === t("components.promptControls.bias.right")) {
+                    if (key === 'bias' && value === t("components.promptControls.bias.right") && !moreBiasPromptShown) {
                       setShowBiasPromptHighlight(true);
+                      setMoreBiasPromptShown(true);
                     }
-                    if (key === 'bias' && value === t("components.promptControls.bias.left")) {
+                    if (key === 'bias' && value === t("components.promptControls.bias.left") && !lessBiasPromptShown) {
                       setShowLessBiasPromptHighlight(true);
+                      setLessBiasPromptShown(true);
                     }
                   }}
                   onOptimize={handleApplyChanges}
