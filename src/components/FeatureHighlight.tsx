@@ -178,7 +178,7 @@ export default function FeatureHighlight({
             className="rounded-full px-5 font-semibold text-brand-tertiary-500 bg-white hover:bg-white/90"
             onClick={onClose}
           >
-            {closeLabel || t('components.popoverSeries.gotIt')}
+            {closeLabel || "Close"}
           </Button>
         </div>
       </div>
