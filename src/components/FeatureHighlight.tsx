@@ -37,12 +37,14 @@ export default function FeatureHighlight({
   const { t } = useLanguage();
   const [rect, setRect] = useState<DOMRect | null>(null);
   const [borderRadius, setBorderRadius] = useState(0);
+  const CUTOUT_PADDING = 8;
 
   const measure = useCallback(() => {
     const el = document.querySelector<HTMLElement>(target);
     if (el) {
       setRect(el.getBoundingClientRect());
-      setBorderRadius(parseFloat(window.getComputedStyle(el).borderRadius) || 0);
+      const computedRadius = parseFloat(window.getComputedStyle(el).borderRadius) || 0;
+      setBorderRadius(Math.max(computedRadius, 12));
     }
   }, [target]);
 
@@ -131,11 +133,11 @@ export default function FeatureHighlight({
           <mask id={maskId} x="0" y="0" width="100%" height="100%">
             <rect x="0" y="0" width="100%" height="100%" fill="white" />
             <rect
-              x={rect.left}
-              y={rect.top}
-              width={rect.width}
-              height={rect.height}
-              rx={borderRadius}
+              x={rect.left - CUTOUT_PADDING}
+              y={rect.top - CUTOUT_PADDING}
+              width={rect.width + CUTOUT_PADDING * 2}
+              height={rect.height + CUTOUT_PADDING * 2}
+              rx={borderRadius + CUTOUT_PADDING / 2}
               fill="black"
             />
           </mask>
