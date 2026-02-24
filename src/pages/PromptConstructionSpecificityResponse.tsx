@@ -421,7 +421,6 @@ export default function SpecificityResponse() {
                                         evaluationFactor="voice"
                                         explanation="Output goes on to one-sidedly represent the topic in question. It reinforces confirmation bias by presenting information that are strictly in line with the biased prompt, i.e. with user's prior beliefs. Such outputs could be factually inaccurate as well."
                                         severity="warning"
-                                        noUnderline
                                       />{" "}The act aims to establish a legal framework for the development, deployment, and use of AI in the European Union, with a focus on promoting safety, transparency, and accountability.
                                     </p>
 
