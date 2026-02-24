@@ -1,4 +1,5 @@
 import { useState } from "react";
+import FeatureHighlight from "@/components/FeatureHighlight";
 import Header from "@/components/Header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,6 +25,7 @@ import { AlertCircle, Bell, Check, ChevronRight, Info, Mail, Search, Settings, S
  * Displays all design tokens, colors, typography, and component examples.
  */
 const DesignSystem = () => {
+  const [highlightOpen, setHighlightOpen] = useState(false);
   const brandPrimaryColors = [
     { name: "50", hex: "#C0C0C0", className: "bg-brand-primary-50" },
     { name: "100", hex: "#AEAEAE", className: "bg-brand-primary-100" },
@@ -675,6 +677,34 @@ const DesignSystem = () => {
                   <Button variant="outline" className="gap-2"><ChevronRight className="h-4 w-4" /> Continue</Button>
                   <Button variant="ghost" className="gap-2"><AlertCircle className="h-4 w-4" /> Warning</Button>
                 </div>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* ── Feature Highlight Demo ── */}
+          <section>
+            <h2 className="text-h3 font-heading text-foreground mb-4">Feature Highlight</h2>
+            <Card>
+              <CardContent className="pt-6 space-y-4">
+                <p className="text-sm text-muted-foreground mb-4">
+                  A guided tooltip that dims the screen, highlights a target element, and shows a callout with a connector line.
+                </p>
+                <Button
+                  id="feature-highlight-demo-target"
+                  variant="outline"
+                  onClick={() => setHighlightOpen(true)}
+                >
+                  Click to demo Feature Highlight
+                </Button>
+                <FeatureHighlight
+                  target="#feature-highlight-demo-target"
+                  open={highlightOpen}
+                  onClose={() => setHighlightOpen(false)}
+                  side="right"
+                  sideOffset={24}
+                >
+                  This button triggers the Feature Highlight component. Use it to point out features or introduce ideas.
+                </FeatureHighlight>
               </CardContent>
             </Card>
           </section>
