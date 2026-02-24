@@ -30,6 +30,7 @@ export default function SpecificityResponse() {
   const [appliedSpecificity, setAppliedSpecificity] = useState("");
   const [biasUnlocked, setBiasUnlocked] = useState(false);
   const [showBiasHighlight, setShowBiasHighlight] = useState(false);
+  const [showBiasPromptHighlight, setShowBiasPromptHighlight] = useState(false);
 
 
   // Input prompt changes immediately
@@ -70,6 +71,10 @@ export default function SpecificityResponse() {
     setAppliedStyle(style);
     setAppliedSpecificity(specificity);
     setSentPrompt(inputPrompt);
+    // Show prompt highlight when "More Bias" is applied
+    if (bias === t("components.promptControls.bias.right")) {
+      setShowBiasPromptHighlight(true);
+    }
   };
 
   // Scroll to TextFlag area when bias output is shown
@@ -151,7 +156,9 @@ export default function SpecificityResponse() {
                 <div className="flex-1 flex flex-col">
                   {/* Article Content with scroll */}
                   <div className="bg-white rounded-lg rounded-b-none p-8 flex-1 flex flex-col">
-                    <ChatPrompt text={sentPrompt} fileName="EU_AI_Act.pdf" />
+                    <div id="chat-prompt-area">
+                      <ChatPrompt text={sentPrompt} fileName="EU_AI_Act.pdf" />
+                    </div>
                     <div className="max-h-[500px] overflow-y-auto flex-1">
                       {showGeneralOutput ?
                         // General content
@@ -782,6 +789,16 @@ export default function SpecificityResponse() {
     >
       <strong>Confirmation Bias</strong>
       <p className="mt-2">Confirmation bias is the tendency to favour information that confirms our existing beliefs. A biased prompt – one that is worded to suggest a particular answer – can lead the model to generate a matching output. By appearing objective or authoritative, such outputs can reinforce our beliefs, strengthening confirmation bias.</p>
+    </FeatureHighlight>
+
+    <FeatureHighlight
+      target="#chat-prompt-area"
+      open={showBiasPromptHighlight}
+      onClose={() => setShowBiasPromptHighlight(false)}
+      side="bottom"
+      sideOffset={24}
+    >
+      This prompt is written in a biased and a commanding way – will it result in a biased output?
     </FeatureHighlight>
 
     <ModuleNavigation
