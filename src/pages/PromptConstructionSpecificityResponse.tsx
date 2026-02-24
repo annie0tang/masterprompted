@@ -316,7 +316,7 @@ export default function SpecificityResponse() {
                               </div> :
                               showBiasedOutput ?
                                 // Biased content about EU AI Act stifling research
-                                <div className="space-y-4">
+                                 <div className="space-y-4">
                                   <p className="text-gray-800 leading-relaxed text-lg">
                                     <TextFlag
                                       text="General Purpose AI (GPAI)"
@@ -345,7 +345,11 @@ export default function SpecificityResponse() {
                                   </p>
 
                                   <p className="text-gray-800 leading-relaxed text-lg">
-                                    The EU AI Act has the potential to stifle AI research in several ways:
+                                    <TextFlag
+                                      text="The EU AI Act has the potential to stifle AI research"
+                                      evaluationFactor="bias"
+                                      explanation={t('components.textFlag.content.overly_broad_definitions')} />
+                                    {' '}in several ways:
                                   </p>
 
                                   <div className="space-y-4">
@@ -357,11 +361,7 @@ export default function SpecificityResponse() {
                                     </div>
 
                                     <div>
-                                      <p className="text-base font-semibold text-gray-900 mb-2">2. <TextFlag
-                                        text="Limited scope for certain AI systems"
-                                        evaluationFactor="bias"
-                                        explanation={t('components.textFlag.content.overly_broad_definitions')} />
-                                      </p>
+                                      <p className="text-base font-semibold text-gray-900 mb-2">2. Limited scope for certain AI systems</p>
                                       <p className="text-gray-700 text-base leading-relaxed">
                                         The act includes provisions that could limit the development and use of certain types of AI systems, particularly those that may pose risks to fundamental rights or public interests. This could hinder research in areas that are deemed to have high risk or potential negative impacts, such as AI for surveillance or disinformation.
                                       </p>
@@ -381,7 +381,10 @@ export default function SpecificityResponse() {
                                     <div>
                                       <p className="text-base font-semibold text-gray-900 mb-2">4. Potential for bureaucratic hurdles</p>
                                       <p className="text-gray-700 text-base leading-relaxed">
-                                        The act may introduce bureaucratic hurdles and red tape for researchers and developers, such as the need for extensive documentation, testing, and registration of AI systems. This could slow down the research process and make it more difficult to bring new AI technologies to market.
+                                        The act may introduce bureaucratic hurdles and red tape for researchers and developers, such as the need for extensive documentation, testing, and registration of AI systems. <TextFlag
+                                          text="This could slow down the research process and make it more difficult to bring new AI technologies to market."
+                                          evaluationFactor="relevance"
+                                          explanation={t('components.textFlag.content.chilling_effect')} />
                                       </p>
                                     </div>
 
