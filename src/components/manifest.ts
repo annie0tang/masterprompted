@@ -134,6 +134,11 @@ export const COMPONENT_MANIFEST = {
     description: "SVG connector lines between DOM elements",
     features: ["Dynamic positioning", "Responsive updates", "Curved paths"],
     path: "src/components/ConnectorLines.tsx"
+  },
+  FeatureHighlight: {
+    description: "Guided tooltip that dims the screen and highlights a target element with a connector line",
+    features: ["Screen dimming", "Element cutout", "Connector line", "Brand-styled tooltip", "Side positioning"],
+    path: "src/components/FeatureHighlight.tsx"
   }
 } as const;
 
