@@ -76,14 +76,14 @@ export default function Takeaways() {
             <Button
               variant="secondary"
               onClick={() => navigate("/module/prompt-construction")}
-              className="font-heading font-semibold px-10 py-6 rounded-full"
+              className="font-heading font-semibold text-base px-10 py-6 rounded-full"
             >
               {t('nextWord.takeaways.nextTask')}
               <ArrowRight className="-mr-2 !h-6 !w-6" />
             </Button>
             <Dialog>
               <DialogTrigger asChild>
-                <Button variant="outline" className="rounded-full px-6 py-6">
+                <Button variant="outline" className="rounded-full text-base font-heading font-semibold px-6 py-6">
                   <Download className="h-4 w-4 mr-2" />
                   {t('promptConstructionModule.takeaways.download')}
                 </Button>
