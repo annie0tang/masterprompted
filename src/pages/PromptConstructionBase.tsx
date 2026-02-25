@@ -68,7 +68,7 @@ export default function PromptConstruction() {
               {/* Continue button */}
               <Button
                 onClick={handleContinue}
-                className="w-fit px-10 py-6 font-heading font-semibold text-lg rounded-full"
+                className="w-fit px-10 py-6 font-heading font-semibold text-base rounded-full"
               >
                 {t('promptConstructionModule.intro.continue')}
                 <ArrowRight className="-mr-2 !h-6 !w-6" />
