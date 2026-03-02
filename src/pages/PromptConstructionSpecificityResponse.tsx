@@ -350,10 +350,10 @@ export default function SpecificityResponse() {
                                     <li>Follow EU copyright rules</li>
                                   </ul>
 
-                                  <p className="text-gray-800 text-base leading-relaxed">
-                                    🚫 <span className="font-semibold">Banned Systems</span><br />
-                                    Some AI uses are off-limits completely—such as tools that exploit vulnerable people (like children or the elderly), or technologies that apply psychological manipulation to cause harm.
-                                  </p>
+                                  
+
+
+
 
                                   
 
