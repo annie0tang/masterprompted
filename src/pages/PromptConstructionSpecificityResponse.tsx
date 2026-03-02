@@ -147,12 +147,6 @@ export default function SpecificityResponse() {
                   disableSend={true}
                   files={[{ name: "EU_AI_Act.pdf" }]} />
 
-                {/* LLM Disclaimer - inside controls on small screens */}
-                <div className="2xl:hidden px-4 pb-4 text-[11px] leading-snug text-muted-foreground">
-                  LLMs have been used in the following places:<br />
-                  The creation of prompt output examples in the Guided Exploration<br />
-                  LLMs used include: Mistral, Claude, Chat GPT &amp; Llama 3.1 8B (open source)
-                </div>
               </div>
             </div>
 
@@ -810,11 +804,11 @@ export default function SpecificityResponse() {
                 </div>
               </div>
 
-              {/* LLM Disclaimer - only on large screens */}
-              <div className="hidden 2xl:block mt-6 text-sm text-muted-foreground max-w-[1100px] w-full">
+              {/* LLM Disclaimer */}
+              <div className="mt-6 text-sm text-muted-foreground max-w-[1100px] w-full">
                 LLMs have been used in the following places:<br />
                 The creation of prompt output examples in the Guided Exploration<br />
-                LLMs used include: Mistral, Claude, Chat GPT &amp; Llama 3.1 8B (open source)
+                LLMs used include: Mistral, Claude, Chat GPT & Llama 3.1 8B (open source)
               </div>
             </div>
           </div>
