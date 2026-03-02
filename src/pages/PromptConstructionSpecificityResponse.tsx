@@ -367,46 +367,47 @@ export default function SpecificityResponse() {
                                     {' '}in several ways:
                                   </p>
 
-                                  <div className="space-y-4">
-                                    <div>
-                                      <p className="text-base font-semibold text-gray-900 mb-2">1. Stringent requirements</p>
-                                      <p className="text-gray-700 text-base leading-relaxed">
-                                        <TextFlag
-                                text="The act imposes strict requirements on the development, deployment, and use of AI systems within the European Union."
-                                evaluationFactor="bias"
-                                explanation={t('components.textFlag.content.overly_broad_definitions')} />
-                              {" "}These requirements may be difficult and time-consuming to meet, especially for researchers and startups with limited resources. This could lead to delays in research and development, as well as increased costs.
-                                      </p>
-                                    </div>
+                                  <SectionFlag
+                                    evaluationFactor="bias"
+                                    explanation="Output goes on to one-sidedly represent the topic in question. It reinforces confirmation bias by presenting information that are strictly in line with the biased prompt, i.e. with user's prior beliefs. Such outputs could be factually inaccurate as well."
+                                  >
+                                    <div className="space-y-4">
+                                      <div>
+                                        <p className="text-base font-semibold text-gray-900 mb-2">1. Stringent requirements</p>
+                                        <p className="text-gray-700 text-base leading-relaxed">
+                                          The act imposes strict requirements on the development, deployment, and use of AI systems within the European Union. These requirements may be difficult and time-consuming to meet, especially for researchers and startups with limited resources. This could lead to delays in research and development, as well as increased costs.
+                                        </p>
+                                      </div>
 
-                                    <div>
-                                      <p className="text-base font-semibold text-gray-900 mb-2">2. Limited scope for certain AI systems</p>
-                                      <p className="text-gray-700 text-base leading-relaxed">
-                                        The act includes provisions that could limit the development and use of certain types of AI systems, particularly those that may pose risks to fundamental rights or public interests. This could hinder research in areas that are deemed to have high risk or potential negative impacts, such as AI for surveillance or disinformation.
-                                      </p>
-                                    </div>
+                                      <div>
+                                        <p className="text-base font-semibold text-gray-900 mb-2">2. Limited scope for certain AI systems</p>
+                                        <p className="text-gray-700 text-base leading-relaxed">
+                                          The act includes provisions that could limit the development and use of certain types of AI systems, particularly those that may pose risks to fundamental rights or public interests. This could hinder research in areas that are deemed to have high risk or potential negative impacts, such as AI for surveillance or disinformation.
+                                        </p>
+                                      </div>
 
-                                    <div>
-                                      <p className="text-base font-semibold text-gray-900 mb-2">3. Uncertainty and legal risks</p>
-                                      <p className="text-gray-700 text-base leading-relaxed">
-                                        The act&apos;s requirements and potential penalties for non-compliance may create a climate of uncertainty and legal risk for researchers and organizations working on AI. This could discourage innovation and limit the willingness of researchers to explore new ideas and methodologies in AI.
-                                      </p>
-                                    </div>
+                                      <div>
+                                        <p className="text-base font-semibold text-gray-900 mb-2">3. Uncertainty and legal risks</p>
+                                        <p className="text-gray-700 text-base leading-relaxed">
+                                          The act&apos;s requirements and potential penalties for non-compliance may create a climate of uncertainty and legal risk for researchers and organizations working on AI. This could discourage innovation and limit the willingness of researchers to explore new ideas and methodologies in AI.
+                                        </p>
+                                      </div>
 
-                                    <div>
-                                      <p className="text-base font-semibold text-gray-900 mb-2">4. Potential for bureaucratic hurdles</p>
-                                      <p className="text-gray-700 text-base leading-relaxed">
-                                        The act may introduce bureaucratic hurdles and red tape for researchers and developers, such as the need for extensive documentation, testing, and registration of AI systems. This could slow down the research process and make it more difficult to bring new AI technologies to market.
-                                      </p>
-                                    </div>
+                                      <div>
+                                        <p className="text-base font-semibold text-gray-900 mb-2">4. Potential for bureaucratic hurdles</p>
+                                        <p className="text-gray-700 text-base leading-relaxed">
+                                          The act may introduce bureaucratic hurdles and red tape for researchers and developers, such as the need for extensive documentation, testing, and registration of AI systems. This could slow down the research process and make it more difficult to bring new AI technologies to market.
+                                        </p>
+                                      </div>
 
-                                    <div>
-                                      <p className="text-base font-semibold text-gray-900 mb-2">5. Impact on international collaboration</p>
-                                      <p className="text-gray-700 text-base leading-relaxed">
-                                        If the EU AI Act&apos;s requirements are seen as too stringent or restrictive, it could negatively impact international collaboration and partnerships in AI research. European researchers and organizations may be less competitive in attracting global talent and investment, as well as less willing to collaborate with researchers and companies from other countries.
-                                      </p>
+                                      <div>
+                                        <p className="text-base font-semibold text-gray-900 mb-2">5. Impact on international collaboration</p>
+                                        <p className="text-gray-700 text-base leading-relaxed">
+                                          If the EU AI Act&apos;s requirements are seen as too stringent or restrictive, it could negatively impact international collaboration and partnerships in AI research. European researchers and organizations may be less competitive in attracting global talent and investment, as well as less willing to collaborate with researchers and companies from other countries.
+                                        </p>
+                                      </div>
                                     </div>
-                                  </div>
+                                  </SectionFlag>
 
                                   <p className="text-gray-700 text-base leading-relaxed">
                                     While the EU AI Act aims to promote safety, transparency, and accountability in AI, its potential impact on AI research should not be overlooked. Careful consideration and flexibility will be key to ensuring that the act supports innovation and progress in the field of AI, while also protecting the public interest.
