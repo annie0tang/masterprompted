@@ -662,7 +662,7 @@ export default function SpecificityResponse() {
                             text="significant"
                             evaluationFactor="bias"
                             explanation={t("components.textFlag.content.bias1")} />
-                                          piece of legislation aimed at regulating artificial intelligence within the European Union. Here&apos;s a summary of its main points:
+                                          {" "}piece of legislation aimed at regulating artificial intelligence within the European Union. Here&apos;s a summary of its main points:
                                         </p>
 
                                         <div>
