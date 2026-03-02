@@ -366,11 +366,11 @@ export function computePathY(
 
     if (pathMatchesSelection && isActiveDepth) {
       // Selected branches get expanded spacing
-      const baseExpanded = Math.max(55, 90 - d * 4);
-      spacing = baseExpanded * (1 + (d - 1) * 0.15);
+      const baseExpanded = Math.max(75, 120 - d * 5);
+      spacing = baseExpanded * (1 + (d - 1) * 0.18);
     } else {
-      // Unselected branches are very compact
-      spacing = Math.max(3, 10 - d * 1.2);
+      // Unselected branches are compact but readable
+      spacing = Math.max(8, 18 - d * 1.5);
     }
 
     // Center children around current y
