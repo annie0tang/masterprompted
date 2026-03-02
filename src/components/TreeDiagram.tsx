@@ -11,8 +11,8 @@ import {
   getAllLeafPaths,
   createEmptySelections,
   computePathY,
-  type PredictionNode,
-} from "@/data/predictionTreeData";
+  type PredictionNode } from
+"@/data/predictionTreeData";
 
 /**
  * TreeDiagram - Shows all possible sentence branches,
@@ -29,7 +29,7 @@ interface TreeDiagramProps {
 export function TreeDiagram({
   selectedPath,
   onPathChange,
-  className,
+  className
 }: TreeDiagramProps) {
   const maxDepth = useMemo(() => getMaxDepth(), []);
   const defaultPathWords = useMemo(() => getDefaultPath(), []);
@@ -77,8 +77,8 @@ export function TreeDiagram({
   const currentPath = useMemo(() => {
     const path: string[] = [predictionTree.word];
     for (let i = 1; i < selections.length; i++) {
-      if (selections[i]) path.push(selections[i]!);
-      else break;
+      if (selections[i]) path.push(selections[i]!);else
+      break;
     }
     return path;
   }, [selections]);
@@ -88,7 +88,7 @@ export function TreeDiagram({
   const isTerminal = currentNode ? currentNode.children.length === 0 : false;
 
   // Get options at each level based on current selections
-  const getOptionsAtLevel = (level: number): { word: string; probability: number }[] => {
+  const getOptionsAtLevel = (level: number): {word: string;probability: number;}[] => {
     if (level === 0) return [{ word: predictionTree.word, probability: 1 }];
     const pathToLevel = currentPath.slice(0, level);
     return getOptionsForPath(pathToLevel);
@@ -264,16 +264,16 @@ export function TreeDiagram({
                 if (!hasUserSelected && isInteractive) {
                   return (
                     <>
-                      {defaultPathWords.map((word, idx) => (
-                        <span key={idx}>
+                      {defaultPathWords.map((word, idx) =>
+                      <span key={idx}>
                           {idx > 0 && " "}
                           <span className={cn(idx === 0 ? "" : "text-muted-foreground/50")}>
                             {word}
                           </span>
                         </span>
-                      ))}
-                    </>
-                  );
+                      )}
+                    </>);
+
                 }
 
                 // Normal display with last word highlighted
@@ -285,27 +285,27 @@ export function TreeDiagram({
                     <>
                       {prefix && <>{prefix} </>}
                       <span className="bg-green-200 text-green-900 px-1 rounded">{lastWord}</span>
-                    </>
-                  );
+                    </>);
+
                 }
                 return words.join(" ");
               })()}
-              {!isTerminal && displayHeadline && hasUserSelected && (
-                <span className="text-muted-foreground/50">...</span>
-              )}
+              {!isTerminal && displayHeadline && hasUserSelected &&
+              <span className="text-muted-foreground/50">...</span>
+              }
             </p>
           </div>
-          {isInteractive && currentLevel > 1 && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleReset}
-              className="h-7 text-xs gap-1.5 ml-4 flex-shrink-0"
-            >
+          {isInteractive && currentLevel > 1 &&
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleReset}
+            className="h-7 text-xs gap-1.5 ml-4 flex-shrink-0">
+
               <RotateCcw className="h-3 w-3" />
               Reset
             </Button>
-          )}
+          }
         </div>
 
         {/* Tree visualization */}
@@ -316,20 +316,20 @@ export function TreeDiagram({
                 "h-full",
                 currentLevel > 1 ? "overflow-x-auto overflow-y-auto" : "overflow-hidden"
               )}
-              ref={scrollContainerRef}
-            >
-              <div className={cn("p-6", currentLevel > 1 ? "min-w-[600px]" : "")}>
+              ref={scrollContainerRef}>
+
+              <div className={cn("p-6 py-0 px-0", currentLevel > 1 ? "min-w-[600px]" : "")}>
                 <svg
                   style={{
                     height: currentLevel <= 1 ? '100%' : svgHeight,
                     width: currentLevel <= 1 ? '100%' : svgWidth,
-                    maxHeight: currentLevel <= 1 ? 'calc(480px - 48px)' : undefined,
+                    maxHeight: currentLevel <= 1 ? 'calc(480px - 48px)' : undefined
                   }}
                   width={svgWidth}
                   height={svgHeight}
                   viewBox={`0 ${viewBoxY} ${svgWidth} ${svgHeight}`}
-                  preserveAspectRatio="xMidYMid meet"
-                >
+                  preserveAspectRatio="xMidYMid meet" className="my-[10px] py-0">
+
                   {/* Draw all leaf paths as branch lines */}
                   {allLeafPaths.map((leafPath, pathIndex) => {
                     const isMatching = leafPathMatchesSelections(leafPath.words);
@@ -337,17 +337,17 @@ export function TreeDiagram({
                     // Compute points for this path
                     const points = leafPath.words.map((_, level) => ({
                       x: levelX(level),
-                      y: computePathY(leafPath.words, level, selections, currentLevel, adjustedCenterY),
+                      y: computePathY(leafPath.words, level, selections, currentLevel, adjustedCenterY)
                     }));
 
                     // Create curved path
                     const pathD =
-                      `M ${points[0].x} ${points[0].y} ` +
-                      points.slice(1).map((p, i) => {
-                        const prev = points[i];
-                        const cpX = (prev.x + p.x) / 2;
-                        return `C ${cpX} ${prev.y} ${cpX} ${p.y} ${p.x} ${p.y}`;
-                      }).join(" ");
+                    `M ${points[0].x} ${points[0].y} ` +
+                    points.slice(1).map((p, i) => {
+                      const prev = points[i];
+                      const cpX = (prev.x + p.x) / 2;
+                      return `C ${cpX} ${prev.y} ${cpX} ${p.y} ${p.x} ${p.y}`;
+                    }).join(" ");
 
                     return (
                       <path
@@ -357,9 +357,9 @@ export function TreeDiagram({
                         stroke={isMatching ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"}
                         strokeWidth={isMatching ? 0.75 : 0.35}
                         opacity={isMatching ? 1 : 0.15}
-                        className="transition-all duration-300"
-                      />
-                    );
+                        className="transition-all duration-300" />);
+
+
                   })}
 
                   {/* Words along the selected path */}
@@ -387,28 +387,28 @@ export function TreeDiagram({
                     // Get probability from tree
                     const node = getNodeAtPath(currentPath.slice(0, level + 1));
                     const parentNode = level > 0 ? getNodeAtPath(currentPath.slice(0, level)) : null;
-                    const probability = parentNode
-                      ? parentNode.children.find(c => c.word === word)?.prob ?? 1
-                      : 1;
+                    const probability = parentNode ?
+                    parentNode.children.find((c) => c.word === word)?.prob ?? 1 :
+                    1;
 
                     return (
                       <g
                         key={`word-${level}`}
                         onClick={handleWordClickOnTree}
                         className={cn(isClickable && "cursor-pointer")}
-                        style={{ pointerEvents: isClickable ? 'all' : 'none' }}
-                      >
-                        {level > 0 && (
-                          <text
-                            x={x}
-                            y={y - rectHeight / 2 - 6}
-                            textAnchor="middle"
-                            className="text-[10px] font-medium pointer-events-none select-none"
-                            fill={isLatestSelection ? "hsl(142 76% 36%)" : "hsl(var(--muted-foreground))"}
-                          >
+                        style={{ pointerEvents: isClickable ? 'all' : 'none' }}>
+
+                        {level > 0 &&
+                        <text
+                          x={x}
+                          y={y - rectHeight / 2 - 6}
+                          textAnchor="middle"
+                          className="text-[10px] font-medium pointer-events-none select-none"
+                          fill={isLatestSelection ? "hsl(142 76% 36%)" : "hsl(var(--muted-foreground))"}>
+
                             {probability.toFixed(2)}
                           </text>
-                        )}
+                        }
                         <rect
                           x={x - wordWidth / 2}
                           y={y - rectHeight / 2}
@@ -418,19 +418,19 @@ export function TreeDiagram({
                           fill={isLatestSelection ? "hsl(142 76% 90%)" : level === 0 ? "hsl(var(--primary))" : "hsl(142 76% 90%)"}
                           stroke={isLatestSelection ? "hsl(142 76% 56%)" : level === 0 ? "hsl(var(--primary))" : "hsl(142 76% 56%)"}
                           strokeWidth={2}
-                          className={cn("transition-all duration-200", isClickable && "cursor-pointer")}
-                        />
+                          className={cn("transition-all duration-200", isClickable && "cursor-pointer")} />
+
                         <text
                           x={x}
                           y={y + 5}
                           textAnchor="middle"
                           className="text-[12px] font-semibold pointer-events-none select-none"
-                          fill={level === 0 ? "hsl(var(--primary-foreground))" : "hsl(142 76% 20%)"}
-                        >
+                          fill={level === 0 ? "hsl(var(--primary-foreground))" : "hsl(142 76% 20%)"}>
+
                           {word}
                         </text>
-                      </g>
-                    );
+                      </g>);
+
                   })}
 
                   {/* Selection buttons at current frontier */}
@@ -453,14 +453,14 @@ export function TreeDiagram({
                             width={buttonWidth + 12}
                             height={buttonHeight + foreignObjectPadTop + 12}
                             rx={12}
-                            fill="hsl(var(--background))"
-                          />
+                            fill="hsl(var(--background))" />
+
                           <foreignObject
                             x={x - buttonWidth / 2}
                             y={optY - buttonHeight / 2 - foreignObjectPadTop}
                             width={buttonWidth}
-                            height={buttonHeight + foreignObjectPadTop}
-                          >
+                            height={buttonHeight + foreignObjectPadTop}>
+
                             <div className="flex justify-center h-full items-end pb-0">
                               <button
                                 onClickCapture={() => handleWordClick(currentLevel, opt.word)}
@@ -469,8 +469,8 @@ export function TreeDiagram({
                                   "relative px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 border-2 whitespace-nowrap min-w-[100px] h-11",
                                   "bg-card border-border hover:border-primary/50 hover:bg-muted cursor-pointer",
                                   isAnimated && "border-primary bg-primary/10"
-                                )}
-                              >
+                                )}>
+
                                 {opt.word}
                                 <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap bg-muted text-muted-foreground">
                                   {opt.probability.toFixed(2)}
@@ -478,8 +478,8 @@ export function TreeDiagram({
                               </button>
                             </div>
                           </foreignObject>
-                        </g>
-                      );
+                        </g>);
+
                     });
                   })()}
 
@@ -497,8 +497,8 @@ export function TreeDiagram({
                         y={centerY - buttonSize / 2}
                         width={buttonSize}
                         height={buttonSize}
-                        style={{ overflow: 'visible' }}
-                      >
+                        style={{ overflow: 'visible' }}>
+
                         <button
                           onClick={() => !isAnimating && playAnimation()}
                           disabled={isAnimating}
@@ -507,12 +507,12 @@ export function TreeDiagram({
                             "bg-muted hover:bg-accent transition-all duration-200 cursor-pointer",
                             isAnimating && "opacity-50 pointer-events-none"
                           )}
-                          title="Watch LLM select highest probability"
-                        >
+                          title="Watch LLM select highest probability">
+
                           <Monitor className={cn("h-4 w-4 text-muted-foreground", isAnimating && "text-primary animate-pulse")} />
                         </button>
-                      </foreignObject>
-                    );
+                      </foreignObject>);
+
                   })()}
                 </svg>
               </div>
@@ -522,14 +522,14 @@ export function TreeDiagram({
       </div>
 
       {/* Start your own overlay */}
-      {isIntroComplete && !isInteractive && (
-        <div className="absolute left-0 right-0 top-24 flex justify-center animate-fade-in z-10">
+      {isIntroComplete && !isInteractive &&
+      <div className="absolute left-0 right-0 top-24 flex justify-center animate-fade-in z-10">
           <Button onClick={handleStartOwn} className="gap-2">
             <RotateCcw className="h-4 w-4" />
             Start Your Own Headline
           </Button>
         </div>
-      )}
-    </div>
-  );
+      }
+    </div>);
+
 }
