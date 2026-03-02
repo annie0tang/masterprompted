@@ -16,25 +16,25 @@ export default function Takeaways() {
     const title = t('nextWord.takeaways.title');
     const subtitle = t('nextWord.takeaways.subtitle');
     const points = [
-      { title: t('nextWord.takeaways.point1Title'), body: t('nextWord.takeaways.point1') },
-      { title: t('nextWord.takeaways.point2Title'), body: t('nextWord.takeaways.point2') },
-      { title: t('nextWord.takeaways.point3Title'), body: t('nextWord.takeaways.point3') },
-    ];
+    { title: t('nextWord.takeaways.point1Title'), body: t('nextWord.takeaways.point1') },
+    { title: t('nextWord.takeaways.point2Title'), body: t('nextWord.takeaways.point2') },
+    { title: t('nextWord.takeaways.point3Title'), body: t('nextWord.takeaways.point3') }];
+
     const todos = [
-      '☐ Before publishing AI-assisted text, verify all facts, quotes, and figures against primary sources.',
-      '☐ Always disclose to editors when AI tools were used in drafting or research.',
-      '☐ Rephrase and rewrite AI-generated drafts in your own voice — never publish raw output.',
-      '☐ Cross-check AI summaries of documents against the original material before citing them.',
-    ];
+    '☐ Before publishing AI-assisted text, verify all facts, quotes, and figures against primary sources.',
+    '☐ Always disclose to editors when AI tools were used in drafting or research.',
+    '☐ Rephrase and rewrite AI-generated drafts in your own voice — never publish raw output.',
+    '☐ Cross-check AI summaries of documents against the original material before citing them.'];
+
     const content = [
-      `${title} ${subtitle}`,
-      '',
-      ...points.map((p, i) => `${i + 1}. ${p.title}${p.body}`),
-      '',
-      '---',
-      'Workflow Action Items:',
-      ...todos,
-    ].join('\n');
+    `${title} ${subtitle}`,
+    '',
+    ...points.map((p, i) => `${i + 1}. ${p.title}${p.body}`),
+    '',
+    '---',
+    'Workflow Action Items:',
+    ...todos].
+    join('\n');
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -50,7 +50,7 @@ export default function Takeaways() {
       <main className="container mx-auto px-6 py-6">
         <Breadcrumb />
         <div className="mb-5" />
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto my-[170px]">
           <h1 className="text-h2 font-heading text-foreground mb-2">
             {t('nextWord.takeaways.title')}
           </h1>
@@ -59,8 +59,8 @@ export default function Takeaways() {
           </h2>
 
           <div className="space-y-8">
-            {[1, 2, 3].map((n) => (
-              <div key={n} className="flex gap-6 items-start">
+            {[1, 2, 3].map((n) =>
+            <div key={n} className="flex gap-6 items-start">
                 <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-lg font-bold flex-shrink-0">
                   {n}
                 </div>
@@ -69,15 +69,15 @@ export default function Takeaways() {
                   {t(`nextWord.takeaways.point${n}`)}
                 </p>
               </div>
-            ))}
+            )}
           </div>
 
           <div className="mt-16 flex items-center gap-4">
             <Button
               variant="secondary"
               onClick={() => navigate("/module/prompt-construction")}
-              className="font-heading font-semibold text-base px-10 py-6 rounded-full"
-            >
+              className="font-heading font-semibold text-base px-10 py-6 rounded-full">
+
               {t('nextWord.takeaways.nextTask')}
               <ArrowRight className="-mr-2 !h-6 !w-6" />
             </Button>
@@ -117,8 +117,8 @@ export default function Takeaways() {
       </main>
       <ModuleNavigation
         previousRoute="/module/next-word-prediction/response"
-        nextRoute="/module/prompt-construction"
-      />
-    </div>
-  );
+        nextRoute="/module/prompt-construction" />
+
+    </div>);
+
 }
