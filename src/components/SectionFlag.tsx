@@ -24,7 +24,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const sectionFlagVariants = cva(
-  "relative border-2 rounded p-3 cursor-pointer",
+  "relative border rounded p-3 cursor-pointer overflow-visible",
   {
     variants: {
       severity: {
