@@ -410,7 +410,12 @@ export default function SpecificityResponse() {
                       // Less Bias content
                       <div className="space-y-4">
                                     <p ref={biasTextFlagRef} className="text-gray-800 leading-relaxed text-base">
-                                      The European Union&apos;s Artificial Intelligence Act (EU AI Act) is a regulatory framework aimed at ensuring the safe and responsible development of AI systems. While the Act&apos;s intentions are to promote trust and safety, some critics argue that it may stifle AI innovation. Here&apos;s a summary of the concerns:
+                                      The European Union&apos;s Artificial Intelligence Act (EU AI Act) is a regulatory framework aimed at ensuring the safe and responsible development of AI systems.{' '}
+                                      <TextFlag
+                                        text="While the Act's intentions are to promote trust and safety, some critics argue that it may stifle AI innovation."
+                                        evaluationFactor="voice"
+                                        explanation="This output attempts to portray both sides of the argument in order to provide a more complete, if not completely objective, picture on the opinions surrounding the EU AI Act."
+                                      />{' '}Here&apos;s a summary of the concerns:
                                     </p>
 
                                     <p className="text-base font-semibold text-gray-900">Potential stifling effects:</p>
@@ -445,7 +450,7 @@ export default function SpecificityResponse() {
                                       </div>
                                     </div>
 
-                                    <p className="text-base font-semibold text-gray-900">Counterarguments:</p>
+                                    <p className="text-base font-semibold text-gray-900"><TextFlag text="Counterarguments:" evaluationFactor="relevance" explanation="The model generates counterarguments to provide a more balanced summary, contrasting the biased example where only one side is presented." /></p>
 
                                     <div className="space-y-4">
                                       <div>
