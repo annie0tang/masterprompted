@@ -310,7 +310,7 @@ export function TreeDiagram({
 
         {/* Tree visualization */}
         <div className="flex flex-col gap-4">
-          <div className="bg-card rounded-xl overflow-hidden h-[480px]">
+          <div className="bg-card rounded-xl overflow-hidden">
             <div
               className={cn(
                 "h-full",
@@ -321,9 +321,9 @@ export function TreeDiagram({
               <div className={cn("p-6 py-0 px-0", currentLevel > 1 ? "min-w-[600px]" : "")}>
                 <svg
                   style={{
-                    height: currentLevel <= 1 ? '100%' : svgHeight,
+                    height: svgHeight,
                     width: currentLevel <= 1 ? '100%' : svgWidth,
-                    maxHeight: currentLevel <= 1 ? 'calc(480px - 48px)' : undefined
+                    maxHeight: undefined
                   }}
                   width={svgWidth}
                   height={svgHeight}
