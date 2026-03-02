@@ -175,7 +175,7 @@ export function TreeDiagram({
   };
 
   // --- Layout ---
-  const stepX = closeUpView ? 200 : 120;
+  const stepX = closeUpView ? 240 : 160;
   const firstWordWidth = 124;
   const leftPadding = firstWordWidth / 2 + 6;
   const svgCenterY = 500; // generous center for layout computation
