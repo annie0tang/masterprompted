@@ -848,7 +848,7 @@ export default function SpecificityResponse() {
       closeLabel="Next">
 
       <strong>Confirmation Bias</strong>
-      <p className="mt-2">Confirmation bias is the tendency to favour information that confirms our existing beliefs. A biased prompt – one that is worded to suggest a particular answer – can lead the model to propagating implicit bias. See how a biased prompt may reinforce biased ideas and how this can be prevent with a less biased one                                  </p>
+      <p className="mt-2">Confirmation bias is the tendency to favour information that confirms our existing beliefs. A biased prompt – one that is worded to suggest a particular answer – can lead the model to propagate implicit bias within its answer. See how a biased prompt may reinforce biased ideas and how this can be prevent with a less biased one                                  </p>
     </FeatureHighlight>
 
     <FeatureHighlight
