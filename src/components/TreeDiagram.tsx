@@ -222,15 +222,32 @@ export function TreeDiagram({
       const containerWidth = container.clientWidth;
       const containerHeight = container.clientHeight;
 
-      // Horizontal: ensure next level is visible
+      // Horizontal: ensure next level options are visible
       const nextLevelXPos = levelX(currentLevel) + 24;
       const targetLeft = Math.max(0, nextLevelXPos - containerWidth + 200);
 
-      // Vertical: center on the selected path's current Y
-      const selectedY = computePathY(currentPath, currentPath.length - 1, selections, currentLevel, adjustedCenterY);
-      const targetTop = Math.max(0, selectedY - viewBoxY - containerHeight / 2);
-
-      container.scrollTo({ left: targetLeft, top: targetTop, behavior: "smooth" });
+      // Vertical: ensure ALL option buttons at the current frontier are visible
+      const options = currentLevel < maxDepth ? getOptionsForPath(currentPath) : [];
+      if (options.length > 0) {
+        const optionYs = options.map(opt => {
+          const hypotheticalPath = [...currentPath, opt.word];
+          return computePathY(hypotheticalPath, currentLevel, selections, currentLevel, adjustedCenterY);
+        });
+        const minOptionY = Math.min(...optionYs) - viewBoxY;
+        const maxOptionY = Math.max(...optionYs) - viewBoxY;
+        const optionsSpan = maxOptionY - minOptionY;
+        const padding = 80;
+        
+        // If all options fit in the viewport, center them; otherwise scroll to show the top
+        const optionsCenterY = (minOptionY + maxOptionY) / 2;
+        const targetTop = Math.max(0, optionsCenterY - containerHeight / 2);
+        container.scrollTo({ left: targetLeft, top: targetTop, behavior: "smooth" });
+      } else {
+        // Terminal: center on the selected path
+        const selectedY = computePathY(currentPath, currentPath.length - 1, selections, currentLevel, adjustedCenterY);
+        const targetTop = Math.max(0, selectedY - viewBoxY - containerHeight / 2);
+        container.scrollTo({ left: targetLeft, top: targetTop, behavior: "smooth" });
+      }
     });
   }, [currentLevel, selections]);
 

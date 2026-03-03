@@ -195,14 +195,37 @@ export function BranchDiagram({
   useEffect(() => {
     if (unlockedLevel < 1 || !containerRef.current) return;
     requestAnimationFrame(() => {
+      if (!containerRef.current) return;
+      const container = containerRef.current;
+      const containerRect = container.getBoundingClientRect();
+
+      // Find all option buttons at the current frontier level
       const nextLevel = Math.min(unlockedLevel + 1, maxDepth);
       const targetEl = levelRefs.current[nextLevel] || levelRefs.current[unlockedLevel];
-      if (!targetEl || !containerRef.current) return;
+      if (!targetEl) return;
+
+      // Horizontal: ensure the next level column is visible
       const levelRect = targetEl.getBoundingClientRect();
-      const containerRect = containerRef.current.getBoundingClientRect();
       const scrollOffset = levelRect.right - containerRect.right + 80;
       if (scrollOffset > 0) {
-        containerRef.current.scrollBy({ left: scrollOffset, behavior: 'smooth' });
+        container.scrollBy({ left: scrollOffset, behavior: 'smooth' });
+      }
+
+      // Vertical: ensure all option buttons are visible
+      const optionButtons = targetEl.querySelectorAll('button, [data-option]');
+      if (optionButtons.length > 0) {
+        let minTop = Infinity, maxBottom = -Infinity;
+        optionButtons.forEach(btn => {
+          const r = btn.getBoundingClientRect();
+          if (r.top < minTop) minTop = r.top;
+          if (r.bottom > maxBottom) maxBottom = r.bottom;
+        });
+        const padding = 40;
+        if (minTop - padding < containerRect.top || maxBottom + padding > containerRect.bottom) {
+          const centerY = (minTop + maxBottom) / 2;
+          const containerCenterY = (containerRect.top + containerRect.bottom) / 2;
+          container.scrollBy({ top: centerY - containerCenterY, behavior: 'smooth' });
+        }
       }
     });
   }, [unlockedLevel, selections]);
