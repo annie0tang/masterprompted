@@ -3,3 +3,4 @@ TODO (order on priority)
 - fix sizing issues across the whole website
 - fix the middle radio prompt controls so they are alighned to a horizontal centre
 - change the alignement of the prompt controls to fit the prompt box with the journalistic evaluation while it is in panel mode ie. on smaller screens
+- Fix weird positioning of LLM bottom disclaimer (when text field for prompt on the left is resized, the block on the left moves over it)
