@@ -342,7 +342,7 @@ export function TreeDiagram({
                   viewBox={`0 ${viewBoxY} ${svgWidth} ${svgHeight}`}
                   preserveAspectRatio="xMidYMid meet" className="my-[10px] py-0">
 
-                  {/* Draw all leaf paths as branch lines */}
+                  {/* Draw all leaf paths as branch lines + terminus dots */}
                   {allLeafPaths.map((leafPath, pathIndex) => {
                     const isMatching = leafPathMatchesSelections(leafPath.words);
 
@@ -361,16 +361,30 @@ export function TreeDiagram({
                       return `C ${cpX} ${prev.y} ${cpX} ${p.y} ${p.x} ${p.y}`;
                     }).join(" ");
 
-                    return (
-                      <path
-                        key={pathIndex}
-                        d={pathD}
-                        fill="none"
-                        stroke={isMatching ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"}
-                        strokeWidth={isMatching ? 0.75 : 0.35}
-                        opacity={isMatching ? 1 : 0.15}
-                        className="transition-all duration-300" />);
+                    // Check if leaf ends with END_TOKEN
+                    const lastWord = leafPath.words[leafPath.words.length - 1];
+                    const lastPoint = points[points.length - 1];
 
+                    return (
+                      <g key={pathIndex}>
+                        <path
+                          d={pathD}
+                          fill="none"
+                          stroke={isMatching ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"}
+                          strokeWidth={isMatching ? 0.75 : 0.35}
+                          opacity={isMatching ? 1 : 0.15}
+                          className="transition-all duration-300" />
+                        {/* Terminus dot at end of branch */}
+                        {lastWord === END_TOKEN && (
+                          <circle
+                            cx={lastPoint.x}
+                            cy={lastPoint.y}
+                            r={isMatching ? 4 : 2.5}
+                            fill="hsl(var(--muted-foreground))"
+                            opacity={isMatching ? 0.5 : 0.15}
+                            className="transition-all duration-300" />
+                        )}
+                      </g>);
 
                   })}
 
@@ -459,25 +473,24 @@ export function TreeDiagram({
                       return (
                         <g key={`option-${idx}`}>
                           {opt.word === END_TOKEN ? (
-                            /* Terminus dot connected to branch */
+                            /* Clickable hit area + probability for terminus */
                             <g
                               onClick={() => !isAnimating && handleWordClick(currentLevel, opt.word)}
                               className="cursor-pointer">
                               <text
                                 x={x}
-                                y={optY - 14}
+                                y={optY - 12}
                                 textAnchor="middle"
                                 className="text-[10px] font-medium pointer-events-none select-none"
                                 fill="hsl(var(--muted-foreground))">
                                 {opt.probability < 0.005 ? '<.01' : opt.probability >= 0.995 ? '>.99' : opt.probability.toFixed(2)}
                               </text>
+                              {/* Invisible hit area for clicking */}
                               <circle
                                 cx={x}
                                 cy={optY}
-                                r={5}
-                                fill="hsl(var(--muted-foreground))"
-                                opacity={0.4}
-                                className="transition-all duration-200 hover:opacity-70" />
+                                r={12}
+                                fill="transparent" />
                             </g>
                           ) : (
                             <>
