@@ -255,9 +255,16 @@ export function BranchDiagram({
       cycles++;
       if (cycles >= cycleCount) {
         clearInterval(interval);
-        const highest = options[0];
-        setAnimatedWord(highest.word);
-        setSelectedProbability(highest.probability);
+        // Weighted random sampling based on probabilities
+        const totalProb = options.reduce((sum, o) => sum + o.probability, 0);
+        let rand = Math.random() * totalProb;
+        let sampled = options[options.length - 1];
+        for (const opt of options) {
+          rand -= opt.probability;
+          if (rand <= 0) { sampled = opt; break; }
+        }
+        setAnimatedWord(sampled.word);
+        setSelectedProbability(sampled.probability);
         setShowPulse(true);
         setShowSelectionMessage(true);
         setTimeout(() => {
@@ -266,7 +273,7 @@ export function BranchDiagram({
           setAnimatingLevel(null);
           setShowSelectionMessage(false);
           setSelectedProbability(null);
-          handleWordClick(level, highest.word);
+          handleWordClick(level, sampled.word);
         }, 1500);
       }
     }, 180);

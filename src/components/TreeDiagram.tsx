@@ -160,12 +160,19 @@ export function TreeDiagram({
       cycleIndex++;
       if (cycleIndex >= cycleCount) {
         clearInterval(interval);
-        const highestProb = options.reduce((a, b) => a.probability > b.probability ? a : b);
-        setAnimatedWord(highestProb.word);
-        setSelectedProbability(highestProb.probability);
+        // Weighted random sampling based on probabilities
+        const totalProb = options.reduce((sum, o) => sum + o.probability, 0);
+        let rand = Math.random() * totalProb;
+        let sampled = options[options.length - 1];
+        for (const opt of options) {
+          rand -= opt.probability;
+          if (rand <= 0) { sampled = opt; break; }
+        }
+        setAnimatedWord(sampled.word);
+        setSelectedProbability(sampled.probability);
         setShowSelectionMessage(true);
         setTimeout(() => {
-          handleWordClick(currentLevel, highestProb.word);
+          handleWordClick(currentLevel, sampled.word);
           setAnimatedWord(null);
           setShowSelectionMessage(false);
           setSelectedProbability(null);
