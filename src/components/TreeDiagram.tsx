@@ -342,7 +342,7 @@ export function TreeDiagram({
                   viewBox={`0 ${viewBoxY} ${svgWidth} ${svgHeight}`}
                   preserveAspectRatio="xMidYMid meet" className="my-[10px] py-0">
 
-                  {/* Draw all leaf paths as branch lines + terminus dots */}
+                  {/* Draw all leaf paths as branch lines */}
                   {allLeafPaths.map((leafPath, pathIndex) => {
                     const isMatching = leafPathMatchesSelections(leafPath.words);
 
@@ -361,30 +361,16 @@ export function TreeDiagram({
                       return `C ${cpX} ${prev.y} ${cpX} ${p.y} ${p.x} ${p.y}`;
                     }).join(" ");
 
-                    // Check if leaf ends with END_TOKEN
-                    const lastWord = leafPath.words[leafPath.words.length - 1];
-                    const lastPoint = points[points.length - 1];
-
                     return (
-                      <g key={pathIndex}>
-                        <path
-                          d={pathD}
-                          fill="none"
-                          stroke={isMatching ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"}
-                          strokeWidth={isMatching ? 0.75 : 0.35}
-                          opacity={isMatching ? 1 : 0.15}
-                          className="transition-all duration-300" />
-                        {/* Terminus dot at end of branch */}
-                        {lastWord === END_TOKEN && (
-                          <circle
-                            cx={lastPoint.x}
-                            cy={lastPoint.y}
-                            r={isMatching ? 4 : 2.5}
-                            fill="hsl(var(--muted-foreground))"
-                            opacity={isMatching ? 0.5 : 0.15}
-                            className="transition-all duration-300" />
-                        )}
-                      </g>);
+                      <path
+                        key={pathIndex}
+                        d={pathD}
+                        fill="none"
+                        stroke={isMatching ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"}
+                        strokeWidth={isMatching ? 0.75 : 0.35}
+                        opacity={isMatching ? 1 : 0.15}
+                        className="transition-all duration-300" />);
+
 
                   })}
 
@@ -472,62 +458,40 @@ export function TreeDiagram({
 
                       return (
                         <g key={`option-${idx}`}>
-                          {opt.word === END_TOKEN ? (
-                            /* Clickable hit area + probability for terminus */
-                            <g
-                              onClick={() => !isAnimating && handleWordClick(currentLevel, opt.word)}
-                              className="cursor-pointer">
-                              <text
-                                x={x}
-                                y={optY - 12}
-                                textAnchor="middle"
-                                className="text-[10px] font-medium pointer-events-none select-none"
-                                fill="hsl(var(--muted-foreground))">
-                                {opt.probability < 0.005 ? '<.01' : opt.probability >= 0.995 ? '>.99' : opt.probability.toFixed(2)}
-                              </text>
-                              {/* Invisible hit area for clicking */}
-                              <circle
-                                cx={x}
-                                cy={optY}
-                                r={12}
-                                fill="transparent" />
-                            </g>
-                          ) : (
-                            <>
-                              {/* Background occluder */}
-                              <rect
-                                x={x - buttonWidth / 2 - 6}
-                                y={optY - buttonHeight / 2 - foreignObjectPadTop - 6}
-                                width={buttonWidth + 12}
-                                height={buttonHeight + foreignObjectPadTop + 12}
-                                rx={12}
-                                fill="hsl(var(--background))" />
+                          {/* Background occluder */}
+                          <rect
+                            x={x - buttonWidth / 2 - 6}
+                            y={optY - buttonHeight / 2 - foreignObjectPadTop - 6}
+                            width={buttonWidth + 12}
+                            height={buttonHeight + foreignObjectPadTop + 12}
+                            rx={12}
+                            fill="hsl(var(--background))" />
 
-                              <foreignObject
-                                x={x - buttonWidth / 2}
-                                y={optY - buttonHeight / 2 - foreignObjectPadTop}
-                                width={buttonWidth}
-                                height={buttonHeight + foreignObjectPadTop}>
+                          <foreignObject
+                            x={x - buttonWidth / 2}
+                            y={optY - buttonHeight / 2 - foreignObjectPadTop}
+                            width={buttonWidth}
+                            height={buttonHeight + foreignObjectPadTop}>
 
-                                <div className="flex justify-center h-full items-end pb-0">
-                                  <button
-                                    onClickCapture={() => handleWordClick(currentLevel, opt.word)}
-                                    disabled={isAnimating}
-                                    className={cn(
-                                     "relative px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 border whitespace-nowrap h-11 w-fit",
-                                      "bg-card border-border hover:border-primary/50 hover:bg-muted cursor-pointer",
-                                      isAnimated && "border-primary bg-primary/10"
-                                    )}>
+                            <div className="flex justify-center h-full items-end pb-0">
+                              <button
+                                onClickCapture={() => handleWordClick(currentLevel, opt.word)}
+                                disabled={isAnimating}
+                                className={cn(
+                                  "relative px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 border-2 whitespace-nowrap min-w-[100px] h-11",
+                                  opt.word === END_TOKEN ?
+                                  "bg-red-50/60 border-red-300 border-dashed hover:border-red-400 hover:bg-red-100 cursor-pointer text-red-600" :
+                                  "bg-card border-border hover:border-primary/50 hover:bg-muted cursor-pointer",
+                                  isAnimated && "border-primary bg-primary/10"
+                                )}>
 
-                                    {opt.word}
-                                    <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap bg-muted text-muted-foreground">
-                                      {opt.probability < 0.005 ? '<.01' : opt.probability >= 0.995 ? '>.99' : opt.probability.toFixed(2)}
-                                    </span>
-                                  </button>
-                                </div>
-                              </foreignObject>
-                            </>
-                          )}
+                                {opt.word === END_TOKEN ? <span className="flex items-center gap-1.5"><span className="text-[10px]">■</span> End sentence</span> : opt.word}
+                                <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap bg-muted text-muted-foreground">
+                                  {opt.probability < 0.005 ? '<.01' : opt.probability >= 0.995 ? '>.99' : opt.probability.toFixed(2)}
+                                </span>
+                              </button>
+                            </div>
+                          </foreignObject>
                         </g>);
 
                     });

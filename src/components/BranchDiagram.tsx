@@ -416,46 +416,20 @@ export function BranchDiagram({
                 </div>
               }
 
-              {option.word === END_TOKEN ? (
-                /* Terminus dot */
-                <div
-                  className={cn(
-                    "relative flex flex-col items-center gap-1 cursor-pointer",
-                    !canSelect && "opacity-40 cursor-not-allowed"
-                  )}
-                  onClick={() => canSelect && handleWordClick(level, option.word)}>
-                  {level > 0 &&
-                    <span className={cn(
-                      "text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap",
-                      isSelected ? "bg-green-200 text-green-800" : "bg-muted text-muted-foreground"
-                    )}>
-                      {option.probability < 0.005 ? '<.01' : option.probability >= 0.995 ? '>.99' : option.probability.toFixed(2)}
-                    </span>
-                  }
-                  <div className={cn(
-                    "w-2.5 h-2.5 rounded-full bg-muted-foreground/40 transition-all duration-200",
-                    isSelected && "bg-muted-foreground/70 scale-125",
-                    canSelect && "hover:bg-muted-foreground/60"
-                  )} />
-                </div>
-              ) : (
-              <>
-              {showSelectionMessage && isPulsing &&
-              <div className="absolute -top-14 left-1/2 -translate-x-1/2 z-10">
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground text-xs font-medium rounded-lg shadow-lg whitespace-nowrap animate-fade-in">
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary-foreground animate-pulse" />
-                    Highest: {selectedProbability !== null ? (selectedProbability * 100).toFixed(0) : 0}%
-                  </div>
-                </div>
-              }
-
               <button
                 onClickCapture={() => canSelect && handleWordClick(level, option.word)}
                 disabled={!canSelect}
                 data-word={option.word}
                 data-selected={isSelected ? "true" : "false"}
                 className={cn(
-                  "relative px-2 py-2 rounded-lg text-sm font-medium transition-all duration-200 border whitespace-nowrap h-11",
+                  "relative px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 border-2 whitespace-nowrap",
+                  "min-w-[100px] h-11",
+                  option.word === END_TOKEN ?
+                  (isSelected ?
+                    "bg-red-50 border-red-400 text-red-800 shadow-md scale-105 cursor-pointer border-dashed" :
+                    canSelect ?
+                    "bg-red-50/60 border-red-300 border-dashed hover:border-red-400 hover:bg-red-100 cursor-pointer text-red-600" :
+                    "bg-muted/50 border-muted border-dashed text-muted-foreground/60 cursor-not-allowed") :
                   level === 0 ?
                   "bg-primary text-primary-foreground border-primary cursor-default" :
                   isSelected ?
@@ -467,7 +441,7 @@ export function BranchDiagram({
                   isPulsing && "bg-primary text-primary-foreground border-primary shadow-lg scale-110"
                 )}>
                 
-                {option.word}
+                {option.word === END_TOKEN ? <span className="flex items-center gap-1.5"><span className="text-[10px]">■</span> End sentence</span> : option.word}
                 {level > 0 &&
                 <span
                   className={cn(
@@ -482,8 +456,6 @@ export function BranchDiagram({
                   </span>
                 }
               </button>
-              </>
-              )}
             </div>);
 
         })}
