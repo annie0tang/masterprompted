@@ -277,9 +277,9 @@ export function TreeDiagram({
         isIntroComplete && !isInteractive && "opacity-25 blur-sm pointer-events-none"
       )}>
         {/* Current headline header */}
-        <div className="flex items-center justify-between bg-card rounded-lg px-4 py-3" data-feature="headline-preview">
+        <div className="flex items-center justify-between bg-card rounded-lg px-4 py-3">
           <div className="flex-1 min-w-0">
-            <p className="text-xl font-medium text-foreground">
+            <p className="text-xl font-medium text-foreground" data-feature="headline-preview">
               {(() => {
                 // Show full default sentence greyed out when user hasn't selected yet
                 if (!hasUserSelected && isInteractive) {
