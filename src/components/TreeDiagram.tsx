@@ -2,7 +2,7 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
-import starIcon from "@/assets/star.png";
+import { FourPointStar } from "@/components/FourPointStar";
 import {
   predictionTree,
   getNodeAtPath,
@@ -531,7 +531,7 @@ export function TreeDiagram({
                           )}
                           title="Watch LLM select highest probability">
 
-                          <img src={starIcon} alt="AI" className={cn("h-4 w-4", isAnimating && "animate-pulse")} />
+                          <FourPointStar className={cn("h-4 w-4", isAnimating && "animate-pulse")} />
                         </button>
                       </foreignObject>);
 

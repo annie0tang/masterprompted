@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { RotateCcw } from "lucide-react";
-import starIcon from "@/assets/star.png";
+import { FourPointStar } from "@/components/FourPointStar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import {
@@ -600,7 +600,7 @@ export function BranchDiagram({
                                   "bg-muted hover:bg-primary/10 text-muted-foreground hover:text-primary"
                                 )}>
                                 
-                                  <img src={starIcon} alt="AI" className="h-4 w-4" />
+                                  <FourPointStar className="h-4 w-4" />
                                 </button>
                               </TooltipTrigger>
                               <TooltipContent>
