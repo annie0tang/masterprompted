@@ -2,7 +2,7 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { RotateCcw, ZoomIn, ZoomOut } from "lucide-react";
-import starIcon from "@/assets/star.png";
+import { FourPointStar } from "@/components/FourPointStar";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import TextFlag from "@/components/TextFlag";
@@ -774,7 +774,7 @@ export function FullBranchDiagram({
                           className="h-5 gap-1 text-[9px] px-2"
                           title="Watch computer select"
                         >
-                          <img src={starIcon} alt="AI" className={cn(
+                          <FourPointStar className={cn(
                               "h-2.5 w-2.5",
                               isAnimating && "animate-pulse"
                             )} />
