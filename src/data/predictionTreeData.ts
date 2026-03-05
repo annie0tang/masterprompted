@@ -1348,3 +1348,149 @@ export const predictionTree: PredictionNode = n("European Union", 1, [
     ])
   ])
 ]);
+
+// --- Utility Functions ---
+
+/** Navigate tree to node at given path, return that node */
+export function getNodeAtPath(path: string[]): PredictionNode | null {
+  let node = predictionTree;
+  for (let i = 1; i < path.length; i++) {
+    const child = node.children.find(c => c.word === path[i]);
+    if (!child) return null;
+    node = child;
+  }
+  return node;
+}
+
+/** Sentinel word used to represent end-of-sentence probability */
+export const END_TOKEN = ".";
+
+/** Get selectable options (children) for a node at the given path.
+ *  If the node has endProb > 0, a synthetic "." option is included. */
+export function getOptionsForPath(path: string[]): { word: string; probability: number }[] {
+  const node = getNodeAtPath(path);
+  if (!node) return [];
+  const options = node.children
+    .map(c => ({ word: c.word, probability: c.prob }))
+    .sort((a, b) => b.probability - a.probability);
+  if (node.endProb > 0) {
+    options.push({ word: END_TOKEN, probability: node.endProb });
+    options.sort((a, b) => b.probability - a.probability);
+  }
+  return options;
+}
+
+/** Check if path has reached a terminal node (no more children) */
+export function isPathTerminal(path: string[]): boolean {
+  const node = getNodeAtPath(path);
+  if (!node) return true;
+  return node.children.length === 0;
+}
+
+/** Get all root-to-leaf paths (only terminal leaves, not canEnd intermediate nodes) */
+export function getAllLeafPaths(): { words: string[]; probabilities: number[] }[] {
+  const paths: { words: string[]; probabilities: number[] }[] = [];
+  function dfs(node: PredictionNode, words: string[], probs: number[]) {
+    if (node.children.length === 0) {
+      paths.push({ words: [...words], probabilities: [...probs] });
+      return;
+    }
+    for (const child of node.children) {
+      dfs(child, [...words, child.word], [...probs, child.prob]);
+    }
+  }
+  dfs(predictionTree, [predictionTree.word], [predictionTree.prob]);
+  return paths;
+}
+
+/** Get maximum depth of the tree (number of levels including root) */
+export function getMaxDepth(): number {
+  function maxD(node: PredictionNode): number {
+    if (node.children.length === 0) return 1;
+    return 1 + Math.max(...node.children.map(maxD));
+  }
+  return maxD(predictionTree);
+}
+
+/** Get the default (highest probability) path through the tree */
+export function getDefaultPath(): string[] {
+  const path = [predictionTree.word];
+  let node = predictionTree;
+  while (node.children.length > 0) {
+    const best = node.children.reduce((a, b) => a.prob > b.prob ? a : b);
+    path.push(best.word);
+    node = best;
+  }
+  return path;
+}
+
+/** 
+ * Compute Y position for a path at a given level in the tree diagram.
+ * Uses tree structure to dynamically position based on sibling count and selection state.
+ */
+export function computePathY(
+  pathWords: string[],
+  level: number,
+  selections: (string | null)[],
+  currentLevel: number,
+  svgCenterY: number
+): number {
+  let y = svgCenterY;
+  let node = predictionTree;
+
+  for (let d = 1; d <= level; d++) {
+    const word = pathWords[d];
+    if (!word) break;
+
+    // Build effective siblings list including synthetic end token if applicable
+    const realSiblings = node.children;
+    const hasEnd = node.endProb > 0;
+    const effectiveSiblingCount = realSiblings.length + (hasEnd ? 1 : 0);
+
+    let childIndex = realSiblings.findIndex(c => c.word === word);
+    const isEndToken = word === END_TOKEN;
+    if (isEndToken && hasEnd) {
+      // End token sorts by probability — find its position among all options
+      const allOptions = [
+        ...realSiblings.map(c => ({ word: c.word, prob: c.prob })),
+        { word: END_TOKEN, prob: node.endProb }
+      ].sort((a, b) => b.prob - a.prob);
+      childIndex = allOptions.findIndex(o => o.word === END_TOKEN);
+    }
+    if (childIndex < 0) break;
+
+    let pathMatchesSelection = true;
+    for (let i = 0; i <= d - 1; i++) {
+      if (selections[i] && selections[i] !== pathWords[i]) {
+        pathMatchesSelection = false;
+        break;
+      }
+    }
+
+    const isActiveDepth = d <= currentLevel;
+    let spacing: number;
+
+    if (pathMatchesSelection && isActiveDepth) {
+      const baseExpanded = Math.max(75, 120 - d * 5);
+      spacing = baseExpanded * (1 + (d - 1) * 0.18);
+    } else {
+      spacing = Math.max(8, 18 - d * 1.5);
+    }
+
+    const offset = (childIndex - (effectiveSiblingCount - 1) / 2) * spacing;
+    y += offset;
+
+    if (isEndToken) break; // No further children
+    node = realSiblings[childIndex];
+  }
+
+  return y;
+}
+
+/** Create an empty selections array of the right length */
+export function createEmptySelections(): (string | null)[] {
+  const depth = getMaxDepth();
+  const arr: (string | null)[] = [predictionTree.word];
+  for (let i = 1; i < depth; i++) arr.push(null);
+  return arr;
+}
