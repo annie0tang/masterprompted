@@ -387,8 +387,8 @@ export function BranchDiagram({
             {/* Ellipsis below */}
             <div style={{ position: "absolute", top: ghostBelowTop, left: "50%", transform: "translateX(-50%)" }}>
               <div
-              className="text-lg font-bold tracking-[0.3em] transition-opacity duration-200"
-              style={{ color: ghostTooltip.visible ? "hsl(var(--muted-foreground))" : "hsl(var(--muted-foreground) / 0.6)" }}>
+              className="text-base font-semibold tracking-[0.25em] transition-opacity duration-200"
+              style={{ color: ghostTooltip.visible ? "hsl(var(--muted-foreground) / 0.9)" : "hsl(var(--muted-foreground) / 0.5)" }}>
                 •••
               </div>
             </div>
