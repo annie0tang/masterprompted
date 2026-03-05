@@ -601,7 +601,7 @@ export function BranchDiagram({
                                 className={cn(
                                   "p-1.5 rounded-md transition-all duration-200",
                                   animatingLevel === level ?
-                                  "bg-primary/20 text-primary animate-pulse" :
+                                  "bg-primary/20 text-primary" :
                                   "bg-muted hover:bg-primary/10 text-muted-foreground hover:text-primary"
                                 )}>
                                 
