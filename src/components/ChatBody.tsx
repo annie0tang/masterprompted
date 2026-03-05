@@ -254,6 +254,26 @@ const ChatBody = memo(function ChatBody({
         <div className="flex-1 min-w-0 flex flex-col h-full relative">
           <div className="flex-1 overflow-y-auto" ref={chatContainerRef}>
             <div className="mt-6 space-y-4">
+              {threads.length === 0 && (
+                <div className="space-y-4 select-none pointer-events-none">
+                  {/* Faint prompt placeholder */}
+                  <div className="flex justify-end">
+                    <div className="w-3/4 border-2 border-dashed border-muted-foreground/15 rounded-2xl p-6">
+                      <div className="h-3 w-2/3 rounded bg-muted-foreground/8 mb-3" />
+                      <div className="h-3 w-1/2 rounded bg-muted-foreground/8" />
+                    </div>
+                  </div>
+                  {/* Faint answer placeholder */}
+                  <div className="flex justify-start">
+                    <div className="w-full border-2 border-dashed border-muted-foreground/15 rounded-2xl p-6">
+                      <div className="h-3 w-full rounded bg-muted-foreground/8 mb-3" />
+                      <div className="h-3 w-5/6 rounded bg-muted-foreground/8 mb-3" />
+                      <div className="h-3 w-4/6 rounded bg-muted-foreground/8 mb-3" />
+                      <div className="h-3 w-3/4 rounded bg-muted-foreground/8" />
+                    </div>
+                  </div>
+                </div>
+              )}
               {threads.map((thread, threadIndex) => {
                 const current = thread.versions[thread.currentIndex];
                 return (
