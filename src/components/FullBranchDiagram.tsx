@@ -774,10 +774,7 @@ export function FullBranchDiagram({
                           className="h-5 gap-1 text-[9px] px-2"
                           title="Watch computer select"
                         >
-                          <FourPointStar className={cn(
-                              "h-2.5 w-2.5",
-                              isAnimating && "animate-pulse"
-                            )} />
+                          <FourPointStar className="h-2.5 w-2.5" />
                           Auto
                         </Button>
                       </div>

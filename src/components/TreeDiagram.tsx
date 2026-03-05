@@ -535,7 +535,7 @@ export function TreeDiagram({
                           )}
                           title="Watch LLM select highest probability">
 
-                          <FourPointStar className={cn("h-4 w-4", isAnimating && "animate-pulse")} />
+                          <FourPointStar className="h-4 w-4" />
                         </button>
                       </foreignObject>);
 
