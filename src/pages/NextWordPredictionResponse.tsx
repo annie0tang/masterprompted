@@ -76,9 +76,9 @@ export default function HeadlineResponse() {
           <Breadcrumb />
         </div>
 
-        {/* On xl+: center column is fixed, panel absolutely positioned. On smaller: flex flow. */}
-        <div className="flex items-start xl:block xl:relative">
-          <div className="flex-1 min-w-0 xl:max-w-4xl xl:mx-auto">
+        <div className="flex items-start">
+          <div className="flex-1 min-w-0">
+            <div className="max-w-4xl mx-auto">
               {/* Original Prompt */}
               <div className="mb-8">
                 <ChatPrompt text="Write a 7-word headline for a long form journalistic article about AI ethics agreement reached across the EU." fileName="EU_AI_Act.pdf" />
@@ -86,7 +86,7 @@ export default function HeadlineResponse() {
 
               {/* AI Response */}
               <div className="space-y-4">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center justify-between">
                   <ToggleGroup
                     type="single"
                     value={viewMode}
@@ -138,11 +138,11 @@ export default function HeadlineResponse() {
                   </div>
                 )}
               </div>
+            </div>
           </div>
-
-          {/* Evaluation panel: in-flow on small screens, absolutely positioned on xl+ */}
+          {/* Evaluation panel */}
           {evaluationPanelOpen && (
-            <div className="flex-shrink-0 xl:absolute xl:top-0 xl:right-0" data-evaluation-panel>
+            <div className="flex-shrink-0" data-evaluation-panel>
               <EvaluationPanel initialIsOpen={true} canClose={true} onClose={() => setEvaluationPanelOpen(false)} />
             </div>
           )}
