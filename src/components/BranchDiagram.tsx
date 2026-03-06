@@ -440,6 +440,17 @@ export function BranchDiagram({
                         <ListChecks className="h-3 w-3 flex-shrink-0" />
                         {option.word}
                       </span>
+                      {level > 0 &&
+                        <span className={cn(
+                          "absolute -top-4 left-1/2 -translate-x-1/2 text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap",
+                          isPulsing ? "bg-primary text-primary-foreground" :
+                          isSelected ? "bg-destructive/20 text-destructive" :
+                          "bg-muted text-muted-foreground"
+                        )}
+                        {...idx === 0 && isCurrentFrontier ? { "data-feature": "probability" } : {}}>
+                          {option.probability < 0.005 ? '<.01' : option.probability >= 0.995 ? '>.99' : option.probability.toFixed(2)}
+                        </span>
+                      }
                     </button>
                   </HoverCardTrigger>
                   <HoverCardContent className="w-64 bg-card border-destructive/20 shadow-lg rounded-lg p-3 z-50" sideOffset={5}>
@@ -483,6 +494,17 @@ export function BranchDiagram({
                   {option.word === END_TOKEN ? (
                     <span className="flex items-center gap-1.5"><span className="text-[10px]">■</span> End sentence</span>
                   ) : option.word}
+                  {level > 0 &&
+                    <span className={cn(
+                      "absolute -top-4 left-1/2 -translate-x-1/2 text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap",
+                      isPulsing ? "bg-primary text-primary-foreground" :
+                      isSelected ? "bg-green-200 text-green-800" :
+                      "bg-muted text-muted-foreground"
+                    )}
+                    {...idx === 0 && isCurrentFrontier ? { "data-feature": "probability" } : {}}>
+                      {option.probability < 0.005 ? '<.01' : option.probability >= 0.995 ? '>.99' : option.probability.toFixed(2)}
+                    </span>
+                  }
                 </button>
               )}
             </div>);
