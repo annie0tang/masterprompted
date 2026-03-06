@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect, useLayoutEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { RotateCcw, ListChecks } from "lucide-react";
+import { RotateCcw, ListChecks, Target } from "lucide-react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { FourPointStar } from "@/components/FourPointStar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -17,7 +17,7 @@ import {
   END_TOKEN,
   type PredictionNode } from
 "@/data/predictionTreeData";
-import { isFlaggedWord, getFlaggedConfig } from "@/data/flaggedWords";
+import { isFlaggedWord, getFlaggedConfig, FACTOR_META } from "@/data/flaggedWords";
 
 /**
  * TreeDiagram - Shows all possible sentence branches,
@@ -477,11 +477,20 @@ export function TreeDiagram({
 
                       {(() => {
                           const isFlagged = isFlaggedWord(word);
-                          const fillColor = isFlagged ? "hsl(var(--destructive))" : (isLatestSelection ? "hsl(142 76% 90%)" : level === 0 ? "hsl(var(--primary))" : "hsl(142 76% 90%)");
-                          const strokeColor = isFlagged ? "hsl(var(--destructive))" : (isLatestSelection ? "hsl(142 76% 56%)" : level === 0 ? "hsl(var(--primary))" : "hsl(142 76% 56%)");
-                          const textColor = isFlagged ? "white" : (level === 0 ? "hsl(var(--primary-foreground))" : "hsl(142 76% 20%)");
+                          const flagConfig = isFlagged ? getFlaggedConfig(word) : undefined;
+                          const isRelevance = flagConfig?.evaluationFactor === "relevance";
+                          const meta = flagConfig ? FACTOR_META[flagConfig.evaluationFactor] : undefined;
+                          const FlagIcon = isRelevance ? Target : ListChecks;
+                          const fillColor = isFlagged ? (isRelevance ? "hsl(45 93% 90%)" : "hsl(var(--destructive))") : (isLatestSelection ? "hsl(142 76% 90%)" : level === 0 ? "hsl(var(--primary))" : "hsl(142 76% 90%)");
+                          const strokeColor = isFlagged ? (isRelevance ? "hsl(45 93% 47%)" : "hsl(var(--destructive))") : (isLatestSelection ? "hsl(142 76% 56%)" : level === 0 ? "hsl(var(--primary))" : "hsl(142 76% 56%)");
+                          const textColor = isFlagged ? (isRelevance ? "hsl(45 93% 20%)" : "white") : (level === 0 ? "hsl(var(--primary-foreground))" : "hsl(142 76% 20%)");
                           if (isFlagged) {
-                            const flagConfig = getFlaggedConfig(word);
+                            const flagFill = isRelevance ? "hsl(45 93% 90%)" : "hsl(var(--destructive) / 0.15)";
+                            const flagStroke = isRelevance ? "hsl(45 93% 47%)" : "hsl(var(--destructive))";
+                            const flagTextColor = isRelevance ? "text-yellow-700" : "text-destructive";
+                            const flagBorderColor = isRelevance ? "border-yellow-300" : "border-destructive/20";
+                            const flagIconColor = isRelevance ? "text-yellow-600" : "text-destructive";
+                            const flagTitleColor = isRelevance ? "text-yellow-700" : "text-destructive";
                             return (
                               <>
                                 <rect
@@ -490,8 +499,8 @@ export function TreeDiagram({
                                   width={wordWidth}
                                   height={rectHeight}
                                   rx={8}
-                                  fill="hsl(var(--destructive) / 0.15)"
-                                  stroke="hsl(var(--destructive))"
+                                  fill={flagFill}
+                                  stroke={flagStroke}
                                   strokeWidth={2}
                                   className="transition-all duration-200" />
                                 <foreignObject
@@ -503,15 +512,15 @@ export function TreeDiagram({
                                   <HoverCard>
                                     <HoverCardTrigger asChild>
                                       <div className="flex items-center justify-center gap-1 h-full cursor-help">
-                                        <ListChecks className="h-3 w-3 text-destructive flex-shrink-0" />
-                                        <span className="text-[12px] font-semibold text-destructive">{word}</span>
+                                        <FlagIcon className={cn("h-3 w-3 flex-shrink-0", flagIconColor)} />
+                                        <span className={cn("text-[12px] font-semibold", flagTextColor)}>{word}</span>
                                       </div>
                                     </HoverCardTrigger>
-                                    <HoverCardContent className="w-64 bg-card border-destructive/20 shadow-lg rounded-lg p-3 z-50" sideOffset={5}>
+                                    <HoverCardContent className={cn("w-64 bg-card shadow-lg rounded-lg p-3 z-50", flagBorderColor)} sideOffset={5}>
                                       <div className="space-y-2">
                                         <div className="flex items-center gap-2">
-                                          <ListChecks className="h-4 w-4 text-destructive flex-shrink-0" />
-                                          <h4 className="font-semibold text-destructive text-sm">Factual Accuracy</h4>
+                                          <FlagIcon className={cn("h-4 w-4 flex-shrink-0", flagIconColor)} />
+                                          <h4 className={cn("font-semibold text-sm", flagTitleColor)}>{meta?.label}</h4>
                                         </div>
                                         <p className="text-xs text-foreground leading-relaxed text-left">{flagConfig?.tooltip}</p>
                                       </div>
@@ -565,7 +574,20 @@ export function TreeDiagram({
                             height={buttonHeight + foreignObjectPadTop}>
 
                             <div className="flex justify-center h-full items-end pb-0">
-                              {isFlaggedWord(opt.word) ? (
+                              {isFlaggedWord(opt.word) ? (() => {
+                                const optFlagConfig = getFlaggedConfig(opt.word)!;
+                                const optIsRelevance = optFlagConfig.evaluationFactor === "relevance";
+                                const optMeta = FACTOR_META[optFlagConfig.evaluationFactor];
+                                const OptFlagIcon = optIsRelevance ? Target : ListChecks;
+                                const optTextColor = optIsRelevance ? "text-yellow-700" : "text-destructive";
+                                const optBgColor = optIsRelevance ? "bg-yellow-50" : "bg-destructive/10";
+                                const optBorderColor = optIsRelevance ? "border-yellow-400" : "border-destructive/60";
+                                const optHoverBorder = optIsRelevance ? "hover:border-yellow-600" : "hover:border-destructive";
+                                const optHoverBg = optIsRelevance ? "hover:bg-yellow-100" : "hover:bg-destructive/20";
+                                const optCardBorder = optIsRelevance ? "border-yellow-300" : "border-destructive/20";
+                                const optIconColor = optIsRelevance ? "text-yellow-600" : "text-destructive";
+                                const optTitleColor = optIsRelevance ? "text-yellow-700" : "text-destructive";
+                                return (
                                 <HoverCard openDelay={100} closeDelay={200}>
                                   <HoverCardTrigger asChild>
                                     <button
@@ -573,11 +595,11 @@ export function TreeDiagram({
                                       disabled={isAnimating}
                                       className={cn(
                                         "relative px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 border-2 whitespace-nowrap min-w-[100px] h-11",
-                                        "bg-destructive/10 border-destructive/60 hover:border-destructive hover:bg-destructive/20 cursor-pointer text-destructive",
+                                        `${optBgColor} ${optBorderColor} ${optHoverBorder} ${optHoverBg} cursor-pointer ${optTextColor}`,
                                         isAnimated && "border-primary bg-primary/10"
                                       )}>
                                       <span className="flex items-center gap-1">
-                                        <ListChecks className="h-3 w-3 flex-shrink-0" />
+                                        <OptFlagIcon className={cn("h-3 w-3 flex-shrink-0", optIconColor)} />
                                         {opt.word}
                                       </span>
                                       <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap bg-muted text-muted-foreground">
@@ -585,17 +607,18 @@ export function TreeDiagram({
                                       </span>
                                     </button>
                                   </HoverCardTrigger>
-                                  <HoverCardContent className="w-64 bg-card border-destructive/20 shadow-lg rounded-lg p-3 z-50" sideOffset={5}>
+                                  <HoverCardContent className={cn("w-64 bg-card shadow-lg rounded-lg p-3 z-50", optCardBorder)} sideOffset={5}>
                                     <div className="space-y-2">
                                       <div className="flex items-center gap-2">
-                                        <ListChecks className="h-4 w-4 text-destructive flex-shrink-0" />
-                                        <h4 className="font-semibold text-destructive text-sm">Factual Accuracy</h4>
+                                        <OptFlagIcon className={cn("h-4 w-4 flex-shrink-0", optIconColor)} />
+                                        <h4 className={cn("font-semibold text-sm", optTitleColor)}>{optMeta.label}</h4>
                                       </div>
-                                      <p className="text-xs text-foreground leading-relaxed text-left break-words whitespace-normal">{getFlaggedConfig(opt.word)?.tooltip}</p>
+                                      <p className="text-xs text-foreground leading-relaxed text-left break-words whitespace-normal">{optFlagConfig.tooltip}</p>
                                     </div>
                                   </HoverCardContent>
                                 </HoverCard>
-                              ) : (
+                                );
+                              })() : (
                                 <button
                                   onClickCapture={() => handleWordClick(currentLevel, opt.word)}
                                   disabled={isAnimating}
