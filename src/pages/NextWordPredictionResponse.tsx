@@ -15,6 +15,7 @@ import { ArrowLeft, ArrowRight, GitBranch, ListChecks } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { predictionTree, getDefaultPath, getOptionsForPath } from "@/data/predictionTreeData";
+import { FLAGGED_WORDS_MAP } from "@/data/flaggedWords";
 
 export default function HeadlineResponse() {
   const navigate = useNavigate();
