@@ -26,6 +26,10 @@ export const FLAGGED_WORDS_MAP: Record<string, FlaggedWordConfig> = {
     tooltip: "While morality is tangentially related to AI ethics, the EU AI Act focuses on regulation and governance — not morality per se. A more precise and relevant term would better serve the headline.",
     evaluationFactor: "relevance",
   },
+  "Globally": {
+    tooltip: "While 'globally' might seem accurate for an international regulation, the EU AI Act specifically applies to the European Union — not the entire globe. Using 'globally' overstates its geographic scope.",
+    evaluationFactor: "factual_accuracy",
+  },
 };
 
 export const FLAGGED_WORDS_LIST = Object.keys(FLAGGED_WORDS_MAP).map(w => w.toLowerCase());
