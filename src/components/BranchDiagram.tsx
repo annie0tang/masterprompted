@@ -480,7 +480,7 @@ export function BranchDiagram({
                     isSelected ?
                     "bg-muted border-foreground/40 text-foreground shadow-md scale-105 cursor-pointer border-dashed" :
                     canSelect ?
-                    "bg-red-50/60 border-red-300 border-dashed hover:border-red-400 hover:bg-red-100 cursor-pointer text-red-600" :
+                    "bg-muted/60 border-foreground/20 border-dashed hover:border-foreground/40 hover:bg-muted cursor-pointer text-foreground" :
                     "bg-muted/50 border-muted border-dashed text-muted-foreground/60 cursor-not-allowed" :
                     level === 0 ?
                     (hasUserSelected ? "bg-primary text-primary-foreground border-primary cursor-pointer hover:opacity-80" : "bg-primary text-primary-foreground border-primary cursor-default") :
