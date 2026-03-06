@@ -644,23 +644,30 @@ export function BranchDiagram({
 
               })}
 
+              {/* Inline completion note next to final word */}
+              {isTerminal && hasUserSelected && (() => {
+                const finalLevel = unlockedLevel;
+                const finalY = getSelectedYAtLevel(finalLevel);
+                return (
+                  <div className="relative" style={{ height: containerHeight, minWidth: 280 }}>
+                    <div
+                      className="absolute left-4 flex items-center gap-2 bg-brand-tertiary-500/10 border border-brand-tertiary-500/30 rounded-lg px-3 py-2 animate-fade-in whitespace-nowrap"
+                      style={{ top: finalY - 20, width: 'max-content' }}
+                    >
+                      <CheckCircle2 className="h-4 w-4 text-brand-tertiary-500 flex-shrink-0" />
+                      <span className="text-xs text-foreground font-medium">Headline complete!</span>
+                      <Button variant="outline" size="sm" onClick={handleReset} className="h-7 text-xs gap-1 border-brand-tertiary-500 text-brand-tertiary-500 hover:bg-brand-tertiary-500/10 ml-1">
+                        <RotateCcw className="h-3 w-3" />
+                        Reset
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })()}
+
             </div>
           </div>
         </div>
-
-        {/* Completion note */}
-        {isTerminal && hasUserSelected && (
-          <div className="mt-4 flex items-center gap-3 bg-brand-tertiary-500/10 border border-brand-tertiary-500/30 rounded-lg px-4 py-3 animate-fade-in">
-            <CheckCircle2 className="h-5 w-5 text-brand-tertiary-500 flex-shrink-0" />
-            <p className="text-sm text-foreground flex-1">
-              <strong>Headline complete!</strong> You've built a full sentence the way an LLM would — one word at a time. Try again with different choices to see how the output changes.
-            </p>
-            <Button variant="outline" size="sm" onClick={handleReset} className="gap-1.5 border-brand-tertiary-500 text-brand-tertiary-500 hover:bg-brand-tertiary-500/10 flex-shrink-0">
-              <RotateCcw className="h-3.5 w-3.5" />
-              Reset &amp; Try Again
-            </Button>
-          </div>
-        )}
       </div>
 
       {/* Start your own overlay */}
