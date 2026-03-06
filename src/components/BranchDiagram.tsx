@@ -485,20 +485,6 @@ export function BranchDiagram({
                   ) : option.word}
                 </button>
               )}
-                {level > 0 &&
-                <span
-                  className={cn(
-                    "absolute -top-4 left-1/2 -translate-x-1/2 text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap",
-                    isPulsing ? "bg-primary text-primary-foreground" :
-                    isSelected ? "bg-green-200 text-green-800" :
-                    "bg-muted text-muted-foreground"
-                  )}
-                  {...idx === 0 && isCurrentFrontier ? { "data-feature": "probability" } : {}}>
-                  
-                    {option.probability < 0.005 ? '<.01' : option.probability >= 0.995 ? '>.99' : option.probability.toFixed(2)}
-                  </span>
-                }
-              </button>
             </div>);
 
         })}
