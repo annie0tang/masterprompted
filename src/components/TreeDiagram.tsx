@@ -476,12 +476,12 @@ export function TreeDiagram({
                         )}
 
                       {(() => {
-                          const isRobotic = word === "Robotic";
-                          const fillColor = isRobotic ? "hsl(var(--destructive))" : (isLatestSelection ? "hsl(142 76% 90%)" : level === 0 ? "hsl(var(--primary))" : "hsl(142 76% 90%)");
-                          const strokeColor = isRobotic ? "hsl(var(--destructive))" : (isLatestSelection ? "hsl(142 76% 56%)" : level === 0 ? "hsl(var(--primary))" : "hsl(142 76% 56%)");
-                          const textColor = isRobotic ? "white" : (level === 0 ? "hsl(var(--primary-foreground))" : "hsl(142 76% 20%)");
-                          // Override the rect colors for Robotic
-                          if (isRobotic) {
+                          const isFlagged = isFlaggedWord(word);
+                          const fillColor = isFlagged ? "hsl(var(--destructive))" : (isLatestSelection ? "hsl(142 76% 90%)" : level === 0 ? "hsl(var(--primary))" : "hsl(142 76% 90%)");
+                          const strokeColor = isFlagged ? "hsl(var(--destructive))" : (isLatestSelection ? "hsl(142 76% 56%)" : level === 0 ? "hsl(var(--primary))" : "hsl(142 76% 56%)");
+                          const textColor = isFlagged ? "white" : (level === 0 ? "hsl(var(--primary-foreground))" : "hsl(142 76% 20%)");
+                          if (isFlagged) {
+                            const flagConfig = getFlaggedConfig(word);
                             return (
                               <>
                                 <rect
@@ -513,7 +513,7 @@ export function TreeDiagram({
                                           <ListChecks className="h-4 w-4 text-destructive flex-shrink-0" />
                                           <h4 className="font-semibold text-destructive text-sm">Factual Accuracy</h4>
                                         </div>
-                                        <p className="text-xs text-foreground leading-relaxed text-left">The word robotic is not associated with the EU AI Act and is not AI. Therefore, it would be inappropriate and misleading to use this term in this headline.</p>
+                                        <p className="text-xs text-foreground leading-relaxed text-left">{flagConfig?.tooltip}</p>
                                       </div>
                                     </HoverCardContent>
                                   </HoverCard>
