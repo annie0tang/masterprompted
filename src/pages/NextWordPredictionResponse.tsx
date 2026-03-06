@@ -86,7 +86,7 @@ export default function HeadlineResponse() {
 
               {/* AI Response */}
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center">
                   <ToggleGroup
                     type="single"
                     value={viewMode}
@@ -102,15 +102,6 @@ export default function HeadlineResponse() {
                       Tree
                     </ToggleGroupItem>
                   </ToggleGroup>
-                  {!evaluationPanelOpen && (
-                    <button
-                      aria-label="Open evaluation panel"
-                      className="p-2 rounded-full hover:bg-muted/50"
-                      onClick={() => setEvaluationPanelOpen(true)}
-                    >
-                      <ListChecks className="h-5 w-5 text-muted-foreground" />
-                    </button>
-                  )}
                 </div>
 
                 {viewMode === "tree" ? (
@@ -140,8 +131,18 @@ export default function HeadlineResponse() {
               </div>
             </div>
           </div>
-          {/* Evaluation panel */}
-          {evaluationPanelOpen && (
+          {/* Evaluation trigger or panel */}
+          {!evaluationPanelOpen ? (
+            <div className="flex-shrink-0 pt-2">
+              <button
+                aria-label="Open evaluation panel"
+                className="p-2 rounded-full hover:bg-muted/50"
+                onClick={() => setEvaluationPanelOpen(true)}
+              >
+                <ListChecks className="h-5 w-5 text-muted-foreground" />
+              </button>
+            </div>
+          ) : (
             <div className="flex-shrink-0" data-evaluation-panel>
               <EvaluationPanel initialIsOpen={true} canClose={true} onClose={() => setEvaluationPanelOpen(false)} />
             </div>
