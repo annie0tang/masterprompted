@@ -1483,7 +1483,8 @@ export function computePathY(
       const baseExpanded = Math.max(75, 120 - d * 5);
       spacing = baseExpanded * (1 + (d - 1) * 0.18);
     } else {
-      spacing = Math.max(8, 18 - d * 1.5);
+      // More generous unselected spacing to reduce initial overlap
+      spacing = Math.max(12, 26 - d * 2);
     }
 
     const offset = (childIndex - (effectiveSiblingCount - 1) / 2) * spacing;
