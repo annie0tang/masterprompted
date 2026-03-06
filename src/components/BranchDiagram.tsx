@@ -431,6 +431,12 @@ export function BranchDiagram({
                   canSelect ?
                   "bg-red-50/60 border-red-300 border-dashed hover:border-red-400 hover:bg-red-100 cursor-pointer text-red-600" :
                   "bg-muted/50 border-muted border-dashed text-muted-foreground/60 cursor-not-allowed" :
+                  option.word === "Robotic" ?
+                  isSelected ?
+                  "bg-destructive/15 border-destructive text-destructive shadow-md scale-105 cursor-pointer" :
+                  canSelect ?
+                  "bg-destructive/10 border-destructive/60 hover:border-destructive hover:bg-destructive/20 cursor-pointer text-destructive" :
+                  "bg-muted/50 border-muted text-muted-foreground/60 cursor-not-allowed" :
                   level === 0 ?
                   (hasUserSelected ? "bg-primary text-primary-foreground border-primary cursor-pointer hover:opacity-80" : "bg-primary text-primary-foreground border-primary cursor-default") :
                   isSelected ?

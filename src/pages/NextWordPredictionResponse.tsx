@@ -53,11 +53,12 @@ export default function HeadlineResponse() {
   // Watch for "Charter" word to expand evaluation panel
   useEffect(() => {
     if (!hasInteracted) return;
-    const hasCharter = currentSentence.some(word => {
+    const hasFlaggedWord = currentSentence.some(word => {
       if (!word) return false;
-      return word.toLowerCase().replace(/[,.]$/g, '') === "charter";
+      const normalized = word.toLowerCase().replace(/[,.]$/g, '');
+      return normalized === "charter" || normalized === "robotic";
     });
-    if (hasCharter) {
+    if (hasFlaggedWord) {
       setEvaluationPanelOpen(true);
     }
   }, [currentSentence, hasInteracted]);
