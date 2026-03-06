@@ -477,11 +477,20 @@ export function TreeDiagram({
 
                       {(() => {
                           const isFlagged = isFlaggedWord(word);
-                          const fillColor = isFlagged ? "hsl(var(--destructive))" : (isLatestSelection ? "hsl(142 76% 90%)" : level === 0 ? "hsl(var(--primary))" : "hsl(142 76% 90%)");
-                          const strokeColor = isFlagged ? "hsl(var(--destructive))" : (isLatestSelection ? "hsl(142 76% 56%)" : level === 0 ? "hsl(var(--primary))" : "hsl(142 76% 56%)");
-                          const textColor = isFlagged ? "white" : (level === 0 ? "hsl(var(--primary-foreground))" : "hsl(142 76% 20%)");
+                          const flagConfig = isFlagged ? getFlaggedConfig(word) : undefined;
+                          const isRelevance = flagConfig?.evaluationFactor === "relevance";
+                          const meta = flagConfig ? FACTOR_META[flagConfig.evaluationFactor] : undefined;
+                          const FlagIcon = isRelevance ? Target : ListChecks;
+                          const fillColor = isFlagged ? (isRelevance ? "hsl(45 93% 90%)" : "hsl(var(--destructive))") : (isLatestSelection ? "hsl(142 76% 90%)" : level === 0 ? "hsl(var(--primary))" : "hsl(142 76% 90%)");
+                          const strokeColor = isFlagged ? (isRelevance ? "hsl(45 93% 47%)" : "hsl(var(--destructive))") : (isLatestSelection ? "hsl(142 76% 56%)" : level === 0 ? "hsl(var(--primary))" : "hsl(142 76% 56%)");
+                          const textColor = isFlagged ? (isRelevance ? "hsl(45 93% 20%)" : "white") : (level === 0 ? "hsl(var(--primary-foreground))" : "hsl(142 76% 20%)");
                           if (isFlagged) {
-                            const flagConfig = getFlaggedConfig(word);
+                            const flagFill = isRelevance ? "hsl(45 93% 90%)" : "hsl(var(--destructive) / 0.15)";
+                            const flagStroke = isRelevance ? "hsl(45 93% 47%)" : "hsl(var(--destructive))";
+                            const flagTextColor = isRelevance ? "text-yellow-700" : "text-destructive";
+                            const flagBorderColor = isRelevance ? "border-yellow-300" : "border-destructive/20";
+                            const flagIconColor = isRelevance ? "text-yellow-600" : "text-destructive";
+                            const flagTitleColor = isRelevance ? "text-yellow-700" : "text-destructive";
                             return (
                               <>
                                 <rect
@@ -490,8 +499,8 @@ export function TreeDiagram({
                                   width={wordWidth}
                                   height={rectHeight}
                                   rx={8}
-                                  fill="hsl(var(--destructive) / 0.15)"
-                                  stroke="hsl(var(--destructive))"
+                                  fill={flagFill}
+                                  stroke={flagStroke}
                                   strokeWidth={2}
                                   className="transition-all duration-200" />
                                 <foreignObject
@@ -503,15 +512,15 @@ export function TreeDiagram({
                                   <HoverCard>
                                     <HoverCardTrigger asChild>
                                       <div className="flex items-center justify-center gap-1 h-full cursor-help">
-                                        <ListChecks className="h-3 w-3 text-destructive flex-shrink-0" />
-                                        <span className="text-[12px] font-semibold text-destructive">{word}</span>
+                                        <FlagIcon className={cn("h-3 w-3 flex-shrink-0", flagIconColor)} />
+                                        <span className={cn("text-[12px] font-semibold", flagTextColor)}>{word}</span>
                                       </div>
                                     </HoverCardTrigger>
-                                    <HoverCardContent className="w-64 bg-card border-destructive/20 shadow-lg rounded-lg p-3 z-50" sideOffset={5}>
+                                    <HoverCardContent className={cn("w-64 bg-card shadow-lg rounded-lg p-3 z-50", flagBorderColor)} sideOffset={5}>
                                       <div className="space-y-2">
                                         <div className="flex items-center gap-2">
-                                          <ListChecks className="h-4 w-4 text-destructive flex-shrink-0" />
-                                          <h4 className="font-semibold text-destructive text-sm">Factual Accuracy</h4>
+                                          <FlagIcon className={cn("h-4 w-4 flex-shrink-0", flagIconColor)} />
+                                          <h4 className={cn("font-semibold text-sm", flagTitleColor)}>{meta?.label}</h4>
                                         </div>
                                         <p className="text-xs text-foreground leading-relaxed text-left">{flagConfig?.tooltip}</p>
                                       </div>
