@@ -25,6 +25,7 @@ export default function HeadlineResponse() {
   const [currentSentence, setCurrentSentence] = useState<string[]>([predictionTree.word]);
   const [viewMode, setViewMode] = useState<"tree" | "branch">("tree");
   const [evaluationPanelOpen, setEvaluationPanelOpen] = useState(false);
+  const [hasEvaluationBeenOpened, setHasEvaluationBeenOpened] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
   const [highlightStep, setHighlightStep] = useState<0 | 1 | 2 | 3>(1);
 
@@ -34,6 +35,7 @@ export default function HeadlineResponse() {
     setCurrentSentence([predictionTree.word]);
     setViewMode("tree");
     setEvaluationPanelOpen(false);
+    setHasEvaluationBeenOpened(false);
     setHasInteracted(false);
 
     const skipHighlights = sessionStorage.getItem('nwp-skip-highlights');
@@ -48,25 +50,29 @@ export default function HeadlineResponse() {
   // When switching view modes, reset evaluation gating
   useEffect(() => {
     setEvaluationPanelOpen(false);
+    setHasEvaluationBeenOpened(false);
     setHasInteracted(false);
   }, [viewMode]);
 
   const { registerFactor, deregisterFactor } = useEvaluation();
 
-  // Watch for flagged words to expand evaluation panel and register factors
+  // Flagged words list
+  const FLAGGED_WORDS = ["robotic", "charter"];
+
+  // Watch for flagged words to expand evaluation panel (only first time) and register factors
   useEffect(() => {
     if (!hasInteracted) return;
-    const hasRobotic = currentSentence.some(word => {
+    const foundFlags = currentSentence.filter(word => {
       if (!word) return false;
-      return word.toLowerCase().replace(/[,.]$/g, '') === "robotic";
+      return FLAGGED_WORDS.includes(word.toLowerCase().replace(/[,.]$/g, ''));
     });
-    const hasCharter = currentSentence.some(word => {
-      if (!word) return false;
-      return word.toLowerCase().replace(/[,.]$/g, '') === "charter";
-    });
-    if (hasRobotic || hasCharter) {
+
+    if (foundFlags.length > 0 && !hasEvaluationBeenOpened) {
       setEvaluationPanelOpen(true);
+      setHasEvaluationBeenOpened(true);
     }
+
+    const hasRobotic = foundFlags.some(w => w.toLowerCase().replace(/[,.]$/g, '') === "robotic");
     if (hasRobotic) {
       registerFactor("factual_accuracy");
     }
