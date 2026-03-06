@@ -195,7 +195,7 @@ export function BranchDiagram({
     onPathChange(newPath);
   };
 
-  // Auto-scroll to keep current frontier visible (horizontal + vertical)
+  // Auto-scroll to keep current selection centered (horizontal + vertical)
   const scrollToFrontier = () => {
     if (!containerRef.current) return;
     const container = containerRef.current;
@@ -212,22 +212,29 @@ export function BranchDiagram({
       container.scrollBy({ left: rightOverflow, behavior: 'smooth' });
     }
 
-    // Vertical: center all option buttons in the viewport
-    const buttons = targetEl.querySelectorAll('button');
-    if (buttons.length > 1) {
-      let minTop = Infinity,maxBottom = -Infinity;
-      buttons.forEach((btn) => {
-        const r = btn.getBoundingClientRect();
-        if (r.top < minTop) minTop = r.top;
-        if (r.bottom > maxBottom) maxBottom = r.bottom;
-      });
-      const buttonsCenterY = (minTop + maxBottom) / 2;
-      const containerCenterY = (containerRect.top + containerRect.bottom) / 2;
-      const diff = buttonsCenterY - containerCenterY;
-      if (Math.abs(diff) > 20) {
-        container.scrollTop += diff;
-      }
+    // Vertical: center the current selection's Y position in the viewport
+    // Find the Y center of the latest selected level's options (or the selected node)
+    const latestSelectedLevel = Math.max(0, unlockedLevel - 1);
+    const selectedY = getSelectedYAtLevel(latestSelectedLevel);
+    
+    // Also consider the frontier options to compute a good center point
+    const frontierButtons = targetEl.querySelectorAll('button');
+    let centerTarget = selectedY;
+    
+    if (frontierButtons.length > 1) {
+      // Use the midpoint of frontier options
+      const frontierOptions = getOptionsAtLevel(unlockedLevel);
+      const prevY = getSelectedYAtLevel(unlockedLevel - 1);
+      const frontierYs = frontierOptions.map((_, idx) => getNodeY(idx, frontierOptions.length, prevY));
+      const minFrontierY = Math.min(...frontierYs);
+      const maxFrontierY = Math.max(...frontierYs);
+      centerTarget = (minFrontierY + maxFrontierY) / 2;
     }
+    
+    // Scroll so that centerTarget is in the middle of the visible area
+    const containerVisibleHeight = container.clientHeight;
+    const targetScrollTop = centerTarget - containerVisibleHeight / 2;
+    container.scrollTo({ top: Math.max(0, targetScrollTop), behavior: 'smooth' });
   };
 
   // Trigger on level/selection changes
@@ -237,8 +244,15 @@ export function BranchDiagram({
     return () => clearTimeout(timer);
   }, [unlockedLevel, selections]);
 
-  // Also trigger on initial mount — retry a few times to handle popovers/tooltips
+  // Also trigger on initial mount — center on root immediately then retry
   useEffect(() => {
+    // On mount, immediately center vertically on the root (containerHeight/2)
+    if (containerRef.current) {
+      const container = containerRef.current;
+      const visibleHeight = container.clientHeight;
+      const initialScrollTop = containerHeight / 2 - visibleHeight / 2;
+      container.scrollTop = Math.max(0, initialScrollTop);
+    }
     const timers = [300, 600, 1000].map((delay) => setTimeout(scrollToFrontier, delay));
     return () => timers.forEach(clearTimeout);
   }, []);
@@ -285,7 +299,7 @@ export function BranchDiagram({
   // --- Layout constants ---
   const nodeHeight = 40;
   const levelGap = 36;
-  const containerHeight = 400;
+  const containerHeight = 800;
 
   const getNodeY = (idx: number, count: number, centerY?: number) => {
     const totalHeight = count * nodeHeight + (count - 1) * levelGap;

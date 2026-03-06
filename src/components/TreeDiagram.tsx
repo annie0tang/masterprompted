@@ -197,6 +197,7 @@ export function TreeDiagram({
   };
 
   // Find Y range across all paths to determine SVG height
+  // Add extra top/bottom padding so the selected path can always be centered
   const { svgMinY, svgMaxY, svgHeight, adjustedCenterY } = useMemo(() => {
     let minY = svgCenterY;
     let maxY = svgCenterY;
@@ -207,8 +208,9 @@ export function TreeDiagram({
         if (y > maxY) maxY = y;
       }
     }
-    const padding = 80;
-    const height = Math.max(400, maxY - minY + padding * 2);
+    // Use generous padding so selections near edges can still be centered
+    const padding = 200;
+    const height = Math.max(600, maxY - minY + padding * 2);
     return { svgMinY: minY - padding, svgMaxY: maxY + padding, svgHeight: height, adjustedCenterY: svgCenterY };
   }, [allLeafPaths, selections, currentLevel]);
 
@@ -230,22 +232,23 @@ export function TreeDiagram({
       const nextLevelXPos = levelX(currentLevel);
       const targetLeft = currentLevel <= 1 ? 0 : Math.max(0, nextLevelXPos - containerWidth + 250);
 
-      // Vertical: center on all options at the frontier
+      // Vertical: center the current selection point, considering frontier options
       const options = currentLevel < maxDepth ? getOptionsForPath(currentPath) : [];
-      let targetTop: number;
+      const selectedY = computePathY(currentPath, currentPath.length - 1, selections, currentLevel, adjustedCenterY);
+      let centerY: number;
       if (options.length > 0) {
         const optionYs = options.map(opt => {
           const hypotheticalPath = [...currentPath, opt.word];
           return computePathY(hypotheticalPath, currentLevel, selections, currentLevel, adjustedCenterY);
         });
-        const minY = Math.min(...optionYs);
-        const maxY = Math.max(...optionYs);
-        const centerY = (minY + maxY) / 2;
-        targetTop = Math.max(0, centerY - viewBoxY - containerHeight / 2);
+        const minOptY = Math.min(...optionYs);
+        const maxOptY = Math.max(...optionYs);
+        // Center between the selected node and the midpoint of options
+        centerY = (selectedY + (minOptY + maxOptY) / 2) / 2;
       } else {
-        const selectedY = computePathY(currentPath, currentPath.length - 1, selections, currentLevel, adjustedCenterY);
-        targetTop = Math.max(0, selectedY - viewBoxY - containerHeight / 2);
+        centerY = selectedY;
       }
+      const targetTop = Math.max(0, centerY - viewBoxY - containerHeight / 2);
       cont.scrollTo({ left: targetLeft, top: targetTop, behavior });
     };
 
