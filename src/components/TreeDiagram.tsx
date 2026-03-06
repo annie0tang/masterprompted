@@ -507,6 +507,7 @@ export function TreeDiagram({
                             {word}
                           </text>
                         )}
+                      </g>);
 
                   })}
 
