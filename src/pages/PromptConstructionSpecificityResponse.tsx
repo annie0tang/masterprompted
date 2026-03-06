@@ -751,7 +751,7 @@ export default function SpecificityResponse() {
                   </div>
 
                   {/* Navigation Button - Fixed at bottom */}
-                  <div className="bg-white rounded-lg rounded-t-none p-8 pt-6 flex items-center gap-3">
+                  <div className="bg-white rounded-lg rounded-t-none p-8 flex items-center gap-3 pt-[30px] py-[34px]">
                     <Button
                       variant="outline"
                       size="icon"
