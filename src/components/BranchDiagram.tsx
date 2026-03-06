@@ -521,13 +521,19 @@ export function BranchDiagram({
           <div className="min-w-0 flex-1">
             <p className="text-xl font-medium text-foreground" data-feature="headline-preview">
               {(() => {
+                const rootClickProps = isInteractive && unlockedLevel > 1 ? {
+                  onClick: handleReset,
+                  className: "cursor-pointer hover:text-brand-tertiary-500 transition-colors",
+                  title: "Reset diagram",
+                } : {};
+
                 if (!hasUserSelected && isInteractive) {
                   return (
                     <>
                       {defaultPath.map((word, idx) =>
                       <span key={idx}>
                           {idx > 0 && " "}
-                          <span className={cn(idx === 0 ? "" : "text-muted-foreground/50")}>{word}</span>
+                          <span className={cn(idx === 0 ? "" : "text-muted-foreground/50")} {...(idx === 0 ? rootClickProps : {})}>{word}</span>
                         </span>
                       )}
                     </>);
@@ -535,17 +541,21 @@ export function BranchDiagram({
                 }
 
                 const words = (displayHeadline || predictionTree.word).split(" ");
+                // "European Union" = first two words
+                const rootText = words.slice(0, 2).join(" ");
+                const restWords = words.slice(2);
                 if (!isTerminal) {
-                  const lastWord = words.pop();
-                  const prefix = words.join(" ");
+                  const lastWord = restWords.pop();
+                  const middle = restWords.join(" ");
                   return (
                     <>
-                      {prefix && <>{prefix} </>}
-                      <span className="bg-green-200 text-green-900 px-1 rounded">{lastWord}</span>
+                      <span {...rootClickProps}>{rootText}</span>
+                      {middle && <> {middle}</>}
+                      {lastWord && <> <span className="bg-green-200 text-green-900 px-1 rounded">{lastWord}</span></>}
                     </>);
 
                 }
-                return words.join(" ");
+                return (<><span {...rootClickProps}>{rootText}</span>{restWords.length > 0 && " " + restWords.join(" ")}</>);
               })()}
               {!isTerminal && displayHeadline && hasUserSelected &&
               <span className="text-muted-foreground/50">...</span>

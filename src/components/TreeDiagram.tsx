@@ -281,6 +281,12 @@ export function TreeDiagram({
           <div className="flex-1 min-w-0">
             <p className="text-xl font-medium text-foreground" data-feature="headline-preview">
               {(() => {
+                const rootClickProps = isInteractive && currentLevel > 1 ? {
+                  onClick: handleReset,
+                  className: "cursor-pointer hover:text-brand-tertiary-500 transition-colors",
+                  title: "Reset diagram",
+                } : {};
+
                 // Show full default sentence greyed out when user hasn't selected yet
                 if (!hasUserSelected && isInteractive) {
                   return (
@@ -288,7 +294,7 @@ export function TreeDiagram({
                       {defaultPathWords.map((word, idx) =>
                       <span key={idx}>
                           {idx > 0 && " "}
-                          <span className={cn(idx === 0 ? "" : "text-muted-foreground/50")}>
+                          <span className={cn(idx === 0 ? "" : "text-muted-foreground/50")} {...(idx === 0 ? rootClickProps : {})}>
                             {word}
                           </span>
                         </span>
@@ -299,18 +305,21 @@ export function TreeDiagram({
 
                 // Normal display with last word highlighted
                 const words = displayHeadline.split(" ");
+                const rootText = words.slice(0, 2).join(" ");
+                const restWords = words.slice(2);
                 if (!isTerminal) {
-                  const lastWord = words.pop();
-                  const prefix = words.join(" ");
+                  const lastWord = restWords.pop();
+                  const middle = restWords.join(" ");
                   return (
                     <>
-                      {prefix && <>{prefix} </>}
-                      <span className="bg-green-200 text-green-900 px-1 rounded">{lastWord}</span>
+                      <span {...rootClickProps}>{rootText}</span>
+                      {middle && <> {middle}</>}
+                      {lastWord && <> <span className="bg-green-200 text-green-900 px-1 rounded">{lastWord}</span></>}
                     </>);
 
                 }
                 const endsWithPeriod = currentPath[currentPath.length - 1] === END_TOKEN;
-                return words.join(" ") + (endsWithPeriod ? "." : "");
+                return (<><span {...rootClickProps}>{rootText}</span>{restWords.length > 0 && " " + restWords.join(" ")}{endsWithPeriod ? "." : ""}</>);
               })()}
               {!isTerminal && displayHeadline && hasUserSelected &&
               <span className="text-muted-foreground/50">...</span>
