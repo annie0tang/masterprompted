@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect, useLayoutEffect } from "react";
 import { cn } from "@/lib/utils";
-import { RotateCcw, CheckCircle2 } from "lucide-react";
+import { RotateCcw, CheckCircle2, ListChecks } from "lucide-react";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { FourPointStar } from "@/components/FourPointStar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
