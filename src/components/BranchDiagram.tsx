@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect, useLayoutEffect } from "react";
 import { cn } from "@/lib/utils";
-import { RotateCcw } from "lucide-react";
+import { RotateCcw, CheckCircle2 } from "lucide-react";
 import { FourPointStar } from "@/components/FourPointStar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
@@ -647,6 +647,20 @@ export function BranchDiagram({
             </div>
           </div>
         </div>
+
+        {/* Completion note */}
+        {isTerminal && hasUserSelected && (
+          <div className="mt-4 flex items-center gap-3 bg-brand-tertiary-500/10 border border-brand-tertiary-500/30 rounded-lg px-4 py-3 animate-fade-in">
+            <CheckCircle2 className="h-5 w-5 text-brand-tertiary-500 flex-shrink-0" />
+            <p className="text-sm text-foreground flex-1">
+              <strong>Headline complete!</strong> You've built a full sentence the way an LLM would — one word at a time. Try again with different choices to see how the output changes.
+            </p>
+            <Button variant="outline" size="sm" onClick={handleReset} className="gap-1.5 border-brand-tertiary-500 text-brand-tertiary-500 hover:bg-brand-tertiary-500/10 flex-shrink-0">
+              <RotateCcw className="h-3.5 w-3.5" />
+              Reset &amp; Try Again
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Start your own overlay */}
