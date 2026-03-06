@@ -618,8 +618,7 @@ export function TreeDiagram({
                                   </HoverCardContent>
                                 </HoverCard>
                                 );
-                              })()
-                              ) : (
+                              })() : (
                                 <button
                                   onClickCapture={() => handleWordClick(currentLevel, opt.word)}
                                   disabled={isAnimating}
