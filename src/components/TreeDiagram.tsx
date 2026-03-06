@@ -461,16 +461,18 @@ export function TreeDiagram({
                             {probability < 0.005 ? '<.01' : probability >= 0.995 ? '>.99' : probability.toFixed(2)}
                           </text>
                         }
-                        <rect
-                          x={x - wordWidth / 2}
-                          y={y - rectHeight / 2}
-                          width={wordWidth}
-                          height={rectHeight}
-                          rx={8}
-                          fill={isLatestSelection ? "hsl(142 76% 90%)" : level === 0 ? "hsl(var(--primary))" : "hsl(142 76% 90%)"}
-                          stroke={isLatestSelection ? "hsl(142 76% 56%)" : level === 0 ? "hsl(var(--primary))" : "hsl(142 76% 56%)"}
-                          strokeWidth={2}
-                          className={cn("transition-all duration-200", isClickable && "cursor-pointer")} />
+                        {word !== "Robotic" && (
+                          <rect
+                            x={x - wordWidth / 2}
+                            y={y - rectHeight / 2}
+                            width={wordWidth}
+                            height={rectHeight}
+                            rx={8}
+                            fill={isLatestSelection ? "hsl(142 76% 90%)" : level === 0 ? "hsl(var(--primary))" : "hsl(142 76% 90%)"}
+                            stroke={isLatestSelection ? "hsl(142 76% 56%)" : level === 0 ? "hsl(var(--primary))" : "hsl(142 76% 56%)"}
+                            strokeWidth={2}
+                            className={cn("transition-all duration-200", isClickable && "cursor-pointer")} />
+                        )}
 
                       {(() => {
                           const isRobotic = word === "Robotic";
