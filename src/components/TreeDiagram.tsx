@@ -384,14 +384,20 @@ export function TreeDiagram({
                       y: computePathY(leafPath.words, level, selections, currentLevel, adjustedCenterY)
                     }));
 
-                    // Create curved path
+                    // Create curved path - use asymmetric control points to reduce crossing
                     const pathD =
                     `M ${points[0].x} ${points[0].y} ` +
                     points.slice(1).map((p, i) => {
                       const prev = points[i];
-                      const cpX = (prev.x + p.x) / 2;
-                      return `C ${cpX} ${prev.y} ${cpX} ${p.y} ${p.x} ${p.y}`;
+                      const dx = p.x - prev.x;
+                      // Control points: stay horizontal longer from prev, then curve into target
+                      const cp1X = prev.x + dx * 0.7;
+                      const cp2X = prev.x + dx * 0.85;
+                      return `C ${cp1X} ${prev.y} ${cp2X} ${p.y} ${p.x} ${p.y}`;
                     }).join(" ");
+
+                    // Fade deeper unselected branches more
+                    const depthFade = isMatching ? 1 : Math.max(0.06, 0.18 - pathIndex * 0.001);
 
                     return (
                       <path
@@ -399,8 +405,8 @@ export function TreeDiagram({
                         d={pathD}
                         fill="none"
                         stroke={isMatching ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"}
-                        strokeWidth={isMatching ? 0.75 : 0.35}
-                        opacity={isMatching ? 1 : 0.15}
+                        strokeWidth={isMatching ? 0.75 : 0.3}
+                        opacity={depthFade}
                         className="transition-all duration-300" />);
 
 
