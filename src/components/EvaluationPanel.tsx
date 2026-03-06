@@ -13,7 +13,7 @@
  * ```
  */
 
-import { ListChecks, Target, Mic, Scale, Copy, ChevronDown, ListChevronsUpDown, ListChevronsDownUp } from "lucide-react";
+import { ListChecks, Target, Mic, Scale, Copy, ChevronDown, ChevronRight } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -62,9 +62,11 @@ interface EvaluationPanelProps extends VariantProps<typeof panelVariants> {
   initialIsOpen?: boolean;
   /** Whether the panel can be minimized */
   canClose?: boolean;
+  /** Callback when panel is closed */
+  onClose?: () => void;
 }
 
-export default function EvaluationPanel({ initialIsOpen = true, canClose = false, size }: EvaluationPanelProps) {
+export default function EvaluationPanel({ initialIsOpen = true, canClose = false, onClose, size }: EvaluationPanelProps) {
   const { t } = useLanguage();
 
   const evaluationCriteria = [
@@ -128,16 +130,16 @@ export default function EvaluationPanel({ initialIsOpen = true, canClose = false
       <div className={cn(isPanelOpen ? panelVariants({ size, state: "open" }) : "")}>
         {isPanelOpen ? (
           <>
-            {/* Header with title and minimize toggle */}
+            {/* Header with title and collapse arrow */}
             <div className="w-full flex items-center justify-between text-lg font-semibold font-heading text-card-foreground mb-2">
               <span>{t('components.evaluationPanel.title')}</span>
               {canClose && (
                 <button
                   aria-label={t('components.evaluationPanel.minimize')}
                   className="p-1 rounded-full hover:bg-muted/50"
-                  onClick={() => setIsPanelOpen(false)}
+                  onClick={() => { setIsPanelOpen(false); onClose?.(); }}
                 >
-                  <ListChevronsDownUp className="h-5 w-5 text-muted-foreground" />
+                  <ChevronRight className="h-5 w-5 text-muted-foreground" />
                 </button>
               )}
             </div>
@@ -183,15 +185,7 @@ export default function EvaluationPanel({ initialIsOpen = true, canClose = false
             ))}
           </div>
           </>
-        ) : (
-          <button
-            aria-label={t('components.evaluationPanel.expand')}
-            className="p-2 rounded-full hover:bg-muted/50"
-            onClick={() => setIsPanelOpen(true)}
-          >
-            <ListChevronsUpDown className="h-5 w-5 text-muted-foreground" />
-          </button>
-        )}
+        ) : null}
       </div>
     </div>
   );
