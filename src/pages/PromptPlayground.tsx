@@ -58,7 +58,7 @@ const PromptPlayground = () => {
   const { t } = useLanguage();
   const [waitingforOptimization, setWaitingForOptimization] = useState<boolean>(false);
   const [uploadedFiles, setUploadedFiles] = useState<ParsedFile[]>([]);
-  const CONTEXT_WINDOW_LIMIT = 512000;
+  const CONTEXT_WINDOW_LIMIT_WORDS = 90000;
 
   // Track current page language (forwarded from Header -> LanguageSwitcher)
   const [pageLanguage, setPageLanguage] = useState<'en' | 'es'>('en');
@@ -282,15 +282,18 @@ const PromptPlayground = () => {
         const text = await extractTextFromPDF(file);
         console.log(`Successfully parsed ${file.name}, extracted ${text.length} characters.`);
 
-        const existingSize = uploadedFiles.reduce((acc, f) => acc + f.content.length, 0);
+        const countWords = (str: string) => str.trim().split(/\s+/).filter(Boolean).length;
+        const newFileWordCount = countWords(text);
+        console.log(`Word count for "${file.name}": ${newFileWordCount} words.`);
+        const currentTotalWords = uploadedFiles.reduce((acc, f) => acc + countWords(f.content), 0);
 
-        if (existingSize + cumulativeNewSize + text.length > CONTEXT_WINDOW_LIMIT) {
-          alert(`File "${file.name}" exceeds the 512k context window limit.`);
+        if (currentTotalWords + cumulativeNewSize + newFileWordCount > CONTEXT_WINDOW_LIMIT_WORDS) {
+          alert(`File "${file.name}" exceeds the ${CONTEXT_WINDOW_LIMIT_WORDS} word context window limit.`);
           setUploadedFiles(prev => prev.filter(f => f.name !== file.name || f.isUploading !== true));
           continue;
         }
 
-        cumulativeNewSize += text.length;
+        cumulativeNewSize += newFileWordCount;
 
         setUploadedFiles(prev => prev.map(f =>
           (f.name === file.name && f.isUploading)
