@@ -32,9 +32,27 @@ export default async (req: Request) => {
         });
     }
 
+    // Execution Guard: 25 seconds (Netlify limit is 26s)
+    const abortController = new AbortController();
+    const timeoutId = setTimeout(() => {
+        console.warn("Execution Guard: Aborting HF request due to 25s limit.");
+        abortController.abort();
+    }, 25000);
+
+    let tokensSent = 0;
+
     try {
         const bodyContent = await req.json();
         const { messages, model, temperature, stream } = bodyContent;
+
+        // Payload size verification (6MB limit)
+        const payloadSize = new Blob([JSON.stringify(bodyContent)]).size;
+        if (payloadSize > 6 * 1024 * 1024) {
+            return new Response(JSON.stringify({ error: "Payload size exceeds 6MB limit" }), {
+                status: 413,
+                headers: { ...getCorsHeaders(origin), "Content-Type": "application/json" },
+            });
+        }
 
         if (!messages || !Array.isArray(messages)) {
             return new Response(JSON.stringify({ error: "messages array is required" }), {
@@ -53,6 +71,8 @@ export default async (req: Request) => {
                 messages,
                 temperature: temperature ?? 0.7,
                 max_tokens: 2048,
+            }, {
+                signal: abortController.signal
             });
 
             // Standard ReadableStream for V2 Netlify Functions
@@ -63,11 +83,17 @@ export default async (req: Request) => {
                         for await (const chunk of streamResponse) {
                             if (chunk.choices && chunk.choices[0].delta.content) {
                                 controller.enqueue(encoder.encode(chunk.choices[0].delta.content));
+                                tokensSent++;
                             }
                         }
-                    } catch (err) {
-                        console.error("Stream error:", err);
+                    } catch (err: any) {
+                        if (err.name === 'AbortError') {
+                            console.error(`Stream Aborted: Silent kill detected at ${tokensSent} tokens.`);
+                        } else {
+                            console.error("Stream error:", err);
+                        }
                     } finally {
+                        clearTimeout(timeoutId);
                         controller.close();
                     }
                 },
@@ -80,11 +106,20 @@ export default async (req: Request) => {
                 },
             });
         } else {
+            // Non-streaming with observability
             const completion = await client.chatCompletion({
                 model: model ?? "meta-llama/Llama-3.1-8B-Instruct:ovhcloud",
                 messages,
                 temperature: temperature ?? 0.7,
+            }, {
+                signal: abortController.signal
             });
+
+            clearTimeout(timeoutId);
+
+            // Log telemetry if available (Note: HF-dist doesn't surface headers easily in the simple client, 
+            // but we can log the execution info we have)
+            console.log(`Completion successful for model: ${model}`);
 
             return new Response(JSON.stringify(completion), {
                 headers: {
@@ -94,6 +129,15 @@ export default async (req: Request) => {
             });
         }
     } catch (error: unknown) {
+        clearTimeout(timeoutId);
+        const name = (error as any)?.name;
+        if (name === 'AbortError') {
+            console.error(`Request Aborted: Execution exceeded 25s threshold. Tokens processed: ${tokensSent}`);
+            return new Response(JSON.stringify({ error: "Request timed out (25s limit)", partial: true }), {
+                status: 504,
+                headers: { ...getCorsHeaders(origin), "Content-Type": "application/json" },
+            });
+        }
         const message = error instanceof Error ? error.message : "Unknown error";
         console.error("HF proxy error caught:", message);
         return new Response(JSON.stringify({ error: message }), {

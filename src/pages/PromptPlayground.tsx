@@ -119,6 +119,13 @@ const PromptPlayground = () => {
         ],
       };
 
+      // Payload size verification (6MB limit)
+      const payloadSize = new Blob([JSON.stringify(payload)]).size;
+      if (payloadSize > 6 * 1024 * 1024) {
+        alert(`Payload size (${(payloadSize / 1024 / 1024).toFixed(2)}MB) exceeds the 6MB Netlify limit.`);
+        return;
+      }
+
       console.log("Submitting to LLM with streaming payload:", payload);
 
       const response = await fetch(NETLIFY_CHAT_URL, {
@@ -136,9 +143,9 @@ const PromptPlayground = () => {
         throw new Error("No response body for streaming");
       }
 
-      const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let accumulatedAnswer = "";
+      let isStreamComplete = false;
 
       // Initialize the version in the thread
       setThreads(prev => {
@@ -156,24 +163,57 @@ const PromptPlayground = () => {
         return copy;
       });
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+      // Integrity Monitor: TransformStream to track chunks and completion
+      const monitor = new TransformStream({
+        transform(chunk, controller) {
+          controller.enqueue(chunk);
+        },
+        flush() {
+          isStreamComplete = true;
+        }
+      });
 
-        accumulatedAnswer += decoder.decode(value, { stream: true });
+      const monitoredStream = response.body.pipeThrough(monitor);
+      const reader = monitoredStream.getReader();
 
-        // Update UI with partial answer
-        setThreads(prev => {
-          const copy = [...prev];
-          const thread = copy[threadIndex];
-          if (!thread?.versions[versionIndex]) return prev;
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
 
-          const versions = [...thread.versions];
-          versions[versionIndex] = { ...versions[versionIndex], answer: accumulatedAnswer };
+          accumulatedAnswer += decoder.decode(value, { stream: true });
 
-          copy[threadIndex] = { ...thread, versions };
-          return copy;
-        });
+          // Update UI with partial answer
+          setThreads(prev => {
+            const copy = [...prev];
+            const thread = copy[threadIndex];
+            if (!thread?.versions[versionIndex]) return prev;
+
+            const versions = [...thread.versions];
+            versions[versionIndex] = { ...versions[versionIndex], answer: accumulatedAnswer };
+
+            copy[threadIndex] = { ...thread, versions };
+            return copy;
+          });
+        }
+      } catch (err) {
+        console.error("IncompleteStreamError: Stream interrupted unexpectedly.", err);
+      } finally {
+        if (!isStreamComplete) {
+          console.warn("Stream terminated without reaching flush. Flagging as partial.");
+          accumulatedAnswer += "\n\n[PARTIAL_RESULT - Connection Interrupted]";
+
+          // Final UI update with partial flag
+          setThreads(prev => {
+            const copy = [...prev];
+            const thread = copy[threadIndex];
+            if (!thread?.versions[versionIndex]) return prev;
+            const versions = [...thread.versions];
+            versions[versionIndex] = { ...versions[versionIndex], answer: accumulatedAnswer };
+            copy[threadIndex] = { ...thread, versions };
+            return copy;
+          });
+        }
       }
 
       // Trigger disinformation check once final answer is complete
