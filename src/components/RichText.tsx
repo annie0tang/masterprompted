@@ -68,7 +68,7 @@ function escapeHtml(input: string): string {
 /**
  * Handles inline markdown formatting like **bold** and *italics*
  */
-function applyInlineFormatting(raw: string, diff: boolean): string {
+function applyInlineFormatting(raw: string, diff: boolean, isInline: boolean = false): string {
   if (!raw) return "";
   // Convert tabs to spaces and escape HTML
   const expanded = raw.replace(/\t/g, "    ");
@@ -92,9 +92,8 @@ function applyInlineFormatting(raw: string, diff: boolean): string {
     html = html.replace(/\[\[ERROR:\s*(.+?)\s*\]\](?!\])/gs, '<span class="text-red-500 font-bold bg-red-50 px-1 py-0.5 rounded border border-red-200">$1</span>');
   }
 
-  // Handle Indentation and Lists (Block indents)
-  const lines = html.split('\n');
-  const processedLines = lines.map(line => {
+  // Handle Indentation and Lists (Block indents) - skip if specifically in inline mode
+  const processedLines = !isInline ? html.split('\n').map(line => {
     if (diff) return line;
 
     // Match leading whitespace, optional list marker (*, -, 1.), and content
@@ -118,7 +117,7 @@ function applyInlineFormatting(raw: string, diff: boolean): string {
     }
 
     return line;
-  });
+  }) : html.split('\n');
 
   // Rejoin lines. Block elements (display: block) manage their own line breaks.
   let finalHtml = "";
@@ -127,7 +126,7 @@ function applyInlineFormatting(raw: string, diff: boolean): string {
     if (i < processedLines.length - 1) {
       // Only add <br/> if both the current and next line are plain text (no block wrapper)
       const isCurrentBlock = processedLines[i].startsWith('<span style="display: block');
-      const isNextBlock = processedLines[i + 1].startsWith('<span style="display: block');
+      const isNextBlock = processedLines[i + 1] && processedLines[i + 1].startsWith('<span style="display: block');
       if (!isCurrentBlock && !isNextBlock) {
         finalHtml += "<br/>";
       }
@@ -149,7 +148,7 @@ function renderBlockText(input: string, diff: boolean): string {
       // Don't render empty paragraphs
       if (!paragraph.trim()) return '';
       // Apply inline formatting (which already handles internal newlines)
-      const formatted = applyInlineFormatting(paragraph, diff);
+      const formatted = applyInlineFormatting(paragraph, diff, false);
       return `<p>${formatted}</p>`;
     })
     .join("");
@@ -169,7 +168,7 @@ const RichText: React.FC<RichTextProps> = ({
   const Component = inline ? 'span' : 'div';
 
   // Choose the correct rendering function based on the 'inline' prop
-  const html = inline ? applyInlineFormatting(text, diff) : renderBlockText(text, diff);
+  const html = inline ? applyInlineFormatting(text, diff, true) : renderBlockText(text, diff);
 
   return (
     <Component

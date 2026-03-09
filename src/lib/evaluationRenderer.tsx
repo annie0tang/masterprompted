@@ -30,41 +30,68 @@ export function renderTextWithFlags(
   }
 
   // Split into paragraphs to maintain consistent formatting with RichText
-  const paragraphStrings = text.split(/\n\s*\n/);
-  let currentGlobalPos = 0;
+  // We use a regex split that preserves enough info to track global positions
+  const paragraphMatches = text.split(/(\n\s*\n)/);
+  let globalOffset = 0;
 
-  return paragraphStrings.map((paragraph, pIndex) => {
-    if (!paragraph.trim()) {
-      currentGlobalPos += paragraph.length + 2; // +2 for potentially \n\n
-      return null;
+  return paragraphMatches.map((content, index) => {
+    const pStart = globalOffset;
+    const pEnd = globalOffset + content.length;
+    globalOffset = pEnd;
+
+    // Is this a separator between paragraphs?
+    if (content.match(/^\n\s*\n$/)) {
+      return null; // The <p> tags below will handle spacing; separators aren't rendered directly
     }
 
-    const pStart = text.indexOf(paragraph, currentGlobalPos);
-    const pEnd = pStart + paragraph.length;
-    currentGlobalPos = pEnd;
+    if (!content.trim()) return null;
 
-    // Filter and adjust spans for this paragraph
-    const pSpans = spans
-      .filter(s => s.start >= pStart && s.end <= pEnd)
-      .map(s => ({ ...s, start: s.start - pStart, end: s.end - pStart }));
+    // Identify spans that intersect with this paragraph
+    const intersectingSpans = spans
+      .filter(s => s.start < pEnd && s.end > pStart)
+      .map(s => ({
+        ...s,
+        // Clip to paragraph bounds and convert to local offset
+        start: Math.max(0, s.start - pStart),
+        end: Math.min(content.length, s.end - pStart)
+      }))
+      .sort((a, b) => a.start - b.start);
 
-    const sortedSpans = [...pSpans].sort((a, b) => a.start - b.start);
+    // Build segments for this paragraph
     const segments: TextSegment[] = [];
-    let pPos = 0;
+    let lastPos = 0;
 
-    for (const span of sortedSpans) {
-      if (span.start > pPos) {
-        segments.push({ type: "text", content: paragraph.slice(pPos, span.start) });
+    for (const span of intersectingSpans) {
+      // Add plain text before the span
+      if (span.start > lastPos) {
+        segments.push({
+          type: "text",
+          content: content.slice(lastPos, span.start),
+        });
       }
-      segments.push({ type: "flag", content: paragraph.slice(span.start, span.end), span });
-      pPos = span.end;
+
+      // Add the flagged segment (handle overlapping/clipping)
+      const actualStart = Math.max(lastPos, span.start);
+      if (span.end > actualStart) {
+        segments.push({
+          type: "flag",
+          content: content.slice(actualStart, span.end),
+          span,
+        });
+        lastPos = span.end;
+      }
     }
-    if (pPos < paragraph.length) {
-      segments.push({ type: "text", content: paragraph.slice(pPos) });
+
+    // Add remaining text after last span
+    if (lastPos < content.length) {
+      segments.push({
+        type: "text",
+        content: content.slice(lastPos),
+      });
     }
 
     return (
-      <p key={pIndex}>
+      <p key={index}>
         {segments.map((segment, sIndex) => {
           if (segment.type === "text") {
             return <RichText key={sIndex} text={segment.content} inline />;

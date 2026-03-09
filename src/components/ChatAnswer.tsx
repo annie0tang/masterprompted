@@ -154,7 +154,7 @@ const ChatAnswer = ({
     });
 
     return (
-      <>
+      <div className="whitespace-pre-wrap break-words">
         {paragraphs.map((paraParts, pIndex) => (
           <p key={pIndex}>
             {paraParts.map((part, index) => {
@@ -202,7 +202,7 @@ const ChatAnswer = ({
             })}
           </p>
         ))}
-      </>
+      </div>
     );
   };
 
@@ -212,8 +212,8 @@ const ChatAnswer = ({
 
   // Render text with evaluation flags
   const renderEvaluation = () => {
-    if (!currentEvaluation?.data) return <RichText text={formattedText} />;
-    return renderTextWithFlags(formattedText, currentEvaluation.data);
+    if (!currentEvaluation?.data) return <RichText text={formattedText} prose={false} />;
+    return <div className="whitespace-pre-wrap break-words">{renderTextWithFlags(formattedText, currentEvaluation.data)}</div>;
   };
 
   return (
