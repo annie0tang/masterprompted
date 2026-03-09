@@ -57,19 +57,18 @@ export function renderTextWithFlags(
       }))
       .sort((a, b) => a.start - b.start);
 
-    // Identify indentation for consistent alignment across view modes
-    // Match leading whitespace, optional list marker (*, -, 1.), and content
-    // This allows us to treat the marker as part of the text, while the whitespace defines the "gutter"
+    // Identify indentation for consistent alignment
     const indentMatch = content.match(/^(\s*)([\*\-]|(?:\d+\.))?(\s*)/);
-    const gutter = indentMatch ? indentMatch[0] : "";
-    const gutterLen = gutter.length;
+    const leadingWhitespace = indentMatch ? indentMatch[1] : "";
+    const indentCount = (leadingWhitespace || "").replace(/\t/g, "    ").length;
+    const hasStructure = indentMatch && (indentMatch[1] || indentMatch[2]);
 
-    // Build segments for this paragraph, starting AFTER the gutter to ensure perfect alignment
+    // Build segments for this paragraph
     const segments: TextSegment[] = [];
-    let lastPos = gutterLen;
+    let lastPos = 0;
 
     for (const span of intersectingSpans) {
-      // Add plain text before the span (but only if it's after the gutter)
+      // Add plain text before the span
       if (span.start > lastPos) {
         segments.push({
           type: "text",
@@ -77,7 +76,7 @@ export function renderTextWithFlags(
         });
       }
 
-      // Add the flagged segment (clipped to paragraph and gutter bounds)
+      // Add the flagged segment (handle overlapping/clipping)
       const actualStart = Math.max(lastPos, span.start);
       if (span.end > actualStart) {
         segments.push({
@@ -97,27 +96,28 @@ export function renderTextWithFlags(
       });
     }
 
-    return (
-      <p key={index} style={{ display: 'flex', alignItems: 'flex-start' }}>
-        <span style={{ whiteSpace: 'pre', flexShrink: 0 }}>{gutter}</span>
-        <span style={{ display: 'block' }}>
-          {segments.map((segment, sIndex) => {
-            if (segment.type === "text") {
-              return <RichText key={sIndex} text={segment.content} inline />;
-            }
+    const wrapperStyle = hasStructure
+      ? { display: 'block', paddingLeft: `${indentCount}ch`, textIndent: `-${indentCount}ch` }
+      : undefined;
 
-            const explanation = getFallacyExplanation(segment.span!.value);
-            return (
-              <TextFlag
-                key={sIndex}
-                text={segment.content}
-                evaluationFactor="factual_accuracy"
-                explanation={explanation}
-                severity="error"
-              />
-            );
-          })}
-        </span>
+    return (
+      <p key={index} style={wrapperStyle}>
+        {segments.map((segment, sIndex) => {
+          if (segment.type === "text") {
+            return <RichText key={sIndex} text={segment.content} inline />;
+          }
+
+          const explanation = getFallacyExplanation(segment.span!.value);
+          return (
+            <TextFlag
+              key={sIndex}
+              text={segment.content}
+              evaluationFactor="factual_accuracy"
+              explanation={explanation}
+              severity="error"
+            />
+          );
+        })}
       </p>
     );
   }).filter(Boolean);
