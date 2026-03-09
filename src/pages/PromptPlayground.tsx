@@ -259,8 +259,8 @@ const PromptPlayground = () => {
       } catch (err: any) {
         clearTimeout(timeoutId);
         const errorMessage = err.name === 'AbortError'
-          ? "[ERROR: [REQUEST_TIMEOUT - Connection took too long to establish]]"
-          : `[ERROR: [CONNECTION_FAILED - ${err.message}]]`;
+          ? "[[ERROR: [REQUEST_TIMEOUT - Connection took too long to establish]]]"
+          : `[[ERROR: [CONNECTION_FAILED - ${err.message}]]]`;
 
         console.error("Fetch level error:", err);
 
