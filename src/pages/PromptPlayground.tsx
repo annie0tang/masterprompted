@@ -69,7 +69,11 @@ const PromptPlayground = () => {
       if (!next[threadIndex]) {
         return prev;
       }
-      next[threadIndex] = { ...next[threadIndex], showDiff: checked };
+      next[threadIndex] = {
+        ...next[threadIndex],
+        showDiff: checked,
+        showEvaluation: checked ? false : next[threadIndex].showEvaluation
+      };
       return next;
     });
   }, []);
@@ -80,7 +84,11 @@ const PromptPlayground = () => {
       if (!next[threadIndex]) {
         return prev;
       }
-      next[threadIndex] = { ...next[threadIndex], showEvaluation: checked };
+      next[threadIndex] = {
+        ...next[threadIndex],
+        showEvaluation: checked,
+        showDiff: checked ? false : next[threadIndex].showDiff
+      };
       return next;
     });
   }, []);
@@ -536,7 +544,7 @@ const PromptPlayground = () => {
               }} />
             </div>
           </div>
-          <div className="flex-1 flex flex-col px-6 py-4 items-center">
+          <div className="flex-1 px-6 py-4 overflow-auto">
             <ChatBody
               threads={threads}
               onPrevVersion={handlePrevVersion}
