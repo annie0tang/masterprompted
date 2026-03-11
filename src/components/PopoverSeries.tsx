@@ -4,6 +4,7 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { Button } from "@/components/ui/button"
 import { X } from "lucide-react"
 import { useLanguage } from "@/contexts/LanguageContext"
+import { cn } from "@/lib/utils"
 
 // MODIFICATION 1: Updated Step type
 type Step = {
@@ -14,6 +15,7 @@ type Step = {
   side?: 'top' | 'bottom' | 'left' | 'right';
   align?: 'start' | 'center' | 'end';
   sideOffset?: number;
+  className?: string;
 };
 
 interface PopoverSeriesProps {
@@ -144,7 +146,7 @@ export function PopoverSeries({ steps, initialStep = 0, onClose }: PopoverSeries
         {/* MODIFICATION 2: Pass positioning props */}
         <PopoverContent
           onOpenAutoFocus={(e) => e.preventDefault()}
-          className="space-y-4"
+          className={cn("space-y-4", currentStepData.className)}
           side={currentStepData.side}
           align={currentStepData.align}
           sideOffset={currentStepData.sideOffset}

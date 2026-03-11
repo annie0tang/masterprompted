@@ -5,7 +5,7 @@ type Language = 'en' | 'es';
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string) => string;
+  t: (key: string) => any;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -25,7 +25,7 @@ interface LanguageProviderProps {
 export const LanguageProvider = ({ children }: LanguageProviderProps) => {
   const [language, setLanguage] = useState<Language>('en');
 
-  const t = (key: string): string => {
+  const t = (key: string): any => {
     const keys = key.split('.');
     let value: any = translations[language];
 
@@ -287,7 +287,8 @@ Output only the final transformed prompt. Do not include explanations, commentar
       },
       promptControls: {
         title: 'Prompt Controls',
-        titleInfo: 'Adjust these parameters to optimise your prompt before sending it to the LLM. Each control modifies the wording and structure of your prompt to influence the AI\'s response — for example, making it more specific, changing the tone, adding context, or reducing bias.',
+        titleInfo: <>The prompt controls allow you to change the style and delivery of your prompt while retaining its original intent. This is accomplished through a form of <b>meta-prompting</b>, where the LLM’s task is <b>prompt-optimization</b> rather than <b>prompt-response</b>. <span id="meta-popover-trigger" className="underline cursor-pointer">Click here</span> for a more detailed view.</>,
+        titleInfoBasic: 'Adjust these parameters to optimise your prompt before sending it to the LLM. Each control modifies the wording and structure of your prompt to influence the AI\'s response — for example, making it more specific, changing the tone, adding context, or reducing bias.',
         original: 'Original',
         specificity: {
           title: 'Specificity',
@@ -315,7 +316,7 @@ Output only the final transformed prompt. Do not include explanations, commentar
         },
         promptHistory: 'Prompt history',
         noHistory: 'No prompt history yet. Send a prompt to get started.',
-        sendOptimizedPrompt: 'Optimize Prompt',
+        sendOptimizedPrompt: 'Send Optimize Prompt',
         sendPrompt: 'Send Prompt',
         promptSpecificity: 'Prompt Specificity',
         interactionStyle: 'Interaction Style',
@@ -330,7 +331,7 @@ Output only the final transformed prompt. Do not include explanations, commentar
         done: 'Done',
         gotIt: 'Got it!',
         promptPlayground: {
-          submitHint: "Click here to submit your prompt and see the AI's response!",
+          submitHint: "Start off by giving the LLM your own prompt.",
           controlsHint: 'You can use the prompt controls to optimize your prompt.'
         },
         diff: {
@@ -629,7 +630,8 @@ Envíe solo la indicación transformada final. No incluya explicaciones, comenta
       },
       promptControls: {
         title: 'Controles de prompt',
-        titleInfo: 'Ajusta estos parámetros para optimizar tu prompt antes de enviarlo al LLM. Cada control modifica la redacción y estructura de tu prompt para influir en la respuesta de la IA — por ejemplo, haciéndolo más específico, cambiando el tono, agregando contexto o reduciendo el sesgo.',
+        titleInfo: <>Los controles de prompt te permiten cambiar el estilo y entrega de tu prompt mientras mantienes su intención original. Esto se logra mediante una forma de <b>meta-prompting</b>, donde la tarea del LLM es la <b>optimización del prompt</b> en lugar de una <b>respuesta al prompt</b>. <span id="meta-popover-trigger" className="underline cursor-pointer">Haz clic aquí</span> para ver una vista más detallada.</>,
+        titleInfoBasic: 'Ajusta estos parámetros para optimizar tu prompt antes de enviarlo al LLM. Cada control modifica la redacción y estructura de tu prompt para influir en la respuesta de la IA — por ejemplo, haciéndolo más específico, cambiando el tono, agregando contexto o reduciendo el sesgo.',
         original: 'Original',
         specificity: {
           title: 'Especificidad',
