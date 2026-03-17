@@ -126,7 +126,7 @@ export default function SystemParametersRoles() {
                     className="px-10 font-heading font-semibold border-brand-tertiary-500 text-brand-tertiary-500 hover:bg-brand-tertiary-500/10"
                   >
                     <ArrowLeft className="-ml-2 !h-6 !w-6" />
-                    Previous (Temperature)
+                    Temperature
                   </Button>
                   <Button
                     variant="outline"
