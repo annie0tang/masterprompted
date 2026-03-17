@@ -42,7 +42,6 @@ const ROLE_OUTPUTS: Record<string, string> = {
   novelist:
     "The letter arrived on a Tuesday, as consequential things often do — tucked between budget memos and a lunch invitation from the Finnish delegation. Claire Marchand, newly appointed to lead France's AI oversight office, read it twice before setting it down on her desk in the Bercy district. Twenty-seven nations, the Commissioner wrote, must speak with one voice on artificial intelligence. But voices, Claire knew, were precisely what algorithms did not have.\n\nShe stood at her window, watching barges drift along the Seine, and thought of the task ahead: to judge machines that learned faster than her staff could be hired, to enforce rules written for a technology that would be unrecognizable by the time the ink was dry. Somewhere in Berlin, in Rome, in Tallinn, her counterparts were reading the same letter — each wondering, she imagined, the same quiet thing.",
 };
-};
 
 export default function SystemParametersRoles() {
   const navigate = useNavigate();
