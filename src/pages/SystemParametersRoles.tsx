@@ -14,7 +14,7 @@ import roleDefaultImg from "@/assets/role-default.png";
 import roleJournalistImg from "@/assets/role-journalist.png";
 import roleNovelistImg from "@/assets/role-novelist.png";
 
-const PROMPT_TEXT = "Summarize who bears the main obligations under the EU AI Act and what responsibilities apply to deployers of high-risk AI systems.";
+const PROMPT_TEXT = "Draft a lead paragraph for a news article about how EU member states are preparing to enforce the AI Act's requirements on high-risk AI systems.";
 
 const ROLES = [
   {
