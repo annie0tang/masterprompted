@@ -529,7 +529,13 @@ Output only the final transformed prompt. Do not include explanations, commentar
     },
     systemParameters: {
       title: 'Parámetros del Sistema',
-      comingSoon: 'Próximamente...'
+      comingSoon: 'Próximamente...',
+      intro: {
+        label: 'Aprendizaje 4: Parámetros del sistema',
+        title: '¿Cómo configuran los ajustes del sistema la salida del LLM?',
+        description: 'Las empresas de LLM controlan parámetros del sistema que determinan cómo se comportan y responden los modelos. El prompting del sistema asigna al modelo un rol o persona específica, influyendo en el tono, estilo y comportamiento. La temperatura controla cuán predecibles o creativas son las respuestas, con valores más bajos produciendo salidas más estables y repetitivas y valores más altos aumentando la aleatoriedad y variación.',
+        continue: 'Continuar'
+      }
     },
     llmTraining: {
       title: 'Entrenamiento LLM',
