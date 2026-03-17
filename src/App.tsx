@@ -24,6 +24,7 @@ import Bias from "./pages/PrompConstructionBias";
 import SystemParameters from "./pages/SystemParameters";
 import SystemParametersTemperature from "./pages/SystemParametersTemperature";
 import SystemParametersRoles from "./pages/SystemParametersRoles";
+import SystemParametersTakeaways from "./pages/SystemParametersTakeaways";
 import MultipleSources from "./pages/MultipleSources";
 import LLMTraining from "./pages/LLMTraining";
 import PromptPlayground from "./pages/PromptPlayground";
