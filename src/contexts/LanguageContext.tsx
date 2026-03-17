@@ -180,7 +180,13 @@ const translations = {
     },
     systemParameters: {
       title: 'System Parameters',
-      comingSoon: 'Coming soon...'
+      comingSoon: 'Coming soon...',
+      intro: {
+        label: 'Learning 4: System parameters',
+        title: 'How do system settings shape LLM output?',
+        description: 'LLM companies control system parameters that shape how models behave and respond. System prompting assigns the model a specific role or persona, influencing tone, style, and behavior. Temperature controls how predictable or creative responses are, with lower values producing more stable, repetitive outputs and higher values increasing randomness and variation.',
+        continue: 'Continue'
+      }
     },
     llmTraining: {
       title: 'LLM Training',
