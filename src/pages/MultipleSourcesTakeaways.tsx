@@ -79,7 +79,7 @@ export default function MultipleSourcesTakeaways() {
             </Button>
             <Button
               variant="secondary"
-              onClick={() => navigate("/modules")}
+              onClick={() => navigate("/module/llm-training")}
               className="font-heading font-semibold text-base px-10 py-6 rounded-full">
               
               Continue
