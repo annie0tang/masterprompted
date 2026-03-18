@@ -145,7 +145,7 @@ export default function LLMTrainingExercise() {
                                 Output
                               </span>
                               <div className="flex items-start gap-1.5">
-                                <FileText className="h-3.5 w-3.5 text-destructive flex-shrink-0 mt-0.5" strokeWidth={2} />
+                                <ListChecks className="h-3.5 w-3.5 text-destructive flex-shrink-0 mt-0.5" strokeWidth={2} />
                                 <span className="text-xs font-semibold text-foreground underline decoration-destructive underline-offset-2">
                                   {pair.outputTitle}
                                 </span>
