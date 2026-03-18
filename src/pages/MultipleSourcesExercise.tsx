@@ -5,8 +5,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import ModuleNavigation from "@/components/ModuleNavigation";
 import EvaluationPanel from "@/components/EvaluationPanel";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, FileText, ClipboardList, AlignLeft, ChevronDown, ChevronUp } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
+import { ArrowRight, FileText, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */
@@ -61,20 +60,6 @@ const RESPONSE_TEXT = `Obligations for Providers: The majority of obligations fa
 User Responsibilities: Users (deployers) of high-risk AI systems have certain obligations, though less than providers.`;
 
 /* ------------------------------------------------------------------ */
-/*  Icon components for the document cards                             */
-/* ------------------------------------------------------------------ */
-
-function DocIcon({ type }: { type: DocumentItem["icon"] }) {
-  const base = "h-10 w-10 text-muted-foreground";
-  switch (type) {
-    case "research":
-      return <ClipboardList className={base} />;
-    case "ethics":
-      return <FileText className={base} />;
-    case "article":
-      return <AlignLeft className={base} />;
-  }
-}
 
 /* ------------------------------------------------------------------ */
 /*  Page                                                               */
@@ -136,20 +121,12 @@ export default function MultipleSourcesExercise() {
                             : "border-border hover:shadow-md"
                         )}
                       >
-                        <DocIcon type={doc.icon} />
+                        <FileText className="h-10 w-10 text-muted-foreground flex-shrink-0" />
                         <div className="flex-1 min-w-0">
                           <span className="text-xs text-muted-foreground">{doc.date}</span>
-                          <div className="flex items-center gap-2">
-                            <Checkbox
-                              checked={isSelected}
-                              className="mt-0.5 pointer-events-none"
-                              tabIndex={-1}
-                            />
-                            <span className="text-sm font-semibold text-foreground leading-tight">
-                              {doc.title}
-                            </span>
-                          </div>
-                          <span className="text-xs text-muted-foreground">{doc.source}</span>
+                          <span className="text-sm font-semibold text-foreground leading-tight block">
+                            {doc.title}
+                          </span>
                         </div>
                       </button>
                     );
