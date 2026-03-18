@@ -5,7 +5,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import EvaluationPanel from "@/components/EvaluationPanel";
 import TextFlag from "@/components/TextFlag";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ListChecks, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowLeft, ArrowRight, ListChecks } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */
@@ -111,24 +111,17 @@ export default function LLMTrainingExercise() {
                         type="button"
                         onClick={() => togglePair(pair.id)}
                         className={cn(
-                          "w-full rounded-xl border p-3 text-left transition-shadow",
+                          "w-full rounded-xl border p-3 text-left transition-shadow font-heading",
                           isSelected
                             ? "border-brand-tertiary-500 shadow-sm"
                             : "border-border hover:shadow-md"
                         )}
                       >
-                        <div className="flex items-center justify-between mb-1">
-                          {!isSelected && (
-                            <span className="text-xs font-semibold text-foreground">
-                              Input Output pair {index + 1}
-                            </span>
-                          )}
-                          {isSelected ? (
-                            <ChevronUp className="h-4 w-4 text-muted-foreground ml-auto" />
-                          ) : (
-                            <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                          )}
-                        </div>
+                        {!isSelected && (
+                          <span className="text-xs font-semibold text-foreground">
+                            Input Output pair {index + 1}
+                          </span>
+                        )}
 
                         {isSelected && (
                           <div className="mt-2 space-y-2">
@@ -205,8 +198,16 @@ export default function LLMTrainingExercise() {
                         </div>
                       </div>
 
-                      {/* Next button */}
+                      {/* Navigation buttons */}
                       <div className="mt-8 flex items-center gap-3">
+                        <Button
+                          variant="outline"
+                          size="lg"
+                          onClick={() => navigate("/module/llm-training")}
+                          className="rounded-md border-brand-tertiary-500 text-brand-tertiary-500 hover:bg-brand-tertiary-500/10"
+                        >
+                          <ArrowLeft className="!h-5 !w-5" />
+                        </Button>
                         <Button
                           variant="outline"
                           size="lg"
