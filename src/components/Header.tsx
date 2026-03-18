@@ -128,7 +128,7 @@ const Header = ({ transparent = false, onLanguageChange }: HeaderProps) => {
                   <ChevronDown className="h-4 w-4" />
                   {/* Active underline */}
                   {isModuleActive() &&
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary rounded-full" />
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-brand-tertiary-500 rounded-full" />
                   }
                   {/* Hover underline */}
                   {!isModuleActive() &&
