@@ -183,11 +183,12 @@ export default function EvaluationPanel({ initialIsOpen = true, canClose = false
           </>
         ) : (
           <button
-            aria-label={t('components.evaluationPanel.title')}
-            className="p-2 rounded-full hover:bg-muted/50"
+            type="button"
             onClick={() => setIsPanelOpen(true)}
+            className="flex items-center gap-2 text-lg font-semibold font-heading text-card-foreground"
           >
-            <ListChecks className="h-6 w-6 text-muted-foreground" />
+            <span>{t('components.evaluationPanel.title')}</span>
+            <ChevronDown className="h-5 w-5 text-muted-foreground" />
           </button>
         )}
       </div>
