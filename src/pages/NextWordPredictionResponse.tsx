@@ -171,21 +171,9 @@ export default function HeadlineResponse() {
 
               {/* Evaluation trigger or panel */}
               <div className="flex-shrink-0 ml-6 2xl:absolute 2xl:left-[884px] 2xl:top-0 2xl:ml-0">
-                {!evaluationPanelOpen ? (
-                  <div className="pt-2">
-                    <button
-                      aria-label="Open evaluation panel"
-                      className="p-2 rounded-full hover:bg-muted/50"
-                      onClick={() => setEvaluationPanelOpen(true)}
-                    >
-                      <ListChecks className="h-5 w-5 text-muted-foreground" />
-                    </button>
-                  </div>
-                ) : (
-                  <div data-evaluation-panel>
-                    <EvaluationPanel initialIsOpen={true} canClose={true} onClose={() => setEvaluationPanelOpen(false)} />
-                  </div>
-                )}
+                <div data-evaluation-panel>
+                  <EvaluationPanel initialIsOpen={evaluationPanelOpen} canClose={true} onClose={() => setEvaluationPanelOpen(false)} />
+                </div>
               </div>
             </div>
           </div>
