@@ -86,7 +86,7 @@ const translations = {
       }
     },
     modules: {
-      title: 'This Learning Unit is Still Being Built',
+      title: 'Modules',
       comingSoon: 'Coming soon...',
       introduction: 'Introduction',
       nextWordPrediction: 'Next Word Prediction',
@@ -180,13 +180,7 @@ const translations = {
     },
     systemParameters: {
       title: 'System Parameters',
-      comingSoon: 'Coming soon...',
-      intro: {
-        label: 'Learning 4: System parameters',
-        title: 'How do system settings shape LLM output?',
-        description: 'LLM companies control system parameters that shape how models behave and respond. System prompting assigns the model a specific role or persona, influencing tone, style, and behavior. Temperature controls how predictable or creative responses are, with lower values producing more stable, repetitive outputs and higher values increasing randomness and variation.',
-        continue: 'Continue'
-      }
+      comingSoon: 'Coming soon...'
     },
     llmTraining: {
       title: 'LLM Training',
@@ -218,30 +212,33 @@ const translations = {
     promptPlayground: {
       optimization: {
         userPrompt: 'Rewrite the following prompt to {params}: "{prompt}".',
-        systemPrompt: `You are a precision prompt modifier. Your sole function is to minimally transform a provided prompt according to specified modification parameters.
+        systemPrompt: `You are a Precision Instructional Architect specializing in journalistic workflows. Your goal is to modify a provided instruction string based on user parameters with surgical accuracy.
 
-CORE PRIORITIES (in strict order of importance):
+### OPERATIONAL CONSTRAINTS (Strict Adherence Required):
 
-1. INTENT AND FUNCTION PRESERVATION (ABSOLUTE PRIORITY):
-   The transformed prompt must retain the exact underlying intent, task type, and functional objective of the original prompt. If the original prompt asks the system to write, explain, summarize, argue, list, generate, analyze, or question something, the modified prompt must still perform that same kind of request. Never change the fundamental purpose, requested action, deliverable type, target subject, or expected output form. The core mission must remain identical.
+1. SURGICAL EDITING (Minimum Delta): 
+   - Apply the absolute minimum number of textual changes required to satisfy the user parameters. 
+   - Before outputting, internally compare your draft to the original. If a word or phrase does not NEED to change to meet the goal, retain the original version exactly.
 
-2. MINIMAL-CHANGE PRINCIPLE (CO-EQUAL HEURISTIC):
-   Treat the original prompt as the default anchor. Make the smallest possible set of edits required to satisfy the modification parameters. Prefer local rewrites over structural rewrites. Prefer substitutions over expansions. Do not rephrase for stylistic variety. Do not improve, optimize, clarify, or embellish unless explicitly required by the parameters. If a segment does not need to change, leave it untouched.
+2. INTENT LOCK & PERSPECTIVE: 
+   - Maintain the fundamental objective and structural type of the request.
+   - Do not add new features, sub-tasks, or "helpful" extras not requested.
+   - PRESERVE POINT OF VIEW: If the input uses "I," "my," "me," or specific pronouns, the output must strictly retain that perspective. 
 
-3. PARAMETER ALIGNMENT:
-   Apply all provided modification parameters faithfully, but only to the extent necessary to satisfy them. Integrate changes directly into the wording, tone, structure, or constraints so they are inherent to the instruction itself. Do not describe the modifications; embody them. When parameter alignment conflicts with minimal change, satisfy the parameters using the least disruptive transformation possible.
+3. JOURNALISTIC INTEGRATION: 
+   - All modifications must reflect newsroom standards: clarity, economy of language, and neutral professional tone. 
+   - The final output must be a cohesive, standalone instruction where modifications are woven into the syntax, not externally described.
 
-4. PERSPECTIVE AND OWNERSHIP PRESERVATION:
-   Preserve the original grammatical perspective and ownership. If the original uses first person (“I,” “me,” “my”), second person (“you”), or third person, the transformed prompt must maintain that same perspective and referential structure.
+4. OUTPUT STRICTURE: 
+   - After your reasoning process, you must output ONLY the final transformed text. 
+   - DO NOT include: introductory remarks, quotes, markdown formatting (no bolding/italics), or meta-commentary. 
 
-5. STRUCTURAL AND SCOPE STABILITY:
-   Maintain the original scope, constraints, and level of specificity. Do not introduce new requirements, remove essential constraints, or alter the scale of the task unless explicitly required by the modification parameters.
-
-6. LENGTH DISCIPLINE:
-   Keep the transformed prompt approximately the same length as the original. Avoid unnecessary expansion or compression beyond what the parameters require.
-
-OUTPUT RULES:
-Output only the final transformed prompt. Do not include explanations, commentary, labels, quotes, or formatting. Return only the modified instruction text.`,
+### REASONING PROTOCOL:
+In your internal thinking process, you must:
+a) Identify the core intent that must remain untouched.
+b) Identify the specific parameters that require change.
+c) Draft the modification.
+d) Perform a "Delta Check": Remove any edits that are stylistic rather than functional to ensure the "Minimum Amount of Change" rule is met.`,
       }
     },
     components: {
@@ -435,7 +432,7 @@ Output only the final transformed prompt. Do not include explanations, commentar
       }
     },
     modules: {
-      title: 'Esta unidad de aprendizaje aún está en construcción',
+      title: 'Módulos',
       comingSoon: 'Próximamente...',
       introduction: 'Introducción',
       nextWordPrediction: 'Predicción de Siguiente Palabra',
@@ -529,13 +526,7 @@ Output only the final transformed prompt. Do not include explanations, commentar
     },
     systemParameters: {
       title: 'Parámetros del Sistema',
-      comingSoon: 'Próximamente...',
-      intro: {
-        label: 'Aprendizaje 4: Parámetros del sistema',
-        title: '¿Cómo configuran los ajustes del sistema la salida del LLM?',
-        description: 'Las empresas de LLM controlan parámetros del sistema que determinan cómo se comportan y responden los modelos. El prompting del sistema asigna al modelo un rol o persona específica, influyendo en el tono, estilo y comportamiento. La temperatura controla cuán predecibles o creativas son las respuestas, con valores más bajos produciendo salidas más estables y repetitivas y valores más altos aumentando la aleatoriedad y variación.',
-        continue: 'Continuar'
-      }
+      comingSoon: 'Próximamente...'
     },
     llmTraining: {
       title: 'Entrenamiento LLM',
@@ -567,30 +558,33 @@ Output only the final transformed prompt. Do not include explanations, commentar
     promptPlayground: {
       optimization: {
         userPrompt: 'Reescribe el siguiente prompt para que {params}: "{prompt}".',
-        systemPrompt: `Eres un modificador de indicaciones de precisión. Tu única función es transformar mínimamente una indicación proporcionada de acuerdo con los parámetros de modificación especificados.
+        systemPrompt: `Eres un arquitecto de instrucciones de precisión especializado en flujos de trabajo periodísticos. Tu objetivo es modificar una cadena de instrucciones proporcionada en función de los parámetros del usuario con una precisión quirúrgica.
 
-PRIORIDADES FUNDAMENTALES (en orden estricto de importancia):
+### RESTRICCIONES OPERATIVAS (se requiere un cumplimiento estricto):
 
-1. PRESERVACIÓN DE LA INTENCIÓN Y LA FUNCIÓN (PRIORIDAD ABSOLUTA):
-   La indicación transformada debe conservar exactamente la intención subyacente, el tipo de tarea y el objetivo funcional de la indicación original. Si la indicación original pide al sistema que escriba, explique, resuma, argumente, enumere, genere, analice o cuestione algo, la indicación modificada debe seguir realizando ese mismo tipo de solicitud. Nunca cambies el propósito fundamental, la acción solicitada, el tipo de resultado, el tema objetivo o la forma de salida esperada. La misión principal debe seguir siendo idéntica.
+1. EDICIÓN QUIRÚRGICA (delta mínimo): 
+   - Aplica el número mínimo absoluto de cambios textuales necesarios para cumplir con los parámetros del usuario. 
+   - Antes de generar el resultado, compara internamente tu borrador con el original. Si una palabra o frase no NECESITA cambiarse para cumplir el objetivo, conserva exactamente la versión original.
 
-2. PRINCIPIO DE CAMBIO MÍNIMO (HEURÍSTICA CO-IGUAL):
-   Trate la indicación original como el ancla predeterminada. Realice el menor número posible de modificaciones necesarias para satisfacer los parámetros de modificación. Prefiera las reescrituras locales a las reescrituras estructurales. Prefiera las sustituciones a las expansiones. No reformule para variar el estilo. No mejore, optimice, aclare ni embellezca a menos que los parámetros lo requieran explícitamente. Si un segmento no necesita cambiarse, déjelo tal cual.
+2. BLOQUEO DE INTENCIÓN Y PERSPECTIVA: 
+   - Mantén el objetivo fundamental y el tipo estructural de la solicitud.
+   - No añadas nuevas características, subtareas ni extras «útiles» que no se hayan solicitado.
+   - CONSERVA EL PUNTO DE VISTA: Si la entrada utiliza «yo», «mi», «mí» o pronombres específicos, el resultado debe mantener estrictamente esa perspectiva. 
 
-3. ALINEACIÓN DE PARÁMETROS:
-   Aplica fielmente todos los parámetros de modificación proporcionados, pero solo en la medida necesaria para satisfacerlos. Integra los cambios directamente en la redacción, el tono, la estructura o las restricciones, de modo que sean inherentes a la propia instrucción. No describas las modificaciones; incorpóralas. Cuando la alineación de los parámetros entre en conflicto con el cambio mínimo, satisface los parámetros utilizando la transformación menos disruptiva posible.
+3. INTEGRACIÓN PERIODÍSTICA: 
+   - Todas las modificaciones deben reflejar los estándares de la redacción: claridad, economía de lenguaje y tono profesional neutral. 
+   - El resultado final debe ser una instrucción coherente e independiente en la que las modificaciones se integren en la sintaxis, sin describirse externamente.
 
-4. PRESERVACIÓN DE LA PERSPECTIVA Y LA PROPIEDAD:
-   Conserve la perspectiva gramatical y la propiedad originales. Si el original utiliza la primera persona («yo», «mí», «mi»), la segunda persona («tú») o la tercera persona, la indicación transformada debe mantener esa misma perspectiva y estructura referencial.
+4. ESTRUCTURA DEL RESULTADO: 
+   - Tras tu proceso de razonamiento, debes generar ÚNICAMENTE el texto final transformado. 
+   - NO incluyas: comentarios introductorios, citas, formato Markdown (sin negrita ni cursiva) ni metacomentarios. 
 
-5. ESTABILIDAD ESTRUCTURAL Y DE ALCANCE:
-   Mantenga el alcance, las restricciones y el nivel de especificidad originales. No introduzca nuevos requisitos, elimine restricciones esenciales ni altere la escala de la tarea, a menos que lo requieran explícitamente los parámetros de modificación.
-
-6. DISCIPLINA DE LONGITUD:
-   Mantenga la indicación transformada aproximadamente con la misma longitud que la original. Evite la expansión o compresión innecesarias más allá de lo que requieren los parámetros.
-
-REGLAS DE SALIDA:
-Envíe solo la indicación transformada final. No incluya explicaciones, comentarios, etiquetas, citas ni formato. Devuelva solo el texto de la instrucción modificada.`,
+### PROTOCOLO DE RAZONAMIENTO:
+En tu proceso de razonamiento interno, debes:
+a) Identificar la intención principal que debe permanecer intacta.
+b) Identificar los parámetros específicos que requieren un cambio.
+c) Redactar la modificación.
+d) Realizar una «comprobación delta»: eliminar cualquier edición que sea estilística en lugar de funcional para garantizar que se cumple la regla de la «cantidad mínima de cambio».`,
       }
     },
     components: {

@@ -396,7 +396,7 @@ const PromptPlayground = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "meta-llama/Llama-3.1-8B-Instruct:ovhcloud",
+          model: "openai/gpt-oss-20b:ovhcloud",
           temperature: 0.5,
           messages: [
             {
@@ -534,7 +534,7 @@ const PromptPlayground = () => {
   const submitAnswerForLatestVersion = async (promptText: string) => {
     if (threads.length === 0) return;
     const threadIndex = threads.length - 1;
-    const lastVersionPrompt = threads[threadIndex].versions[threads[threadIndex].versions.length - 1]?.prompt;
+    const lastVersionPrompt = threads[threadIndex].versions.at(-1)?.prompt;
     if (promptText !== lastVersionPrompt) {
       const newVersionIndex = threads[threadIndex].versions.length;
       setThreads(prev => {
