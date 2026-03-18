@@ -108,26 +108,28 @@ export default function LLMTrainingFewShot() {
                   </button>
                 </div>
 
-                {/* Example Lede Used */}
-                <div>
-                  <h3 className="text-base font-heading font-bold text-foreground mb-3">
-                    Example Lede Used
-                  </h3>
-                  <div className="space-y-2">
-                    <div>
-                      <span className="text-sm font-semibold text-foreground block">Title</span>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {EXAMPLE_LEDE.title}
-                      </p>
-                    </div>
-                    <div>
-                      <span className="text-sm font-semibold text-foreground block">Lede</span>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {EXAMPLE_LEDE.lede}
-                      </p>
+                {/* Example Lede Used - only when examples are on */}
+                {selectedOption === "on" && (
+                  <div>
+                    <h3 className="text-base font-heading font-bold text-foreground mb-3">
+                      Example Lede Used
+                    </h3>
+                    <div className="space-y-2">
+                      <div>
+                        <span className="text-sm font-semibold text-foreground block">Title</span>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {EXAMPLE_LEDE.title}
+                        </p>
+                      </div>
+                      <div>
+                        <span className="text-sm font-semibold text-foreground block">Lede</span>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {EXAMPLE_LEDE.lede}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
 
               {/* ── Center content ── */}
