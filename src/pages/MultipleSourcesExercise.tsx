@@ -158,7 +158,7 @@ export default function MultipleSourcesExercise() {
                       <div className="mt-8 flex items-center gap-3">
                         <Button
                           variant="outline"
-                          size="icon"
+                          size="lg"
                           onClick={() => navigate("/module/multiple-sources")}
                           className="rounded-md border-brand-tertiary-500 text-brand-tertiary-500 hover:bg-brand-tertiary-500/10"
                         >
