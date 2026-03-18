@@ -121,12 +121,13 @@ export default function MultipleSourcesExercise() {
                             : "border-border hover:shadow-md"
                         )}
                       >
-                        <FileText className="h-10 w-10 text-muted-foreground flex-shrink-0" />
+                        <File className="h-8 w-8 text-muted-foreground flex-shrink-0" strokeWidth={1.5} />
                         <div className="flex-1 min-w-0">
                           <span className="text-xs text-muted-foreground">{doc.date}</span>
                           <span className="text-sm font-semibold text-foreground leading-tight block">
                             {doc.title}
                           </span>
+                          <span className="text-xs text-muted-foreground">{doc.source}</span>
                         </div>
                       </button>
                     );
