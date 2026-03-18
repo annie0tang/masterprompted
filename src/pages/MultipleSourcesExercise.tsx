@@ -211,7 +211,7 @@ export default function MultipleSourcesExercise() {
                       <div className="max-h-[500px] overflow-y-auto flex-1">
                         <div className="space-y-4">
                           <p className="text-muted-foreground leading-relaxed text-base whitespace-pre-line">
-                            {RESPONSE_TEXT}
+                            {currentResponse}
                           </p>
                         </div>
                       </div>
