@@ -55,8 +55,8 @@ export default function PromptConstructionSpecificityTakeaways() {
         <Breadcrumb />
         <div className="mb-5" />
         <div className="max-w-4xl mx-auto pt-0 mt-[130px]">
+          <p className="text-muted-foreground text-sm mb-4">Prompt construction</p>
           <h1 className="text-h2 font-heading text-foreground mb-2">
-            {t('promptConstructionModule.takeaways.title')}
           </h1>
           <h2 className="text-h2 font-heading text-foreground mb-12">
             {t('promptConstructionModule.takeaways.subtitle')}

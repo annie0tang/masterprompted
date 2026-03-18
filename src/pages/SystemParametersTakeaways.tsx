@@ -44,6 +44,7 @@ export default function SystemParametersTakeaways() {
         <Breadcrumb />
         <div className="mb-5" />
         <div className="max-w-4xl mx-auto my-[170px]">
+          <p className="text-muted-foreground text-sm mb-4">System parameters</p>
           <h1 className="text-h2 font-heading text-foreground mb-12">
             How do system parameters, set by LLM companies, affect the LLM's output?
           </h1>
