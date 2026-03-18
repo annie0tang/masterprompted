@@ -132,7 +132,7 @@ const Header = ({ transparent = false, onLanguageChange }: HeaderProps) => {
                   }
                   {/* Hover underline */}
                   {!isModuleActive() &&
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary/40 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-center" />
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-brand-tertiary-500/40 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-center" />
                   }
                 </button>
               </DropdownMenuTrigger>
