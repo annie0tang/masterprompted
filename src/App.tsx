@@ -76,12 +76,13 @@ const App = () => (
               <Route path="/module/prompt-construction/context" element={<Context />} />
               <Route path="/module/prompt-construction/bias" element={<Bias />} />
 
-              {/* UNIMPLEMENTED */}
+              {/* COMING SOON - uncomment to restore full modules:
               <Route path="/module/system-parameters" element={<SystemParameters />} />
               <Route path="/module/system-parameters/temperature" element={<SystemParametersTemperature />} />
               <Route path="/module/system-parameters/roles" element={<SystemParametersRoles />} />
               <Route path="/module/system-parameters/takeaways" element={<SystemParametersTakeaways />} />
               <Route path="/module/multiple-sources" element={<MultipleSources />} />
+              */}
               <Route path="/module/llm-training" element={<LLMTraining />} />
               <Route path="/module/journalistic-evaluation" element={<JournalisticEvaluation />} />
 

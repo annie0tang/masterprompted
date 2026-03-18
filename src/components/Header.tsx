@@ -59,12 +59,14 @@ const Header = ({ transparent = false, onLanguageChange }: HeaderProps) => {
   {
     title: "System Parameters",
     path: "/module/system-parameters",
-    completed: false
+    completed: false,
+    comingSoon: true
   },
   {
     title: "Multiple Documents",
     path: "/module/multiple-sources",
-    completed: false
+    completed: false,
+    comingSoon: true
   }
   // Hidden modules - uncomment to restore:
   // { 
@@ -144,28 +146,33 @@ const Header = ({ transparent = false, onLanguageChange }: HeaderProps) => {
                 {moduleItems.map((item, index) =>
                 <DropdownMenuItem
                   key={item.path}
-                  onClick={() => navigate(item.path)}
-                  className={`relative flex items-center gap-3 px-4 py-3 rounded-md cursor-pointer transition-colors ${
+                  onClick={() => !item.comingSoon && navigate(item.path)}
+                  className={`relative flex items-center gap-3 px-4 py-3 rounded-md transition-colors ${
+                  item.comingSoon ?
+                  'opacity-50 cursor-default' :
                   isActive(item.path) ?
-                  'bg-muted' :
-                  'hover:bg-muted/50'}`
+                  'bg-muted cursor-pointer' :
+                  'hover:bg-muted/50 cursor-pointer'}`
                   }>
 
                     {/* Green highlight bar for active item */}
-                    {isActive(item.path)
+                    {isActive(item.path) && !item.comingSoon
 
                   }
                     
                     {/* Checkmark for active or completed modules */}
                     <div className="w-5 h-5 flex items-center justify-center">
-                      {(item.completed || isActive(item.path)) &&
+                      {!item.comingSoon && (item.completed || isActive(item.path)) &&
                     <Check className="h-4 w-4 text-primary" />
                     }
                     </div>
                     
-                    <span className={`text-sm ${isActive(item.path) ? 'font-medium text-foreground' : 'text-muted-foreground'}`}>
+                    <span className={`text-sm flex-1 ${isActive(item.path) && !item.comingSoon ? 'font-medium text-foreground' : 'text-muted-foreground'}`}>
                       {item.title}
                     </span>
+                    {item.comingSoon && (
+                      <span className="text-xs text-muted-foreground/70 italic">Coming Soon</span>
+                    )}
                   </DropdownMenuItem>
                 )}
               </DropdownMenuContent>
