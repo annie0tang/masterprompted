@@ -30,6 +30,7 @@ import MultipleSourcesExercise from "./pages/MultipleSourcesExercise";
 import MultipleSourcesTakeaways from "./pages/MultipleSourcesTakeaways";
 import LLMTraining from "./pages/LLMTraining";
 import LLMTrainingExercise from "./pages/LLMTrainingExercise";
+import LLMTrainingFewShot from "./pages/LLMTrainingFewShot";
 import PromptPlayground from "./pages/PromptPlayground";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
