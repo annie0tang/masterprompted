@@ -86,7 +86,7 @@ export default function PromptConstructionSpecificityTakeaways() {
             </Button>
             <Button
               variant="secondary"
-              onClick={() => navigate("/module/system-parameters")}
+              onClick={() => navigate("/modules")}
               className="font-heading font-semibold text-base px-10 py-6 rounded-full"
             >
               Next Task
