@@ -86,7 +86,7 @@ const translations = {
       }
     },
     modules: {
-      title: 'Modules',
+      title: 'This Learning Unit is Still Being Built',
       comingSoon: 'Coming soon...',
       introduction: 'Introduction',
       nextWordPrediction: 'Next Word Prediction',
@@ -435,7 +435,7 @@ Output only the final transformed prompt. Do not include explanations, commentar
       }
     },
     modules: {
-      title: 'Módulos',
+      title: 'Esta unidad de aprendizaje aún está en construcción',
       comingSoon: 'Próximamente...',
       introduction: 'Introducción',
       nextWordPrediction: 'Predicción de Siguiente Palabra',
