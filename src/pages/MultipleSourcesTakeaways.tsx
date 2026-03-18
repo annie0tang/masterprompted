@@ -124,7 +124,7 @@ export default function MultipleSourcesTakeaways() {
       </main>
       <ModuleNavigation
         previousRoute="/module/multiple-sources/exercise"
-        nextRoute="/modules" />
+        nextRoute="/module/llm-training" />
       
     </div>);
 
