@@ -146,21 +146,16 @@ const Header = ({ transparent = false, onLanguageChange }: HeaderProps) => {
                   onClick={() => navigate(item.path)}
                   className={`relative flex items-center gap-3 px-4 py-3 rounded-md transition-colors ${
                   isActive(item.path) ?
-                  'bg-muted cursor-pointer' :
+                  'bg-brand-tertiary-500/10 cursor-pointer' :
                   'hover:bg-muted/50 cursor-pointer'}`
                   }>
 
-                    {/* Green highlight bar for active item */}
-                    {isActive(item.path)}
-                    
-                    {/* Checkmark for active or completed modules */}
-                    <div className="w-5 h-5 flex items-center justify-center">
-                      {(item.completed || isActive(item.path)) &&
-                    <Check className="h-4 w-4 text-primary" />
+                    {/* Green left bar for active item */}
+                    {isActive(item.path) &&
+                      <div className="absolute left-0 top-2 bottom-2 w-[3px] bg-brand-tertiary-500 rounded-full" />
                     }
-                    </div>
                     
-                    <span className={`text-sm flex-1 ${isActive(item.path) ? 'font-medium text-foreground' : 'text-muted-foreground'}`}>
+                    <span className={`text-sm flex-1 ${isActive(item.path) ? 'font-medium text-brand-tertiary-700' : 'text-muted-foreground'}`}>
                       {item.title}
                     </span>
                   </DropdownMenuItem>
