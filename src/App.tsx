@@ -82,6 +82,7 @@ const App = () =>
               <Route path="/module/system-parameters/roles" element={<SystemParametersRoles />} />
               <Route path="/module/system-parameters/takeaways" element={<SystemParametersTakeaways />} />
               <Route path="/module/multiple-sources" element={<MultipleSources />} />
+              <Route path="/module/multiple-sources/exercise" element={<MultipleSourcesExercise />} />
               <Route path="/module/llm-training" element={<LLMTraining />} />
               <Route path="/module/journalistic-evaluation" element={<JournalisticEvaluation />} />
 
