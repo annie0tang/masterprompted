@@ -86,7 +86,7 @@ const translations = {
       }
     },
     modules: {
-      title: 'Modules',
+      title: 'This Learning Unit is Still Being Built',
       comingSoon: 'Coming soon...',
       introduction: 'Introduction',
       nextWordPrediction: 'Next Word Prediction',
