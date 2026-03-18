@@ -108,7 +108,7 @@ export default function SystemParametersRoles() {
               </div>
 
               {/* Middle column - Prompt + Output text */}
-              <div className="w-[860px] flex-shrink-0">
+              <div className="flex-1 min-w-0">
                 {/* Prompt bubble */}
                 <ChatPrompt
                   text={PROMPT_TEXT}
