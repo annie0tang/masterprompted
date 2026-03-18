@@ -127,7 +127,7 @@ export default function EvaluationPanel({ initialIsOpen = true, canClose = false
 
   return (
     <div className="z-10 [&_*]:!font-heading">
-      <div className={cn(isPanelOpen ? panelVariants({ size, state: "open" }) : "px-4 py-4")}>
+      <div className={cn(panelVariants({ size, state: "open" }))}>
         {isPanelOpen ? (
           <>
             {/* Header with title and collapse arrow */}
