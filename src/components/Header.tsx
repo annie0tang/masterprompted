@@ -1,4 +1,4 @@
-import { Star, ChevronDown, Check } from "lucide-react";
+import { Star, ChevronDown } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import {
