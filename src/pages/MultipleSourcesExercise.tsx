@@ -61,20 +61,6 @@ const RESPONSE_TEXT = `Obligations for Providers: The majority of obligations fa
 User Responsibilities: Users (deployers) of high-risk AI systems have certain obligations, though less than providers.`;
 
 /* ------------------------------------------------------------------ */
-/*  Icon components for the document cards                             */
-/* ------------------------------------------------------------------ */
-
-function DocIcon({ type }: { type: DocumentItem["icon"] }) {
-  const base = "h-10 w-10 text-muted-foreground";
-  switch (type) {
-    case "research":
-      return <ClipboardList className={base} />;
-    case "ethics":
-      return <FileText className={base} />;
-    case "article":
-      return <AlignLeft className={base} />;
-  }
-}
 
 /* ------------------------------------------------------------------ */
 /*  Page                                                               */
