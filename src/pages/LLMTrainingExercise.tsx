@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Breadcrumb from "@/components/Breadcrumb";
 import EvaluationPanel from "@/components/EvaluationPanel";
+import TextFlag from "@/components/TextFlag";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, FileText, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowRight, ListChecks, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */
@@ -117,11 +118,13 @@ export default function LLMTrainingExercise() {
                         )}
                       >
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-xs font-semibold text-foreground">
-                            Input Output pair {index + 1}
-                          </span>
+                          {!isSelected && (
+                            <span className="text-xs font-semibold text-foreground">
+                              Input Output pair {index + 1}
+                            </span>
+                          )}
                           {isSelected ? (
-                            <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                            <ChevronUp className="h-4 w-4 text-muted-foreground ml-auto" />
                           ) : (
                             <ChevronDown className="h-4 w-4 text-muted-foreground" />
                           )}
@@ -142,7 +145,7 @@ export default function LLMTrainingExercise() {
                                 Output
                               </span>
                               <div className="flex items-start gap-1.5">
-                                <FileText className="h-3.5 w-3.5 text-destructive flex-shrink-0 mt-0.5" strokeWidth={2} />
+                                <ListChecks className="h-3.5 w-3.5 text-destructive flex-shrink-0 mt-0.5" strokeWidth={2} />
                                 <span className="text-xs font-semibold text-foreground underline decoration-destructive underline-offset-2">
                                   {pair.outputTitle}
                                 </span>
@@ -170,12 +173,13 @@ export default function LLMTrainingExercise() {
                   <div className="flex-1 flex flex-col">
                     {/* Response area */}
                     <div className="bg-background rounded-lg p-8 flex-1 flex flex-col">
-                      {/* Article title with icon */}
-                      <div className="flex items-center gap-2 mb-6">
-                        <FileText className="h-5 w-5 text-destructive" strokeWidth={2} />
-                        <h2 className="text-xl font-heading font-bold text-foreground underline decoration-destructive decoration-2 underline-offset-4">
-                          {ARTICLE_CONTENT.title}
-                        </h2>
+                      {/* Article title as TextFlag */}
+                      <div className="mb-6">
+                        <TextFlag
+                          text={ARTICLE_CONTENT.title}
+                          evaluationFactor="factual_accuracy"
+                          explanation="The title suggests a comprehensive outline, but the content should be verified against official EU AI Act documentation for completeness and accuracy."
+                        />
                       </div>
 
                       <div className="max-h-[500px] overflow-y-auto flex-1">
