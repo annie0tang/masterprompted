@@ -127,22 +127,18 @@ export default function EvaluationPanel({ initialIsOpen = true, canClose = false
 
   return (
     <div className="z-10 [&_*]:!font-heading">
-      <div className={cn(isPanelOpen ? panelVariants({ size, state: "open" }) : "")}>
+      <div className={cn(isPanelOpen ? panelVariants({ size, state: "open" }) : "px-4 py-4")}>
         {isPanelOpen ? (
           <>
             {/* Header with title and collapse arrow */}
-            <div className="w-full flex items-center justify-between text-lg font-semibold font-heading text-card-foreground mb-2">
+            <button
+              type="button"
+              onClick={() => { setIsPanelOpen(false); onClose?.(); }}
+              className="w-full flex items-center justify-between text-lg font-semibold font-heading text-card-foreground mb-2"
+            >
               <span>{t('components.evaluationPanel.title')}</span>
-              {canClose && (
-                <button
-                  aria-label={t('components.evaluationPanel.minimize')}
-                  className="p-1 rounded-full hover:bg-muted/50"
-                  onClick={() => { setIsPanelOpen(false); onClose?.(); }}
-                >
-                  <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                </button>
-              )}
-            </div>
+              <ChevronUp className="h-5 w-5 text-muted-foreground" />
+            </button>
 
             <div className="space-y-3 mt-4">
             {evaluationCriteria.map((criterion) => (
