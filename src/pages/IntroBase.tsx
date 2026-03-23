@@ -58,7 +58,6 @@ const Introduction = () => {
                   className="w-fit px-10 py-6 font-heading font-semibold text-base rounded-full"
                 >
                   {t('intro.base.startAtBeginning')}
-                  <ArrowRight className="-mr-2 !h-6 !w-6" />
                 </Button>
                 <Button
                   variant="outline"
