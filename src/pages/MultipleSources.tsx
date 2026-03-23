@@ -4,6 +4,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, X } from "lucide-react";
+import magnifyingGlassImage from "@/assets/magnifying-glass.png";
 
 export default function MultipleSources() {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ export default function MultipleSources() {
             {/* Left column - Magnifying glass image */}
             <div className="flex-shrink-0">
               <img
-                src="/magnifying-glass.png"
+                src={magnifyingGlassImage}
                 alt="Magnifying glass illustration"
                 className="w-[325px] h-auto"
               />

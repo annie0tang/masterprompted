@@ -8,6 +8,7 @@ import { ArrowRight } from "lucide-react";
 import starImage from "@/assets/star.png";
 import mannequinImage from "@/assets/mannequin.png";
 import dumbbellImg from "@/assets/dumbbell.png";
+import magnifyingGlassImage from "@/assets/magnifying-glass.png";
 
 const LEARNING_UNITS = [
   {
@@ -38,7 +39,7 @@ const LEARNING_UNITS = [
     key: 'multipleSources',
     route: '/module/multiple-sources',
     number: 4,
-    image: '/magnifying-glass.png',
+    image: magnifyingGlassImage,
   },
   {
     key: 'llmTraining',
