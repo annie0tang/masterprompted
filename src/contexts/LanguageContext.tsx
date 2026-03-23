@@ -89,6 +89,7 @@ const translations = {
       title: 'Select a Learning Unit',
       subtitle: 'Choose a module to explore at your own pace, or start from the beginning for a guided experience.',
       startAtBeginning: 'Start at Beginning',
+      unitLabel: 'Learning',
       units: {
         nextWordPrediction: {
           title: 'Next Word Prediction',
