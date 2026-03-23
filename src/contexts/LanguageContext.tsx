@@ -471,7 +471,14 @@ d) Perform a "Delta Check": Remove any edits that are stylistic rather than func
       subtitle: 'Elige un módulo para explorar a tu ritmo, o comienza desde el principio para una experiencia guiada.',
       startAtBeginning: 'Comenzar desde el Principio',
       unitLabel: 'Aprendizaje',
+      introLabel: 'Punto de Partida',
+      startHere: 'Comenzar Aquí',
+      goToUnit: 'Ir a la Unidad',
       units: {
+        introduction: {
+          title: 'Introducción',
+          description: 'Obtén una visión general del simulador y aprende qué esperar de la experiencia de aprendizaje guiada.'
+        },
         nextWordPrediction: {
           title: 'Predicción de Siguiente Palabra',
           description: 'Comprende cómo los LLM generan texto prediciendo la siguiente palabra en una secuencia.'
