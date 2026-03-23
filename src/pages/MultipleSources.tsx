@@ -26,7 +26,7 @@ export default function MultipleSources() {
             {/* Left column - Magnifying glass image */}
             <div className="flex-shrink-0">
               <img
-                src="/magnifying-glass.png"
+                src={magnifyingGlassImage}
                 alt="Magnifying glass illustration"
                 className="w-[325px] h-auto"
               />
