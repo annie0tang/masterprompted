@@ -42,32 +42,32 @@ const Header = ({ transparent = false, onLanguageChange }: HeaderProps) => {
 
   const moduleItems = [
   {
-    title: t('modules.introduction'),
+    title: t('modules.units.introduction.title'),
     path: "/module/intro/about-simulator",
     completed: false
   },
   {
-    title: t('modules.nextWordPrediction'),
+    title: t('modules.units.nextWordPrediction.title'),
     path: "/module/next-word-prediction",
     completed: false
   },
   {
-    title: t('modules.promptConstruction'),
+    title: t('modules.units.promptConstruction.title'),
     path: "/module/prompt-construction",
     completed: false
   },
   {
-    title: "System Parameters",
+    title: t('modules.units.systemParameters.title'),
     path: "/module/system-parameters",
     completed: false
   },
   {
-    title: "Multiple Documents",
+    title: t('modules.units.multipleSources.title'),
     path: "/module/multiple-sources",
     completed: false
   },
   {
-    title: "LLM Training",
+    title: t('modules.units.llmTraining.title'),
     path: "/module/llm-training",
     completed: false
   }
