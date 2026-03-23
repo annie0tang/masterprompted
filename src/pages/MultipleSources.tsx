@@ -4,6 +4,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, X } from "lucide-react";
+import magnifyingGlassImage from "@/assets/magnifying-glass.png";
 
 export default function MultipleSources() {
   const navigate = useNavigate();
