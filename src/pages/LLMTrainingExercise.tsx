@@ -5,7 +5,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import EvaluationPanel from "@/components/EvaluationPanel";
 
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, ListChecks } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */
