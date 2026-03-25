@@ -157,12 +157,12 @@ export default function LLMTrainingExercise() {
 
               {/* ── Center content ── */}
               <div className="flex-initial flex flex-col px-6 py-6 2xl:pt-0 items-start">
-                <div className="w-full max-w-[860px] 2xl:hidden">
+                <div className="w-full max-w-[1100px] 2xl:hidden">
                   <Breadcrumb />
                   <div className="mb-5" />
                 </div>
 
-                <div className="flex gap-6 max-w-[860px] w-full">
+                <div className="flex gap-6 max-w-[1100px] w-full">
                   <div className="flex-1 flex flex-col">
                     {/* Response area */}
                     <div className="bg-background rounded-lg p-8 flex-1 flex flex-col">
