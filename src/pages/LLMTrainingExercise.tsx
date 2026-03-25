@@ -144,14 +144,51 @@ const MAIN_OUTPUT = INPUT_OUTPUT_PAIRS[1];
 /*  Structural highlight groups                                        */
 /* ------------------------------------------------------------------ */
 
-type StructGroup = "title" | "heading" | "bullet" | "footer";
+type StructGroup =
+  | "title"
+  | "intro"
+  | "key-policies"
+  | "challenges"
+  | "economic"
+  | "conclusion"
+  | "footer"
+  | "key-provisions"
+  | "compliance"
+  | "enforcement"
+  | "industry";
 
-const STRUCT_COLORS: Record<StructGroup, string> = {
+const STRUCT_COLORS: Record<string, string> = {
   title: "bg-brand-tertiary-500/20 ring-1 ring-brand-tertiary-500/30",
-  heading: "bg-sky-400/20 ring-1 ring-sky-400/30",
-  bullet: "bg-violet-400/15 ring-1 ring-violet-400/25",
-  footer: "bg-amber-400/15 ring-1 ring-amber-400/25",
+  intro: "bg-sky-400/20 ring-1 ring-sky-400/30",
+  "key-policies": "bg-violet-400/15 ring-1 ring-violet-400/25",
+  "key-provisions": "bg-violet-400/15 ring-1 ring-violet-400/25",
+  challenges: "bg-rose-400/15 ring-1 ring-rose-400/25",
+  compliance: "bg-rose-400/15 ring-1 ring-rose-400/25",
+  economic: "bg-amber-400/15 ring-1 ring-amber-400/25",
+  enforcement: "bg-amber-400/15 ring-1 ring-amber-400/25",
+  industry: "bg-emerald-400/15 ring-1 ring-emerald-400/25",
+  conclusion: "bg-emerald-400/15 ring-1 ring-emerald-400/25",
+  footer: "bg-orange-400/15 ring-1 ring-orange-400/25",
 };
+
+/** Map section headings to semantic struct groups for cross-output comparison */
+const SECTION_STRUCT_MAP: Record<string, StructGroup> = {
+  "Introduction": "intro",
+  "Key Policies": "key-policies",
+  "Key Provisions": "key-provisions",
+  "Implementation Challenges": "challenges",
+  "Compliance Requirements": "compliance",
+  "Economic Impact": "economic",
+  "Enforcement and Penalties": "enforcement",
+  "Industry Impact": "industry",
+  "Conclusion": "conclusion",
+};
+
+/** Get the struct group for a section by its index position (parallel structure) */
+function getSectionGroup(sectionIndex: number): StructGroup {
+  const positionalGroups: StructGroup[] = ["intro", "key-policies", "challenges", "economic", "industry", "conclusion"];
+  return positionalGroups[sectionIndex] || "intro";
+}
 
 /* ------------------------------------------------------------------ */
 /*  Session-once hint                                                  */
@@ -274,14 +311,16 @@ export default function LLMTrainingExercise() {
                               </span>
 
                               <div className="mt-1.5 space-y-1.5">
-                                {pair.sections.map((section, si) => (
+                                {pair.sections.map((section, si) => {
+                                  const group = getSectionGroup(si);
+                                  return (
                                   <div key={si}>
                                     <span
                                       className={cn(
                                         "text-xs font-semibold text-foreground block px-1 py-0.5 cursor-default",
-                                        structClass("heading")
+                                        structClass(group)
                                       )}
-                                      {...structHandlers("heading")}
+                                      {...structHandlers(group)}
                                     >
                                       {section.heading}
                                     </span>
@@ -291,9 +330,9 @@ export default function LLMTrainingExercise() {
                                           key={ii}
                                           className={cn(
                                             "text-xs text-muted-foreground leading-relaxed flex items-start gap-1.5 px-1 py-0.5 cursor-default",
-                                            structClass("bullet")
+                                            structClass(group)
                                           )}
-                                          {...structHandlers("bullet")}
+                                          {...structHandlers(group)}
                                         >
                                           <span className="mt-1.5 h-1 w-1 rounded-full bg-muted-foreground flex-shrink-0" />
                                           {item}
@@ -301,7 +340,8 @@ export default function LLMTrainingExercise() {
                                       ))}
                                     </ul>
                                   </div>
-                                ))}
+                                  );
+                                })}
                               </div>
 
                               {pair.footer && (
@@ -349,28 +389,28 @@ export default function LLMTrainingExercise() {
 
                       <div className="max-h-[500px] overflow-y-auto flex-1">
                         <div className="space-y-6">
-                          {MAIN_OUTPUT.sections.map((section, i) => (
+                          {MAIN_OUTPUT.sections.map((section, i) => {
+                            const group = getSectionGroup(i);
+                            return (
                             <div key={i}>
-                              {/* Section heading */}
                               <h3
                                 className={cn(
                                   "text-lg font-heading font-semibold text-foreground mb-3 px-1 py-0.5 cursor-default",
-                                  structClass("heading")
+                                  structClass(group)
                                 )}
-                                {...structHandlers("heading")}
+                                {...structHandlers(group)}
                               >
                                 {section.heading}
                               </h3>
-                              {/* Bullet items */}
                               <ul className="space-y-2 ml-1">
                                 {section.items.map((item, j) => (
                                   <li
                                     key={j}
                                     className={cn(
                                       "flex items-start gap-3 text-base text-foreground leading-relaxed px-1 py-0.5 cursor-default",
-                                      structClass("bullet")
+                                      structClass(group)
                                     )}
-                                    {...structHandlers("bullet")}
+                                    {...structHandlers(group)}
                                   >
                                     <span className="mt-2 h-1.5 w-1.5 rounded-full bg-foreground flex-shrink-0" />
                                     {item}
@@ -378,7 +418,8 @@ export default function LLMTrainingExercise() {
                                 ))}
                               </ul>
                             </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       </div>
 
@@ -442,9 +483,9 @@ export default function LLMTrainingExercise() {
         sideOffset={20}
         closeLabel="Got it"
       >
-        <strong>Compare structures!</strong>
+        <strong>Compare sections!</strong>
         <br />
-        Hover over titles, headings, or bullet points in the training pair to see matching structural elements highlighted in the output column.
+        Hover over a section (e.g. Introduction, Conclusion) in the training pair to see the matching section highlighted in the output — notice how the model replicates the same structure.
       </FeatureHighlight>
     </div>
   );
