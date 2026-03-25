@@ -389,28 +389,28 @@ export default function LLMTrainingExercise() {
 
                       <div className="max-h-[500px] overflow-y-auto flex-1">
                         <div className="space-y-6">
-                          {MAIN_OUTPUT.sections.map((section, i) => (
+                          {MAIN_OUTPUT.sections.map((section, i) => {
+                            const group = getSectionGroup(i);
+                            return (
                             <div key={i}>
-                              {/* Section heading */}
                               <h3
                                 className={cn(
                                   "text-lg font-heading font-semibold text-foreground mb-3 px-1 py-0.5 cursor-default",
-                                  structClass("heading")
+                                  structClass(group)
                                 )}
-                                {...structHandlers("heading")}
+                                {...structHandlers(group)}
                               >
                                 {section.heading}
                               </h3>
-                              {/* Bullet items */}
                               <ul className="space-y-2 ml-1">
                                 {section.items.map((item, j) => (
                                   <li
                                     key={j}
                                     className={cn(
                                       "flex items-start gap-3 text-base text-foreground leading-relaxed px-1 py-0.5 cursor-default",
-                                      structClass("bullet")
+                                      structClass(group)
                                     )}
-                                    {...structHandlers("bullet")}
+                                    {...structHandlers(group)}
                                   >
                                     <span className="mt-2 h-1.5 w-1.5 rounded-full bg-foreground flex-shrink-0" />
                                     {item}
@@ -418,7 +418,8 @@ export default function LLMTrainingExercise() {
                                 ))}
                               </ul>
                             </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       </div>
 
