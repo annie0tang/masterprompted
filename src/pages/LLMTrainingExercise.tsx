@@ -225,6 +225,12 @@ export default function LLMTrainingExercise() {
                         </div>
                       </div>
 
+                      {ARTICLE_CONTENT.footer && (
+                        <p className="text-sm text-muted-foreground italic mt-6">
+                          {ARTICLE_CONTENT.footer}
+                        </p>
+                      )}
+
                       {/* Navigation buttons */}
                       <div className="mt-8 flex items-center gap-3">
                         <Button
