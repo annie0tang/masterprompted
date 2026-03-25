@@ -384,7 +384,7 @@ export default function LLMTrainingExercise() {
                         {MAIN_OUTPUT.outputTitle}
                       </h2>
 
-                      <div className="max-h-[500px] overflow-y-auto flex-1">
+                      <div ref={mainScrollRef} onScroll={() => handleSyncScroll("main")} className="max-h-[500px] overflow-y-auto flex-1">
                         <div className="space-y-6">
                           {MAIN_OUTPUT.sections.map((section, i) => {
                             const group = getSectionGroup(section.heading);
