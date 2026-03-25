@@ -67,11 +67,11 @@ export default function SystemParametersRoles() {
               {/* Left panel - Role selection */}
               <div className="w-[280px] lg:w-[320px] flex-shrink-0 pr-6 lg:pr-10">
                 <h2 className="text-xl font-heading font-bold text-foreground mb-4">
-                  Role Prompting
+                  System Prompt
                 </h2>
 
                 <p className="text-sm text-muted-foreground leading-relaxed mb-6">
-                  Role prompting uses a system prompt to assign an LLM a specific role or persona. This prompt sets instructions about how the model should behave, communicate, and respond, guiding its outputs to match the defined role, context, and goals.
+                  A system prompt is used by developers to assign an LLM a specific role or persona. This prompt sets instructions about how the model should behave, communicate, and respond, guiding its outputs to match the defined role, context, and goals.
                 </p>
 
                 <p className="text-sm font-medium text-foreground mb-4">
