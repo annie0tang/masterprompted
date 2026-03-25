@@ -285,67 +285,73 @@ export default function LLMTrainingExercise() {
                               </p>
                             </div>
 
-                            {/* Output – structurally highlighted */}
-                            <div>
+                            {/* Output – structurally highlighted, scrollable */}
+                            <div className="flex flex-col min-h-0">
                               <span className="text-xs font-semibold text-muted-foreground block mb-0.5">
                                 Output
                               </span>
 
-                              <span
-                                className={cn(
-                                  "text-xs font-semibold text-foreground block px-1 py-0.5 cursor-default",
-                                  structClass("title")
-                                )}
-                                {...structHandlers("title")}
+                              <div
+                                ref={sidebarScrollRef}
+                                onScroll={() => handleSyncScroll("sidebar")}
+                                className="max-h-[280px] overflow-y-auto pr-1"
                               >
-                                {pair.outputTitle}
-                              </span>
-
-                              <div className="mt-1.5 space-y-1.5">
-                                {pair.sections.map((section, si) => {
-                                  const group = getSectionGroup(section.heading);
-                                  return (
-                                  <div key={si}>
-                                    <span
-                                      className={cn(
-                                        "text-xs font-semibold text-foreground block px-1 py-0.5 cursor-default",
-                                        structClass(group)
-                                      )}
-                                      {...structHandlers(group)}
-                                    >
-                                      {section.heading}
-                                    </span>
-                                    <ul className="ml-2 mt-0.5 space-y-0.5">
-                                      {section.items.map((item, ii) => (
-                                        <li
-                                          key={ii}
-                                          className={cn(
-                                            "text-xs text-muted-foreground leading-relaxed flex items-start gap-1.5 px-1 py-0.5 cursor-default",
-                                            structClass(group)
-                                          )}
-                                          {...structHandlers(group)}
-                                        >
-                                          <span className="mt-1.5 h-1 w-1 rounded-full bg-muted-foreground flex-shrink-0" />
-                                          {item}
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  </div>
-                                  );
-                                })}
-                              </div>
-
-                              {pair.footer && (
-                                <p
+                                <span
                                   className={cn(
-                                    "text-xs text-muted-foreground italic mt-2 px-1 py-0.5 cursor-default",
-                                    structClass("footer")
+                                    "text-xs font-semibold text-foreground block px-1 py-0.5 cursor-default",
+                                    structClass("title")
                                   )}
-                                  {...structHandlers("footer")}
+                                  {...structHandlers("title")}
                                 >
-                                  {pair.footer}
-                                </p>
-                              )}
+                                  {pair.outputTitle}
+                                </span>
+
+                                <div className="mt-1.5 space-y-1.5">
+                                  {pair.sections.map((section, si) => {
+                                    const group = getSectionGroup(section.heading);
+                                    return (
+                                    <div key={si}>
+                                      <span
+                                        className={cn(
+                                          "text-xs font-semibold text-foreground block px-1 py-0.5 cursor-default",
+                                          structClass(group)
+                                        )}
+                                        {...structHandlers(group)}
+                                      >
+                                        {section.heading}
+                                      </span>
+                                      <ul className="ml-2 mt-0.5 space-y-0.5">
+                                        {section.items.map((item, ii) => (
+                                          <li
+                                            key={ii}
+                                            className={cn(
+                                              "text-xs text-muted-foreground leading-relaxed flex items-start gap-1.5 px-1 py-0.5 cursor-default",
+                                              structClass(group)
+                                            )}
+                                            {...structHandlers(group)}
+                                          >
+                                            <span className="mt-1.5 h-1 w-1 rounded-full bg-muted-foreground flex-shrink-0" />
+                                            {item}
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                    );
+                                  })}
+                                </div>
+
+                                {pair.footer && (
+                                  <p
+                                    className={cn(
+                                      "text-xs text-muted-foreground italic mt-2 px-1 py-0.5 cursor-default",
+                                      structClass("footer")
+                                    )}
+                                    {...structHandlers("footer")}
+                                  >
+                                    {pair.footer}
+                                  </p>
+                                )}
+                              </div>
                             </div>
                           </div>
                         )}
