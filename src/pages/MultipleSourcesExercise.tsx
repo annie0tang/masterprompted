@@ -270,14 +270,27 @@ The most responsibility lies with journalistic organizations, like DW and Yle, a
 
 export default function MultipleSourcesExercise() {
   const navigate = useNavigate();
-  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [selected, setSelected] = useState<Set<string>>(new Set(["doc-1"]));
   const [snippetsOpen, setSnippetsOpen] = useState(true);
+
+  /* Only allow sequential selection: doc-1, doc-1+doc-2, doc-1+doc-2+doc-3 */
+  const ALLOWED_SETS: string[][] = [
+    ["doc-1"],
+    ["doc-1", "doc-2"],
+    ["doc-1", "doc-2", "doc-3"],
+  ];
 
   const toggle = (id: string) => {
     setSelected((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
+      // Check if the resulting set is allowed
+      const nextArr = Array.from(next).sort();
+      const isAllowed = ALLOWED_SETS.some(
+        (allowed) => allowed.length === nextArr.length && allowed.every((v, i) => v === nextArr[i])
+      );
+      if (!isAllowed) return prev; // reject invalid combination
       return next;
     });
   };
@@ -362,6 +375,12 @@ export default function MultipleSourcesExercise() {
                   <div className="flex-1 flex flex-col">
                     {/* Response area */}
                     <div className="bg-background rounded-lg p-8 flex-1 flex flex-col">
+                      <div className="mb-4">
+                        <p className="text-sm font-semibold text-foreground">Prompt:</p>
+                        <p className="text-sm text-muted-foreground italic">
+                          Who holds the most responsibility to uphold AI ethics?
+                        </p>
+                      </div>
                       <div className="max-h-[500px] overflow-y-auto flex-1">
                         <div className="space-y-4">
                           <p className="text-muted-foreground leading-relaxed text-base whitespace-pre-line">
