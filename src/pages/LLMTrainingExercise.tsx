@@ -307,7 +307,7 @@ export default function LLMTrainingExercise() {
 
                               <div className="mt-1.5 space-y-1.5">
                                 {pair.sections.map((section, si) => {
-                                  const group = getSectionGroup(si);
+                                  const group = getSectionGroup(section.heading);
                                   return (
                                   <div key={si}>
                                     <span
