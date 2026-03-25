@@ -199,7 +199,7 @@ export default function MultipleSourcesExercise() {
 
               {/* ── Center content ── */}
               <div className="flex-initial flex flex-col px-6 py-6 2xl:pt-0 items-start">
-                <div className="w-full max-w-[860px] 2xl:hidden">
+                <div className="w-full max-w-[1100px] 2xl:hidden">
                   <Breadcrumb />
                   <div className="mb-5" />
                 </div>
