@@ -188,16 +188,34 @@ export default function LLMTrainingExercise() {
   const [activeStruct, setActiveStruct] = useState<StructGroup | null>(null);
   const { show: showHint, dismiss: dismissHint } = useStructHint();
 
+  const sidebarScrollRef = useRef<HTMLDivElement>(null);
+  const mainScrollRef = useRef<HTMLDivElement>(null);
+  const isSyncing = useRef(false);
+
+  const handleSyncScroll = useCallback((source: "sidebar" | "main") => {
+    if (isSyncing.current) return;
+    isSyncing.current = true;
+    const from = source === "sidebar" ? sidebarScrollRef.current : mainScrollRef.current;
+    const to = source === "sidebar" ? mainScrollRef.current : sidebarScrollRef.current;
+    if (from && to) {
+      const ratio = from.scrollTop / (from.scrollHeight - from.clientHeight || 1);
+      to.scrollTop = ratio * (to.scrollHeight - to.clientHeight);
+    }
+    requestAnimationFrame(() => { isSyncing.current = false; });
+  }, []);
+
   const togglePair = (id: string) => {
     setSelectedPair((prev) => (prev === id ? "" : id));
     setActiveStruct(null);
   };
 
+  /** Only connected (non-null) groups get highlight styling */
   const structClass = (group: StructGroup | null) =>
     cn(
       "transition-all duration-200 rounded-sm",
-      group && activeStruct === group ? STRUCT_COLORS[group] : "",
-      activeStruct && activeStruct !== group ? "opacity-35" : ""
+      group && activeStruct === group ? HIGHLIGHT_CLASS : "",
+      // Only dim elements that ARE connected but not the active one
+      activeStruct && group && activeStruct !== group ? "opacity-35" : ""
     );
 
   const structHandlers = (group: StructGroup | null) => group ? ({
