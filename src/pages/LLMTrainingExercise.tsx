@@ -228,6 +228,12 @@ export default function LLMTrainingExercise() {
                   <div className="flex-1 flex flex-col">
                     {/* Response area */}
                     <div className="bg-background rounded-lg p-8 flex-1 flex flex-col">
+                      <div className="bg-muted/50 rounded-lg p-4 mb-6">
+                        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Prompt</span>
+                        <p className="text-sm text-foreground mt-1">
+                          Design an outline for an article about the EU AI Act
+                        </p>
+                      </div>
                       <h2 className="text-xl font-heading font-semibold text-foreground mb-6">
                         {ARTICLE_CONTENT.title}
                       </h2>
