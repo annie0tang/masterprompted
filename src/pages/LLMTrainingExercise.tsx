@@ -156,7 +156,7 @@ export default function LLMTrainingExercise() {
             {/* Three-column layout */}
             <div className="flex flex-1">
               {/* ── Left sidebar ── */}
-              <div className="w-80 flex-shrink-0 px-6 pt-6 2xl:pt-0">
+              <div className="w-80 flex-shrink-0 px-6 pt-6 2xl:pt-0 flex flex-col overflow-hidden">
                 <h2 className="text-xl font-heading font-bold text-foreground mb-3">
                   Supervised learning
                 </h2>
@@ -168,7 +168,7 @@ export default function LLMTrainingExercise() {
                   Select an input-output pair and see how the output changes
                 </p>
 
-                <div className="space-y-3">
+                <div className="space-y-3 flex-1 overflow-y-auto pr-1">
                   {INPUT_OUTPUT_PAIRS.map((pair, index) => {
                     const isSelected = selectedPair === pair.id;
                     return (
