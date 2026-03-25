@@ -311,14 +311,16 @@ export default function LLMTrainingExercise() {
                               </span>
 
                               <div className="mt-1.5 space-y-1.5">
-                                {pair.sections.map((section, si) => (
+                                {pair.sections.map((section, si) => {
+                                  const group = getSectionGroup(si);
+                                  return (
                                   <div key={si}>
                                     <span
                                       className={cn(
                                         "text-xs font-semibold text-foreground block px-1 py-0.5 cursor-default",
-                                        structClass("heading")
+                                        structClass(group)
                                       )}
-                                      {...structHandlers("heading")}
+                                      {...structHandlers(group)}
                                     >
                                       {section.heading}
                                     </span>
@@ -328,9 +330,9 @@ export default function LLMTrainingExercise() {
                                           key={ii}
                                           className={cn(
                                             "text-xs text-muted-foreground leading-relaxed flex items-start gap-1.5 px-1 py-0.5 cursor-default",
-                                            structClass("bullet")
+                                            structClass(group)
                                           )}
-                                          {...structHandlers("bullet")}
+                                          {...structHandlers(group)}
                                         >
                                           <span className="mt-1.5 h-1 w-1 rounded-full bg-muted-foreground flex-shrink-0" />
                                           {item}
@@ -338,7 +340,8 @@ export default function LLMTrainingExercise() {
                                       ))}
                                     </ul>
                                   </div>
-                                ))}
+                                  );
+                                })}
                               </div>
 
                               {pair.footer && (
