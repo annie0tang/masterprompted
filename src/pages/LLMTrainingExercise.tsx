@@ -144,14 +144,51 @@ const MAIN_OUTPUT = INPUT_OUTPUT_PAIRS[1];
 /*  Structural highlight groups                                        */
 /* ------------------------------------------------------------------ */
 
-type StructGroup = "title" | "heading" | "bullet" | "footer";
+type StructGroup =
+  | "title"
+  | "intro"
+  | "key-policies"
+  | "challenges"
+  | "economic"
+  | "conclusion"
+  | "footer"
+  | "key-provisions"
+  | "compliance"
+  | "enforcement"
+  | "industry";
 
-const STRUCT_COLORS: Record<StructGroup, string> = {
+const STRUCT_COLORS: Record<string, string> = {
   title: "bg-brand-tertiary-500/20 ring-1 ring-brand-tertiary-500/30",
-  heading: "bg-sky-400/20 ring-1 ring-sky-400/30",
-  bullet: "bg-violet-400/15 ring-1 ring-violet-400/25",
-  footer: "bg-amber-400/15 ring-1 ring-amber-400/25",
+  intro: "bg-sky-400/20 ring-1 ring-sky-400/30",
+  "key-policies": "bg-violet-400/15 ring-1 ring-violet-400/25",
+  "key-provisions": "bg-violet-400/15 ring-1 ring-violet-400/25",
+  challenges: "bg-rose-400/15 ring-1 ring-rose-400/25",
+  compliance: "bg-rose-400/15 ring-1 ring-rose-400/25",
+  economic: "bg-amber-400/15 ring-1 ring-amber-400/25",
+  enforcement: "bg-amber-400/15 ring-1 ring-amber-400/25",
+  industry: "bg-emerald-400/15 ring-1 ring-emerald-400/25",
+  conclusion: "bg-emerald-400/15 ring-1 ring-emerald-400/25",
+  footer: "bg-orange-400/15 ring-1 ring-orange-400/25",
 };
+
+/** Map section headings to semantic struct groups for cross-output comparison */
+const SECTION_STRUCT_MAP: Record<string, StructGroup> = {
+  "Introduction": "intro",
+  "Key Policies": "key-policies",
+  "Key Provisions": "key-provisions",
+  "Implementation Challenges": "challenges",
+  "Compliance Requirements": "compliance",
+  "Economic Impact": "economic",
+  "Enforcement and Penalties": "enforcement",
+  "Industry Impact": "industry",
+  "Conclusion": "conclusion",
+};
+
+/** Get the struct group for a section by its index position (parallel structure) */
+function getSectionGroup(sectionIndex: number): StructGroup {
+  const positionalGroups: StructGroup[] = ["intro", "key-policies", "challenges", "economic", "industry", "conclusion"];
+  return positionalGroups[sectionIndex] || "intro";
+}
 
 /* ------------------------------------------------------------------ */
 /*  Session-once hint                                                  */
