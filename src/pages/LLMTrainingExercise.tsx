@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Breadcrumb from "@/components/Breadcrumb";
 import EvaluationPanel from "@/components/EvaluationPanel";
-import TextFlag from "@/components/TextFlag";
+
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, ListChecks } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -166,14 +166,9 @@ export default function LLMTrainingExercise() {
                   <div className="flex-1 flex flex-col">
                     {/* Response area */}
                     <div className="bg-background rounded-lg p-8 flex-1 flex flex-col">
-                      {/* Article title as TextFlag */}
-                      <div className="mb-6">
-                        <TextFlag
-                          text={ARTICLE_CONTENT.title}
-                          evaluationFactor="factual_accuracy"
-                          explanation="The title suggests a comprehensive outline, but the content should be verified against official EU AI Act documentation for completeness and accuracy."
-                        />
-                      </div>
+                      <h2 className="text-xl font-heading font-semibold text-foreground mb-6">
+                        {ARTICLE_CONTENT.title}
+                      </h2>
 
                       <div className="max-h-[500px] overflow-y-auto flex-1">
                         <div className="space-y-6">
