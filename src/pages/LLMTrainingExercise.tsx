@@ -31,12 +31,42 @@ Importance for energy security and climate change...`,
   },
   {
     id: "pair-2",
-    input: "Write a summary of the EU AI Act's key provisions",
-    outputTitle: "EU AI Act Summary",
-    outputBody: `Overview
-Purpose and scope of the regulation
-Risk-based classification framework
-Key obligations for providers and deployers...`,
+    input: "Design an outline for an article about the EU AI Act",
+    outputTitle: "AI Act Article Outline",
+    outputBody: `Introduction
+What is the EU AI Act and why it matters
+Timeline: from proposal to enforcement (2021-2025)
+First comprehensive AI regulation globally
+
+Key Provisions
+Risk-based approach: prohibited, high-risk, limited-risk, and minimal-risk AI systems
+Prohibited AI practices (social scoring, emotion recognition in workplaces/schools, etc.)
+Requirements for high-risk AI systems (documentation, transparency, human oversight)
+Foundation model regulations for powerful AI systems
+
+Compliance Requirements
+Conformity assessments and CE marking
+Risk management systems and quality management
+Data governance and record-keeping obligations
+Human oversight requirements
+
+Enforcement and Penalties
+National supervisory authorities
+Fines up to €35 million or 7% of global turnover
+Phased implementation timeline through 2027
+
+Industry Impact
+Effects on AI developers and deployers
+Compliance costs and market access
+Innovation vs. regulation balance
+Global influence on AI governance
+
+Conclusion
+Significance for the future of AI regulation
+Potential model for other jurisdictions
+Challenges and opportunities ahead
+
+Would you like me to expand on any particular section or adjust the focus of the outline?`,
   },
 ];
 
