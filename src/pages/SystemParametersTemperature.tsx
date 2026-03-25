@@ -87,17 +87,17 @@ export default function SystemParametersTemperature() {
 
                   <div className="relative">
                     {/* Custom temperature slider */}
-                    <div className="relative h-10 flex items-center">
+                    <div className="relative h-12 flex items-center">
                       {/* Track background */}
-                      <div className="absolute inset-x-0 h-3 rounded-md bg-surface-500" />
+                      <div className="absolute inset-x-0 h-5 rounded bg-surface-500" />
                       {/* Filled range */}
                       <div
-                        className="absolute left-0 h-3 rounded-l-md bg-brand-tertiary-500"
-                        style={{ width: `calc(${(stepIndex / (TEMPERATURE_STEPS.length - 1)) * 100}% - 6px)` }}
+                        className="absolute left-0 h-5 rounded-l bg-brand-tertiary-500"
+                        style={{ width: `calc(${(stepIndex / (TEMPERATURE_STEPS.length - 1)) * 100}% - 30px)` }}
                       />
                       {/* Thumb bar with gap */}
                       <div
-                        className="absolute h-8 w-2.5 rounded-sm bg-brand-tertiary-500 -translate-x-1/2 cursor-pointer"
+                        className="absolute h-8 w-1.5 rounded-sm bg-brand-tertiary-500 -translate-x-1/2 cursor-pointer"
                         style={{ left: `${(stepIndex / (TEMPERATURE_STEPS.length - 1)) * 100}%` }}
                       />
                       {/* Invisible native slider for interaction */}
