@@ -374,18 +374,18 @@ export default function LLMTrainingExercise() {
                     <div className="bg-background rounded-lg p-8 flex-1 flex flex-col">
                       <ChatPrompt text={MAIN_OUTPUT.input} />
 
-                      {/* Title */}
-                      <h2
-                        className={cn(
-                          "text-xl font-heading font-semibold text-foreground mb-6 px-1 py-0.5 cursor-default",
-                          structClass("title")
-                        )}
-                        {...structHandlers("title")}
-                      >
-                        {MAIN_OUTPUT.outputTitle}
-                      </h2>
-
                       <div ref={mainScrollRef} onScroll={() => handleSyncScroll("main")} className="max-h-[500px] overflow-y-auto flex-1">
+                        {/* Title */}
+                        <h2
+                          className={cn(
+                            "text-xl font-heading font-semibold text-foreground mb-6 px-1 py-0.5 cursor-default",
+                            structClass("title")
+                          )}
+                          {...structHandlers("title")}
+                        >
+                          {MAIN_OUTPUT.outputTitle}
+                        </h2>
+
                         <div className="space-y-6">
                           {MAIN_OUTPUT.sections.map((section, i) => {
                             const group = getSectionGroup(section.heading);
@@ -405,7 +405,7 @@ export default function LLMTrainingExercise() {
                               {section.heading === "Introduction" ? (
                                 <SectionFlag
                                   evaluationFactor="relevance"
-                                  severity="warning"
+                                  severity="error"
                                   explanation="The model produces three to four bullet points per section because that is the pattern in the training example — not because three points are the right number for this topic. This rigid structure can cause the model to leave out key information or wrongly elevate minor points to fill the pattern."
                                 >
                                   <ul className="space-y-2 ml-1">
@@ -427,7 +427,7 @@ export default function LLMTrainingExercise() {
                               ) : section.heading === "Key Provisions" ? (
                                 <SectionFlag
                                   evaluationFactor="relevance"
-                                  severity="warning"
+                                  severity="error"
                                   explanation="The order and prominence of sections in the output is shaped by the training pair's structure, not by what is most relevant to this specific topic. A section placed high in the outline may appear important, but its position is inherited from the example — you might miss key information or wrongly elevate minor points."
                                 >
                                   <h3
@@ -476,20 +476,20 @@ export default function LLMTrainingExercise() {
                             );
                           })}
                         </div>
-                      </div>
 
-                      {/* Footer */}
-                      {MAIN_OUTPUT.footer && (
-                        <p
-                          className={cn(
-                            "text-sm text-muted-foreground italic mt-6 px-1 py-0.5 cursor-default",
-                            structClass("footer")
-                          )}
-                          {...structHandlers("footer")}
-                        >
-                          {MAIN_OUTPUT.footer}
-                        </p>
-                      )}
+                        {/* Footer */}
+                        {MAIN_OUTPUT.footer && (
+                          <p
+                            className={cn(
+                              "text-sm text-muted-foreground italic mt-6 px-1 py-0.5 cursor-default",
+                              structClass("footer")
+                            )}
+                            {...structHandlers("footer")}
+                          >
+                            {MAIN_OUTPUT.footer}
+                          </p>
+                        )}
+                      </div>
 
                       {/* Navigation */}
                       <div className="mt-8 flex items-center gap-3">
