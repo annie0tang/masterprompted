@@ -4,9 +4,8 @@ import Header from "@/components/Header";
 import Breadcrumb from "@/components/Breadcrumb";
 import ModuleNavigation from "@/components/ModuleNavigation";
 import EvaluationPanel from "@/components/EvaluationPanel";
-import ChatPrompt from "@/components/ChatPrompt";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, File, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowLeft, ArrowRight, File, Paperclip, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */
@@ -309,6 +308,10 @@ export default function MultipleSourcesExercise() {
     return sorted.flatMap((id) => SNIPPETS_BY_DOC[id] || []);
   }, [selected]);
 
+  const selectedDocs = useMemo(() => {
+    return DOCUMENTS.filter((doc) => selected.has(doc.id));
+  }, [selected]);
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
@@ -376,9 +379,26 @@ export default function MultipleSourcesExercise() {
                   <div className="flex-1 flex flex-col">
                     {/* Response area */}
                     <div className="bg-background rounded-lg p-8 flex-1 flex flex-col">
-                      <ChatPrompt
-                        text="Who holds the most responsibility to uphold AI ethics?"
-                      />
+                      <div
+                        className="mb-6 mx-2 max-w-fit ml-auto bg-muted p-5 max-w-[80%]"
+                        style={{ borderRadius: '20px' }}
+                      >
+                        <p className="text-foreground leading-relaxed">
+                          Who holds the most responsibility to uphold AI ethics?
+                        </p>
+                        {selectedDocs.length > 0 && (
+                          <div className="flex flex-col gap-1 mt-2">
+                            {selectedDocs.map((doc) => (
+                              <div key={doc.id} className="inline-flex items-center gap-2">
+                                <Paperclip className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                <span className="text-sm text-foreground font-medium">
+                                  {doc.title}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                       <div className="max-h-[500px] overflow-y-auto flex-1">
                         <div className="space-y-4">
                           <p className="text-muted-foreground leading-relaxed text-base whitespace-pre-line">
