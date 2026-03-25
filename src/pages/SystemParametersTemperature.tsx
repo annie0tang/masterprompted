@@ -89,7 +89,7 @@ export default function SystemParametersTemperature() {
                     {/* Custom temperature slider */}
                     <div className="relative h-12 flex items-center">
                       {/* Track background */}
-                      <div className="absolute inset-x-0 h-5 rounded bg-surface-500" />
+                      <div className="absolute inset-x-0 h-5 rounded bg-surface-600" />
                       {/* Filled range */}
                       <div
                         className="absolute left-0 h-5 rounded-l bg-brand-tertiary-500"
