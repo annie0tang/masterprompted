@@ -71,12 +71,12 @@ export default function SystemParametersTemperature() {
                 </p>
 
                 <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-muted-foreground">Set Temperature</span>
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="text-sm font-heading font-semibold text-foreground">Set Temperature</span>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <button className="text-muted-foreground hover:text-foreground transition-colors">
-                          <Info className="h-3 w-3" />
+                          <Info className="h-3.5 w-3.5" />
                         </button>
                       </TooltipTrigger>
                       <TooltipContent side="right" className="max-w-xs">
@@ -85,18 +85,25 @@ export default function SystemParametersTemperature() {
                     </Tooltip>
                   </div>
 
-                  <Slider
-                    value={[stepIndex]}
-                    onValueChange={(val) => setStepIndex(val[0])}
-                    min={0}
-                    max={TEMPERATURE_STEPS.length - 1}
-                    step={1}
-                    className="w-full"
-                  />
+                  <div className="relative">
+                    <Slider
+                      value={[stepIndex]}
+                      onValueChange={(val) => setStepIndex(val[0])}
+                      min={0}
+                      max={TEMPERATURE_STEPS.length - 1}
+                      step={1}
+                      className="w-full [&_[data-slot=slider-track]]:h-4 [&_[data-slot=slider-track]]:rounded-full [&_[data-slot=slider-track]]:bg-surface-500 [&_[data-slot=slider-range]]:bg-brand-tertiary-500 [&_[data-slot=slider-range]]:rounded-l-full [&_[data-slot=slider-thumb]]:h-7 [&_[data-slot=slider-thumb]]:w-2 [&_[data-slot=slider-thumb]]:rounded-sm [&_[data-slot=slider-thumb]]:bg-brand-tertiary-500 [&_[data-slot=slider-thumb]]:border-0 [&_.relative]:h-4 [&_.relative]:rounded-full [&_.relative]:bg-surface-500 [&_.absolute]:bg-brand-tertiary-500 [&_.absolute]:rounded-l-full [&_[role=slider]]:h-7 [&_[role=slider]]:w-2 [&_[role=slider]]:rounded-sm [&_[role=slider]]:bg-brand-tertiary-500 [&_[role=slider]]:border-0"
+                    />
+                    {/* Inline temperature value */}
+                    <div
+                      className="text-sm font-heading font-semibold text-foreground mt-2 absolute -translate-x-1/2"
+                      style={{ left: `${(stepIndex / (TEMPERATURE_STEPS.length - 1)) * 100}%` }}
+                    >
+                      {temperature.toFixed(1)}
+                    </div>
+                  </div>
 
-                  <div className="text-sm font-medium text-foreground">{temperature.toFixed(1)}</div>
-
-                  <div className="flex justify-between text-xs text-muted-foreground">
+                  <div className="flex justify-between text-sm font-heading font-semibold text-foreground pt-5">
                     <span>More Stable</span>
                     <span>More Random</span>
                   </div>
