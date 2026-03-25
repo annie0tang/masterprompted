@@ -56,7 +56,7 @@ export default function MultipleSources() {
 
               {/* Description */}
               <p className="text-muted-foreground text-body-1 leading-relaxed mb-8 flex-grow whitespace-pre-line">
-                {"While LLMs offer advantages like concise, easy-to-follow responses and the ability to 'analyse' documents, they risk introducing more bias and misinformation compared to traditional search engines. \n\nOne way is when multiple documents are used together as sources. Due to how LLMs compile data, users may get answers to questions that are inaccurate and/or loses the information source. Ideas can get mixed, and lose the original meaning as well as the attribution to the document it came from."}
+                {"While LLMs offer advantages like concise, easy-to-follow responses, they risk introducing more bias and misinformation compared to traditional search engines. \n\nOne way is when multiple documents are used together as sources. Due to how LLMs compile data, users may get answers to questions that are inaccurate and/or loses the information source. Ideas can get mixed, and lose the original meaning as well as the attribution to the document it came from."}
               </p>
 
               {/* Continue button */}
