@@ -4,11 +4,14 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Info } from "lucide-react";
 import Chatbox from "./ChatBox";
 import { Parameters } from "@/pages/PromptPlayground";
 import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import optimizationFig from "@/assets/optimization_fig.png";
 
 const NO_CHANGE_VALUE = "no-change";
 
@@ -183,6 +186,34 @@ export default function PromptControls({
     className
 }: PromptControlsProps) {
     const { t } = useLanguage();
+    const [titlePopoverOpen, setTitlePopoverOpen] = useState(false);
+    const [walkthroughOpen, setWalkthroughOpen] = useState(false);
+    const hoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    useEffect(() => {
+        const handleMetaLinkClick = (e: MouseEvent) => {
+            const target = e.target as HTMLElement;
+            if (target && target.id === 'meta-popover-trigger') {
+                setTitlePopoverOpen(false);
+                setWalkthroughOpen(true);
+            }
+        };
+
+        document.addEventListener('click', handleMetaLinkClick);
+        return () => document.removeEventListener('click', handleMetaLinkClick);
+    }, []);
+
+    const handleMouseEnter = () => {
+        if (hoverTimeout.current) clearTimeout(hoverTimeout.current);
+        setTitlePopoverOpen(true);
+    };
+
+    const handleMouseLeave = () => {
+        hoverTimeout.current = setTimeout(() => {
+            setTitlePopoverOpen(false);
+        }, 100);
+    };
+
     const handleResetClick = () => {
         if (onReset) onReset();
     };
@@ -222,16 +253,21 @@ export default function PromptControls({
                 <div className="flex-initial flex flex-col justify-end min-h-0 overflow-y-auto">
                     <div className="flex items-center gap-1.5 mt-2 mb-1">
                         <h3 className="font-bold text-foreground text-lg">{t('components.promptControls.title')}</h3>
-                        <TooltipProvider>
-                            <Tooltip delayDuration={300}>
-                                <TooltipTrigger asChild>
-                                    <Info className="w-4 h-4 cursor-pointer text-muted-foreground hover:text-foreground transition-colors" />
-                                </TooltipTrigger>
-                                <TooltipContent side="top" align="start" sideOffset={6} className="max-w-xs">
-                                    {t('components.promptControls.titleInfo')}
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
+                        <Popover open={titlePopoverOpen} onOpenChange={setTitlePopoverOpen}>
+                            <PopoverTrigger asChild onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                                <Info className="w-4 h-4 cursor-pointer text-muted-foreground hover:text-foreground transition-colors" />
+                            </PopoverTrigger>
+                            <PopoverContent 
+                                side="top" 
+                                align="start" 
+                                sideOffset={6} 
+                                className="max-w-xs bg-emerald-600 text-white rounded-xl shadow-lg px-5 py-4 text-sm font-medium border-none leading-relaxed z-[100]"
+                                onMouseEnter={handleMouseEnter}
+                                onMouseLeave={handleMouseLeave}
+                            >
+                                {t('components.promptControls.titleInfo')}
+                            </PopoverContent>
+                        </Popover>
                     </div>
                     <div id='parameters' className="relative overflow-auto">
                         <Parameter
@@ -299,6 +335,26 @@ export default function PromptControls({
                     </p>
                 </div>
             </div>
+            
+            <Dialog open={walkthroughOpen} onOpenChange={setWalkthroughOpen}>
+                <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto p-8 rounded-3xl border-none shadow-2xl">
+                    <DialogHeader className="mb-6">
+                        <DialogTitle className="text-3xl font-bold font-heading text-foreground tracking-tight">Prompt Optimization Overview</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-8">
+                        <p className="text-base leading-relaxed text-muted-foreground font-heading max-w-4xl">
+                            This diagram shows an overview of the prompt playground. A standard LLM is used for response generation, but a <b>specialized LLM</b> must be used for the prompt optimization, because this task has a relatively small scope. This is accomplished by giving a general-purpose LLM a specialized <b>system prompt</b>, where it’s given instructions and rules, as well as expected input and output formats. The user’s prompt is then injected into a standardized <b>meta-prompt</b> which reduces LLM volatility and encourages it to stay on-task. Also injected into the meta-prompt are the parameters selected by the user, formatted for coherency. The meta-prompt is passed to the optimizer LLM and it generates a suitable optimization prompt. The user’s original prompt is always used as the baseline prompt in order to prevent <b>model collapse</b>.
+                        </p>
+                        <div className="flex justify-center bg-muted/30 p-10 rounded-3xl border border-border/50 shadow-inner">
+                            <img 
+                                src={optimizationFig} 
+                                alt="Prompt Optimization Diagram" 
+                                className="max-w-full h-auto rounded-xl shadow-xl border border-white/20"
+                            />
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

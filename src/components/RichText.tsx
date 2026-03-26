@@ -68,7 +68,7 @@ function escapeHtml(input: string): string {
 /**
  * Handles inline markdown formatting like **bold** and *italics*
  */
-function applyInlineFormatting(raw: string, diff: boolean, isInline: boolean = false): string {
+export function applyInlineFormatting(raw: string, diff: boolean, isInline: boolean = false): string {
   if (!raw) return "";
   // Convert tabs to spaces and escape HTML
   const expanded = raw.replace(/\t/g, "    ");
@@ -97,22 +97,18 @@ function applyInlineFormatting(raw: string, diff: boolean, isInline: boolean = f
     if (diff) return line;
 
     // Match leading whitespace, optional list marker (*, -, 1.), and content
-    // This allows us to treat the marker as part of the text, while the whitespace defines the "gutter"
-    const match = line.match(/^(\s*)([\*\-]|(?:\d+\.))?(\s*)(.*)$/);
+    // We require the marker to be followed by a space or end-of-line to avoid 
+    // peeling off the first asterisk of markdown triples (like ***bold***)
+    const match = line.match(/^(\s*)(?:([*\-]|(?:\d+\.))(?=\s|$))?(\s*)(.*)$/);
 
     // We process the line into a block if it has leading whitespace OR a marker
     if (match && (match[1] || match[2])) {
-      const leadingWhitespace = match[1];
-      const marker = match[2] || "";
-      const spaceAfterMarker = match[3] || "";
+      const gutter = match[1] + (match[2] || "") + (match[3] || "");
       const content = match[4] || "";
 
-      // Calculate indentation based ONLY on leading whitespace (Marker is NOT included in calculation)
-      const indentCount = leadingWhitespace.replace(/\t/g, "    ").length;
-
-      // Use negative text-indent strategy for consistent wrapping
-      // This matches the logic in evaluationRenderer.tsx for perfect unification
-      return `<span style="display: block; padding-left: ${indentCount}ch; text-indent: -${indentCount}ch;">${line}</span>`;
+      // Use flexbox strategy for perfect "flush" alignment across different fonts
+      // This matches the logic in evaluationRenderer.tsx
+      return `<span style="display: flex; align-items: flex-start;"><span style="white-space: pre; flex-shrink: 0;">${gutter}</span><span>${content}</span></span>`;
     }
 
     return line;
@@ -124,8 +120,8 @@ function applyInlineFormatting(raw: string, diff: boolean, isInline: boolean = f
     finalHtml += processedLines[i];
     if (i < processedLines.length - 1) {
       // Only add <br/> if both the current and next line are plain text (no block wrapper)
-      const isCurrentBlock = processedLines[i].startsWith('<span style="display: block');
-      const isNextBlock = processedLines[i + 1] && processedLines[i + 1].startsWith('<span style="display: block');
+      const isCurrentBlock = processedLines[i].startsWith('<span style="display: flex');
+      const isNextBlock = processedLines[i + 1] && processedLines[i + 1].startsWith('<span style="display: flex');
       if (!isCurrentBlock && !isNextBlock) {
         finalHtml += "<br/>";
       }

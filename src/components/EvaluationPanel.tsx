@@ -13,7 +13,7 @@
  * ```
  */
 
-import { ListChecks, Target, Mic, Scale, Copy, ChevronDown, ChevronRight } from "lucide-react";
+import { ListChecks, Target, Mic, Scale, Copy, ChevronDown, ChevronUp } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -127,22 +127,18 @@ export default function EvaluationPanel({ initialIsOpen = true, canClose = false
 
   return (
     <div className="z-10 [&_*]:!font-heading">
-      <div className={cn(isPanelOpen ? panelVariants({ size, state: "open" }) : "")}>
+      <div className={cn(panelVariants({ size, state: "open" }))}>
         {isPanelOpen ? (
           <>
             {/* Header with title and collapse arrow */}
-            <div className="w-full flex items-center justify-between text-lg font-semibold font-heading text-card-foreground mb-2">
+            <button
+              type="button"
+              onClick={() => { setIsPanelOpen(false); onClose?.(); }}
+              className="w-full flex items-center gap-2 text-base font-semibold font-heading text-card-foreground mb-2"
+            >
               <span>{t('components.evaluationPanel.title')}</span>
-              {canClose && (
-                <button
-                  aria-label={t('components.evaluationPanel.minimize')}
-                  className="p-1 rounded-full hover:bg-muted/50"
-                  onClick={() => { setIsPanelOpen(false); onClose?.(); }}
-                >
-                  <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                </button>
-              )}
-            </div>
+              <ChevronUp className="h-5 w-5 text-muted-foreground" />
+            </button>
 
             <div className="space-y-3 mt-4">
             {evaluationCriteria.map((criterion) => (
@@ -187,11 +183,12 @@ export default function EvaluationPanel({ initialIsOpen = true, canClose = false
           </>
         ) : (
           <button
-            aria-label={t('components.evaluationPanel.title')}
-            className="p-2 rounded-full hover:bg-muted/50"
+            type="button"
             onClick={() => setIsPanelOpen(true)}
+            className="w-full flex items-center gap-2 text-base font-semibold font-heading text-card-foreground"
           >
-            <ListChecks className="h-6 w-6 text-muted-foreground" />
+            <span>{t('components.evaluationPanel.title')}</span>
+            <ChevronDown className="h-5 w-5 text-muted-foreground" />
           </button>
         )}
       </div>

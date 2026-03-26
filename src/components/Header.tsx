@@ -1,4 +1,4 @@
-import { Star, ChevronDown, Check } from "lucide-react";
+import { Star, ChevronDown } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import {
@@ -42,36 +42,35 @@ const Header = ({ transparent = false, onLanguageChange }: HeaderProps) => {
 
   const moduleItems = [
   {
-    title: t('modules.introduction'),
+    title: t('modules.units.introduction.title'),
     path: "/module/intro/about-simulator",
     completed: false
   },
   {
-    title: t('modules.nextWordPrediction'),
+    title: t('modules.units.nextWordPrediction.title'),
     path: "/module/next-word-prediction",
     completed: false
   },
   {
-    title: t('modules.promptConstruction'),
+    title: t('modules.units.promptConstruction.title'),
     path: "/module/prompt-construction",
     completed: false
+  },
+  {
+    title: t('modules.units.systemParameters.title'),
+    path: "/module/system-parameters",
+    completed: false
+  },
+  {
+    title: t('modules.units.multipleSources.title'),
+    path: "/module/multiple-sources",
+    completed: false
+  },
+  {
+    title: t('modules.units.llmTraining.title'),
+    path: "/module/llm-training",
+    completed: false
   }
-  // Hidden modules - uncomment to restore:
-  // { 
-  //   title: "System Parameters", 
-  //   path: "/module/system-parameters",
-  //   completed: false
-  // },
-  // { 
-  //   title: "Multiple Sources", 
-  //   path: "/module/multiple-sources",
-  //   completed: false
-  // },
-  // { 
-  //   title: "LLM Training", 
-  //   path: "/module/llm-training",
-  //   completed: false
-  // }
   ];
 
   const isActive = (path: string) => {
@@ -129,11 +128,11 @@ const Header = ({ transparent = false, onLanguageChange }: HeaderProps) => {
                   <ChevronDown className="h-4 w-4" />
                   {/* Active underline */}
                   {isModuleActive() &&
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary rounded-full" />
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-brand-secondary-500 rounded-full" />
                   }
                   {/* Hover underline */}
                   {!isModuleActive() &&
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary/40 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-center" />
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-brand-secondary-500/40 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-center" />
                   }
                 </button>
               </DropdownMenuTrigger>
@@ -145,25 +144,18 @@ const Header = ({ transparent = false, onLanguageChange }: HeaderProps) => {
                 <DropdownMenuItem
                   key={item.path}
                   onClick={() => navigate(item.path)}
-                  className={`relative flex items-center gap-3 px-4 py-3 rounded-md cursor-pointer transition-colors ${
+                  className={`relative flex items-center gap-3 px-4 py-3 rounded-md transition-colors ${
                   isActive(item.path) ?
-                  'bg-muted' :
-                  'hover:bg-muted/50'}`
+                  'bg-brand-secondary-500/10 cursor-pointer' :
+                  'hover:bg-muted/50 cursor-pointer'}`
                   }>
 
-                    {/* Green highlight bar for active item */}
-                    {isActive(item.path)
-
-                  }
-                    
-                    {/* Checkmark for active or completed modules */}
-                    <div className="w-5 h-5 flex items-center justify-center">
-                      {(item.completed || isActive(item.path)) &&
-                    <Check className="h-4 w-4 text-primary" />
+                    {/* Green left bar for active item */}
+                    {isActive(item.path) &&
+                      <div className="absolute left-0 top-2 bottom-2 w-[3px] bg-brand-secondary-500 rounded-full" />
                     }
-                    </div>
                     
-                    <span className={`text-sm ${isActive(item.path) ? 'font-medium text-foreground' : 'text-muted-foreground'}`}>
+                    <span className={`text-sm flex-1 ${isActive(item.path) ? 'font-medium text-brand-secondary-700' : 'text-muted-foreground'}`}>
                       {item.title}
                     </span>
                   </DropdownMenuItem>
@@ -184,16 +176,14 @@ const Header = ({ transparent = false, onLanguageChange }: HeaderProps) => {
               transparent ?
               'text-white/80 hover:text-white' :
               'text-muted-foreground hover:text-foreground'}`
-              }>
+               }>
 
                 {item.label}
-                {/* Active underline */}
                 {isActive(item.path) &&
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary rounded-full" />
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-brand-secondary-500 rounded-full" />
               }
-                {/* Hover underline */}
                 {!isActive(item.path) &&
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary/40 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-center" />
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-brand-secondary-500/40 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-center" />
               }
               </button>
             )}

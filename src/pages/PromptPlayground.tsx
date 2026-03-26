@@ -2,13 +2,16 @@
 
 import Header from "@/components/Header";
 import PromptControls from "@/components/PromptControlsPromptPlayground.tsx";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { PopoverSeries } from "@/components/PopoverSeries";
 import { useLanguage } from '@/contexts/LanguageContext';
 import ChatBody from "@/components/ChatBody";
 import { checkDisinformation, DisinformationSpan } from "@/services/disinformationApi";
 const NO_CHANGE_VALUE = "no-change";
-const NETLIFY_CHAT_URL = "https://luxury-blini-3336bb.netlify.app/.netlify/functions/chat";
+// const NETLIFY_CHAT_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+//   ? "/api/chat"
+//   : "https://luxury-blini-3336bb.netlify.app/api/chat";
+const NETLIFY_CHAT_URL = "https://luxury-blini-3336bb.netlify.app/api/chat";
 
 export type Parameters = {
   specificity: string;
@@ -48,6 +51,7 @@ const PromptPlayground = () => {
   const [editingText, setEditingText] = useState<string>("");
   const [previousPrompt, setPreviousPrompt] = useState<string>("");
   const [hasManualEdit, setHasManualEdit] = useState<boolean>(false);
+  const [isEmpty, setIsEmpty] = useState<boolean>(true);
   const [enableBias, setEnableBias] = useState<boolean>(false);
   const [enableSpecificity, setEnableSpecificity] = useState<boolean>(false);
   const [enableStyle, setEnableStyle] = useState<boolean>(false);
@@ -57,8 +61,9 @@ const PromptPlayground = () => {
   const [showControlPanelPopover, setShowControlPanelPopover] = useState<boolean>(false);
   const { t } = useLanguage();
   const [waitingforOptimization, setWaitingForOptimization] = useState<boolean>(false);
+  const optimizeAbortControllerRef = useRef<AbortController | null>(null);
   const [uploadedFiles, setUploadedFiles] = useState<ParsedFile[]>([]);
-  const CONTEXT_WINDOW_LIMIT_WORDS = 150000;
+  const CONTEXT_WINDOW_LIMIT_TOKENS = 125000;
 
   // Track current page language (forwarded from Header -> LanguageSwitcher)
   const [pageLanguage, setPageLanguage] = useState<'en' | 'es'>('en');
@@ -100,6 +105,56 @@ const PromptPlayground = () => {
     } catch (e) { setShowControlPanelPopover(false); }
   }, []);
 
+  // API Test calls on page load
+  useEffect(() => {
+    const testAPIs = async () => {
+      console.log("--- Starting API Tests ---");
+
+      // 1. Extract Claims
+      try {
+        const extractRes = await fetch("https://claim-detection-aicode.ilabhub.atc.gr/extract_claims", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: "The sun is the center of the solar system. The Earth orbits around it." })
+        });
+        const extractData = await extractRes.json();
+        console.log("1. /extract_claims result:", extractData);
+      } catch (err) {
+        console.error("1. /extract_claims failed:", err);
+      }
+
+      // // 2. Claim Match
+      // try {
+      //   const matchRes = await fetch("https://claim-matching-aicode.ilabhub.atc.gr/claim_match", {
+      //     method: "POST",
+      //     headers: { "Content-Type": "application/json" },
+      //     body: JSON.stringify({ message: "HAARP is responsible for floods in Spain." })
+      //   });
+      //   const matchData = await matchRes.json();
+      //   console.log("2. /claim_match result:", matchData);
+      // } catch (err) {
+      //   console.error("2. /claim_match failed:", err);
+      // }
+
+      // // 3. Web Search
+      // try {
+      //   const searchRes = await fetch("https://web-search-aicode.ilabhub.atc.gr/web_search/", {
+      //     method: "POST",
+      //     headers: { "Content-Type": "application/json" },
+      //     body: JSON.stringify({ claim_text: "Ukraine will sell land to be used as a toxic waste dump" })
+      //   });
+      //   const searchData = await searchRes.json();
+      //   console.log("3. /web_search result:", searchData);
+      // } catch (err) {
+      //   console.error("3. /web_search failed:", err);
+      // }
+
+      console.log("--- API Test(s) Completed ---");
+    };
+
+    testAPIs();
+  }, []);
+
   const handleParameterChange = (paramKey: keyof Parameters, value: string) => {
     setParameters(prev => ({ ...prev, [paramKey]: value }));
   };
@@ -114,8 +169,8 @@ const PromptPlayground = () => {
   const submitAnswerForThreadVersion = useCallback(
     async (threadIndex: number, versionIndex: number, promptText: string) => {
       const payload = {
-        // model: "meta-llama/Llama-3.1-8B-Instruct:ovhcloud",
-        model: "Qwen/Qwen3-Coder-30B-A3B-Instruct:fastest",
+        model: "meta-llama/Llama-3.1-8B-Instruct:ovhcloud",
+        // model: "Qwen/Qwen3-Coder-30B-A3B-Instruct:fastest",
         temperature: 0.7,
         stream: true,
         messages: [
@@ -137,9 +192,9 @@ const PromptPlayground = () => {
 
       const controller = new AbortController();
       const timeoutId = setTimeout(() => {
-        console.warn("Client-side timeout: Aborting request after 25s.");
+        console.warn("Client-side timeout: Aborting request after 120s.");
         controller.abort();
-      }, 25000);
+      }, 120000);
 
       try {
         const response = await fetch(NETLIFY_CHAT_URL, {
@@ -178,7 +233,6 @@ const PromptPlayground = () => {
           return copy;
         });
 
-        // Integrity Monitor: TransformStream to track chunks and completion
         const monitor = new TransformStream({
           transform(chunk, controller) {
             controller.enqueue(chunk);
@@ -200,39 +254,44 @@ const PromptPlayground = () => {
             if (done) break;
 
             chunkCount++;
-            if (chunkCount % 50 === 0) {
-              console.log(`Still generating... (received ${chunkCount} text chunks, ~${accumulatedAnswer.length} chars)`);
-            }
+            // if (chunkCount % 50 === 0) {
+            //   console.log(`Still generating... (received ${chunkCount} text chunks, ~${accumulatedAnswer.length} chars)`);
+            // }
 
             accumulatedAnswer += decoder.decode(value, { stream: true });
 
-            // Update UI with partial answer
             setThreads(prev => {
               const copy = [...prev];
               const thread = copy[threadIndex];
               if (!thread?.versions[versionIndex]) return prev;
-
               const versions = [...thread.versions];
               versions[versionIndex] = { ...versions[versionIndex], answer: accumulatedAnswer };
-
               copy[threadIndex] = { ...thread, versions };
               return copy;
             });
           }
         } catch (err: any) {
           if (err.name === 'AbortError') {
-            console.error("IncompleteStreamError: Request aborted due to 25s timeout.");
+            const timeoutMsg = `\n\n[[ERROR: [TIMEOUT - Generator stopped after 120s]]]`;
+            accumulatedAnswer += timeoutMsg;
+            console.error("Stream aborted due to 120s timeout.");
           } else {
-            console.error("IncompleteStreamError: Stream interrupted unexpectedly.", err);
+            console.error("Stream interrupted unexpectedly.", err);
           }
         } finally {
           clearTimeout(timeoutId);
-          if (!isStreamComplete) {
+          // If the stream was interrupted OR it never received content, show an error
+          if (!isStreamComplete || !accumulatedAnswer) {
             const timeoutFlag = controller.signal.aborted ? "Timeout" : "Connection Interrupted";
-            console.warn(`Stream terminated without reaching flush. Flagging as partial (${timeoutFlag}).`);
-            accumulatedAnswer += `\n\n[[ERROR: [PARTIAL_RESULT - ${timeoutFlag}]]]`;
+            const emptyFlag = !accumulatedAnswer ? "Empty Response / API Error" : null;
+            const finalFlag = emptyFlag || timeoutFlag;
 
-            // Final UI update with partial flag
+            const errorMarker = `\n\n[[ERROR: [PARTIAL_RESULT - ${finalFlag}]]]`;
+
+            if (!accumulatedAnswer.includes("[ERROR:")) {
+              accumulatedAnswer += errorMarker;
+            }
+
             setThreads(prev => {
               const copy = [...prev];
               const thread = copy[threadIndex];
@@ -245,57 +304,72 @@ const PromptPlayground = () => {
           }
         }
 
-        // Trigger disinformation check once final answer is complete
-        const evaluationResult = await checkDisinformation(accumulatedAnswer);
+        // Trigger disinformation check
+        let evaluationResult = null;
+        try {
+          evaluationResult = await checkDisinformation(accumulatedAnswer);
+        } catch (evalErr) {
+          console.error("Evaluation failed but answer is visible:", evalErr);
+        }
 
-        // Update evaluation state
         setThreads(prev => {
           const copy = [...prev];
           const thread = copy[threadIndex];
           if (!thread?.evaluations) return prev;
-
           const evaluations = [...thread.evaluations];
           evaluations[versionIndex] = {
             loading: false,
             error: evaluationResult === null,
             data: evaluationResult,
           };
-
           copy[threadIndex] = { ...thread, evaluations };
           return copy;
         });
+
       } catch (err: any) {
         clearTimeout(timeoutId);
         const errorMessage = err.name === 'AbortError'
           ? "[[ERROR: [REQUEST_TIMEOUT - Connection took too long to establish]]]"
           : `[[ERROR: [CONNECTION_FAILED - ${err.message}]]]`;
 
-        console.error("Fetch level error:", err);
+        console.error("Outer catch error:", err);
 
         setThreads(prev => {
           const copy = [...prev];
           const thread = copy[threadIndex];
           if (!thread?.versions[versionIndex]) return prev;
+
           const versions = [...thread.versions];
-          versions[versionIndex] = { ...versions[versionIndex], answer: errorMessage };
-          copy[threadIndex] = { ...thread, versions };
+          if (!versions[versionIndex].answer || versions[versionIndex].answer.length < 5) {
+            versions[versionIndex] = { ...versions[versionIndex], answer: errorMessage };
+          }
+
+          const evaluations = [...(thread.evaluations || [])];
+          evaluations[versionIndex] = { loading: false, error: true, data: null };
+
+          copy[threadIndex] = { ...thread, versions, evaluations };
           return copy;
         });
-
-        if (err.name !== 'AbortError') {
-          // throw err; // Don't throw for generic connection failures to keep UI stable
-        }
+      } finally {
+        clearTimeout(timeoutId);
       }
     },
     [uploadedFiles]
   );
 
-  const handlePromptOptimize = useCallback(async (prompt: string, ...args: string[]) => {
+  const handlePromptOptimize = useCallback(async (prompt: string, specificity: string, style: string, context: string, bias: string) => {
     if (!prompt.trim()) return;
+
+    // Abort previous optimization request to free up concurrent slots
+    if (optimizeAbortControllerRef.current) {
+      optimizeAbortControllerRef.current.abort();
+    }
+    const controller = new AbortController();
+    optimizeAbortControllerRef.current = controller;
+
     setWaitingForOptimization(true);
     setPreviousPrompt(prompt);
     try {
-      const [specificity, style, context, bias] = args;
       const paramMap: Record<string, string> = { specificity, style, context, bias };
 
       const beKeyword = pageLanguage === 'es' ? 'sea' : 'be';
@@ -322,7 +396,7 @@ const PromptPlayground = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "meta-llama/Llama-3.1-8B-Instruct:ovhcloud",
+          model: "openai/gpt-oss-20b:ovhcloud",
           temperature: 0.5,
           messages: [
             {
@@ -332,6 +406,7 @@ const PromptPlayground = () => {
             { role: "user", content: optimizeUserPrompt },
           ],
         }),
+        signal: controller.signal,
       });
 
       if (!response.ok) {
@@ -350,8 +425,18 @@ const PromptPlayground = () => {
       } else {
         throw new Error("handlePromptOptimize: optimized_prompt missing or empty");
       }
-    } catch (err) { console.error("handlePromptOptimize failed:", err); }
-    setWaitingForOptimization(false);
+    } catch (err: any) {
+      if (err.name === 'AbortError') {
+        console.log("Optimization request aborted (likely newer request started).");
+        return;
+      }
+      console.error("handlePromptOptimize failed:", err);
+    } finally {
+      // Only clear waiting state if this was the latest request
+      if (optimizeAbortControllerRef.current === controller) {
+        setWaitingForOptimization(false);
+      }
+    }
   }, [pageLanguage]);
 
   const handleUploadFiles = useCallback(async (files: FileList | File[]) => {
@@ -363,7 +448,7 @@ const PromptPlayground = () => {
     const { extractTextFromPDF } = await import('@/lib/pdfParser');
 
     console.log(`Starting upload/parse for ${pdfs.length} PDF(s)`);
-    let cumulativeNewSize = 0;
+    let cumulativeNewTokens = 0;
 
     for (const file of pdfs) {
       console.log(`Parsing file: ${file.name}`);
@@ -373,30 +458,38 @@ const PromptPlayground = () => {
         const text = await extractTextFromPDF(file);
         console.log(`Successfully parsed ${file.name}, extracted ${text.length} characters.`);
 
-        const countWords = (str: string) => str.trim().split(/\s+/).filter(Boolean).length;
-        const newFileWordCount = countWords(text);
-        console.log(`Word count for "${file.name}": ${newFileWordCount} words.`);
-        const currentTotalWords = uploadedFiles.reduce((acc, f) => acc + countWords(f.content), 0);
+        const newFileTokens = Math.ceil(text.length / 3.5);
+        console.log(`Estimated tokens for "${file.name}": ${newFileTokens} (Chars: ${text.length}).`);
+        const currentFilesTokens = uploadedFiles
+          .filter(f => !f.isUploading)
+          .reduce((acc, f) => acc + Math.ceil(f.content.length / 3.5), 0);
 
-        if (currentTotalWords + cumulativeNewSize + newFileWordCount > CONTEXT_WINDOW_LIMIT_WORDS) {
-          alert(`File "${file.name}" exceeds the ${CONTEXT_WINDOW_LIMIT_WORDS} word context window limit.`);
+        const totalBatchTokensProcessed = cumulativeNewTokens + newFileTokens;
+
+        if (currentFilesTokens + totalBatchTokensProcessed > CONTEXT_WINDOW_LIMIT_TOKENS) {
+          alert(`File "${file.name}" exceeds the ${CONTEXT_WINDOW_LIMIT_TOKENS} token context window limit.`);
           setUploadedFiles(prev => prev.filter(f => f.name !== file.name || f.isUploading !== true));
           continue;
         }
 
-        cumulativeNewSize += newFileWordCount;
+        cumulativeNewTokens += newFileTokens;
 
         setUploadedFiles(prev => prev.map(f =>
           (f.name === file.name && f.isUploading)
             ? { name: file.name, content: text, size: text.length, isUploading: false }
             : f
         ));
+
+        setHasManualEdit(true);
+        // console.log(isEmpty);
+        setDisableSend(isEmpty);
+
       } catch (err) {
         console.error(`Failed to parse PDF ${file.name}:`, err);
         setUploadedFiles(prev => prev.filter(f => f.name !== file.name || f.isUploading !== true));
       }
     }
-  }, [uploadedFiles]);
+  }, [uploadedFiles, isEmpty]);
 
   const handleRemoveFile = useCallback((index: number) => {
     setUploadedFiles(prev => prev.filter((_, i) => i !== index));
@@ -427,6 +520,9 @@ const PromptPlayground = () => {
     setCurrentPrompt(previousPrompt);
     setEditingText(previousPrompt);
     setPreviousPrompt("");
+    const empty = !previousPrompt.trim();
+    setIsEmpty(empty);
+    setDisableSend(empty);
   };
 
   const createNewThreadAndFetch = async (submittedText: string) => {
@@ -438,7 +534,7 @@ const PromptPlayground = () => {
   const submitAnswerForLatestVersion = async (promptText: string) => {
     if (threads.length === 0) return;
     const threadIndex = threads.length - 1;
-    const lastVersionPrompt = threads[threadIndex].versions.at(-1)?.prompt;
+    const lastVersionPrompt = threads[threadIndex].versions[threads[threadIndex].versions.length - 1]?.prompt;
     if (promptText !== lastVersionPrompt) {
       const newVersionIndex = threads[threadIndex].versions.length;
       setThreads(prev => {
@@ -481,8 +577,9 @@ const PromptPlayground = () => {
     handleReset();
     setEditingText(input);
     setCurrentPrompt(input);
-    const isEmpty = !input.trim();
-    setDisableSend(isEmpty);
+    const empty = !input.trim();
+    setIsEmpty(empty);
+    setDisableSend(empty);
     setDisableOptimize(true);
     setEnableSpecificity(false); setEnableBias(false); setEnableContext(false); setEnableStyle(false);
   };

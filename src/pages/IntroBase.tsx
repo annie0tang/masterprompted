@@ -51,14 +51,23 @@ const Introduction = () => {
                 {t('intro.base.description')}
               </p>
 
-              {/* Continue button */}
-              <Button
-                onClick={handleContinue}
-                className="w-fit px-10 py-6 font-heading font-semibold text-base rounded-full"
-              >
-                {t('intro.base.startSimulator')}
-                <ArrowRight className="-mr-2 !h-6 !w-6" />
-              </Button>
+              {/* Action buttons */}
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => navigate("/modules")}
+                  className="w-fit px-10 py-6 font-heading font-semibold text-base rounded-full"
+                >
+                  {t('intro.base.selectLearning')}
+                </Button>
+                <Button
+                  onClick={handleContinue}
+                  className="w-fit px-10 py-6 font-heading font-semibold text-base rounded-full"
+                >
+                  {t('intro.base.startNow')}
+                  <ArrowRight className="ml-1 h-4 w-4" />
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>

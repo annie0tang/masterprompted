@@ -22,8 +22,16 @@ import ConversationStyle from "./pages/PromptConstructionConversationStyle";
 import Context from "./pages/PromptConstructionContext";
 import Bias from "./pages/PrompConstructionBias";
 import SystemParameters from "./pages/SystemParameters";
+import SystemParametersTemperature from "./pages/SystemParametersTemperature";
+import SystemParametersRoles from "./pages/SystemParametersRoles";
+import SystemParametersTakeaways from "./pages/SystemParametersTakeaways";
 import MultipleSources from "./pages/MultipleSources";
+import MultipleSourcesExercise from "./pages/MultipleSourcesExercise";
+import MultipleSourcesTakeaways from "./pages/MultipleSourcesTakeaways";
 import LLMTraining from "./pages/LLMTraining";
+import LLMTrainingExercise from "./pages/LLMTrainingExercise";
+import LLMTrainingFewShot from "./pages/LLMTrainingFewShot";
+import LLMTrainingTakeaways from "./pages/LLMTrainingTakeaways";
 import PromptPlayground from "./pages/PromptPlayground";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -34,14 +42,14 @@ import DesignSystem from "./pages/DesignSystem";
 import DesignSystemFab from "./components/DesignSystemFab";
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
+const App = () =>
+<QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <LanguageProvider>
         <EvaluationProvider>
           <Sonner />
           <BrowserRouter>
-            {/* <DesignSystemFab /> */}
+            <DesignSystemFab />
             <Routes>
               {/* NAV BAR */}
               <Route path="/" element={<Landing />} />
@@ -73,10 +81,17 @@ const App = () => (
               <Route path="/module/prompt-construction/context" element={<Context />} />
               <Route path="/module/prompt-construction/bias" element={<Bias />} />
 
-              {/* UNIMPLEMENTED */}
               <Route path="/module/system-parameters" element={<SystemParameters />} />
+              <Route path="/module/system-parameters/temperature" element={<SystemParametersTemperature />} />
+              <Route path="/module/system-parameters/roles" element={<SystemParametersRoles />} />
+              <Route path="/module/system-parameters/takeaways" element={<SystemParametersTakeaways />} />
               <Route path="/module/multiple-sources" element={<MultipleSources />} />
+              <Route path="/module/multiple-sources/exercise" element={<MultipleSourcesExercise />} />
+              <Route path="/module/multiple-sources/takeaways" element={<MultipleSourcesTakeaways />} />
               <Route path="/module/llm-training" element={<LLMTraining />} />
+              <Route path="/module/llm-training/supervised" element={<LLMTrainingExercise />} />
+              <Route path="/module/llm-training/few-shot" element={<LLMTrainingFewShot />} />
+              <Route path="/module/llm-training/takeaways" element={<LLMTrainingTakeaways />} />
               <Route path="/module/journalistic-evaluation" element={<JournalisticEvaluation />} />
 
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
@@ -86,7 +101,7 @@ const App = () => (
         </EvaluationProvider>
       </LanguageProvider>
     </TooltipProvider>
-  </QueryClientProvider>
-);
+  </QueryClientProvider>;
+
 
 export default App;

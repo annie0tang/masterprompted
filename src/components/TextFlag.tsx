@@ -23,6 +23,8 @@ import { useEvaluation } from "@/contexts/EvaluationContext";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
+import RichText from "@/components/RichText.tsx";
+
 const textFlagVariants = cva(
   "inline cursor-pointer",
   {
@@ -63,6 +65,8 @@ const labelMap = {
 interface TextFlagProps extends VariantProps<typeof textFlagVariants> {
   /** The text to display with the flag */
   text: string;
+  /** Whether the text contains HTML that should be rendered */
+  isHtml?: boolean;
   /** The evaluation criterion this flag represents */
   evaluationFactor: "factual_accuracy" | "relevance" | "voice" | "bias" | "plagiarism";
   /** Explanation shown in hover card */
@@ -75,6 +79,7 @@ interface TextFlagProps extends VariantProps<typeof textFlagVariants> {
 
 export default function TextFlag({
   text,
+  isHtml = false,
   evaluationFactor,
   explanation,
   className = "",
@@ -108,7 +113,7 @@ export default function TextFlag({
             setHoverCardOpen(!hoverCardOpen);
           }}
         >
-          <Icon className="inline-block h-3 w-3 text-destructive align-middle mr-1" />
+          <Icon className="inline-block h-4 w-4 text-destructive align-middle mr-1" />
           {href ? (
             <a
               href={href}
@@ -116,13 +121,13 @@ export default function TextFlag({
               rel="noopener noreferrer"
               className="underline decoration-2 underline-offset-2 text-current hover:opacity-80"
               onClick={(e) => e.stopPropagation()}
-            >
-              {text}
-            </a>
+              {...(isHtml ? { dangerouslySetInnerHTML: { __html: text } } : { children: <RichText text={text} inline /> })}
+            />
           ) : (
-            <span className="underline decoration-2 underline-offset-2 decoration-destructive text-current">
-              {text}
-            </span>
+            <span
+              className="underline decoration-2 underline-offset-2 decoration-destructive text-current"
+              {...(isHtml ? { dangerouslySetInnerHTML: { __html: text } } : { children: <RichText text={text} inline /> })}
+            />
           )}
         </span>
       </HoverCardTrigger>
@@ -135,9 +140,9 @@ export default function TextFlag({
             <Icon className="h-4 w-4 text-destructive flex-shrink-0" />
             <h4 className="font-semibold text-destructive text-sm">{t(`components.textFlag.type.${evaluationFactor}`)}</h4>
           </div>
-          <p className="text-sm text-foreground font-normal leading-relaxed break-words whitespace-normal overflow-wrap-anywhere text-left">
-            {explanation}
-          </p>
+          <div className="text-sm text-foreground font-normal leading-relaxed break-words whitespace-normal overflow-wrap-anywhere text-left">
+            {typeof explanation === 'string' ? <RichText text={explanation} prose={false} /> : explanation}
+          </div>
         </div>
       </HoverCardContent>
     </HoverCard>

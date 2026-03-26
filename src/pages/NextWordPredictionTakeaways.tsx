@@ -51,8 +51,8 @@ export default function Takeaways() {
         <Breadcrumb />
         <div className="mb-5" />
         <div className="max-w-4xl mx-auto my-[170px]">
+          <p className="text-muted-foreground text-sm mb-4">Next word prediction</p>
           <h1 className="text-h2 font-heading text-foreground mb-2">
-            {t('nextWord.takeaways.title')}
           </h1>
           <h2 className="text-h2 font-heading text-foreground mb-12">
             {t('nextWord.takeaways.subtitle')}
