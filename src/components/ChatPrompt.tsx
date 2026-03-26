@@ -23,12 +23,12 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const promptVariants = cva(
-  "mb-6 mx-2 max-w-fit ml-auto bg-muted-light relative",
+  "mb-6 mx-2 max-w-fit ml-auto bg-surface-400 relative",
   {
     variants: {
       variant: {
-        default: "bg-muted-light",
-        highlighted: "bg-muted-light ring-2 ring-primary"
+        default: "bg-surface-400",
+        highlighted: "bg-surface-400 ring-2 ring-primary"
       },
       size: {
         default: "p-5 max-w-[80%]",
@@ -62,7 +62,7 @@ type ChatPromptProps = VariantProps<typeof promptVariants> & {
   onNextVersion?: () => void;
 };
 
-const MAX_FILENAME_LENGTH = 28;
+const MAX_FILENAME_LENGTH = 20;
 
 const truncateFileName = (name: string): string => {
   if (name.length <= MAX_FILENAME_LENGTH) return name;
