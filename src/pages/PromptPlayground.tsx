@@ -680,6 +680,7 @@ const PromptPlayground = () => {
           <div className="flex-1 px-6 py-4 overflow-auto">
             <ChatBody
               threads={threads}
+              uploadedFiles={uploadedFiles}
               onPrevVersion={handlePrevVersion}
               onNextVersion={handleNextVersion}
               onToggleThreadDiff={handleThreadDiffToggle}
