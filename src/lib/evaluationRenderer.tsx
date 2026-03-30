@@ -7,12 +7,13 @@
 import React from "react";
 import TextFlag from "@/components/TextFlag";
 import RichText, { applyInlineFormatting } from "@/components/RichText.tsx";
-import { DisinformationSpan, getFallacyExplanation } from "@/services/disinformationApi";
+import { EvaluationSpan } from "@/services/evaluations/types";
+import { getFallacyExplanation } from "@/services/evaluations/fallacyService";
 
 interface TextSegment {
   type: "text" | "flag";
   content: string;
-  span?: DisinformationSpan;
+  span?: EvaluationSpan;
 }
 
 /**
@@ -25,7 +26,7 @@ interface TextSegment {
  */
 export function renderTextWithFlags(
   text: string,
-  spans: DisinformationSpan[]
+  spans: EvaluationSpan[]
 ): React.ReactNode[] {
   if (!spans.length) {
     return [<RichText key="text" text={text} />];
@@ -113,7 +114,7 @@ export function renderTextWithFlags(
           // For simplicity, we wrap it in the most recent active span's TextFlag.
           const spanId = Array.from(activeSpans).pop()!;
           const spanInfo = spanMap.get(spanId)!;
-          const explanation = getFallacyExplanation(spanInfo.value);
+          const explanation = spanInfo.explanation ?? getFallacyExplanation(spanInfo.value);
 
           // Re-wrap the part in active tags so the formatting persists inside the flag
           let wrappedPart = part;
@@ -132,6 +133,7 @@ export function renderTextWithFlags(
               evaluationFactor="factual_accuracy"
               explanation={explanation}
               severity="error"
+              href={spanInfo.href}
             />
           );
         } else {

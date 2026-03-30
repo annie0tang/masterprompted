@@ -209,12 +209,17 @@ const ChatAnswer = ({
   // Determine if evaluation toggle should be disabled
   const evaluationDisabled = !currentEvaluation || currentEvaluation.loading || currentEvaluation.error || !currentEvaluation.data;
   const evaluationLoading = currentEvaluation?.loading ?? false;
-  const evaluationClean = currentEvaluation && !currentEvaluation.loading && !currentEvaluation.error && currentEvaluation.data && currentEvaluation.data.length === 0;
+  const evaluationClean = currentEvaluation
+    && !currentEvaluation.loading
+    && !currentEvaluation.error
+    && currentEvaluation.data
+    && currentEvaluation.data.spans.length === 0
+    && Object.values(currentEvaluation.data.pipelineStatus).every(s => s === "success");
 
   // Render text with evaluation flags
   const renderEvaluation = () => {
-    if (!currentEvaluation?.data) return <RichText text={formattedText} prose={false} />;
-    return <div className="whitespace-pre-wrap break-words">{renderTextWithFlags(formattedText, currentEvaluation.data)}</div>;
+    if (!currentEvaluation?.data?.spans) return <RichText text={formattedText} prose={false} />;
+    return <div className="whitespace-pre-wrap break-words">{renderTextWithFlags(formattedText, currentEvaluation.data.spans)}</div>;
   };
 
   return (
