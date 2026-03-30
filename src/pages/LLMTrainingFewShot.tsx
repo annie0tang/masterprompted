@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Breadcrumb from "@/components/Breadcrumb";
 import EvaluationPanel from "@/components/EvaluationPanel";
+import ChatPrompt from "@/components/ChatPrompt";
 import TextFlag from "@/components/TextFlag";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -143,8 +144,9 @@ export default function LLMTrainingFewShot() {
                   <div className="flex-1 flex flex-col">
                     {/* Response area */}
                     <div className="bg-background rounded-lg p-8 flex-1 flex flex-col">
+                      <ChatPrompt text="Write a lede for a news article about the EU AI Act in the style of DW." fileName="EU_AI_Act.pdf" />
                       <div className="max-h-[500px] overflow-y-auto flex-1">
-                        <p className="text-xl text-foreground leading-relaxed">
+                        <p className="text-base text-foreground leading-relaxed">
                           {(selectedOption === "on" ? RESPONSE_OFF : RESPONSE_ON).map((part, i) =>
                             part.flagged ? (
                               <TextFlag
