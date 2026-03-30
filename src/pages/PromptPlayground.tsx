@@ -6,7 +6,8 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { PopoverSeries } from "@/components/PopoverSeries";
 import { useLanguage } from '@/contexts/LanguageContext';
 import ChatBody from "@/components/ChatBody";
-import { checkDisinformation, DisinformationSpan } from "@/services/disinformationApi";
+import { runAllEvaluations } from "@/services/evaluations";
+import type { EvaluationResult } from "@/services/evaluations/types";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 const NO_CHANGE_VALUE = "no-change";
@@ -25,7 +26,7 @@ export type Parameters = {
 export type VersionEvaluation = {
   loading: boolean;
   error: boolean;
-  data: DisinformationSpan[] | null;
+  data: EvaluationResult | null;
 };
 
 export type ThreadVersion = { prompt: string; answer?: string; parameters?: Parameters };
@@ -122,56 +123,6 @@ const PromptPlayground = () => {
       const seen = localStorage.getItem(LOCALSTORAGE_POPKEY);
       if (!seen) setShowControlPanelPopover(true);
     } catch (e) { setShowControlPanelPopover(false); }
-  }, []);
-
-  // API Test calls on page load
-  useEffect(() => {
-    const testAPIs = async () => {
-      console.log("--- Starting API Tests ---");
-
-      // 1. Extract Claims
-      try {
-        const extractRes = await fetch("https://claim-detection-aicode.ilabhub.atc.gr/extract_claims", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: "The sun is the center of the solar system. The Earth orbits around it." })
-        });
-        const extractData = await extractRes.json();
-        console.log("1. /extract_claims result:", extractData);
-      } catch (err) {
-        console.error("1. /extract_claims failed:", err);
-      }
-
-      // // 2. Claim Match
-      // try {
-      //   const matchRes = await fetch("https://claim-matching-aicode.ilabhub.atc.gr/claim_match", {
-      //     method: "POST",
-      //     headers: { "Content-Type": "application/json" },
-      //     body: JSON.stringify({ message: "HAARP is responsible for floods in Spain." })
-      //   });
-      //   const matchData = await matchRes.json();
-      //   console.log("2. /claim_match result:", matchData);
-      // } catch (err) {
-      //   console.error("2. /claim_match failed:", err);
-      // }
-
-      // // 3. Web Search
-      // try {
-      //   const searchRes = await fetch("https://web-search-aicode.ilabhub.atc.gr/web_search/", {
-      //     method: "POST",
-      //     headers: { "Content-Type": "application/json" },
-      //     body: JSON.stringify({ claim_text: "Ukraine will sell land to be used as a toxic waste dump" })
-      //   });
-      //   const searchData = await searchRes.json();
-      //   console.log("3. /web_search result:", searchData);
-      // } catch (err) {
-      //   console.error("3. /web_search failed:", err);
-      // }
-
-      console.log("--- API Test(s) Completed ---");
-    };
-
-    testAPIs();
   }, []);
 
   const handleParameterChange = (paramKey: keyof Parameters, value: string) => {
@@ -325,10 +276,10 @@ const PromptPlayground = () => {
           }
         }
 
-        // Trigger disinformation check
-        let evaluationResult = null;
+        // Trigger all evaluation pipelines (fallacy detection + claims pipeline)
+        let evaluationResult: EvaluationResult | null = null;
         try {
-          evaluationResult = await checkDisinformation(accumulatedAnswer);
+          evaluationResult = await runAllEvaluations(accumulatedAnswer);
         } catch (evalErr) {
           console.error("Evaluation failed but answer is visible:", evalErr);
         }
