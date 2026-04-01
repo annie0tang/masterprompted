@@ -43,8 +43,8 @@ function mergeOverlappingSpans(
 
   for (let i = 1; i < indexed.length; i++) {
     const s = indexed[i];
-    if (s.start <= current.end) {
-      // Overlapping or adjacent — extend region
+    if (s.start < current.end) {
+      // Strictly overlapping — extend region
       current.end = Math.max(current.end, s.end);
       current.spanIndices.push(s.idx);
     } else {
