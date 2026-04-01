@@ -5,6 +5,8 @@
  */
 
 import type { EvaluationSpan } from "./types";
+import { fetchWithRetry } from "./fetchWithRetry";
+import { findSnippetRange } from "./claimsPipeline";
 
 interface DisinformationResponse {
   signals: Array<{
@@ -65,7 +67,7 @@ export async function checkFallacies(text: string): Promise<EvaluationSpan[] | n
   if (!text.trim()) return [];
 
   try {
-    const response = await fetch(DISINFORMATION_ENDPOINT, {
+    const response = await fetchWithRetry(DISINFORMATION_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -90,14 +92,28 @@ export async function checkFallacies(text: string): Promise<EvaluationSpan[] | n
 
     const data: DisinformationResponse = JSON.parse(responseText);
 
-    const fallacySpans = data.signals
+    const rawSpans = data.signals
       ?.filter(s => s.name === "FALLACY")
       .flatMap(s => s.spans) ?? [];
 
-    return fallacySpans.map(span => ({
-      ...span,
-      source: "fallacy" as const,
-    }));
+    // The API often returns start/end covering the entire text even though
+    // the segment field is a specific substring. Relocate each segment in
+    // the source text to get accurate positions.
+    return rawSpans.map(span => {
+      const range = findSnippetRange(text, span.segment);
+      if (range) {
+        return {
+          start: range.start,
+          end: range.end,
+          segment: text.slice(range.start, range.end),
+          confidence: span.confidence,
+          value: span.value,
+          source: "fallacy" as const,
+        };
+      }
+      // Fallback: trust the API positions if segment can't be located
+      return { ...span, source: "fallacy" as const };
+    });
   } catch (error) {
     console.error("checkFallacies error:", error);
     return null;

@@ -77,39 +77,48 @@ export async function runAllEvaluations(
   // Emit Phase 1 results so UI can show them immediately
   onUpdate?.({ ...result, spans: [...result.spans] });
 
-  // Phase 2: Run web_search sequentially for each extracted claim
-  for (const claim of extractedClaims) {
+  // Phase 2: Run web_search sequentially for each unique claim text,
+  // then apply the result to all sub-snippets sharing that claim.
+  const uniqueClaimTexts = [...new Set(extractedClaims.map(c => c.claim))];
+
+  for (const claimText of uniqueClaimTexts) {
     try {
-      const searchResult = await webSearchClaim(claim.claim);
+      const searchResult = await webSearchClaim(claimText);
       if (searchResult?.claimDebunked && searchResult.debunkReport) {
         // Build explanation with hyperlinked sources
         let explanation = searchResult.debunkReport;
         if (searchResult.debunkingSources.length > 0) {
           const sourceLinks = searchResult.debunkingSources
             .filter(s => s.source)
-            .sort((a, b) => a.citationNumber - b.citationNumber)
-            .map(s => `- [${s.citationNumber}] [${s.origin || s.source}](${s.source})`)
+            .sort((a, b) => (a.citationNumber ?? Infinity) - (b.citationNumber ?? Infinity))
+            .map(s => {
+              const prefix = s.citationNumber ? `[${s.citationNumber}] ` : "";
+              return `- ${prefix}[${s.origin || s.source}](${s.source})`;
+            })
             .join("\n");
           if (sourceLinks) {
             explanation += `\n\n**Sources:**\n${sourceLinks}`;
           }
         }
 
-        const newSpan: EvaluationSpan = {
-          start: claim.snippetStart,
-          end: claim.snippetStart + claim.snippet.length,
-          segment: claim.snippet,
-          confidence: 1.0,
-          value: "factual_inaccuracy",
-          source: "web_search",
-          explanation,
-        };
-        result.spans.push(newSpan);
+        // Create a span for each sub-snippet of this claim
+        for (const entry of extractedClaims.filter(c => c.claim === claimText)) {
+          const newSpan: EvaluationSpan = {
+            start: entry.snippetStart,
+            end: entry.snippetStart + entry.snippet.length,
+            segment: entry.snippet,
+            confidence: 1.0,
+            value: "factual_inaccuracy",
+            source: "web_search",
+            explanation,
+          };
+          result.spans.push(newSpan);
+        }
         result.spans.sort((a, b) => a.start - b.start);
         onUpdate?.({ ...result, spans: [...result.spans] });
       }
     } catch (err) {
-      console.error(`Web search failed for claim: "${claim.claim.slice(0, 60)}..."`, err);
+      console.error(`Web search failed for claim: "${claimText.slice(0, 60)}..."`, err);
     }
   }
 

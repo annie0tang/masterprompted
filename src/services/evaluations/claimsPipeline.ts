@@ -13,30 +13,99 @@ import { matchClaim } from "./claimMatchService";
  * Find the start index of a snippet in the source text.
  * Falls back to whitespace-normalized search if exact match fails.
  */
-export function findSnippetPosition(text: string, snippet: string): number {
-  const exactIndex = text.indexOf(snippet);
-  if (exactIndex !== -1) return exactIndex;
-
-  // Fallback: normalize whitespace and try again
-  const normalize = (s: string) => s.replace(/\s+/g, " ").trim();
-  const normalizedText = normalize(text);
-  const normalizedSnippet = normalize(snippet);
-  const normIndex = normalizedText.indexOf(normalizedSnippet);
-  if (normIndex === -1) return -1;
-
-  // Map normalized index back to original text position.
-  let origPos = 0;
-  let normPos = 0;
-  while (normPos < normIndex && origPos < text.length) {
-    if (/\s/.test(text[origPos])) {
-      while (origPos < text.length && /\s/.test(text[origPos])) origPos++;
-      normPos++;
+/**
+ * Map an index in a transformed string back to the original string,
+ * given a char-removal function that was applied to produce the transformed version.
+ */
+function mapTransformedIndexToOriginal(
+  original: string,
+  transformedIndex: number,
+  shouldSkip: (char: string, pos: number, src: string) => boolean,
+): number {
+  let tIdx = 0;
+  let oIdx = 0;
+  while (tIdx < transformedIndex && oIdx < original.length) {
+    if (shouldSkip(original[oIdx], oIdx, original)) {
+      oIdx++;
     } else {
-      origPos++;
-      normPos++;
+      oIdx++;
+      tIdx++;
     }
   }
-  return origPos;
+  // Skip any trailing chars that would be removed at the match start
+  while (oIdx < original.length && shouldSkip(original[oIdx], oIdx, original)) {
+    oIdx++;
+  }
+  return oIdx;
+}
+
+/**
+ * Find snippet in text, returning { start, end } in the original text.
+ * `end` accounts for characters (like markdown markers) that may exist in
+ * the original but not in the snippet.
+ */
+export function findSnippetRange(text: string, snippet: string): { start: number; end: number } | null {
+  // 1. Exact match
+  const exactIndex = text.indexOf(snippet);
+  if (exactIndex !== -1) return { start: exactIndex, end: exactIndex + snippet.length };
+
+  // 2. Whitespace-normalized match
+  const normalizeWS = (s: string) => s.replace(/\s+/g, " ").trim();
+  const wsText = normalizeWS(text);
+  const wsSnippet = normalizeWS(snippet);
+  const wsIndex = wsText.indexOf(wsSnippet);
+  if (wsIndex !== -1) {
+    const skipWS = (ch: string, pos: number, src: string) => {
+      if (!/\s/.test(ch)) return false;
+      return pos > 0 && /\s/.test(src[pos - 1]);
+    };
+    const start = mapTransformedIndexToOriginal(text, wsIndex, skipWS);
+    const end = mapTransformedIndexToOriginal(text, wsIndex + wsSnippet.length, skipWS);
+    return { start, end };
+  }
+
+  // 3. Markdown-stripped match (handles API segments without ** / * / _ markers)
+  const stripMd = (s: string) => s.replace(/\*{1,2}|_{1,2}/g, "");
+  const mdText = stripMd(text);
+  const mdSnippet = stripMd(snippet);
+  const mdIndex = mdText.indexOf(mdSnippet);
+  if (mdIndex !== -1) {
+    const skipMd = (ch: string) => ch === "*" || ch === "_";
+    const start = mapTransformedIndexToOriginal(text, mdIndex, skipMd);
+    const end = mapTransformedIndexToOriginal(text, mdIndex + mdSnippet.length, skipMd);
+    return { start, end };
+  }
+
+  // 4. Both normalizations combined
+  const bothText = normalizeWS(stripMd(text));
+  const bothSnippet = normalizeWS(stripMd(snippet));
+  const bothIndex = bothText.indexOf(bothSnippet);
+  if (bothIndex !== -1) {
+    const mdStripped = stripMd(text);
+    const idxInMd = normalizeWS(mdStripped).indexOf(bothSnippet);
+    if (idxInMd !== -1) {
+      const skipWS = (ch: string, pos: number, src: string) => {
+        if (!/\s/.test(ch)) return false;
+        return pos > 0 && /\s/.test(src[pos - 1]);
+      };
+      const skipMd = (ch: string) => ch === "*" || ch === "_";
+      const mdStart = mapTransformedIndexToOriginal(mdStripped, idxInMd, skipWS);
+      const mdEnd = mapTransformedIndexToOriginal(mdStripped, idxInMd + bothSnippet.length, skipWS);
+      const start = mapTransformedIndexToOriginal(text, mdStart, skipMd);
+      const end = mapTransformedIndexToOriginal(text, mdEnd, skipMd);
+      return { start, end };
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Convenience wrapper returning just the start position (backward compat).
+ */
+export function findSnippetPosition(text: string, snippet: string): number {
+  const range = findSnippetRange(text, snippet);
+  return range ? range.start : -1;
 }
 
 /**
@@ -50,38 +119,58 @@ export async function runClaimsMatchPipeline(text: string): Promise<ClaimsMatchP
   if (claims === null) return null;
   if (claims.length === 0) return { spans: [], extractedClaims: [] };
 
-  // Locate all snippets first
-  const locatedClaims = claims.map(claim => {
-    const snippetStart = findSnippetPosition(text, claim.snippet);
-    if (snippetStart === -1) {
+  // Locate all snippets. If a snippet contains newlines, split it into
+  // sub-snippets (one per line) sharing the same claim, since the API
+  // sometimes returns multi-line snippets that span non-contiguous text.
+  const locatedClaims: Array<{ claim: string; snippet: string; snippetStart: number }> = [];
+
+  for (const claim of claims) {
+    const subSnippets = claim.snippet.includes("\n")
+      ? claim.snippet.split("\n").map(s => s.trim()).filter(Boolean)
+      : [claim.snippet];
+
+    let anyFound = false;
+    for (const sub of subSnippets) {
+      const start = findSnippetPosition(text, sub);
+      if (start !== -1) {
+        locatedClaims.push({ claim: claim.claim, snippet: sub, snippetStart: start });
+        anyFound = true;
+      }
+    }
+    if (!anyFound) {
       console.warn(`Claims pipeline: could not locate snippet in text: "${claim.snippet.slice(0, 80)}..."`);
     }
-    return { ...claim, snippetStart };
-  }).filter(c => c.snippetStart !== -1);
+  }
 
-  // Run claim_match for all claims in parallel
+  // Deduplicate claim texts so we only call claim_match once per unique claim
+  const uniqueClaims = [...new Set(locatedClaims.map(c => c.claim))];
   const matchResults = await Promise.allSettled(
-    locatedClaims.map(claim => matchClaim(claim.claim))
+    uniqueClaims.map(claim => matchClaim(claim))
   );
+
+  // Build a map from claim text -> match result
+  const matchMap = new Map<string, Awaited<ReturnType<typeof matchClaim>>>();
+  matchResults.forEach((result, i) => {
+    matchMap.set(uniqueClaims[i], result.status === "fulfilled" ? result.value : null);
+  });
 
   const spans: EvaluationSpan[] = [];
 
-  matchResults.forEach((result, i) => {
-    const match = result.status === "fulfilled" ? result.value : null;
-    if (!match?.debunked) return;
+  for (const entry of locatedClaims) {
+    const match = matchMap.get(entry.claim);
+    if (!match?.debunked) continue;
 
-    const claim = locatedClaims[i];
     spans.push({
-      start: claim.snippetStart,
-      end: claim.snippetStart + claim.snippet.length,
-      segment: claim.snippet,
+      start: entry.snippetStart,
+      end: entry.snippetStart + entry.snippet.length,
+      segment: entry.snippet,
       confidence: match.similarityScore,
       value: "factual_inaccuracy",
       source: "claim_match",
       explanation: `This claim was debunked [here](${match.url}).`,
       href: match.url,
     });
-  });
+  }
 
   return {
     spans,
