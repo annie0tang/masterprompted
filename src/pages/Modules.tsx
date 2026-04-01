@@ -111,11 +111,9 @@ export default function Modules() {
                     </span>
                     <Badge
                       variant="outline"
-                      className={`text-[10px] px-1.5 py-0 h-5 gap-0.5 font-medium ${LEVEL_CONFIG[unit.level].className}`}
+                      className={`text-[10px] px-1.5 py-0.5 h-auto font-medium whitespace-nowrap ${LEVEL_CONFIG[unit.level].className}`}
                     >
-                      {Array.from({ length: LEVEL_CONFIG[unit.level].stars }).map((_, i) => (
-                        <FourPointStar key={i} className="h-2.5 w-2.5" />
-                      ))}
+                      {LEVEL_CONFIG[unit.level].label}
                     </Badge>
                   </div>
                   <h2 className="font-heading font-semibold text-foreground text-sm leading-tight mb-1">
