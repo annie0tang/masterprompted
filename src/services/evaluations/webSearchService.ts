@@ -11,7 +11,7 @@ export interface DebunkingSource {
   context: string;
   source: string;
   origin: string;
-  citationNumber: number;
+  citationNumber: number | null;
 }
 
 export interface WebSearchResult {
@@ -45,7 +45,7 @@ export async function webSearchClaim(claimText: string): Promise<WebSearchResult
       context: d.context ?? "",
       source: d.metadata?.source ?? "",
       origin: d.metadata?.origin ?? "",
-      citationNumber: d.metadata?.citation_number ?? 0,
+      citationNumber: d.metadata?.citation_number ?? null,
     }));
 
     return {
