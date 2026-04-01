@@ -50,38 +50,58 @@ export async function runClaimsMatchPipeline(text: string): Promise<ClaimsMatchP
   if (claims === null) return null;
   if (claims.length === 0) return { spans: [], extractedClaims: [] };
 
-  // Locate all snippets first
-  const locatedClaims = claims.map(claim => {
-    const snippetStart = findSnippetPosition(text, claim.snippet);
-    if (snippetStart === -1) {
+  // Locate all snippets. If a snippet contains newlines, split it into
+  // sub-snippets (one per line) sharing the same claim, since the API
+  // sometimes returns multi-line snippets that span non-contiguous text.
+  const locatedClaims: Array<{ claim: string; snippet: string; snippetStart: number }> = [];
+
+  for (const claim of claims) {
+    const subSnippets = claim.snippet.includes("\n")
+      ? claim.snippet.split("\n").map(s => s.trim()).filter(Boolean)
+      : [claim.snippet];
+
+    let anyFound = false;
+    for (const sub of subSnippets) {
+      const start = findSnippetPosition(text, sub);
+      if (start !== -1) {
+        locatedClaims.push({ claim: claim.claim, snippet: sub, snippetStart: start });
+        anyFound = true;
+      }
+    }
+    if (!anyFound) {
       console.warn(`Claims pipeline: could not locate snippet in text: "${claim.snippet.slice(0, 80)}..."`);
     }
-    return { ...claim, snippetStart };
-  }).filter(c => c.snippetStart !== -1);
+  }
 
-  // Run claim_match for all claims in parallel
+  // Deduplicate claim texts so we only call claim_match once per unique claim
+  const uniqueClaims = [...new Set(locatedClaims.map(c => c.claim))];
   const matchResults = await Promise.allSettled(
-    locatedClaims.map(claim => matchClaim(claim.claim))
+    uniqueClaims.map(claim => matchClaim(claim))
   );
+
+  // Build a map from claim text -> match result
+  const matchMap = new Map<string, Awaited<ReturnType<typeof matchClaim>>>();
+  matchResults.forEach((result, i) => {
+    matchMap.set(uniqueClaims[i], result.status === "fulfilled" ? result.value : null);
+  });
 
   const spans: EvaluationSpan[] = [];
 
-  matchResults.forEach((result, i) => {
-    const match = result.status === "fulfilled" ? result.value : null;
-    if (!match?.debunked) return;
+  for (const entry of locatedClaims) {
+    const match = matchMap.get(entry.claim);
+    if (!match?.debunked) continue;
 
-    const claim = locatedClaims[i];
     spans.push({
-      start: claim.snippetStart,
-      end: claim.snippetStart + claim.snippet.length,
-      segment: claim.snippet,
+      start: entry.snippetStart,
+      end: entry.snippetStart + entry.snippet.length,
+      segment: entry.snippet,
       confidence: match.similarityScore,
       value: "factual_inaccuracy",
       source: "claim_match",
       explanation: `This claim was debunked [here](${match.url}).`,
       href: match.url,
     });
-  });
+  }
 
   return {
     spans,
