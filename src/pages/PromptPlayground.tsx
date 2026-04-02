@@ -1,7 +1,7 @@
 // src/pages/PromptPlayground.tsx
 
 import Header from "@/components/Header";
-import PromptControls from "@/components/PromptControls";
+import PromptControls from "@/components/PromptControlsPromptPlayground.tsx";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { PopoverSeries } from "@/components/PopoverSeries";
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -498,13 +498,13 @@ const PromptPlayground = () => {
         setUploadedFiles(prev => prev.map(f =>
           (f.name === file.name && f.isUploading)
             ? {
-              name: file.name,
-              content: finalContent,
-              size: finalContent.length,
-              isUploading: false,
-              isSummarized,
-              originalTokenCount: isSummarized ? rawTokens : undefined,
-            }
+                name: file.name,
+                content: finalContent,
+                size: finalContent.length,
+                isUploading: false,
+                isSummarized,
+                originalTokenCount: isSummarized ? rawTokens : undefined,
+              }
             : f
         ));
 
