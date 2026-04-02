@@ -78,9 +78,9 @@ const SNIPPETS_BY_DOC: Record<string, Snippet[]> = {
   ],
 };
 
-/* ── Snippet difference flags ── */
-/* Each flag highlights a phrase unique to or notably different from other docs */
-interface SnippetFlagDef {
+/* ── Difference flags ── */
+/* Each flag highlights a phrase unique to or notably different from other docs/output */
+interface FlagDef {
   text: string;
   explanation: string;
 }
