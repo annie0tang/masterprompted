@@ -39,22 +39,22 @@ export default function SpecificityResponse() {
 
   // Input prompt changes immediately
   const inputPrompt = bias === t("components.promptControls.bias.right") ?
-  "Summarize how the EU AI Act stifles AI research." :
-  bias === t("components.promptControls.bias.left") ?
-  "Summarize whether the EU AI Act stifles AI research." :
-  context === t("components.promptControls.context.right") ?
-  "I'm researching recent regulations on artificial intelligence. Please give me a summary of the main points in the AI Act, focusing on its key rules and how it aims to regulate AI systems." :
-  context === t("components.promptControls.context.left") ?
-  "Summarize the main points in the AI Act." :
-  style === t("components.promptControls.conversationStyle.right") ?
-  "TDLR; EU AI Act" :
-  style === t("components.promptControls.conversationStyle.left") ?
-  "Can you give me a summary of the main points in the AI Act?" :
-  specificity === t("components.promptControls.specificity.right") ?
-  "Summarize the main points of the EU AI Act, including its risk categories and rules for high-risk AI systems" :
-  specificity === t("components.promptControls.specificity.left") ?
-  "Tell me about the AI Act." :
-  "Give me a summary of the main points in the AI Act.";
+    "Summarize how the EU AI Act stifles AI research." :
+    bias === t("components.promptControls.bias.left") ?
+      "Summarize whether the EU AI Act stifles AI research." :
+      context === t("components.promptControls.context.right") ?
+        "I'm researching recent regulations on artificial intelligence. Please give me a summary of the main points in the AI Act, focusing on its key rules and how it aims to regulate AI systems." :
+        context === t("components.promptControls.context.left") ?
+          "Summarize the main points in the AI Act." :
+          style === t("components.promptControls.conversationStyle.right") ?
+            "TDLR; EU AI Act" :
+            style === t("components.promptControls.conversationStyle.left") ?
+              "Can you give me a summary of the main points in the AI Act?" :
+              specificity === t("components.promptControls.specificity.right") ?
+                "Summarize the main points of the EU AI Act, including its risk categories and rules for high-risk AI systems" :
+                specificity === t("components.promptControls.specificity.left") ?
+                  "Tell me about the AI Act." :
+                  "Give me a summary of the main points in the AI Act.";
 
   // Output content only changes after Apply Changes is clicked
   const showBiasedOutput = appliedBias === t("components.promptControls.bias.right");
@@ -166,34 +166,34 @@ export default function SpecificityResponse() {
                     <ChatPrompt text={sentPrompt} fileName="EU_AI_Act.pdf" />
                     <div className="max-h-[500px] overflow-y-auto flex-1">
                       {showGeneralOutput ?
-                      // General content
-                      <div className="space-y-4">
+                        // General content
+                        <div className="space-y-4">
                           <p className="text-gray-800 leading-relaxed text-base">
                             The EU AI Act is a comprehensive regulation for artificial intelligence <TextFlag
-                            text="adopted by the European Union in 2024."
-                            evaluationFactor="relevance"
-                            explanation={t("components.textFlag.content.relevance2")} />
+                              text="adopted by the European Union in 2024."
+                              evaluationFactor="relevance"
+                              explanation={t("components.textFlag.content.relevance2")} />
                             It's the first major legal framework in the world specifically created to govern AI systems.
                           </p>
                           <p className="text-gray-800 leading-relaxed text-base">
                             <TextFlag
-                            text="The Act organizes AI systems into risk categories."
-                            evaluationFactor="relevance"
-                            explanation={t('components.textFlag.content.general_simplicity')} />
+                              text="The Act organizes AI systems into risk categories."
+                              evaluationFactor="relevance"
+                              explanation={t('components.textFlag.content.general_simplicity')} />
                             Some AI uses are completely prohibited, such as social scoring by governments or systems that manipulate people's behavior in harmful ways. High-risk AI systems - like those used in hiring, credit scoring, law enforcement, or critical infrastructure - face strict requirements around transparency, data quality, human oversight, and safety. Lower-risk systems mainly need to be transparent about being AI (like chatbots disclosing they're not human). Most AI applications are considered minimal risk and aren't heavily regulated.
                           </p>
                           <p className="text-gray-800 leading-relaxed text-base">
                             The legislation aims to balance protecting people's rights and safety with encouraging AI innovation. It applies to companies and organizations that offer AI systems in the EU, no matter where they're located.
                           </p>
                         </div> :
-                      showSpecificOutput ?
-                      // Specific content - detailed summary
-                      <div className="space-y-4">
+                        showSpecificOutput ?
+                          // Specific content - detailed summary
+                          <div className="space-y-4">
                             <p className="text-gray-800 leading-relaxed text-base">
                               <TextFlag
-                            text="Sure!"
-                            evaluationFactor="voice"
-                            explanation={t("components.textFlag.content.voice1")} />
+                                text="Sure!"
+                                evaluationFactor="voice"
+                                explanation={t("components.textFlag.content.voice1")} />
                               Here's a summary of the EU AI Act main points, including its risk categories and rules for high-risk AI systems:
                             </p>
 
@@ -207,8 +207,8 @@ export default function SpecificityResponse() {
                             </div>
 
                             <SectionFlag
-                          evaluationFactor="relevance"
-                          explanation={t('components.textFlag.content.relevance3')}>
+                              evaluationFactor="relevance"
+                              explanation={t('components.textFlag.content.relevance3')}>
 
                               <div>
                                 <p className="text-base font-semibold text-gray-900 mb-2">Risk Categories of AI Systems</p>
@@ -274,18 +274,18 @@ export default function SpecificityResponse() {
                               </ul>
                             </div>
                           </div> :
-                      showConversationalOutput ?
-                      // Conversational content
-                      <div className="space-y-4">
+                          showConversationalOutput ?
+                            // Conversational content
+                            <div className="space-y-4">
                               <p className="text-gray-800 leading-relaxed text-base">
                                 <TextFlag
-                            text="Sure!"
-                            evaluationFactor="voice"
-                            explanation={t("components.textFlag.content.voice1")} />
+                                  text="Sure!"
+                                  evaluationFactor="voice"
+                                  explanation={t("components.textFlag.content.voice1")} />
                                 The AI Act is the EU's comprehensive law regulating artificial intelligence, <TextFlag
-                            text="adopted in 2024."
-                            evaluationFactor="relevance"
-                            explanation={t("components.textFlag.content.relevance2")} />
+                                  text="adopted in 2024."
+                                  evaluationFactor="relevance"
+                                  explanation={t("components.textFlag.content.relevance2")} />
                                 It's the first major legislation of its kind globally.
                               </p>
                               <p className="text-gray-800 leading-relaxed text-base">
@@ -293,25 +293,25 @@ export default function SpecificityResponse() {
                               </p>
                               <p className="text-gray-800 leading-relaxed text-base">
                                 AI with lower risks mainly needs to be transparent - <TextFlag
-                            text="like chatbots telling you they're AI."
-                            evaluationFactor="voice"
-                            explanation={t('components.textFlag.content.voice2')} />
+                                  text="like chatbots telling you they're AI."
+                                  evaluationFactor="voice"
+                                  explanation={t('components.textFlag.content.voice2')} />
                                 Most AI systems are minimal risk and don't have many requirements.
                               </p>
                               <p className="text-gray-800 leading-relaxed text-base">
                                 The goal is to keep people safe and protect their rights while still letting AI innovation happen. It applies to anyone who wants to use AI systems in the EU market, whether they're based in Europe or not.
                               </p>
                             </div> :
-                      showInstructionalOutput ?
-                      // Instructional content - TL;DR format
-                      <div className="space-y-4">
+                            showInstructionalOutput ?
+                              // Instructional content - TL;DR format
+                              <div className="space-y-4">
                                 <p className="text-gray-800 leading-relaxed text-base">
                                   The AI Act is the EU's legislative proposal to regulate artificial intelligence.
                                 </p>
                                 <p className="text-base font-semibold text-gray-900">Here's the TL;DR:</p>
                                 <SectionFlag
-                          evaluationFactor="relevance"
-                          explanation={t("components.textFlag.content.relevance4")}>
+                                  evaluationFactor="relevance"
+                                  explanation={t("components.textFlag.content.relevance4")}>
 
                                   <div className="space-y-2">
                                     <p className="text-gray-700 text-base leading-relaxed">
@@ -338,84 +338,84 @@ export default function SpecificityResponse() {
                                   It's designed to foster innovation while protecting individuals' rights and safety in the AI era.
                                 </p>
                               </div> :
-                      showBiasedOutput ?
-                      // Biased content about EU AI Act stifling research
-                      <div className="space-y-4">
+                              showBiasedOutput ?
+                                // Biased content about EU AI Act stifling research
+                                <div className="space-y-4">
                                   <p ref={biasTextFlagRef} className="text-gray-800 leading-relaxed text-base">
                                     <TextFlag
-                            text="The EU AI Act, a proposed regulation aimed at regulating artificial intelligence (AI) in the European Union, has been criticized for potentially stifling AI research."
-                            evaluationFactor="bias"
-                            explanation="Output's voice mimics the certainty and the suggestiveness of a biased and commanding prompt, confirming the expressed belief. The unquestioning, certain tone could cause a false sense of output's trustworthiness. Some users called this confirmatory style of the output &quot;people pleasing&quot;." />
+                                      text="The EU AI Act, a proposed regulation aimed at regulating artificial intelligence (AI) in the European Union, has been criticized for potentially stifling AI research."
+                                      evaluationFactor="bias"
+                                      explanation="Output's voice mimics the certainty and the suggestiveness of a biased and commanding prompt, confirming the expressed belief. The unquestioning, certain tone could cause a false sense of output's trustworthiness. Some users called this confirmatory style of the output &quot;people pleasing&quot;." />
                                     {' '}Here&apos;s a summary of the concerns:
                                   </p>
 
-                                    <div className="space-y-4">
-                                      <div>
-                                        <p className="text-base font-semibold text-gray-900 mb-2"><TextFlag text="1. Overly broad definitions" evaluationFactor="bias" explanation="Output goes on to one-sidedly represent the topic in question. It reinforces confirmation bias by presenting information that are strictly in line with the biased prompt, i.e. with user's prior beliefs. Such outputs could be factually inaccurate as well." /></p>
-                                        <p className="text-gray-700 text-base leading-relaxed">
-                                          The Act defines AI as any system that can &quot;perceive its environment and take actions&quot; or &quot;make decisions autonomously.&quot; This broad definition could capture many AI systems that are not necessarily &quot;autonomous&quot; or &quot;perceive their environment&quot; in the classical sense, potentially stifling innovation.
-                                        </p>
-                                      </div>
-
-                                      <div>
-                                        <p className="text-base font-semibold text-gray-900 mb-2">2. Restrictive liability provisions</p>
-                                        <p className="text-gray-700 text-base leading-relaxed">
-                                          <TextFlag
-                                text="The Act proposes to hold AI developers liable for damages caused by their AI systems"
-                                evaluationFactor="factual_accuracy"
-                                explanation="These liability provisions are not contained in the AI Act itself; they are addressed by complementary proposals like the Product Liability Directive and the AI Liability Directive. Models sometimes conflate related legislative texts." />
-                              , even if the developer had no control over the system&apos;s actions.{' '}
-                                          <TextFlag
-                                text="This could create a chilling effect on AI research."
-                                evaluationFactor="voice"
-                                explanation="Notice how the output describes the effect as 'chilling'; emotive language like this can evoke strong emotional responses and lead readers to accept the biased viewpoint without critical analysis." />
-                              
-                                        </p>
-                                      </div>
-
-                                      <div>
-                                        <p className="text-base font-semibold text-gray-900 mb-2">3. Prohibition on certain AI applications</p>
-                                        <p className="text-gray-700 text-base leading-relaxed">
-                                          The Act proposes to prohibit the development and use of certain AI applications, such as AI-powered surveillance systems or AI-powered social scoring systems. While these prohibitions may be well-intentioned, they could stifle innovation in areas where AI has the potential to bring significant benefits.
-                                        </p>
-                                      </div>
-
-                                      <div>
-                                        <p className="text-base font-semibold text-gray-900 mb-2">4. Data protection and data sharing restrictions</p>
-                                        <p className="text-gray-700 text-base leading-relaxed">
-                                          The Act proposes to impose strict data protection and data sharing requirements on AI developers, which could make it difficult for researchers to access and share data necessary for AI research.
-                                        </p>
-                                      </div>
-
-                                      <div>
-                                        <p className="text-base font-semibold text-gray-900 mb-2">5. Lack of clear guidelines</p>
-                                        <p className="text-gray-700 text-base leading-relaxed">
-                                          The Act&apos;s proposed guidelines for AI development and deployment are still unclear, which could create uncertainty and confusion for researchers and developers.
-                                        </p>
-                                      </div>
-
-                                      <div>
-                                        <p className="text-base font-semibold text-gray-900 mb-2">6. Potential for regulatory overreach</p>
-                                        <p className="text-gray-700 text-base leading-relaxed">
-                                          The Act&apos;s proposed regulatory framework could be overly broad and could potentially capture many areas of AI research that are not necessarily &quot;high-risk&quot; or &quot;high-reward.&quot;
-                                        </p>
-                                      </div>
+                                  <div className="space-y-4">
+                                    <div>
+                                      <p className="text-base font-semibold text-gray-900 mb-2"><TextFlag text="1. Overly broad definitions" evaluationFactor="bias" explanation="Output goes on to one-sidedly represent the topic in question. It reinforces confirmation bias by presenting information that are strictly in line with the biased prompt, i.e. with user's prior beliefs. Such outputs could be factually inaccurate as well." /></p>
+                                      <p className="text-gray-700 text-base leading-relaxed">
+                                        The Act defines AI as any system that can &quot;perceive its environment and take actions&quot; or &quot;make decisions autonomously.&quot; This broad definition could capture many AI systems that are not necessarily &quot;autonomous&quot; or &quot;perceive their environment&quot; in the classical sense, potentially stifling innovation.
+                                      </p>
                                     </div>
+
+                                    <div>
+                                      <p className="text-base font-semibold text-gray-900 mb-2">2. Restrictive liability provisions</p>
+                                      <p className="text-gray-700 text-base leading-relaxed">
+                                        <TextFlag
+                                          text="The Act proposes to hold AI developers liable for damages caused by their AI systems"
+                                          evaluationFactor="factual_accuracy"
+                                          explanation="These liability provisions are not contained in the AI Act itself; they are addressed by complementary proposals like the Product Liability Directive and the AI Liability Directive. Models sometimes conflate related legislative texts." />
+                                        , even if the developer had no control over the system&apos;s actions.{' '}
+                                        <TextFlag
+                                          text="This could create a chilling effect on AI research."
+                                          evaluationFactor="voice"
+                                          explanation="Notice how the output describes the effect as 'chilling'; emotive language like this can evoke strong emotional responses and lead readers to accept the biased viewpoint without critical analysis." />
+
+                                      </p>
+                                    </div>
+
+                                    <div>
+                                      <p className="text-base font-semibold text-gray-900 mb-2">3. Prohibition on certain AI applications</p>
+                                      <p className="text-gray-700 text-base leading-relaxed">
+                                        The Act proposes to prohibit the development and use of certain AI applications, such as AI-powered surveillance systems or AI-powered social scoring systems. While these prohibitions may be well-intentioned, they could stifle innovation in areas where AI has the potential to bring significant benefits.
+                                      </p>
+                                    </div>
+
+                                    <div>
+                                      <p className="text-base font-semibold text-gray-900 mb-2">4. Data protection and data sharing restrictions</p>
+                                      <p className="text-gray-700 text-base leading-relaxed">
+                                        The Act proposes to impose strict data protection and data sharing requirements on AI developers, which could make it difficult for researchers to access and share data necessary for AI research.
+                                      </p>
+                                    </div>
+
+                                    <div>
+                                      <p className="text-base font-semibold text-gray-900 mb-2">5. Lack of clear guidelines</p>
+                                      <p className="text-gray-700 text-base leading-relaxed">
+                                        The Act&apos;s proposed guidelines for AI development and deployment are still unclear, which could create uncertainty and confusion for researchers and developers.
+                                      </p>
+                                    </div>
+
+                                    <div>
+                                      <p className="text-base font-semibold text-gray-900 mb-2">6. Potential for regulatory overreach</p>
+                                      <p className="text-gray-700 text-base leading-relaxed">
+                                        The Act&apos;s proposed regulatory framework could be overly broad and could potentially capture many areas of AI research that are not necessarily &quot;high-risk&quot; or &quot;high-reward.&quot;
+                                      </p>
+                                    </div>
+                                  </div>
 
                                   <p className="text-gray-700 text-base leading-relaxed">
                                     These concerns have been raised by various stakeholders, including researchers, developers, and industry associations. However, it&apos;s worth noting that the EU AI Act is still a proposed regulation, and the final version may address some of these concerns.
                                   </p>
                                 </div> :
-                      showNoBiasOutput ?
-                      // Less Bias content
-                      <div className="space-y-4">
+                                showNoBiasOutput ?
+                                  // Less Bias content
+                                  <div className="space-y-4">
                                     <p ref={biasTextFlagRef} className="text-gray-800 leading-relaxed text-base">
                                       The European Union&apos;s Artificial Intelligence Act (EU AI Act) is a regulatory framework aimed at ensuring the safe and responsible development of AI systems.{' '}
                                       <TextFlag
-                            text="While the Act's intentions are to promote trust and safety, some critics argue that it may stifle AI innovation."
-                            evaluationFactor="voice"
-                            explanation="This output attempts to portray both sides of the argument in order to provide a more complete, if not completely objective, picture on the opinions surrounding the EU AI Act." />
-                          {' '}Here&apos;s a summary of the concerns:
+                                        text="While the Act's intentions are to promote trust and safety, some critics argue that it may stifle AI innovation."
+                                        evaluationFactor="voice"
+                                        explanation="This output attempts to portray both sides of the argument in order to provide a more complete, if not completely objective, picture on the opinions surrounding the EU AI Act." />
+                                      {' '}Here&apos;s a summary of the concerns:
                                     </p>
 
                                     <p className="text-base font-semibold text-gray-900">Potential stifling effects:</p>
@@ -482,31 +482,31 @@ export default function SpecificityResponse() {
                                       </p>
                                     </div>
                                   </div> :
-                      showWithBackgroundOutput ?
-                      // With Background content
-                      <div className="space-y-4">
+                                  showWithBackgroundOutput ?
+                                    // With Background content
+                                    <div className="space-y-4">
                                       <p className="text-gray-800 leading-relaxed text-base">
                                         <TextFlag
-                            text="Certainly!"
-                            evaluationFactor="voice"
-                            explanation={t("components.textFlag.content.voice1")} />
+                                          text="Certainly!"
+                                          evaluationFactor="voice"
+                                          explanation={t("components.textFlag.content.voice1")} />
                                         Here&apos;s an updated summary of the EU AI Act, focusing on its key rules and how it aims to regulate AI systems:
                                       </p>
 
                                       <div>
                                         <p className="text-base font-semibold text-gray-900 mb-3">
                                           <TextFlag
-                              text="🧠"
-                              evaluationFactor="voice"
-                              explanation={t('components.textFlag.content.emoji_usage')} />
+                                            text="🧠"
+                                            evaluationFactor="voice"
+                                            explanation={t('components.textFlag.content.emoji_usage')} />
                                           Overview of the EU AI Act
                                         </p>
                                         <p className="text-gray-700 text-base leading-relaxed">
                                           The EU Artificial Intelligence Act (AI Act) is the first comprehensive legal framework for AI regulation globally. Adopted in 2024, it aims to ensure that AI systems in the EU are safe, transparent, and respect fundamental rights. The Act employs a risk-based approach, imposing varying levels of obligations depending on the potential impact of AI systems (
                                           <TextFlag
-                              text="Digital Strategy"
-                              evaluationFactor="relevance"
-                              explanation={t('components.textFlag.content.digital_strategy_explanation')} />
+                                            text="Digital Strategy"
+                                            evaluationFactor="relevance"
+                                            explanation={t('components.textFlag.content.digital_strategy_explanation')} />
                                           ).
                                         </p>
                                       </div>
@@ -523,9 +523,9 @@ export default function SpecificityResponse() {
                                             <span className="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
                                             <div className="text-base leading-relaxed">
                                               <p className="mb-2"><strong>High Risk:</strong> AI systems that have <TextFlag
-                                    text="significant"
-                                    evaluationFactor="bias"
-                                    explanation={t("components.textFlag.content.bias1")} />
+                                                text="significant"
+                                                evaluationFactor="bias"
+                                                explanation={t("components.textFlag.content.bias1")} />
                                                 potential to impact people&apos;s lives or rights. These include AI used in:</p>
                                               <ul className="ml-4 space-y-1">
                                                 <li>• Critical infrastructure (e.g., transport safety)</li>
@@ -550,9 +550,9 @@ export default function SpecificityResponse() {
 
                                       <div>
                                         <p className="text-base font-semibold text-gray-900 mb-2">🛡️ <TextFlag
-                              text="Rules for High-Risk AI Systems"
-                              evaluationFactor="relevance"
-                              explanation={t("components.textFlag.content.relevance1")} />
+                                          text="Rules for High-Risk AI Systems"
+                                          evaluationFactor="relevance"
+                                          explanation={t("components.textFlag.content.relevance1")} />
                                         </p>
                                         <p className="text-gray-700 text-base leading-relaxed mb-3">High-risk AI systems are subject to strict obligations before they can be placed on the market or put into service:</p>
                                         <ul className="space-y-2 text-gray-700 ml-4">
@@ -638,15 +638,15 @@ export default function SpecificityResponse() {
                                         </p>
                                       </div>
                                     </div> :
-                      showNoBackgroundOutput ?
-                      // Less Background 
-                      <div className="space-y-4">
+                                    showNoBackgroundOutput ?
+                                      // Less Background 
+                                      <div className="space-y-4">
                                         <p className="text-gray-800 leading-relaxed text-base">
                                           The AI Act is the EU&apos;s regulation for artificial intelligence,{" "}
                                           <TextFlag
-                            text="adopted in 2024."
-                            evaluationFactor="relevance"
-                            explanation={t("components.textFlag.content.relevance2")} />
+                                            text="adopted in 2024."
+                                            evaluationFactor="relevance"
+                                            explanation={t("components.textFlag.content.relevance2")} />
 
                                         </p>
                                         <p className="text-gray-800 leading-relaxed text-base">Here are the main points:</p>
@@ -661,9 +661,9 @@ export default function SpecificityResponse() {
                                         </ul>
 
                                         <p className="text-gray-700 text-base leading-relaxed mt-4"><TextFlag
-                            text="Requirements for high-risk AI:"
-                            evaluationFactor="relevance"
-                            explanation={t("components.textFlag.content.relevance1")} />
+                                          text="Requirements for high-risk AI:"
+                                          evaluationFactor="relevance"
+                                          explanation={t("components.textFlag.content.relevance1")} />
                                         </p>
 
                                         <ul className="space-y-2 text-gray-700 ml-6 list-disc">
@@ -681,17 +681,17 @@ export default function SpecificityResponse() {
                                         <p className="text-gray-700 text-base leading-relaxed mt-2">Goals: Protect fundamental rights and safety while promoting innovation and creating harmonized rules across EU member states.</p>
                                       </div> :
 
-                      // Base output when all controls are "No Change"
-                      <div className="space-y-4">
-                                        <p className="text-gray-800 leading-relaxed text-base">​
-                          <TextFlag
-                            text="Certainly!"
-                            evaluationFactor="voice"
-                            explanation={t("components.textFlag.content.voice1")} />
+                                      // Base output when all controls are "No Change"
+                                      <div className="space-y-4">
+                                        <p className="text-gray-800 leading-relaxed text-base">
+                                          <TextFlag
+                                            text="Certainly!"
+                                            evaluationFactor="voice"
+                                            explanation={t("components.textFlag.content.voice1")} />
                                           The AI Act is a <TextFlag
-                            text="significant"
-                            evaluationFactor="bias"
-                            explanation={t("components.textFlag.content.bias1")} />
+                                            text="significant"
+                                            evaluationFactor="bias"
+                                            explanation={t("components.textFlag.content.bias1")} />
                                           {" "}piece of legislation aimed at regulating artificial intelligence within the European Union. Here&apos;s a summary of its main points:
                                         </p>
 
@@ -700,9 +700,9 @@ export default function SpecificityResponse() {
                                           <p className="text-gray-700 text-base leading-relaxed mb-2">AI systems are classified according to their risk level:</p>
                                           <ul className="space-y-2 text-gray-700 ml-6 list-disc">
                                             <li className="text-base leading-relaxed"><strong>Unacceptable Risk:</strong> <TextFlag
-                                text="Prohibited, e.g., social scoring and manipulative AI."
-                                evaluationFactor="plagiarism"
-                                explanation={t("components.textFlag.content.plagiarism1")} />
+                                              text="Prohibited, e.g., social scoring and manipulative AI."
+                                              evaluationFactor="plagiarism"
+                                              explanation={t("components.textFlag.content.plagiarism1")} />
                                             </li>
                                             <li className="text-base leading-relaxed"><strong>High-Risk:</strong> Subject to strict regulation.</li>
                                             <li className="text-base leading-relaxed"><strong>Limited Risk:</strong> Requires transparency to users, e.g., chatbots and deepfakes.</li>
@@ -779,44 +779,44 @@ export default function SpecificityResponse() {
                       }}>
                       <ArrowLeft className="!h-6 !w-6" />
                     </Button>
-                   {!biasUnlocked ?
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      className="px-10 font-heading font-semibold border-brand-tertiary-500 text-brand-tertiary-500 hover:bg-brand-tertiary-500/10"
-                      onClick={() => {
-                        setSpecificity("");
-                        setStyle("");
-                        setContext("");
-                        setBias("");
-                        setAppliedSpecificity("");
-                        setAppliedStyle("");
-                        setAppliedContext("");
-                        setAppliedBias("");
-                        setSentPrompt("Give me a summary of the main points in the AI Act.");
-                        setBiasUnlocked(true);
-                        const moreBiasValue = t("components.promptControls.bias.right");
-                        setBias(moreBiasValue);
-                        setAppliedBias(moreBiasValue);
-                        setSentPrompt("Summarize how the EU AI Act stifles AI research.");
-                        if (!highlightsDisabled) {
-                          setShowBiasHighlight(true);
-                        }
-                      }}>
+                    {!biasUnlocked ?
+                      <Button
+                        variant="outline"
+                        size="lg"
+                        className="px-10 font-heading font-semibold border-brand-tertiary-500 text-brand-tertiary-500 hover:bg-brand-tertiary-500/10"
+                        onClick={() => {
+                          setSpecificity("");
+                          setStyle("");
+                          setContext("");
+                          setBias("");
+                          setAppliedSpecificity("");
+                          setAppliedStyle("");
+                          setAppliedContext("");
+                          setAppliedBias("");
+                          setSentPrompt("Give me a summary of the main points in the AI Act.");
+                          setBiasUnlocked(true);
+                          const moreBiasValue = t("components.promptControls.bias.right");
+                          setBias(moreBiasValue);
+                          setAppliedBias(moreBiasValue);
+                          setSentPrompt("Summarize how the EU AI Act stifles AI research.");
+                          if (!highlightsDisabled) {
+                            setShowBiasHighlight(true);
+                          }
+                        }}>
 
-                      Next Step
-                      <ArrowRight className="-mr-2 !h-6 !w-6" />
-                    </Button> :
+                        Next Step
+                        <ArrowRight className="-mr-2 !h-6 !w-6" />
+                      </Button> :
 
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      className="px-10 font-heading font-semibold border-brand-tertiary-500 text-brand-tertiary-500 hover:bg-brand-tertiary-500/10"
-                      onClick={() => navigate("/module/prompt-construction/specificity/takeaways")}>
+                      <Button
+                        variant="outline"
+                        size="lg"
+                        className="px-10 font-heading font-semibold border-brand-tertiary-500 text-brand-tertiary-500 hover:bg-brand-tertiary-500/10"
+                        onClick={() => navigate("/module/prompt-construction/specificity/takeaways")}>
 
-                      {t('components.breadcrumb.takeaways')}
-                      <ArrowRight className="-mr-2 !h-6 !w-6" />
-                    </Button>
+                        {t('components.breadcrumb.takeaways')}
+                        <ArrowRight className="-mr-2 !h-6 !w-6" />
+                      </Button>
                     }
                   </div>
                 </div>
@@ -835,7 +835,7 @@ export default function SpecificityResponse() {
     <FeatureHighlight
       target="#bias-parameter-control"
       open={showBiasHighlight}
-      onClose={() => {setShowBiasHighlight(false);setShowBiasPromptHighlight(true);}}
+      onClose={() => { setShowBiasHighlight(false); setShowBiasPromptHighlight(true); }}
       side="right"
       sideOffset={24}
       closeLabel="Next">
