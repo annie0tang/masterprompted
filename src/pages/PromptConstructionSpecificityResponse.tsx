@@ -6,7 +6,7 @@ import ModuleNavigation from "@/components/ModuleNavigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import EvaluationPanel from "@/components/EvaluationPanel";
-import PromptControls from "@/components/PromptControls";
+import PromptControls from "@/components/PromptControlsPromptConstruction";
 import { Parameters } from "@/pages/PromptPlayground";
 import TextFlag from "@/components/TextFlag";
 import SectionFlag from "@/components/SectionFlag";

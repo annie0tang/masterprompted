@@ -1,7 +1,7 @@
 // src/pages/PromptPlayground.tsx
 
 import Header from "@/components/Header";
-import PromptControls from "@/components/PromptControlsPromptPlayground.tsx";
+import PromptControls from "@/components/PromptControlsPromptConstruction";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { PopoverSeries } from "@/components/PopoverSeries";
 import { useLanguage } from '@/contexts/LanguageContext';

@@ -4,14 +4,11 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Info, Redo2, RefreshCcw } from "lucide-react";
-import Chatbox from "./ChatBox";
+import { Info } from "lucide-react";
+import Chatbox from "./ChatBoxPromptConstruction";
 import { Parameters } from "@/pages/PromptPlayground";
 import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import optimizationFig from "@/assets/optimization_fig.png";
 
 const NO_CHANGE_VALUE = "no-change";
 
@@ -25,6 +22,10 @@ interface ParameterProps {
     currentValue: string;
     onParameterChange?: (key: keyof Parameters, value: string) => void;
     infoText?: string;
+    /** Hide the middle "Original" radio option, showing only left and right */
+    hideOriginal?: boolean;
+    /** Optional id for the wrapper div */
+    id?: string;
 }
 
 function Parameter({
@@ -36,7 +37,9 @@ function Parameter({
     enabled = true,
     currentValue,
     onParameterChange,
-    infoText
+    infoText,
+    hideOriginal = false,
+    id
 }: ParameterProps) {
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [pulseActive, setPulseActive] = useState(false);
@@ -71,6 +74,7 @@ function Parameter({
 
     return (
         <div
+            id={id}
             className={`my-3 rounded-lg px-2 py-1 transition-all ${!enabled ? 'opacity-30 pointer-events-none' : 'bg-background/60'} ${pulseActive ? 'animate-pulse-once' : ''}`}
         >
             <div className="flex items-center gap-1 mb-2">
@@ -99,24 +103,40 @@ function Parameter({
                 value={selectedValue}
                 onValueChange={handleValueChange}
                 orientation="horizontal"
-                className="relative flex w-full justify-between gap-0 py-1 px-2"
+                className={cn("relative flex w-full justify-between gap-0 py-1 px-2")}
             >
-                <div className="pointer-events-none absolute top-[14px] left-[calc(16.666%+14px)] w-[calc(33.333%-26px)] h-[2px] bg-surface-500" />
-                <div className="pointer-events-none absolute top-[14px] left-[calc(50%+12px)] w-[calc(33.333%-26px)] h-[2px] bg-surface-500" />
-                <div className="flex flex-1 flex-col items-center gap-1 w-1/3">
-                    <RadioGroupItem value={leftParameter} id={`${parameterTitle}-r1`} />
-                    <Label htmlFor={`${parameterTitle}-r1`} className="text-[11px] font-normal text-center leading-tight px-0.5 text-muted-foreground">{leftParameter}</Label>
-                </div>
+                {hideOriginal ? (
+                    <>
+                        <div className="pointer-events-none absolute top-[14px] left-[calc(25%+14px)] w-[calc(50%-28px)] h-[2px] bg-surface-500" />
+                        <div className="flex flex-1 flex-col items-center gap-1 w-1/2">
+                            <RadioGroupItem value={leftParameter} id={`${parameterTitle}-r1`} />
+                            <Label htmlFor={`${parameterTitle}-r1`} className="text-[11px] font-normal text-center leading-tight px-0.5 text-muted-foreground">{leftParameter}</Label>
+                        </div>
+                        <div className="flex flex-1 flex-col items-center gap-1 w-1/2">
+                            <RadioGroupItem value={rightParameter} id={`${parameterTitle}-r3`} />
+                            <Label htmlFor={`${parameterTitle}-r3`} className="text-[11px] font-normal text-center leading-tight px-0.5 text-muted-foreground">{rightParameter}</Label>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div className="pointer-events-none absolute top-[14px] left-[calc(16.666%+14px)] w-[calc(33.333%-26px)] h-[2px] bg-surface-500" />
+                        <div className="pointer-events-none absolute top-[14px] left-[calc(50%+12px)] w-[calc(33.333%-26px)] h-[2px] bg-surface-500" />
+                        <div className="flex flex-1 flex-col items-center gap-1 w-1/3">
+                            <RadioGroupItem value={leftParameter} id={`${parameterTitle}-r1`} />
+                            <Label htmlFor={`${parameterTitle}-r1`} className="text-[11px] font-normal text-center leading-tight px-0.5 text-muted-foreground">{leftParameter}</Label>
+                        </div>
 
-                <div className="flex flex-1 flex-col items-center gap-1 w-1/3">
-                    <RadioGroupItem value={NO_CHANGE_VALUE} id={`${parameterTitle}-r2`} />
-                    <Label htmlFor={`${parameterTitle}-r2`} className="text-[11px] font-normal text-center leading-tight px-0.5 text-muted-foreground">{useLanguage().t('components.promptControls.original')}</Label>
-                </div>
+                        <div className="flex flex-1 flex-col items-center gap-1 w-1/3">
+                            <RadioGroupItem value={NO_CHANGE_VALUE} id={`${parameterTitle}-r2`} />
+                            <Label htmlFor={`${parameterTitle}-r2`} className="text-[11px] font-normal text-center leading-tight px-0.5 text-muted-foreground">{useLanguage().t('components.promptControls.original')}</Label>
+                        </div>
 
-                <div className="flex flex-1 flex-col items-center gap-1 w-1/3">
-                    <RadioGroupItem value={rightParameter} id={`${parameterTitle}-r3`} />
-                    <Label htmlFor={`${parameterTitle}-r3`} className="text-[11px] font-normal text-center leading-tight px-0.5 text-muted-foreground">{rightParameter}</Label>
-                </div>
+                        <div className="flex flex-1 flex-col items-center gap-1 w-1/3">
+                            <RadioGroupItem value={rightParameter} id={`${parameterTitle}-r3`} />
+                            <Label htmlFor={`${parameterTitle}-r3`} className="text-[11px] font-normal text-center leading-tight px-0.5 text-muted-foreground">{rightParameter}</Label>
+                        </div>
+                    </>
+                )}
             </RadioGroup>
         </div>
     );
@@ -135,8 +155,6 @@ interface PromptControlsProps {
     onParameterChange: (key: keyof Parameters, value: string) => void;
     onReset?: () => void;
     onOptimize?: () => void;
-    onRegenerate?: () => void;
-    showRegenerate?: boolean;
     undoEnabled?: boolean;
     onUndo?: () => void;
     disableSend?: boolean;
@@ -169,8 +187,6 @@ export default function PromptControls({
     onParameterChange,
     onReset,
     onOptimize,
-    onRegenerate,
-    showRegenerate = false,
     undoEnabled = false,
     onUndo,
     chatValue = "",
@@ -190,34 +206,6 @@ export default function PromptControls({
     className
 }: PromptControlsProps) {
     const { t } = useLanguage();
-    const [titlePopoverOpen, setTitlePopoverOpen] = useState(false);
-    const [walkthroughOpen, setWalkthroughOpen] = useState(false);
-    const hoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-    useEffect(() => {
-        const handleMetaLinkClick = (e: MouseEvent) => {
-            const target = e.target as HTMLElement;
-            if (target && target.id === 'meta-popover-trigger') {
-                setTitlePopoverOpen(false);
-                setWalkthroughOpen(true);
-            }
-        };
-
-        document.addEventListener('click', handleMetaLinkClick);
-        return () => document.removeEventListener('click', handleMetaLinkClick);
-    }, []);
-
-    const handleMouseEnter = () => {
-        if (hoverTimeout.current) clearTimeout(hoverTimeout.current);
-        setTitlePopoverOpen(true);
-    };
-
-    const handleMouseLeave = () => {
-        hoverTimeout.current = setTimeout(() => {
-            setTitlePopoverOpen(false);
-        }, 100);
-    };
-
     const handleResetClick = () => {
         if (onReset) onReset();
     };
@@ -233,47 +221,42 @@ export default function PromptControls({
     const isAnyParameterSet = Object.values(parameters).some(p => p !== "");
 
     return (
-        <div className={cn("bg-surface-200 flex flex-col overflow-hidden h-fit [&_*]:!font-heading [&_textarea]:!font-['Manrope']", className)}>
-            <div className="px-4 pb-4 pt-3 flex flex-col gap-1 min-h-0">
+        <div className={cn("bg-surface-200 flex flex-col overflow-hidden [&_*]:!font-heading [&_textarea]:!font-['Manrope']", className)}>
+            <div className="px-4 pb-4 pt-3 flex-1 flex flex-col gap-1 min-h-0">
                 {/* Chatbox */}
-                <Chatbox
-                    value={chatValue}
-                    onChange={onChatChange ?? (() => { })}
-                    onSubmit={onChatSubmit}
-                    submitButtonId={chatSubmitButtonId}
-                    disableSend={disableSend}
-                    animationKey={chatAnimationKey}
-                    waitingforOptimization={waitingforOptimization}
-                    onUploadFiles={onUploadFiles}
-                    files={files}
-                    onRemoveFile={onRemoveFile}
-                    readOnly={readOnly}
-                    hideSubmitButton={hideChatSubmitButton}
-                    autoResize={readOnly}
-                    onRegenerate={onRegenerate}
-                    showRegenerate={showRegenerate}
-                    className={cn("z-50 w-full", readOnly ? "flex-none" : "flex-auto min-h-0")}
-                />
+                <div id="prompt-controls-chatbox">
+                    <Chatbox
+                        value={chatValue}
+                        onChange={onChatChange ?? (() => { })}
+                        onSubmit={onChatSubmit}
+                        submitButtonId={chatSubmitButtonId}
+                        disableSend={disableSend}
+                        animationKey={chatAnimationKey}
+                        waitingforOptimization={waitingforOptimization}
+                        onUploadFiles={onUploadFiles}
+                        files={files}
+                        onRemoveFile={onRemoveFile}
+                        readOnly={readOnly}
+                        hideSubmitButton={hideChatSubmitButton}
+                        autoResize={readOnly}
+                        className={cn("z-50 w-full", readOnly ? "flex-none" : "flex-auto min-h-0")}
+                    />
+                </div>
 
                 {/* Parameters area */}
                 <div className="flex-initial flex flex-col justify-end min-h-0 overflow-y-auto">
                     <div className="flex items-center gap-1.5 mt-2 mb-1">
                         <h3 className="font-bold text-foreground text-lg">{t('components.promptControls.title')}</h3>
-                        <Popover open={titlePopoverOpen} onOpenChange={setTitlePopoverOpen}>
-                            <PopoverTrigger asChild onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-                                <Info className="w-4 h-4 cursor-pointer text-muted-foreground hover:text-foreground transition-colors" />
-                            </PopoverTrigger>
-                            <PopoverContent
-                                side="top"
-                                align="start"
-                                sideOffset={6}
-                                className="max-w-xs bg-emerald-600 text-white rounded-xl shadow-lg px-5 py-4 text-sm font-medium border-none leading-relaxed z-[100]"
-                                onMouseEnter={handleMouseEnter}
-                                onMouseLeave={handleMouseLeave}
-                            >
-                                {t('components.promptControls.titleInfo')}
-                            </PopoverContent>
-                        </Popover>
+                        <TooltipProvider>
+                            <Tooltip delayDuration={300}>
+                                <TooltipTrigger asChild>
+                                    <Info className="w-4 h-4 cursor-pointer text-muted-foreground hover:text-foreground transition-colors" />
+                                </TooltipTrigger>
+                                <TooltipContent side="top" align="start" sideOffset={6} className="max-w-xs">
+                                    {t('components.promptControls.titleInfoBasic')}
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
                     </div>
                     <div id='parameters' className="relative overflow-auto">
                         <Parameter
@@ -322,6 +305,8 @@ export default function PromptControls({
                             currentValue={parameters.bias}
                             onParameterChange={onParameterChange}
                             infoText={t('components.promptControls.bias.info')}
+                            hideOriginal
+                            id="bias-parameter-control"
                         />
                     </div>
 
@@ -336,31 +321,11 @@ export default function PromptControls({
                             {t('components.promptControls.sendOptimizedPrompt')}
                         </Button>
                     </div>
-                    <p className="text-[10px] leading-snug text-muted-foreground/70 text-left">
-                        LLMs used in the creation of prompt optimizations and generated outputs include: Mistral, Claude, Chat GPT &amp; Llama 3.1 8B (open source)
+                    <p className="text-[10px] leading-snug text-muted-foreground/70 text-left pt-2">
+                        LLMs used in the creation of prompt output examples in the Guided Exploration include: Mistral, Claude, Chat GPT &amp; Llama 3.1 8B (open source)
                     </p>
                 </div>
             </div>
-
-            <Dialog open={walkthroughOpen} onOpenChange={setWalkthroughOpen}>
-                <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto p-8 rounded-3xl border-none shadow-2xl">
-                    <DialogHeader className="mb-6">
-                        <DialogTitle className="text-3xl font-bold font-heading text-foreground tracking-tight">Prompt Optimization Overview</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-8">
-                        <p className="text-base leading-relaxed text-muted-foreground font-heading max-w-4xl">
-                            This diagram shows an overview of the prompt playground. A standard LLM is used for response generation, but a <b>specialized LLM</b> must be used for the prompt optimization, because this task has a relatively small scope. This is accomplished by giving a general-purpose LLM a specialized <b>system prompt</b>, where it’s given instructions and rules, as well as expected input and output formats. The user’s prompt is then injected into a standardized <b>meta-prompt</b> which reduces LLM volatility and encourages it to stay on-task. Also injected into the meta-prompt are the parameters selected by the user, formatted for coherency. The meta-prompt is passed to the optimizer LLM and it generates a suitable optimization prompt. The user’s original prompt is always used as the baseline prompt in order to prevent <b>model collapse</b>.
-                        </p>
-                        <div className="flex justify-center bg-muted/30 p-10 rounded-3xl border border-border/50 shadow-inner">
-                            <img
-                                src={optimizationFig}
-                                alt="Prompt Optimization Diagram"
-                                className="max-w-full h-auto rounded-xl shadow-xl border border-white/20"
-                            />
-                        </div>
-                    </div>
-                </DialogContent>
-            </Dialog>
         </div>
     );
 }
