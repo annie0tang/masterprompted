@@ -85,7 +85,7 @@ interface FlagDef {
   explanation: string;
 }
 
-const SNIPPET_FLAGS: Record<string, SnippetFlagDef[][]> = {
+const SNIPPET_FLAGS: Record<string, FlagDef[][]> = {
   "doc-1": [
     [
       { text: "AI strategy", explanation: "Doc 2 frames this as 'governance frameworks' and Doc 3 as 'internal guidelines' — each document conceptualises the organisational approach differently." },
