@@ -389,7 +389,7 @@ export default function MultipleSourcesExercise() {
 
   const currentSnippets = useMemo(() => {
     const sorted = Array.from(selected).sort();
-    return sorted.flatMap((id) => SNIPPETS_BY_DOC[id] || []);
+    return sorted.flatMap((id) => (SNIPPETS_BY_DOC[id] || []).map((s) => ({ ...s, docId: id })));
   }, [selected]);
 
   const selectedDocs = useMemo(() => {
