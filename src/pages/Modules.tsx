@@ -1,3 +1,4 @@
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -5,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
+  type CarouselApi,
   Carousel,
   CarouselContent,
   CarouselItem,
@@ -74,6 +76,14 @@ const LEARNING_UNITS = [
 export default function Modules() {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const onApiChange = useCallback((api: CarouselApi) => {
+    if (!api) return;
+    const onSelect = () => setSelectedIndex(api.selectedScrollSnap());
+    onSelect();
+    api.on("select", onSelect);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -93,74 +103,95 @@ export default function Modules() {
           </div>
 
           {/* Learning units carousel */}
-          <div className="px-12 mb-8">
+          <div className="mb-8">
             <Carousel
               opts={{
-                align: "start",
-                loop: false,
+                align: "center",
+                loop: true,
               }}
+              setApi={onApiChange}
               className="w-full"
             >
               <CarouselContent className="-ml-4">
-                {LEARNING_UNITS.map((unit) => (
-                  <CarouselItem
-                    key={unit.key}
-                    className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
-                  >
-                    <Card
-                      className="group border border-border hover:border-secondary transition-all rounded-xl bg-white overflow-hidden flex flex-col h-full cursor-pointer"
-                      onClick={() => navigate(unit.route)}
+                {LEARNING_UNITS.map((unit, index) => {
+                  const isSelected = index === selectedIndex;
+                  return (
+                    <CarouselItem
+                      key={unit.key}
+                      className="pl-4 basis-[80%] sm:basis-1/2 lg:basis-1/3 transition-all duration-300"
                     >
-                      {/* Image */}
-                      <div className="aspect-[4/3] bg-muted/30 flex items-center justify-center p-6">
-                        <img
-                          src={unit.image}
-                          alt={t(`modules.units.${unit.key}.title`)}
-                          className="w-full h-full object-contain"
-                        />
-                      </div>
+                      <div
+                        className={`transition-transform duration-300 ${
+                          isSelected ? "scale-105" : "scale-90 opacity-60"
+                        }`}
+                      >
+                        <Card
+                          className={`group rounded-xl overflow-hidden flex flex-col h-full cursor-pointer transition-all duration-300 ${
+                            isSelected
+                              ? "border-2 border-emerald-500 ring-2 ring-emerald-200 shadow-lg bg-emerald-50"
+                              : "border border-border bg-white"
+                          }`}
+                          onClick={() => navigate(unit.route)}
+                        >
+                          {/* Image */}
+                          <div className="aspect-[4/3] bg-muted/30 flex items-center justify-center p-6">
+                            <img
+                              src={unit.image}
+                              alt={t(`modules.units.${unit.key}.title`)}
+                              className="w-full h-full object-contain"
+                            />
+                          </div>
 
-                      {/* Content */}
-                      <div className="p-4 flex-1 flex flex-col">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-xs text-muted-foreground font-heading">
-                            {unit.number === 0
-                              ? t('modules.introLabel')
-                              : `${t('modules.unitLabel')} ${unit.number}`}
-                          </span>
-                          <Badge
-                            variant="outline"
-                            className={`text-[10px] px-1.5 py-0.5 h-auto font-medium whitespace-nowrap ${LEVEL_CONFIG[unit.level].className}`}
-                          >
-                            {LEVEL_CONFIG[unit.level].label}
-                          </Badge>
-                        </div>
-                        <h2 className="font-heading font-semibold text-foreground text-sm leading-tight mb-1">
-                          {t(`modules.units.${unit.key}.title`)}
-                        </h2>
-                        <p className="text-xs text-muted-foreground leading-snug mb-3 line-clamp-2 flex-1">
-                          {t(`modules.units.${unit.key}.description`)}
-                        </p>
-                        <div className="flex justify-end">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 rounded-full"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              navigate(unit.route);
-                            }}
-                          >
-                            <ArrowRight className="h-4 w-4" />
-                          </Button>
-                        </div>
+                          {/* Content */}
+                          <div className="p-4 flex-1 flex flex-col">
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-xs text-muted-foreground font-heading">
+                                {unit.number === 0
+                                  ? t('modules.introLabel')
+                                  : `${t('modules.unitLabel')} ${unit.number}`}
+                              </span>
+                              <Badge
+                                variant="outline"
+                                className={`text-[10px] px-1.5 py-0.5 h-auto font-medium whitespace-nowrap ${LEVEL_CONFIG[unit.level].className}`}
+                              >
+                                {LEVEL_CONFIG[unit.level].label}
+                              </Badge>
+                            </div>
+                            <h2 className="font-heading font-semibold text-foreground text-sm leading-tight mb-1">
+                              {t(`modules.units.${unit.key}.title`)}
+                            </h2>
+                            <p className="text-xs text-muted-foreground leading-snug mb-3 line-clamp-2 flex-1">
+                              {t(`modules.units.${unit.key}.description`)}
+                            </p>
+                            <div className="flex justify-end">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 rounded-full"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  navigate(unit.route);
+                                }}
+                              >
+                                <ArrowRight className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </Card>
                       </div>
-                    </Card>
-                  </CarouselItem>
-                ))}
+                    </CarouselItem>
+                  );
+                })}
               </CarouselContent>
-              <CarouselPrevious />
-              <CarouselNext />
+
+              {/* Navigation arrows below the carousel */}
+              <div className="flex items-center justify-center gap-4 mt-6">
+                <CarouselPrevious className="static translate-y-0 translate-x-0" />
+                <span className="text-sm text-muted-foreground font-heading">
+                  {selectedIndex + 1} / {LEARNING_UNITS.length}
+                </span>
+                <CarouselNext className="static translate-y-0 translate-x-0" />
+              </div>
             </Carousel>
           </div>
         </div>
