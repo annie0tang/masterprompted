@@ -544,17 +544,14 @@ export default function MultipleSourcesExercise() {
                           <p className="text-sm font-semibold text-foreground">
                             {snippet.title}
                           </p>
-                          {snippet.paragraphs.map((para, j) => {
-                            const flags = SNIPPET_FLAGS[snippet.docId]?.[j] || [];
-                            return (
-                              <p
-                                key={j}
-                                className="text-sm text-muted-foreground leading-relaxed"
-                              >
-                                {renderFlaggedParagraph(para, flags, `${i}-${j}`)}
-                              </p>
-                            );
-                          })}
+                          {snippet.paragraphs.map((para, j) => (
+                            <p
+                              key={j}
+                              className="text-sm text-muted-foreground leading-relaxed"
+                            >
+                              {para}
+                            </p>
+                          ))}
                         </div>
                       ))}
                     </div>
