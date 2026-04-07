@@ -176,15 +176,17 @@ export default function Modules() {
             </Carousel>
 
             {/* Single enter button for selected unit */}
-            <div className="flex justify-center mt-6">
-              <Button
-                className="bg-emerald-600 hover:bg-emerald-700 text-white px-6"
-                onClick={() => navigate(LEARNING_UNITS[selectedIndex].route)}
-              >
-                {t(`modules.units.${LEARNING_UNITS[selectedIndex].key}.title`)}
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
+            {selectedIndex < LEARNING_UNITS.length && (
+              <div className="flex justify-center mt-6">
+                <Button
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white px-6"
+                  onClick={() => navigate(LEARNING_UNITS[selectedIndex].route)}
+                >
+                  {t(`modules.units.${LEARNING_UNITS[selectedIndex].key}.title`)}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </main>
