@@ -113,8 +113,18 @@ export default function Modules() {
               className="w-full overflow-visible"
             >
               <CarouselContent className="-ml-5 overflow-visible py-4">
-                {LEARNING_UNITS.map((unit, index) => {
+                {[...LEARNING_UNITS, null].map((unit, index) => {
                   const isSelected = index === selectedIndex;
+                  if (!unit) {
+                    return (
+                      <CarouselItem key="spacer" className="pl-5 basis-[85%] sm:basis-1/2 lg:basis-1/3">
+                        <Card className={`rounded-xl overflow-hidden flex flex-col h-full transition-all duration-300 border border-dashed border-border bg-background ${isSelected ? "scale-105" : "opacity-50 scale-95"}`}>
+                          <div className="aspect-[4/3]" />
+                          <div className="p-4 flex-1" />
+                        </Card>
+                      </CarouselItem>
+                    );
+                  }
                   return (
                     <CarouselItem
                       key={unit.key}
@@ -128,7 +138,6 @@ export default function Modules() {
                         }`}
                         onClick={() => navigate(unit.route)}
                       >
-                        {/* Image */}
                         <div className="aspect-[4/3] bg-muted/30 flex items-center justify-center p-6">
                           <img
                             src={unit.image}
@@ -136,8 +145,6 @@ export default function Modules() {
                             className="w-full h-full object-contain"
                           />
                         </div>
-
-                        {/* Content */}
                         <div className="p-4 flex-1 flex flex-col">
                           <div className="flex items-center justify-between mb-1">
                             <span className="text-xs text-muted-foreground font-heading">
