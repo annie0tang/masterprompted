@@ -4,6 +4,13 @@ import Breadcrumb from "@/components/Breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+} from "@/components/ui/carousel";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowRight } from "lucide-react";
 
@@ -85,56 +92,76 @@ export default function Modules() {
             </p>
           </div>
 
-          {/* Learning units tile grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-5 mb-8">
-            {LEARNING_UNITS.map((unit) => (
-              <Card
-                key={unit.key}
-                className="group border border-border hover:border-secondary transition-all rounded-xl bg-white overflow-hidden flex flex-col"
-              >
-                {/* Image */}
-                <div className="aspect-[4/3] bg-muted/30 flex items-center justify-center p-6">
-                  <img
-                    src={unit.image}
-                    alt={t(`modules.units.${unit.key}.title`)}
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-
-                {/* Content */}
-                <div className="p-4 flex-1 flex flex-col">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-muted-foreground font-heading">
-                      {unit.number === 0
-                        ? t('modules.introLabel')
-                        : `${t('modules.unitLabel')} ${unit.number}`}
-                    </span>
-                    <Badge
-                      variant="outline"
-                      className={`text-[10px] px-1.5 py-0.5 h-auto font-medium whitespace-nowrap ${LEVEL_CONFIG[unit.level].className}`}
-                    >
-                      {LEVEL_CONFIG[unit.level].label}
-                    </Badge>
-                  </div>
-                  <h2 className="font-heading font-semibold text-foreground text-sm leading-tight mb-1">
-                    {t(`modules.units.${unit.key}.title`)}
-                  </h2>
-                  <p className="text-xs text-muted-foreground leading-snug mb-3 line-clamp-2 flex-1">
-                    {t(`modules.units.${unit.key}.description`)}
-                  </p>
-                  <div className="flex justify-end">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 rounded-full"
+          {/* Learning units carousel */}
+          <div className="px-12 mb-8">
+            <Carousel
+              opts={{
+                align: "start",
+                loop: false,
+              }}
+              className="w-full"
+            >
+              <CarouselContent className="-ml-4">
+                {LEARNING_UNITS.map((unit) => (
+                  <CarouselItem
+                    key={unit.key}
+                    className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
+                  >
+                    <Card
+                      className="group border border-border hover:border-secondary transition-all rounded-xl bg-white overflow-hidden flex flex-col h-full cursor-pointer"
                       onClick={() => navigate(unit.route)}
                     >
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            ))}
+                      {/* Image */}
+                      <div className="aspect-[4/3] bg-muted/30 flex items-center justify-center p-6">
+                        <img
+                          src={unit.image}
+                          alt={t(`modules.units.${unit.key}.title`)}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+
+                      {/* Content */}
+                      <div className="p-4 flex-1 flex flex-col">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-xs text-muted-foreground font-heading">
+                            {unit.number === 0
+                              ? t('modules.introLabel')
+                              : `${t('modules.unitLabel')} ${unit.number}`}
+                          </span>
+                          <Badge
+                            variant="outline"
+                            className={`text-[10px] px-1.5 py-0.5 h-auto font-medium whitespace-nowrap ${LEVEL_CONFIG[unit.level].className}`}
+                          >
+                            {LEVEL_CONFIG[unit.level].label}
+                          </Badge>
+                        </div>
+                        <h2 className="font-heading font-semibold text-foreground text-sm leading-tight mb-1">
+                          {t(`modules.units.${unit.key}.title`)}
+                        </h2>
+                        <p className="text-xs text-muted-foreground leading-snug mb-3 line-clamp-2 flex-1">
+                          {t(`modules.units.${unit.key}.description`)}
+                        </p>
+                        <div className="flex justify-end">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 rounded-full"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate(unit.route);
+                            }}
+                          >
+                            <ArrowRight className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </Card>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
           </div>
         </div>
       </main>
