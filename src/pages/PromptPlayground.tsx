@@ -153,14 +153,15 @@ const PromptPlayground = () => {
     async (threadIndex: number, versionIndex: number, promptText: string) => {
       // --- Grounding system prompt (conditional on PDF uploads) ---
       const groundingPrompt = uploadedFiles.length > 0
-        ? `You are a document analysis assistant. You have been provided with one or more reference documents. Follow these rules strictly:
+        ? `You are a document analysis assistant. You have been provided with one or more reference documents in the user message below. Follow these rules strictly:
 
 1. BASE YOUR ANSWERS ON THE PROVIDED DOCUMENTS. When the user's question relates to topics covered in the documents, your answer must be drawn from the document content. Do not supplement with outside knowledge unless the document is insufficient to answer the question.
-2. QUOTE AND CITE. When referencing specific facts, statistics, names, or claims from a document, quote the relevant passage or clearly indicate which document and section the information comes from.
-3. DISTINGUISH SOURCES. If you must use knowledge beyond the documents (because the documents do not address the question), explicitly state: "Based on the provided documents, this is not covered. From general knowledge: ..."
+2. CITE WITH NUMBERED REFERENCES. When referencing specific facts, statistics, names, or claims from a document, place an inline citation immediately after the claim using the format [1], [2], etc., where the number corresponds to the document index. If citing a specific section, use [1, p.X] or [1, Section Y].
+3. DISTINGUISH SOURCES. If you must use knowledge beyond the documents (because the documents do not address the question), mark the claim with [External] and briefly note the source if known.
 4. NEVER FABRICATE DOCUMENT CONTENT. If you cannot find specific information in the provided documents, say so. Do not guess or paraphrase loosely — accuracy is more important than completeness.
 5. PRESERVE PRECISION. Reproduce names, dates, numbers, and statistics exactly as they appear in the documents. Do not round, approximate, or restate figures unless asked.
-6. WHEN IN DOUBT, QUOTE. If uncertain whether your recollection of a document detail is exact, quote the relevant passage directly rather than paraphrasing.`
+6. WHEN IN DOUBT, QUOTE. If uncertain whether your recollection of a document detail is exact, quote the relevant passage directly rather than paraphrasing.
+7. INCLUDE A REFERENCES SECTION. At the end of your response, list all cited sources under a "## References" heading. For each document, use the format: [N] Document title or filename. For external sources, use: [External] Source description or URL.`
         : "You are a helpful assistant.";
 
       // --- Build document context with XML tags for clear boundaries ---
@@ -173,18 +174,19 @@ const PromptPlayground = () => {
         return `<document index="${idx + 1}" filename="${file.name}" ${label}>\n${fileContent}\n</document>`;
       }).join('\n\n');
 
-      // --- Combine: grounding prompt FIRST, then documents appended AFTER ---
-      const systemContent = uploadedFiles.length > 0
-        ? `${groundingPrompt}\n\n<reference_documents>\n${documentContext}\n</reference_documents>`
-        : groundingPrompt;
+      // --- Documents go in the user message; system prompt has grounding rules only ---
+      const userContent = uploadedFiles.length > 0
+        ? `<reference_documents>\n${documentContext}\n</reference_documents>\n\n${promptText}`
+        : promptText;
 
-      const payload = {
-        model: "meta-llama/Llama-3.3-70B-Instruct:ovhcloud",
+      const payload: Record<string, unknown> = {
+        model: "CohereLabs/command-a-reasoning-08-2025:cohere",
         temperature: uploadedFiles.length > 0 ? 0.3 : 0.7,
         stream: true,
+        thinking: { type: "disabled" },
         messages: [
-          { role: "system", content: systemContent },
-          { role: "user", content: promptText },
+          { role: "system", content: groundingPrompt },
+          { role: "user", content: userContent },
         ],
       };
 
