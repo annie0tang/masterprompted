@@ -671,6 +671,20 @@ export default function MultipleSourcesExercise() {
                               <ArrowLeft className="h-3 w-3" /> Back
                             </button>
 
+                            {/* Prompt input */}
+                            <div>
+                              <p className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                                Prompt
+                              </p>
+                              <div className="ml-auto max-w-[80%] bg-muted p-4 rounded-[20px]">
+                                <p className="text-sm text-foreground leading-relaxed">
+                                  Who holds the most responsibility to uphold AI ethics?
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-muted-foreground/40" /></div>
+
                             {/* Document selector (inline) */}
                             <div>
                               <p className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-2">
@@ -764,6 +778,20 @@ export default function MultipleSourcesExercise() {
                             >
                               <ArrowLeft className="h-3 w-3" /> Back
                             </button>
+
+                            {/* Prompt input */}
+                            <div>
+                              <p className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                                Prompt
+                              </p>
+                              <div className="ml-auto max-w-[80%] bg-muted p-4 rounded-[20px]">
+                                <p className="text-sm text-foreground leading-relaxed">
+                                  Who holds the most responsibility to uphold AI ethics?
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-muted-foreground/40" /></div>
 
                             {/* Indexed sources */}
                             <div>
