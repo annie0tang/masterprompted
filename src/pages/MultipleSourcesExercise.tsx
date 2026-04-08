@@ -662,11 +662,11 @@ export default function MultipleSourcesExercise() {
                                     >
                                       <div className="flex items-center gap-1.5 mb-1">
                                         <FileText className="h-3.5 w-3.5 text-muted-foreground" />
-                                        <span className={cn("text-xs font-semibold line-clamp-1", isOn ? "text-foreground" : "text-muted-foreground")}>
+                                        <span className={cn("text-xs font-semibold", isOn ? "text-foreground" : "text-muted-foreground")}>
                                           {doc.title}
                                         </span>
                                       </div>
-                                      <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-2">
+                                      <p className="text-[11px] text-muted-foreground leading-relaxed">
                                         {SNIPPETS_BY_DOC[doc.id]?.[0]?.paragraphs[0] || ""}
                                       </p>
                                     </button>
@@ -679,7 +679,7 @@ export default function MultipleSourcesExercise() {
                                     <span className="text-xs font-semibold text-foreground">Training Database</span>
                                     <Lock className="h-3 w-3 text-muted-foreground/50 ml-auto" />
                                   </div>
-                                  <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-2">
+                                  <p className="text-[11px] text-muted-foreground leading-relaxed">
                                     {LLM_DATABASE_SNIPPET}
                                   </p>
                                 </div>
@@ -706,15 +706,6 @@ export default function MultipleSourcesExercise() {
                                     "AI ethics" · "journalism standards" · "public trust" · …
                                   </p>
                                 </div>
-                              </div>
-                            </div>
-
-                            <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-muted-foreground/40" /></div>
-
-                            {/* Merge step */}
-                            <div className="flex justify-center">
-                              <div className="px-4 py-2 rounded-lg border border-border bg-muted/30 text-sm font-heading font-semibold text-foreground">
-                                All information merged into a single response
                               </div>
                             </div>
 
@@ -760,22 +751,13 @@ export default function MultipleSourcesExercise() {
                                   <div key={doc.id} className="rounded-lg border border-border bg-muted/30 p-3 flex-1 min-w-[140px]">
                                     <div className="flex items-center gap-1.5 mb-1">
                                       <FileText className="h-3.5 w-3.5 text-muted-foreground" />
-                                      <span className="text-xs font-semibold text-foreground line-clamp-1">{doc.title}</span>
+                                      <span className="text-xs font-semibold text-foreground">{doc.title}</span>
                                     </div>
-                                    <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-2">
+                                    <p className="text-[11px] text-muted-foreground leading-relaxed">
                                       {SNIPPETS_BY_DOC[doc.id]?.[0]?.paragraphs[0] || ""}
                                     </p>
                                   </div>
                                 ))}
-                              </div>
-                            </div>
-
-                            <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-muted-foreground/40" /></div>
-
-                            {/* Query matched independently */}
-                            <div className="flex justify-center">
-                              <div className="px-4 py-2 rounded-lg border border-border bg-muted/30 text-sm font-heading font-semibold text-foreground">
-                                Query matched against each index independently
                               </div>
                             </div>
 
