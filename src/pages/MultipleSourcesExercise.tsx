@@ -6,7 +6,8 @@ import ModuleNavigation from "@/components/ModuleNavigation";
 import EvaluationPanel from "@/components/EvaluationPanel";
 import TextFlag from "@/components/TextFlag";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, File, Paperclip, ChevronDown, ChevronUp } from "lucide-react";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { ArrowLeft, ArrowRight, File, Paperclip, ChevronDown, ChevronUp, Bot, Search, Database, FileText, AlertTriangle, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */
@@ -346,6 +347,44 @@ The most responsibility lies with journalistic organizations, like DW and Yle, a
 };
 
 /* ------------------------------------------------------------------ */
+/* ── Search-engine comparison data                                    */
+/* ------------------------------------------------------------------ */
+
+const DOC_COLORS: Record<string, { bg: string; border: string }> = {
+  "doc-1": { bg: "bg-blue-50", border: "border-blue-200" },
+  "doc-2": { bg: "bg-amber-50", border: "border-amber-200" },
+  "doc-3": { bg: "bg-emerald-50", border: "border-emerald-200" },
+};
+
+const LLM_DATABASE_SNIPPET =
+  "General training data: AI ethics principles, journalism standards, technology policy debates, and millions of web pages the model was trained on.";
+
+const LLM_MERGED_OUTPUTS: Record<string, { text: string; issues: string[] }> = {
+  "doc-1": {
+    text: "Public service media have a special responsibility to inform, educate, and connect people. Human judgment must remain at the heart of editorial decisions, and ethics must guide all technological choices. Organizations must guard public trust carefully.",
+    issues: [
+      "\"inform, educate, and connect\" — not in the source document",
+      "\"Human judgment must remain at the heart\" — fabricated quote",
+      "\"guard public trust\" — paraphrased from training data, not the document",
+    ],
+  },
+  "doc-1,doc-2": {
+    text: "Journalists are the gatekeepers of accuracy and fairness in the age of AI. Media organizations must establish governance frameworks while investing in training staff on AI risks. Regulators and policymakers also bear responsibility for creating legal frameworks to govern AI use in journalism.",
+    issues: [
+      "\"gatekeepers\" — neither document uses this word",
+      "\"training staff on AI risks\" — not in either source",
+      "\"Regulators and policymakers\" — entire category invented by the model",
+    ],
+  },
+  "doc-1,doc-2,doc-3": {
+    text: "DW is firmly committed to journalism produced by people. Their journalists control all applications and review everything before publication. Combined with governance frameworks from ethics boards and the principle that a human is always responsible for outcomes when AI is used, the industry is moving toward responsible AI adoption.",
+    issues: [
+      "\"control all applications\" — not in any source document",
+      "\"a human is always responsible\" — fabricated attribution",
+      "Information from 3 distinct sources blended into one seamless narrative with no attribution",
+    ],
+  },
+};
 
 /* ------------------------------------------------------------------ */
 /* ── Page ── */
@@ -355,6 +394,7 @@ export default function MultipleSourcesExercise() {
   const navigate = useNavigate();
   const [selected, setSelected] = useState<Set<string>>(new Set(["doc-1"]));
   const [snippetsOpen, setSnippetsOpen] = useState(true);
+  const [viewMode, setViewMode] = useState<"llm" | "search">("llm");
 
   /* Only allow sequential selection: doc-1, doc-1+doc-2, doc-1+doc-2+doc-3 */
   const ALLOWED_SETS: string[][] = [
@@ -414,9 +454,31 @@ export default function MultipleSourcesExercise() {
                 <h2 className="text-xl font-heading font-bold text-foreground mb-3">
                   Multiple Documents
                 </h2>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-6">
-                  Compare how the output changes based on three distinct sources and evaluate their respective outputs side-by-side to gain a comprehensive understanding of the topic.
+                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                  {viewMode === "llm"
+                    ? "See how an LLM merges information from multiple sources into one answer."
+                    : "See how a search engine keeps each source separate, preserving attribution."
+                  }
                 </p>
+
+                {/* View mode toggle */}
+                <div className="mb-6">
+                  <ToggleGroup
+                    type="single"
+                    value={viewMode}
+                    onValueChange={(v) => v && setViewMode(v as typeof viewMode)}
+                    className="w-full"
+                  >
+                    <ToggleGroupItem value="llm" className="flex-1 gap-1.5 text-xs">
+                      <Bot className="h-3.5 w-3.5" />
+                      LLM
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="search" className="flex-1 gap-1.5 text-xs">
+                      <Search className="h-3.5 w-3.5" />
+                      Search Engine
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+                </div>
 
                 <p className="text-sm font-semibold text-foreground mb-3">
                   Select one or more documents
@@ -462,6 +524,7 @@ export default function MultipleSourcesExercise() {
                   <div className="flex-1 flex flex-col">
                     {/* Response area */}
                     <div className="bg-background rounded-lg p-8 flex-1 flex flex-col">
+                      {/* Query bubble — shared by both views */}
                       <div
                         className="mb-6 mx-2 max-w-fit ml-auto bg-muted p-5 max-w-[80%]"
                         style={{ borderRadius: '20px' }}
@@ -482,15 +545,161 @@ export default function MultipleSourcesExercise() {
                           </div>
                         )}
                       </div>
-                      <div className="max-h-[500px] overflow-y-auto flex-1">
-                        <div className="space-y-4">
-                          <p className="text-muted-foreground leading-relaxed text-base whitespace-pre-line">
-                            {renderFlaggedResponse(currentResponse, OUTPUT_FLAGS[selectionKey] || [])}
-                          </p>
-                        </div>
-                      </div>
 
-                      {/* Takeaways button */}
+                      {/* ── LLM view ── */}
+                      {viewMode === "llm" && (
+                        <>
+                          <div className="max-h-[500px] overflow-y-auto flex-1">
+                            <div className="space-y-4">
+                              <p className="text-muted-foreground leading-relaxed text-base whitespace-pre-line">
+                                {renderFlaggedResponse(currentResponse, OUTPUT_FLAGS[selectionKey] || [])}
+                              </p>
+                            </div>
+                          </div>
+                        </>
+                      )}
+
+                      {/* ── Search engine view ── */}
+                      {viewMode === "search" && (
+                        <div className="flex-1 space-y-5">
+                          {/* Input sources */}
+                          <div>
+                            <p className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                              Input Sources
+                            </p>
+                            <div className="flex gap-3 flex-wrap">
+                              {selectedDocs.map((doc) => {
+                                const colors = DOC_COLORS[doc.id];
+                                return (
+                                  <div
+                                    key={doc.id}
+                                    className={cn(
+                                      "flex-1 min-w-[160px] rounded-lg border-2 p-3",
+                                      colors.bg,
+                                      colors.border
+                                    )}
+                                  >
+                                    <div className="flex items-center gap-2 mb-1.5">
+                                      <FileText className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                                      <span className="text-xs font-semibold text-foreground line-clamp-1">
+                                        {doc.title}
+                                      </span>
+                                    </div>
+                                    <p className="text-xs text-muted-foreground leading-relaxed">
+                                      {SNIPPETS_BY_DOC[doc.id]?.[0]?.paragraphs[0] || ""}
+                                    </p>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+
+                          {/* Processing indicator */}
+                          <div className="flex justify-center">
+                            <div className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-heading font-semibold bg-emerald-100 text-emerald-700">
+                              <CheckCircle className="h-4 w-4" />
+                              Sources kept separate
+                            </div>
+                          </div>
+
+                          {/* Search results — separate per source */}
+                          <div>
+                            <p className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                              Search Results
+                            </p>
+                            <div className="space-y-3">
+                              {selectedDocs.map((doc) => {
+                                const colors = DOC_COLORS[doc.id];
+                                return (
+                                  <div
+                                    key={doc.id}
+                                    className={cn("rounded-lg border p-4", colors.bg, colors.border)}
+                                  >
+                                    <div className="flex items-center gap-2 mb-2">
+                                      <Search className="h-3.5 w-3.5 text-muted-foreground" />
+                                      <span className="text-xs font-semibold text-foreground">
+                                        {doc.title}
+                                      </span>
+                                    </div>
+                                    <p className="text-sm text-foreground leading-relaxed">
+                                      {SNIPPETS_BY_DOC[doc.id]?.[0]?.paragraphs.join(" ") || ""}
+                                    </p>
+                                  </div>
+                                );
+                              })}
+
+                              <div className="flex items-start gap-2 p-3 rounded-lg bg-emerald-50 border border-emerald-200">
+                                <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                                <p className="text-xs text-emerald-700 leading-relaxed">
+                                  Each result is clearly attributed to its source. You can verify claims by checking the original document.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* LLM comparison block */}
+                          <div>
+                            <p className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                              Compare: LLM Output for the Same Query
+                            </p>
+
+                            {/* LLM training data block */}
+                            <div className="rounded-lg border-2 border-dashed border-purple-300 bg-purple-50 p-3 mb-3">
+                              <div className="flex items-center gap-2 mb-1.5">
+                                <Database className="h-3.5 w-3.5 text-purple-500 flex-shrink-0" />
+                                <span className="text-xs font-semibold text-purple-700">
+                                  LLM Training Data also mixed in
+                                </span>
+                              </div>
+                              <p className="text-xs text-purple-600/70 leading-relaxed">
+                                {LLM_DATABASE_SNIPPET}
+                              </p>
+                            </div>
+
+                            <div className="flex justify-center mb-3">
+                              <div className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-heading font-semibold bg-red-100 text-red-700">
+                                <AlertTriangle className="h-4 w-4" />
+                                All sources merged into one output
+                              </div>
+                            </div>
+
+                            {(() => {
+                              const merged = LLM_MERGED_OUTPUTS[selectionKey];
+                              if (!merged) return null;
+                              return (
+                                <div className="space-y-3">
+                                  <div className="rounded-lg border border-border bg-white p-4">
+                                    <p className="text-sm text-foreground leading-relaxed">
+                                      {merged.text}
+                                    </p>
+                                  </div>
+                                  <div className="rounded-lg bg-red-50 border border-red-200 p-3">
+                                    <div className="flex items-center gap-2 mb-2">
+                                      <AlertTriangle className="h-4 w-4 text-red-600 flex-shrink-0" />
+                                      <span className="text-xs font-semibold text-red-700">
+                                        Information mixing detected
+                                      </span>
+                                    </div>
+                                    <ul className="space-y-1.5">
+                                      {merged.issues.map((issue, i) => (
+                                        <li
+                                          key={i}
+                                          className="text-xs text-red-600/80 leading-relaxed flex items-start gap-1.5"
+                                        >
+                                          <span className="text-red-400 mt-0.5">&#x2022;</span>
+                                          {issue}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                </div>
+                              );
+                            })()}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Navigation buttons */}
                       <div className="mt-8 flex items-center gap-3">
                         <Button
                           variant="outline"
@@ -572,7 +781,7 @@ export default function MultipleSourcesExercise() {
 
       <ModuleNavigation
         previousRoute="/module/multiple-sources"
-        nextRoute="/modules"
+        nextRoute="/module/multiple-sources/takeaways"
       />
     </div>
   );
