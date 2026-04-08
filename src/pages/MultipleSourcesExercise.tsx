@@ -701,11 +701,6 @@ export default function MultipleSourcesExercise() {
                                     </p>
                                   </div>
                                 ))}
-                                <div className="rounded-lg border border-dashed border-border bg-muted/20 p-2.5 flex-1 min-w-[130px]">
-                                  <p className="text-[11px] text-muted-foreground leading-relaxed italic">
-                                    "AI ethics" · "journalism standards" · "public trust" · …
-                                  </p>
-                                </div>
                               </div>
                             </div>
 
