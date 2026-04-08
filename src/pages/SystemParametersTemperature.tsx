@@ -36,18 +36,16 @@ export default function SystemParametersTemperature() {
 
       <main className="flex-1 flex flex-col pb-10">
         <div className="flex-1 flex justify-center">
-          <div className="flex flex-col w-full">
-            {/* Breadcrumb */}
-            <div className="pt-6 pb-3 px-6 flex justify-center">
-              <div className="max-w-[1100px]">
-                <Breadcrumb />
-              </div>
+          <div className="flex flex-col">
+            {/* Breadcrumb for 2xl - starts at controls, not bound by column */}
+            <div className="hidden 2xl:block pt-6 pb-5">
+              <Breadcrumb />
             </div>
 
             {/* Three column layout: Left panel + Center content + Evaluation */}
-            <div className="flex flex-1 items-start px-6 relative justify-center">
+            <div className="flex flex-1">
               {/* Left panel - Temperature controls */}
-              <div className="w-[280px] lg:w-[320px] flex-shrink-0 pr-6 lg:pr-10">
+              <div className="w-80 flex-shrink-0 px-6 pt-6 2xl:pt-0">
                 <div className="flex items-center gap-2 mb-4">
                   <h2 className="text-xl font-heading font-bold text-foreground">Temperature</h2>
                   <Tooltip>
@@ -132,46 +130,55 @@ export default function SystemParametersTemperature() {
               </div>
 
               {/* Middle column - Prompt + Output text */}
-              <div className="flex-1 min-w-0 max-w-[1100px]">
-                {/* Prompt bubble */}
-                <ChatPrompt
-                  text={PROMPT_TEXT}
-                  fileName="EU_AI_Act.pdf"
-                />
-
-                <div className="min-h-[400px] pt-4">
-                  {TEMPERATURE_OUTPUTS[temperature].split('\n\n').map((paragraph, i) => (
-                    <p key={i} className="text-xl leading-relaxed text-muted-foreground/60 mb-8">
-                      {paragraph}
-                    </p>
-                  ))}
+              <div className="flex-initial flex flex-col px-6 py-6 2xl:pt-0 items-start">
+                <div className="w-full max-w-[1100px] 2xl:hidden">
+                  <Breadcrumb />
+                  <div className="mb-5" />
                 </div>
 
-                {/* Navigation buttons */}
-                <div className="mt-8 mb-12 flex items-center gap-3">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => navigate("/module/system-parameters")}
-                    className="h-12 w-12 border-brand-tertiary-500 text-brand-tertiary-500 hover:bg-brand-tertiary-500/10"
-                  >
-                    <ArrowLeft className="!h-6 !w-6" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    onClick={() => navigate("/module/system-parameters/roles")}
-                    className="px-10 font-heading font-semibold border-brand-tertiary-500 text-brand-tertiary-500 hover:bg-brand-tertiary-500/10"
-                  >
-                    Continue
-                    <ArrowRight className="-mr-2 !h-6 !w-6" />
-                  </Button>
-                </div>
-              </div>
+                <div className="flex gap-6 max-w-[1100px] w-full">
+                  <div className="flex-1 flex flex-col">
+                    {/* Prompt bubble */}
+                    <ChatPrompt
+                      text={PROMPT_TEXT}
+                      fileName="EU_AI_Act.pdf"
+                    />
 
-              {/* Right column - Evaluation panel */}
-              <div className="flex-shrink-0 ml-6">
-                <EvaluationPanel initialIsOpen={true} canClose={true} />
+                    <div className="min-h-[400px] pt-4">
+                      {TEMPERATURE_OUTPUTS[temperature].split('\n\n').map((paragraph, i) => (
+                        <p key={i} className="text-xl leading-relaxed text-muted-foreground/60 mb-8">
+                          {paragraph}
+                        </p>
+                      ))}
+                    </div>
+
+                    {/* Navigation buttons */}
+                    <div className="mt-8 mb-12 flex items-center gap-3">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => navigate("/module/system-parameters")}
+                        className="h-12 w-12 border-brand-tertiary-500 text-brand-tertiary-500 hover:bg-brand-tertiary-500/10"
+                      >
+                        <ArrowLeft className="!h-6 !w-6" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="lg"
+                        onClick={() => navigate("/module/system-parameters/roles")}
+                        className="px-10 font-heading font-semibold border-brand-tertiary-500 text-brand-tertiary-500 hover:bg-brand-tertiary-500/10"
+                      >
+                        Continue
+                        <ArrowRight className="-mr-2 !h-6 !w-6" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Right column - Evaluation panel */}
+                  <div className="flex-shrink-0">
+                    <EvaluationPanel initialIsOpen={true} canClose={true} />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
