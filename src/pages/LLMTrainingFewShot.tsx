@@ -486,12 +486,12 @@ export default function LLMTrainingFewShot() {
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
 
-              {/* ── Right sidebar ── */}
-              <div className="w-80 flex-shrink-0">
-                <EvaluationPanel initialIsOpen={false} canClose={true} />
+                  {/* Right sidebar - Evaluation */}
+                  <div className="w-80 flex-shrink-0">
+                    <EvaluationPanel initialIsOpen={false} canClose={true} />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -512,50 +512,50 @@ export default function MultipleSourcesExercise() {
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
 
-              {/* ── Right sidebar ── */}
-              <div className="w-80 flex-shrink-0">
-                <EvaluationPanel initialIsOpen={false} canClose={true} />
+                  {/* Right sidebar - Evaluation */}
+                  <div className="w-80 flex-shrink-0">
+                    <EvaluationPanel initialIsOpen={false} canClose={true} />
 
-                {/* Retrieved Snippets */}
-                <div className="px-4 mt-4">
-                  <button
-                    type="button"
-                    onClick={() => setSnippetsOpen(!snippetsOpen)}
-                    className="flex items-center gap-2 text-base font-semibold font-heading text-foreground mb-3"
-                  >
-                    Retrieved Snippets
-                    {snippetsOpen ? (
-                      <ChevronUp className="h-4 w-4 text-muted-foreground" />
-                    ) : (
-                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                    )}
-                  </button>
+                    {/* Retrieved Snippets */}
+                    <div className="px-4 mt-4">
+                      <button
+                        type="button"
+                        onClick={() => setSnippetsOpen(!snippetsOpen)}
+                        className="flex items-center gap-2 text-base font-semibold font-heading text-foreground mb-3"
+                      >
+                        Retrieved Snippets
+                        {snippetsOpen ? (
+                          <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                        )}
+                      </button>
 
-                  {snippetsOpen && (
-                    <div className="space-y-4">
-                      {currentSnippets.map((snippet, i) => (
-                        <div
-                          key={i}
-                          className="border border-border rounded-lg p-4 space-y-3"
-                        >
-                          <p className="text-sm font-semibold text-foreground">
-                            {snippet.title}
-                          </p>
-                          {snippet.paragraphs.map((para, j) => (
-                            <p
-                              key={j}
-                              className="text-sm text-muted-foreground leading-relaxed"
+                      {snippetsOpen && (
+                        <div className="space-y-4">
+                          {currentSnippets.map((snippet, i) => (
+                            <div
+                              key={i}
+                              className="border border-border rounded-lg p-4 space-y-3"
                             >
-                              {para}
-                            </p>
+                              <p className="text-sm font-semibold text-foreground">
+                                {snippet.title}
+                              </p>
+                              {snippet.paragraphs.map((para, j) => (
+                                <p
+                                  key={j}
+                                  className="text-sm text-muted-foreground leading-relaxed"
+                                >
+                                  {para}
+                                </p>
+                              ))}
+                            </div>
                           ))}
                         </div>
-                      ))}
+                      )}
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
             </div>
