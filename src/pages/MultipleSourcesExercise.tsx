@@ -102,6 +102,20 @@ const OUTPUT_FLAGS: Record<string, FlagDef[]> = {
     { text: "Regulators and Policymakers", explanation: "No retrieved snippet mentions regulators or policymakers. The model fabricates this section, including claims about 'legal and regulatory frameworks' attributed to 'the YLE guide'." },
     { text: "Invest in training staff on AI risks and ethical implications", explanation: "Not in either retrieved snippet. The snippets discuss governance frameworks and transparency obligations — staff training is the model's own addition." },
   ],
+  "doc-2": [
+    { text: "Organizations should implement labelling systems and disclosure policies.", explanation: "The retrieved snippet mentions 'transparency with audiences' and 'editorial oversight mechanisms' — but never specifically mentions 'labelling systems' or 'disclosure policies'. The model adds implementation details not present in the source." },
+  ],
+  "doc-3": [
+    { text: "Internal guidelines require labelling of AI-assisted content and prohibit fully automated publishing without human review.", explanation: "This closely mirrors the retrieved snippet but is presented as the model's summary rather than a paraphrase. The original says 'developed internal guidelines that require labelling' — the model drops 'developed' and presents it as established fact." },
+  ],
+  "doc-1,doc-3": [
+    { text: "DW exemplifies this by using AI to support journalists while keeping editorial control with humans.", explanation: "The Doc 3 snippet says 'final editorial decisions must always rest with human editors' — the model paraphrases this as 'keeping editorial control with humans', subtly shifting the meaning from decision-making to broader control." },
+    { text: "Both sources emphasise the need to scrutinise AI tools for biases and maintain transparency through content labelling and human oversight.", explanation: "Doc 1 mentions 'scrutinise products for biases and stereotypes' and Doc 3 mentions 'labelling of AI-assisted content' — the model merges these into a single claim as though both documents equally emphasise both points, when each source focuses on different aspects." },
+  ],
+  "doc-2,doc-3": [
+    { text: "Clear governance frameworks for AI use are essential, as demonstrated by DW's internal guidelines requiring human editorial oversight.", explanation: "The model conflates two sources: Doc 2 mentions 'governance frameworks' and Doc 3 mentions 'internal guidelines' — but Doc 3 never uses the term 'governance frameworks' and Doc 2 doesn't reference DW. The model creates an unsupported causal link between them." },
+    { text: "ensuring audiences understand when AI tools have been used in the editorial process", explanation: "Doc 2 mentions 'transparency with audiences about AI-generated content' and Doc 3 mentions 'labelling of AI-assisted content' — the model reframes these as 'ensuring audiences understand', adding an interpretive layer not present in either source." },
+  ],
   "doc-1,doc-2,doc-3": [
     { text: "DW is firmly committed to journalism that is produced by people.", explanation: "Presented as a DW quote, but the Doc 3 snippet actually says 'DW uses AI tools to support journalists but maintains that final editorial decisions must always rest with human editors' — similar sentiment, different wording." },
     { text: "Our journalists will continue to control all applications and thoroughly review anything before publication.", explanation: "This quote is not in the Doc 3 snippet. The snippet mentions 'labelling of AI-assisted content' and prohibiting 'fully automated publishing' — not 'control all applications'." },
@@ -377,6 +391,34 @@ const LLM_MERGED_OUTPUTS: Record<string, { text: string; issues: string[] }> = {
       "\"Regulators and policymakers\" — entire category invented by the model",
     ],
   },
+  "doc-2": {
+    text: "Media organisations must establish clear governance frameworks for AI use. Transparency with audiences about AI-generated content is a fundamental ethical obligation, requiring labelling systems and disclosure policies.",
+    issues: [
+      "\"labelling systems and disclosure policies\" — not in the source snippet",
+      "Model adds specific implementation details beyond what the document states",
+    ],
+  },
+  "doc-3": {
+    text: "DW uses AI to support journalists while keeping editorial control with humans. Internal guidelines require labelling AI-assisted content and prohibit fully automated publishing.",
+    issues: [
+      "\"keeping editorial control\" — paraphrased from 'final editorial decisions must always rest with human editors'",
+      "Close to source but subtly shifts meaning from decisions to broader control",
+    ],
+  },
+  "doc-1,doc-3": {
+    text: "Media organisations need an AI strategy for public service value. DW exemplifies this by supporting journalists with AI while maintaining human editorial control and transparency through content labelling.",
+    issues: [
+      "\"exemplifies this\" — creates an unsupported link between the two documents",
+      "Merges distinct points from each source as though they share a unified argument",
+    ],
+  },
+  "doc-2,doc-3": {
+    text: "Clear governance frameworks are essential for ethical AI use in media. DW's internal guidelines demonstrate this in practice, requiring human oversight and content labelling for transparency.",
+    issues: [
+      "\"demonstrate this in practice\" — model links Doc 2's frameworks to Doc 3's guidelines without source support",
+      "Neither document references the other; the causal connection is fabricated",
+    ],
+  },
   "doc-1,doc-2,doc-3": {
     text: "DW is firmly committed to journalism produced by people. Their journalists control all applications and review everything before publication. Combined with governance frameworks from ethics boards, the industry is moving toward responsible AI adoption.",
     issues: [
@@ -401,25 +443,14 @@ export default function MultipleSourcesExercise() {
   const [diagramRoute, setDiagramRoute] = useState<null | "llm" | "search">(null);
   /* Separate doc selection for the LLM diagram (independent from exercise) */
   const [diagramDocs, setDiagramDocs] = useState<Set<string>>(new Set(["doc-1"]));
-
-  /* Only allow sequential selection: doc-1, doc-1+doc-2, doc-1+doc-2+doc-3 */
-  const ALLOWED_SETS: string[][] = [
-    ["doc-1"],
-    ["doc-1", "doc-2"],
-    ["doc-1", "doc-2", "doc-3"],
-  ];
+  /* Drag-and-drop visual state for the LLM diagram drop zone */
+  const [isDragOver, setIsDragOver] = useState(false);
 
   const toggle = (id: string) => {
     setSelected((prev) => {
       const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
+      if (next.has(id)) { if (next.size > 1) next.delete(id); } // keep at least 1
       else next.add(id);
-      // Check if the resulting set is allowed
-      const nextArr = Array.from(next).sort();
-      const isAllowed = ALLOWED_SETS.some(
-        (allowed) => allowed.length === nextArr.length && allowed.every((v, i) => v === nextArr[i])
-      );
-      if (!isAllowed) return prev; // reject invalid combination
       return next;
     });
   };
@@ -432,6 +463,44 @@ export default function MultipleSourcesExercise() {
       else next.add(id);
       return next;
     });
+  };
+
+  const addDiagramDoc = (id: string) => {
+    setDiagramDocs((prev) => {
+      if (prev.has(id)) return prev;
+      const next = new Set(prev);
+      next.add(id);
+      return next;
+    });
+  };
+
+  const removeDiagramDoc = (id: string) => {
+    setDiagramDocs((prev) => {
+      if (!prev.has(id) || prev.size <= 1) return prev; // keep at least 1
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+  };
+
+  const handleDocDragStart = (e: React.DragEvent<HTMLElement>, id: string) => {
+    e.dataTransfer.setData("text/plain", id);
+    e.dataTransfer.effectAllowed = "copy";
+  };
+
+  const handleDropZoneDragOver = (e: React.DragEvent<HTMLElement>) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "copy";
+    if (!isDragOver) setIsDragOver(true);
+  };
+
+  const handleDropZoneDragLeave = () => setIsDragOver(false);
+
+  const handleDropZoneDrop = (e: React.DragEvent<HTMLElement>) => {
+    e.preventDefault();
+    const id = e.dataTransfer.getData("text/plain");
+    if (id) addDiagramDoc(id);
+    setIsDragOver(false);
   };
 
   const diagramSelectionKey = useMemo(() => Array.from(diagramDocs).sort().join(","), [diagramDocs]);
@@ -532,11 +601,51 @@ export default function MultipleSourcesExercise() {
                   </>
                 )}
 
-                {/* ── How-it-works sidebar (minimal — controls are in main column) ── */}
+                {/* ── How-it-works sidebar ── */}
                 {topView === "how-it-works" && (
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    Explore how an LLM and a search engine each process the same query with multiple documents.
-                  </p>
+                  <>
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                      Explore how an LLM and a search engine each process the same query with multiple documents.
+                    </p>
+                    {diagramRoute === "llm" && (
+                      <>
+                        <p className="text-sm font-semibold text-foreground mb-3">
+                          Drag documents into the diagram
+                        </p>
+                        <div className="space-y-3">
+                          {DOCUMENTS.map((doc) => {
+                            const inDiagram = diagramDocs.has(doc.id);
+                            return (
+                              <button
+                                key={doc.id}
+                                type="button"
+                                draggable
+                                onDragStart={(e) => handleDocDragStart(e, doc.id)}
+                                onClick={() => addDiagramDoc(doc.id)}
+                                className={cn(
+                                  "w-full flex items-start gap-3 rounded-xl border p-3 text-left transition-shadow cursor-grab active:cursor-grabbing",
+                                  inDiagram
+                                    ? "border-brand-tertiary-500 shadow-sm opacity-60"
+                                    : "border-border hover:shadow-md"
+                                )}
+                              >
+                                <File className="h-8 text-muted-foreground flex-shrink-0 my-[23px] w-[32px]" strokeWidth={1.5} />
+                                <div className="flex-1 min-w-0">
+                                  <span className="text-xs text-muted-foreground">{doc.date}</span>
+                                  <span className="text-sm font-semibold text-foreground leading-tight block">
+                                    {doc.title}
+                                  </span>
+                                  <span className="text-xs text-muted-foreground">
+                                    {inDiagram ? "In diagram" : doc.source}
+                                  </span>
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </>
+                    )}
+                  </>
                 )}
               </div>
 
@@ -597,17 +706,19 @@ export default function MultipleSourcesExercise() {
                     {topView === "how-it-works" && (
                       <div className="bg-background rounded-lg p-8 flex-1 flex flex-col">
 
+                        {/* Prompt – always visible */}
+                        <div className="mb-6 ml-auto max-w-[80%] bg-muted p-5 rounded-[20px]">
+                          <p className="text-foreground leading-relaxed">
+                            Who holds the most responsibility to uphold AI ethics?
+                          </p>
+                        </div>
+
                         {/* Route chooser (inline in main column) */}
                         {!diagramRoute && (
                           <>
                             <p className="text-sm text-muted-foreground mb-6">
                               How does each approach handle the same query with multiple documents?
                             </p>
-                            <div className="mb-6 ml-auto max-w-[80%] bg-muted p-5 rounded-[20px]">
-                              <p className="text-foreground leading-relaxed">
-                                Who holds the most responsibility to uphold AI ethics?
-                              </p>
-                            </div>
                             <div className="flex gap-4 mt-4">
                               <button
                                 type="button"
@@ -633,47 +744,71 @@ export default function MultipleSourcesExercise() {
 
                         {/* ── LLM block diagram ── */}
                         {diagramRoute === "llm" && (
-                          <div className="flex-1 space-y-4">
+                          <div className="flex-1 space-y-0">
                             <button
                               type="button"
                               onClick={() => setDiagramRoute(null)}
-                              className="text-xs text-brand-tertiary-500 font-semibold flex items-center gap-1 hover:underline mb-2"
+                              className="text-xs text-brand-tertiary-500 font-semibold flex items-center gap-1 hover:underline mb-4"
                             >
                               <ArrowLeft className="h-3 w-3" /> Back
                             </button>
 
-                            {/* Document selector (inline) */}
-                            <div>
-                              <p className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-                                Select documents to include
-                              </p>
-                              <div className="flex gap-2 flex-wrap mb-1">
-                                {DOCUMENTS.map((doc) => {
-                                  const isOn = diagramDocs.has(doc.id);
-                                  return (
-                                    <button
-                                      key={doc.id}
-                                      type="button"
-                                      onClick={() => toggleDiagramDoc(doc.id)}
-                                      className={cn(
-                                        "rounded-lg border p-3 flex-1 min-w-[140px] text-left transition-all",
-                                        isOn ? "border-foreground bg-muted" : "border-border opacity-40"
-                                      )}
-                                    >
-                                      <div className="flex items-center gap-1.5 mb-1">
-                                        <FileText className="h-3.5 w-3.5 text-muted-foreground" />
-                                        <span className={cn("text-xs font-semibold", isOn ? "text-foreground" : "text-muted-foreground")}>
-                                          {doc.title}
-                                        </span>
-                                      </div>
-                                      <p className="text-[11px] text-muted-foreground leading-relaxed">
-                                        {SNIPPETS_BY_DOC[doc.id]?.[0]?.paragraphs[0] || ""}
-                                      </p>
-                                    </button>
-                                  );
-                                })}
-                                {/* Locked database */}
-                                <div className="rounded-lg border border-dashed border-muted-foreground/30 bg-muted/50 p-3 flex-1 min-w-[140px]">
+                            {/* ── SOURCES BLOCK (drop zone) ── */}
+                            <div
+                              onDragOver={handleDropZoneDragOver}
+                              onDragLeave={handleDropZoneDragLeave}
+                              onDrop={handleDropZoneDrop}
+                              className={cn(
+                                "rounded-xl border-2 p-4 transition-all",
+                                isDragOver
+                                  ? "border-brand-tertiary-500 bg-brand-tertiary-500/5"
+                                  : "border-dashed border-border bg-muted/20"
+                              )}
+                            >
+                              <div className="flex items-center justify-between mb-3">
+                                <span className="text-[11px] font-heading font-bold text-foreground uppercase tracking-wider">
+                                  Sources
+                                </span>
+                                <span className="text-[10px] text-muted-foreground">
+                                  {diagramSelectedDocs.length === 0
+                                    ? "Drop documents here"
+                                    : "Drop to add more"}
+                                </span>
+                              </div>
+                              <div className="flex gap-2 flex-wrap">
+                                {diagramSelectedDocs.length === 0 && (
+                                  <div className="flex-1 min-h-[72px] flex items-center justify-center text-xs text-muted-foreground italic">
+                                    Drag documents from the left column into this box
+                                  </div>
+                                )}
+                                {diagramSelectedDocs.map((doc) => (
+                                  <div
+                                    key={doc.id}
+                                    className="group relative rounded-lg border-2 border-foreground bg-white p-3 flex-1 min-w-[140px]"
+                                  >
+                                    <div className="flex items-center gap-1.5 mb-1 pr-5">
+                                      <FileText className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                                      <span className="text-xs font-semibold text-foreground leading-tight">
+                                        {doc.title}
+                                      </span>
+                                    </div>
+                                    <p className="text-[11px] text-muted-foreground leading-relaxed">
+                                      {SNIPPETS_BY_DOC[doc.id]?.[0]?.paragraphs[0] || ""}
+                                    </p>
+                                    {diagramSelectedDocs.length > 1 && (
+                                      <button
+                                        type="button"
+                                        onClick={() => removeDiagramDoc(doc.id)}
+                                        className="absolute top-1.5 right-1.5 h-4 w-4 flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-muted text-xs leading-none"
+                                        aria-label={`Remove ${doc.title}`}
+                                      >
+                                        ×
+                                      </button>
+                                    )}
+                                  </div>
+                                ))}
+                                {/* Locked training database (always present) */}
+                                <div className="rounded-lg border-2 border-dashed border-muted-foreground/40 bg-muted/40 p-3 flex-1 min-w-[140px]">
                                   <div className="flex items-center gap-1.5 mb-1">
                                     <Database className="h-3.5 w-3.5 text-muted-foreground" />
                                     <span className="text-xs font-semibold text-foreground">Training Database</span>
@@ -686,16 +821,41 @@ export default function MultipleSourcesExercise() {
                               </div>
                             </div>
 
-                            <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-muted-foreground/40" /></div>
+                            {/* Connector */}
+                            <div className="flex flex-col items-center py-1">
+                              <div className="w-px h-4 bg-muted-foreground/40" />
+                              <ArrowDown className="h-4 w-4 text-muted-foreground/60 -mt-1" />
+                            </div>
 
-                            {/* Extraction */}
-                            <div>
-                              <p className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                            {/* ── LLM PROCESSING BLOCK ── */}
+                            <div className="rounded-xl border-2 border-foreground bg-white p-4 shadow-sm">
+                              <div className="flex items-center gap-3">
+                                <div className="rounded-lg bg-muted p-2.5">
+                                  <Bot className="h-6 w-6 text-foreground" />
+                                </div>
+                                <div className="flex-1">
+                                  <p className="text-sm font-heading font-bold text-foreground">Language Model</p>
+                                  <p className="text-[11px] text-muted-foreground leading-relaxed">
+                                    Reads every source, blends facts with training data, and generates one merged answer.
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Connector */}
+                            <div className="flex flex-col items-center py-1">
+                              <div className="w-px h-4 bg-muted-foreground/40" />
+                              <ArrowDown className="h-4 w-4 text-muted-foreground/60 -mt-1" />
+                            </div>
+
+                            {/* ── EXTRACTION BLOCK ── */}
+                            <div className="rounded-xl border-2 border-border bg-muted/20 p-4">
+                              <span className="text-[11px] font-heading font-bold text-foreground uppercase tracking-wider block mb-3">
                                 Information extracted
-                              </p>
+                              </span>
                               <div className="flex gap-2 flex-wrap">
                                 {diagramSelectedDocs.map((doc) => (
-                                  <div key={doc.id} className="rounded-lg border border-border bg-muted/30 p-2.5 flex-1 min-w-[130px]">
+                                  <div key={doc.id} className="rounded-lg border border-border bg-white p-2.5 flex-1 min-w-[130px]">
                                     <p className="text-[11px] text-foreground leading-relaxed italic">
                                       {LLM_EXTRACTIONS[doc.id]}
                                     </p>
@@ -704,21 +864,23 @@ export default function MultipleSourcesExercise() {
                               </div>
                             </div>
 
-                            <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-muted-foreground/40" /></div>
+                            {/* Connector */}
+                            <div className="flex flex-col items-center py-1">
+                              <div className="w-px h-4 bg-muted-foreground/40" />
+                              <ArrowDown className="h-4 w-4 text-muted-foreground/60 -mt-1" />
+                            </div>
 
-                            {/* Output */}
-                            <div>
-                              <p className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                            {/* ── OUTPUT BLOCK ── */}
+                            <div className="rounded-xl border-2 border-border bg-white p-4">
+                              <span className="text-[11px] font-heading font-bold text-foreground uppercase tracking-wider block mb-3">
                                 Output
-                              </p>
+                              </span>
                               {(() => {
                                 const key = Array.from(diagramDocs).sort().join(",");
                                 const merged = LLM_MERGED_OUTPUTS[key];
                                 if (!merged) return <p className="text-xs text-muted-foreground">Select a valid document combination.</p>;
                                 return (
-                                  <div className="rounded-lg border border-border bg-white p-4">
-                                    <p className="text-sm text-foreground leading-relaxed">{merged.text}</p>
-                                  </div>
+                                  <p className="text-sm text-foreground leading-relaxed">{merged.text}</p>
                                 );
                               })()}
                             </div>
