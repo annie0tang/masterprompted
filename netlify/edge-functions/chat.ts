@@ -149,14 +149,8 @@ function translateCohereSSE(
     let buf = "";
     const docNumber = new Map<string, number>();
     let nextN = 1;
-    // Debug counters
-    let loggedFirstChunk = false;
-    let eventCount = 0;
-    let parseErrors = 0;
-    let emittedContentChars = 0;
 
     const emitContent = (controller: TransformStreamDefaultController, content: string) => {
-        emittedContentChars += content.length;
         const frame = {
             choices: [{ index: 0, delta: { content }, finish_reason: null }],
         };
@@ -211,32 +205,19 @@ function translateCohereSSE(
     return upstream.pipeThrough(
         new TransformStream({
             transform(chunk, controller) {
-                const decoded = decoder.decode(chunk, { stream: true });
-                if (!loggedFirstChunk) {
-                    loggedFirstChunk = true;
-                    console.log(`[EDGE_DBG] cohere first chunk (${decoded.length} chars): ${JSON.stringify(decoded.slice(0, 600))}`);
-                }
                 // Cohere v2 streams NDJSON: one JSON object per line, separated
                 // by a single '\n'. Not SSE — no `data:` prefix, no blank-line
                 // frame separator.
-                buf += decoded;
+                buf += decoder.decode(chunk, { stream: true });
                 const lines = buf.split("\n");
                 buf = lines.pop() ?? "";
                 for (const line of lines) {
                     const json = line.trim();
                     if (!json) continue;
                     try {
-                        const evt = JSON.parse(json);
-                        eventCount++;
-                        if (eventCount <= 3) {
-                            console.log(`[EDGE_DBG] cohere event #${eventCount} type=${evt.type}`);
-                        }
-                        handleEvent(evt, controller);
-                    } catch (e) {
-                        parseErrors++;
-                        if (parseErrors <= 3) {
-                            console.log(`[EDGE_DBG] cohere parse error: ${e}. line=${JSON.stringify(json.slice(0, 200))}`);
-                        }
+                        handleEvent(JSON.parse(json), controller);
+                    } catch {
+                        // ignore malformed line
                     }
                 }
             },
@@ -245,14 +226,11 @@ function translateCohereSSE(
                 const tail = buf.trim();
                 if (tail) {
                     try {
-                        const evt = JSON.parse(tail);
-                        eventCount++;
-                        handleEvent(evt, controller);
+                        handleEvent(JSON.parse(tail), controller);
                     } catch {
                         // ignore
                     }
                 }
-                console.log(`[EDGE_DBG] cohere stream done events=${eventCount} parseErrors=${parseErrors} emittedContent=${emittedContentChars}`);
                 emitDone(controller);
             },
         }),
