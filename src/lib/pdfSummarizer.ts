@@ -4,6 +4,8 @@
  * chunk summaries into a single document summary.
  */
 
+import { SSEContentParser } from "./sseStream";
+
 const CHARS_PER_TOKEN = 3.5;
 const CHUNK_TOKEN_TARGET = 4000;
 const CHUNK_CHAR_TARGET = CHUNK_TOKEN_TARGET * CHARS_PER_TOKEN; // ~14,000
@@ -83,7 +85,8 @@ async function callLLM(
   signal?: AbortSignal
 ): Promise<string> {
   // Use streaming to avoid Netlify's 26s idle timeout on edge functions.
-  // The edge function streams plain text chunks back, keeping the connection alive.
+  // The edge function forwards raw SSE frames, so we parse `delta.content`
+  // client-side via SSEContentParser.
   const response = await fetch(apiUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -104,15 +107,19 @@ async function callLLM(
     throw new Error(`Summarization LLM call failed: ${response.status} - ${errorText}`);
   }
 
-  // Accumulate streamed plain-text chunks into the full response
+  // Parse SSE frames client-side and accumulate the content deltas
   const reader = response.body!.getReader();
   const decoder = new TextDecoder();
+  const parser = new SSEContentParser();
   let result = '';
 
   while (true) {
     const { done, value } = await reader.read();
-    if (done) break;
-    result += decoder.decode(value, { stream: true });
+    if (done) {
+      result += parser.flush().join('');
+      break;
+    }
+    result += parser.feed(decoder.decode(value, { stream: true })).join('');
   }
 
   return result.trim();
@@ -123,8 +130,11 @@ async function callLLM(
 // ---------------------------------------------------------------------------
 
 const MAP_SYSTEM_PROMPT =
-  'You are a document summarizer. Produce a concise, factual summary of the following text section. ' +
-  'Preserve key facts, names, dates, statistics, and arguments. Do not add commentary.';
+  'You are a precise document summarizer. Produce a factual summary of the following text section. ' +
+  'Rules: (1) Preserve ALL names, dates, numbers, statistics, and quoted statements exactly as written — do not round, approximate, or rephrase numerical data. ' +
+  '(2) Do not infer, interpret, or add information not explicitly stated in the text. ' +
+  '(3) If a passage is ambiguous, summarize what it literally says rather than what it might mean. ' +
+  '(4) Do not add commentary, opinions, or conclusions beyond what the text states.';
 
 async function summarizeChunk(
   chunk: string,
@@ -158,8 +168,11 @@ async function summarizeChunk(
 // ---------------------------------------------------------------------------
 
 const REDUCE_SYSTEM_PROMPT =
-  'You are a document summarizer. Combine the following section summaries into a single coherent document summary. ' +
-  'Preserve all key facts and maintain logical flow. Be concise.';
+  'You are a precise document summarizer. Combine the following section summaries into a single coherent document summary. ' +
+  'Rules: (1) Preserve ALL names, dates, numbers, and statistics exactly as they appear — do not alter any factual details during consolidation. ' +
+  '(2) If two sections contain the same fact stated differently, preserve both versions rather than choosing one. ' +
+  '(3) Maintain logical flow but never add connective statements that introduce new claims. ' +
+  '(4) Be concise without sacrificing factual precision.';
 
 async function reduceSummaries(
   summaries: string[],

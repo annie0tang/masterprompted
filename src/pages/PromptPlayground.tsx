@@ -6,6 +6,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { PopoverSeries } from "@/components/PopoverSeries";
 import { useLanguage } from '@/contexts/LanguageContext';
 import ChatBody from "@/components/ChatBody";
+import { SSEContentParser } from "@/lib/sseStream";
 import { runAllEvaluations } from "@/services/evaluations";
 import type { EvaluationResult } from "@/services/evaluations/types";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -14,7 +15,8 @@ const NO_CHANGE_VALUE = "no-change";
 // const NETLIFY_CHAT_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
 //   ? "/api/chat"
 //   : "https://luxury-blini-3336bb.netlify.app/api/chat";
-const NETLIFY_CHAT_URL = "https://luxury-blini-3336bb.netlify.app/api/chat";
+// const NETLIFY_CHAT_URL = "https://luxury-blini-3336bb.netlify.app/api/chat";
+const NETLIFY_CHAT_URL = "https://69d76b0a4a68e272bd584118--luxury-blini-3336bb.netlify.app/api/chat"
 
 export type Parameters = {
   specificity: string;
@@ -151,25 +153,46 @@ const PromptPlayground = () => {
 
   const submitAnswerForThreadVersion = useCallback(
     async (threadIndex: number, versionIndex: number, promptText: string) => {
-      const payload = {
-        model: "meta-llama/Llama-3.3-70B-Instruct:ovhcloud",
-        // model: "Qwen/Qwen3-Coder-30B-A3B-Instruct:fastest",
-        temperature: 0.7,
+      // --- Grounding system prompt (conditional on PDF uploads) ---
+      const groundingPrompt = uploadedFiles.length > 0
+        ? `You are a document analysis assistant. You have been provided with one or more reference documents. Follow these rules strictly:
+
+1. BASE YOUR ANSWERS ON THE PROVIDED DOCUMENTS. When the user's question relates to topics covered in the documents, your answer must be drawn from the document content. Do not supplement with outside knowledge unless the document is insufficient to answer the question.
+2. CITE WITH NUMBERED REFERENCES. When referencing specific facts, statistics, names, or claims from a document, place an inline citation immediately after the claim using the format [1], [2], etc., where the number corresponds to the document index. If citing a specific section, use [1, p.X] or [1, Section Y].
+3. DISTINGUISH SOURCES. If you must use knowledge beyond the documents (because the documents do not address the question), mark the claim with [External] and briefly note the source if known.
+4. NEVER FABRICATE DOCUMENT CONTENT. If you cannot find specific information in the provided documents, say so. Do not guess or paraphrase loosely — accuracy is more important than completeness.
+5. PRESERVE PRECISION. Reproduce names, dates, numbers, and statistics exactly as they appear in the documents. Do not round, approximate, or restate figures unless asked.
+6. WHEN IN DOUBT, QUOTE. If uncertain whether your recollection of a document detail is exact, quote the relevant passage directly rather than paraphrasing.`
+        : "You are a helpful assistant.";
+
+      // --- Build documents array in Cohere's native format ---
+      // The edge function sends this directly to Cohere's `documents` parameter
+      // for native citations, and stringifies it into the system prompt for
+      // the Qwen fallback path.
+      const documents = uploadedFiles.length > 0
+        ? uploadedFiles.map((file, idx) => {
+            const useSum = useSummaryForOutput && !!file.summary;
+            const text = getFileContent(file, useSummaryForOutput);
+            const titleSuffix = useSum
+              ? ` [summary of ~${file.originalTokenCount} tokens]`
+              : "";
+            return {
+              id: `doc-${idx + 1}`,
+              data: { title: `${file.name}${titleSuffix}`, text },
+            };
+          })
+        : undefined;
+
+      const payload: Record<string, unknown> = {
+        model: "command-r-08-2024",
+        provider: "cohere",
+        temperature: uploadedFiles.length > 0 ? 0.3 : 0.7,
         stream: true,
         messages: [
-          { role: "system", content: "You are a helpful assistant." },
-          ...uploadedFiles.map(file => {
-            const useSum = useSummaryForOutput && !!file.summary;
-            const fileContent = getFileContent(file, useSummaryForOutput);
-            return {
-              role: "user" as const,
-              content: useSum
-                ? `Summary of uploaded PDF "${file.name}" (condensed from ~${file.originalTokenCount} tokens):\n\n${fileContent}`
-                : `Context from uploaded PDF "${file.name}":\n\n${fileContent}`
-            };
-          }),
+          { role: "system", content: groundingPrompt },
           { role: "user", content: promptText },
         ],
+        ...(documents ? { documents } : {}),
       };
 
       // Payload size verification (6MB limit)
@@ -203,6 +226,7 @@ const PromptPlayground = () => {
         }
 
         const decoder = new TextDecoder();
+        const sseParser = new SSEContentParser();
         let accumulatedAnswer = "";
         let isStreamComplete = false;
 
@@ -233,31 +257,32 @@ const PromptPlayground = () => {
 
         const monitoredStream = response.body.pipeThrough(monitor);
         const reader = monitoredStream.getReader();
-        let chunkCount = 0;
 
         console.info("Stream reading started...");
+
+        const applyDeltas = (deltas: string[]) => {
+          if (deltas.length === 0) return;
+          accumulatedAnswer += deltas.join("");
+          setThreads(prev => {
+            const copy = [...prev];
+            const thread = copy[threadIndex];
+            if (!thread?.versions[versionIndex]) return prev;
+            const versions = [...thread.versions];
+            versions[versionIndex] = { ...versions[versionIndex], answer: accumulatedAnswer };
+            copy[threadIndex] = { ...thread, versions };
+            return copy;
+          });
+        };
 
         try {
           while (true) {
             const { done, value } = await reader.read();
-            if (done) break;
-
-            chunkCount++;
-            // if (chunkCount % 50 === 0) {
-            //   console.log(`Still generating... (received ${chunkCount} text chunks, ~${accumulatedAnswer.length} chars)`);
-            // }
-
-            accumulatedAnswer += decoder.decode(value, { stream: true });
-
-            setThreads(prev => {
-              const copy = [...prev];
-              const thread = copy[threadIndex];
-              if (!thread?.versions[versionIndex]) return prev;
-              const versions = [...thread.versions];
-              versions[versionIndex] = { ...versions[versionIndex], answer: accumulatedAnswer };
-              copy[threadIndex] = { ...thread, versions };
-              return copy;
-            });
+            if (done) {
+              applyDeltas(sseParser.flush());
+              break;
+            }
+            const text = decoder.decode(value, { stream: true });
+            applyDeltas(sseParser.feed(text));
           }
         } catch (err: any) {
           if (err.name === 'AbortError') {
@@ -518,15 +543,15 @@ const PromptPlayground = () => {
         setUploadedFiles(prev => prev.map(f =>
           (f.name === file.name && f.isUploading)
             ? {
-                name: file.name,
-                content: activeContent,
-                rawContent: text,
-                summary: summaryText,
-                size: activeContent.length,
-                isUploading: false,
-                isSummarized,
-                originalTokenCount: isSummarized ? rawTokens : undefined,
-              }
+              name: file.name,
+              content: activeContent,
+              rawContent: text,
+              summary: summaryText,
+              size: activeContent.length,
+              isUploading: false,
+              isSummarized,
+              originalTokenCount: isSummarized ? rawTokens : undefined,
+            }
             : f
         ));
 
@@ -687,7 +712,7 @@ const PromptPlayground = () => {
     <div className="min-h-screen max-h-screen bg-background flex flex-col">
       <Header onLanguageChange={setPageLanguage} />
       <main className="flex-1 flex flex-col">
-        <div className="flex flex-1 h-[calc(100vh-4rem)]">
+        <div className="flex flex-1 h-[calc(100vh-4rem)] max-w-7xl mx-auto w-full items-center">
           <div className="w-80 flex-shrink-0 bg-surface-200 2xl:bg-transparent 2xl:pb-4 flex items-start justify-center">
             <div className="w-[264px] pt-6 pb-4 2xl:pt-0 2xl:pb-0 2xl:bg-card 2xl:border 2xl:border-border 2xl:rounded-lg 2xl:shadow-sm 2xl:overflow-hidden 2xl:w-72">
               <PromptControls {...{
