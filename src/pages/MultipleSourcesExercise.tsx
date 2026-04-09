@@ -443,6 +443,8 @@ export default function MultipleSourcesExercise() {
   const [diagramRoute, setDiagramRoute] = useState<null | "llm" | "search">(null);
   /* Separate doc selection for the LLM diagram (independent from exercise) */
   const [diagramDocs, setDiagramDocs] = useState<Set<string>>(new Set(["doc-1"]));
+  /* Drag-and-drop visual state for the LLM diagram drop zone */
+  const [isDragOver, setIsDragOver] = useState(false);
 
   const toggle = (id: string) => {
     setSelected((prev) => {
@@ -461,6 +463,44 @@ export default function MultipleSourcesExercise() {
       else next.add(id);
       return next;
     });
+  };
+
+  const addDiagramDoc = (id: string) => {
+    setDiagramDocs((prev) => {
+      if (prev.has(id)) return prev;
+      const next = new Set(prev);
+      next.add(id);
+      return next;
+    });
+  };
+
+  const removeDiagramDoc = (id: string) => {
+    setDiagramDocs((prev) => {
+      if (!prev.has(id) || prev.size <= 1) return prev; // keep at least 1
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+  };
+
+  const handleDocDragStart = (e: React.DragEvent<HTMLElement>, id: string) => {
+    e.dataTransfer.setData("text/plain", id);
+    e.dataTransfer.effectAllowed = "copy";
+  };
+
+  const handleDropZoneDragOver = (e: React.DragEvent<HTMLElement>) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "copy";
+    if (!isDragOver) setIsDragOver(true);
+  };
+
+  const handleDropZoneDragLeave = () => setIsDragOver(false);
+
+  const handleDropZoneDrop = (e: React.DragEvent<HTMLElement>) => {
+    e.preventDefault();
+    const id = e.dataTransfer.getData("text/plain");
+    if (id) addDiagramDoc(id);
+    setIsDragOver(false);
   };
 
   const diagramSelectionKey = useMemo(() => Array.from(diagramDocs).sort().join(","), [diagramDocs]);
@@ -561,11 +601,51 @@ export default function MultipleSourcesExercise() {
                   </>
                 )}
 
-                {/* ── How-it-works sidebar (minimal — controls are in main column) ── */}
+                {/* ── How-it-works sidebar ── */}
                 {topView === "how-it-works" && (
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    Explore how an LLM and a search engine each process the same query with multiple documents.
-                  </p>
+                  <>
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                      Explore how an LLM and a search engine each process the same query with multiple documents.
+                    </p>
+                    {diagramRoute === "llm" && (
+                      <>
+                        <p className="text-sm font-semibold text-foreground mb-3">
+                          Drag documents into the diagram
+                        </p>
+                        <div className="space-y-3">
+                          {DOCUMENTS.map((doc) => {
+                            const inDiagram = diagramDocs.has(doc.id);
+                            return (
+                              <button
+                                key={doc.id}
+                                type="button"
+                                draggable
+                                onDragStart={(e) => handleDocDragStart(e, doc.id)}
+                                onClick={() => addDiagramDoc(doc.id)}
+                                className={cn(
+                                  "w-full flex items-start gap-3 rounded-xl border p-3 text-left transition-shadow cursor-grab active:cursor-grabbing",
+                                  inDiagram
+                                    ? "border-brand-tertiary-500 shadow-sm opacity-60"
+                                    : "border-border hover:shadow-md"
+                                )}
+                              >
+                                <File className="h-8 text-muted-foreground flex-shrink-0 my-[23px] w-[32px]" strokeWidth={1.5} />
+                                <div className="flex-1 min-w-0">
+                                  <span className="text-xs text-muted-foreground">{doc.date}</span>
+                                  <span className="text-sm font-semibold text-foreground leading-tight block">
+                                    {doc.title}
+                                  </span>
+                                  <span className="text-xs text-muted-foreground">
+                                    {inDiagram ? "In diagram" : doc.source}
+                                  </span>
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </>
+                    )}
+                  </>
                 )}
               </div>
 
@@ -664,47 +744,71 @@ export default function MultipleSourcesExercise() {
 
                         {/* ── LLM block diagram ── */}
                         {diagramRoute === "llm" && (
-                          <div className="flex-1 space-y-4">
+                          <div className="flex-1 space-y-0">
                             <button
                               type="button"
                               onClick={() => setDiagramRoute(null)}
-                              className="text-xs text-brand-tertiary-500 font-semibold flex items-center gap-1 hover:underline mb-2"
+                              className="text-xs text-brand-tertiary-500 font-semibold flex items-center gap-1 hover:underline mb-4"
                             >
                               <ArrowLeft className="h-3 w-3" /> Back
                             </button>
 
-                            {/* Document selector (inline) */}
-                            <div>
-                              <p className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-                                Select documents to include
-                              </p>
-                              <div className="flex gap-2 flex-wrap mb-1">
-                                {DOCUMENTS.map((doc) => {
-                                  const isOn = diagramDocs.has(doc.id);
-                                  return (
-                                    <button
-                                      key={doc.id}
-                                      type="button"
-                                      onClick={() => toggleDiagramDoc(doc.id)}
-                                      className={cn(
-                                        "rounded-lg border p-3 flex-1 min-w-[140px] text-left transition-all",
-                                        isOn ? "border-foreground bg-muted" : "border-border opacity-40"
-                                      )}
-                                    >
-                                      <div className="flex items-center gap-1.5 mb-1">
-                                        <FileText className="h-3.5 w-3.5 text-muted-foreground" />
-                                        <span className={cn("text-xs font-semibold", isOn ? "text-foreground" : "text-muted-foreground")}>
-                                          {doc.title}
-                                        </span>
-                                      </div>
-                                      <p className="text-[11px] text-muted-foreground leading-relaxed">
-                                        {SNIPPETS_BY_DOC[doc.id]?.[0]?.paragraphs[0] || ""}
-                                      </p>
-                                    </button>
-                                  );
-                                })}
-                                {/* Locked database */}
-                                <div className="rounded-lg border border-dashed border-muted-foreground/30 bg-muted/50 p-3 flex-1 min-w-[140px]">
+                            {/* ── SOURCES BLOCK (drop zone) ── */}
+                            <div
+                              onDragOver={handleDropZoneDragOver}
+                              onDragLeave={handleDropZoneDragLeave}
+                              onDrop={handleDropZoneDrop}
+                              className={cn(
+                                "rounded-xl border-2 p-4 transition-all",
+                                isDragOver
+                                  ? "border-brand-tertiary-500 bg-brand-tertiary-500/5"
+                                  : "border-dashed border-border bg-muted/20"
+                              )}
+                            >
+                              <div className="flex items-center justify-between mb-3">
+                                <span className="text-[11px] font-heading font-bold text-foreground uppercase tracking-wider">
+                                  Sources
+                                </span>
+                                <span className="text-[10px] text-muted-foreground">
+                                  {diagramSelectedDocs.length === 0
+                                    ? "Drop documents here"
+                                    : "Drop to add more"}
+                                </span>
+                              </div>
+                              <div className="flex gap-2 flex-wrap">
+                                {diagramSelectedDocs.length === 0 && (
+                                  <div className="flex-1 min-h-[72px] flex items-center justify-center text-xs text-muted-foreground italic">
+                                    Drag documents from the left column into this box
+                                  </div>
+                                )}
+                                {diagramSelectedDocs.map((doc) => (
+                                  <div
+                                    key={doc.id}
+                                    className="group relative rounded-lg border-2 border-foreground bg-white p-3 flex-1 min-w-[140px]"
+                                  >
+                                    <div className="flex items-center gap-1.5 mb-1 pr-5">
+                                      <FileText className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                                      <span className="text-xs font-semibold text-foreground leading-tight">
+                                        {doc.title}
+                                      </span>
+                                    </div>
+                                    <p className="text-[11px] text-muted-foreground leading-relaxed">
+                                      {SNIPPETS_BY_DOC[doc.id]?.[0]?.paragraphs[0] || ""}
+                                    </p>
+                                    {diagramSelectedDocs.length > 1 && (
+                                      <button
+                                        type="button"
+                                        onClick={() => removeDiagramDoc(doc.id)}
+                                        className="absolute top-1.5 right-1.5 h-4 w-4 flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-muted text-xs leading-none"
+                                        aria-label={`Remove ${doc.title}`}
+                                      >
+                                        ×
+                                      </button>
+                                    )}
+                                  </div>
+                                ))}
+                                {/* Locked training database (always present) */}
+                                <div className="rounded-lg border-2 border-dashed border-muted-foreground/40 bg-muted/40 p-3 flex-1 min-w-[140px]">
                                   <div className="flex items-center gap-1.5 mb-1">
                                     <Database className="h-3.5 w-3.5 text-muted-foreground" />
                                     <span className="text-xs font-semibold text-foreground">Training Database</span>
@@ -717,16 +821,41 @@ export default function MultipleSourcesExercise() {
                               </div>
                             </div>
 
-                            <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-muted-foreground/40" /></div>
+                            {/* Connector */}
+                            <div className="flex flex-col items-center py-1">
+                              <div className="w-px h-4 bg-muted-foreground/40" />
+                              <ArrowDown className="h-4 w-4 text-muted-foreground/60 -mt-1" />
+                            </div>
 
-                            {/* Extraction */}
-                            <div>
-                              <p className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                            {/* ── LLM PROCESSING BLOCK ── */}
+                            <div className="rounded-xl border-2 border-foreground bg-white p-4 shadow-sm">
+                              <div className="flex items-center gap-3">
+                                <div className="rounded-lg bg-muted p-2.5">
+                                  <Bot className="h-6 w-6 text-foreground" />
+                                </div>
+                                <div className="flex-1">
+                                  <p className="text-sm font-heading font-bold text-foreground">Language Model</p>
+                                  <p className="text-[11px] text-muted-foreground leading-relaxed">
+                                    Reads every source, blends facts with training data, and generates one merged answer.
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Connector */}
+                            <div className="flex flex-col items-center py-1">
+                              <div className="w-px h-4 bg-muted-foreground/40" />
+                              <ArrowDown className="h-4 w-4 text-muted-foreground/60 -mt-1" />
+                            </div>
+
+                            {/* ── EXTRACTION BLOCK ── */}
+                            <div className="rounded-xl border-2 border-border bg-muted/20 p-4">
+                              <span className="text-[11px] font-heading font-bold text-foreground uppercase tracking-wider block mb-3">
                                 Information extracted
-                              </p>
+                              </span>
                               <div className="flex gap-2 flex-wrap">
                                 {diagramSelectedDocs.map((doc) => (
-                                  <div key={doc.id} className="rounded-lg border border-border bg-muted/30 p-2.5 flex-1 min-w-[130px]">
+                                  <div key={doc.id} className="rounded-lg border border-border bg-white p-2.5 flex-1 min-w-[130px]">
                                     <p className="text-[11px] text-foreground leading-relaxed italic">
                                       {LLM_EXTRACTIONS[doc.id]}
                                     </p>
@@ -735,21 +864,23 @@ export default function MultipleSourcesExercise() {
                               </div>
                             </div>
 
-                            <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-muted-foreground/40" /></div>
+                            {/* Connector */}
+                            <div className="flex flex-col items-center py-1">
+                              <div className="w-px h-4 bg-muted-foreground/40" />
+                              <ArrowDown className="h-4 w-4 text-muted-foreground/60 -mt-1" />
+                            </div>
 
-                            {/* Output */}
-                            <div>
-                              <p className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                            {/* ── OUTPUT BLOCK ── */}
+                            <div className="rounded-xl border-2 border-border bg-white p-4">
+                              <span className="text-[11px] font-heading font-bold text-foreground uppercase tracking-wider block mb-3">
                                 Output
-                              </p>
+                              </span>
                               {(() => {
                                 const key = Array.from(diagramDocs).sort().join(",");
                                 const merged = LLM_MERGED_OUTPUTS[key];
                                 if (!merged) return <p className="text-xs text-muted-foreground">Select a valid document combination.</p>;
                                 return (
-                                  <div className="rounded-lg border border-border bg-white p-4">
-                                    <p className="text-sm text-foreground leading-relaxed">{merged.text}</p>
-                                  </div>
+                                  <p className="text-sm text-foreground leading-relaxed">{merged.text}</p>
                                 );
                               })()}
                             </div>
