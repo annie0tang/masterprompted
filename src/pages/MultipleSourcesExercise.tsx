@@ -613,35 +613,30 @@ export default function MultipleSourcesExercise() {
                           Drag documents into the diagram
                         </p>
                         <div className="space-y-3">
-                          {DOCUMENTS.map((doc) => {
-                            const inDiagram = diagramDocs.has(doc.id);
-                            return (
-                              <button
-                                key={doc.id}
-                                type="button"
-                                draggable
-                                onDragStart={(e) => handleDocDragStart(e, doc.id)}
-                                onClick={() => addDiagramDoc(doc.id)}
-                                className={cn(
-                                  "w-full flex items-start gap-3 rounded-xl border p-3 text-left transition-shadow cursor-grab active:cursor-grabbing",
-                                  inDiagram
-                                    ? "border-brand-tertiary-500 shadow-sm opacity-60"
-                                    : "border-border hover:shadow-md"
-                                )}
-                              >
-                                <File className="h-8 text-muted-foreground flex-shrink-0 my-[23px] w-[32px]" strokeWidth={1.5} />
-                                <div className="flex-1 min-w-0">
-                                  <span className="text-xs text-muted-foreground">{doc.date}</span>
-                                  <span className="text-sm font-semibold text-foreground leading-tight block">
-                                    {doc.title}
-                                  </span>
-                                  <span className="text-xs text-muted-foreground">
-                                    {inDiagram ? "In diagram" : doc.source}
-                                  </span>
-                                </div>
-                              </button>
-                            );
-                          })}
+                          {DOCUMENTS.filter((doc) => !diagramDocs.has(doc.id)).map((doc) => (
+                            <button
+                              key={doc.id}
+                              type="button"
+                              draggable
+                              onDragStart={(e) => handleDocDragStart(e, doc.id)}
+                              onClick={() => addDiagramDoc(doc.id)}
+                              className="w-full flex items-start gap-3 rounded-xl border border-border hover:shadow-md p-3 text-left transition-shadow cursor-grab active:cursor-grabbing"
+                            >
+                              <File className="h-8 text-muted-foreground flex-shrink-0 my-[23px] w-[32px]" strokeWidth={1.5} />
+                              <div className="flex-1 min-w-0">
+                                <span className="text-xs text-muted-foreground">{doc.date}</span>
+                                <span className="text-sm font-semibold text-foreground leading-tight block">
+                                  {doc.title}
+                                </span>
+                                <span className="text-xs text-muted-foreground">{doc.source}</span>
+                              </div>
+                            </button>
+                          ))}
+                          {DOCUMENTS.every((doc) => diagramDocs.has(doc.id)) && (
+                            <p className="text-xs text-muted-foreground italic">
+                              All documents are in the diagram.
+                            </p>
+                          )}
                         </div>
                       </>
                     )}
