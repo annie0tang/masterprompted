@@ -161,7 +161,7 @@ function renderFlaggedResponse(
           text={flag.text}
           evaluationFactor="factual_accuracy"
           explanation={flag.explanation}
-          severity="warning"
+          severity="error"
         />,
       );
       last = flag.index + flag.text.length;
