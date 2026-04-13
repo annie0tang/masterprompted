@@ -16,7 +16,6 @@ import {
   type PredictionNode } from
 "@/data/predictionTreeData";
 import { isFlaggedWord, getFlaggedConfig, FACTOR_META } from "@/data/flaggedWords";
-import FlagIntroHighlight, { useFlagIntroHighlight } from "@/components/FlagIntroHighlight";
 
 /**
  * BranchDiagram - Visualizes word prediction paths as a horizontal column-based diagram
@@ -38,9 +37,6 @@ export function BranchDiagram({
 }: WordTreeDiagramProps) {
   const maxDepth = useMemo(() => getMaxDepth(), []);
   const defaultPath = useMemo(() => getDefaultPath(), []);
-
-  // First-visible-flag intro highlight (shared with TextFlag)
-  const { id: introHighlightId, show: showFlagIntro, close: closeFlagIntro } = useFlagIntroHighlight();
 
   // Intro animation disabled - start interactive immediately
   const [isIntroAnimating, setIsIntroAnimating] = useState(false);
@@ -440,7 +436,7 @@ export function BranchDiagram({
                 <HoverCard openDelay={100} closeDelay={200}>
                   <HoverCardTrigger asChild>
                     <button
-                      id={!introIdAttached ? (introIdAttached = true, introHighlightId) : undefined}
+                      data-flag-intro=""
                       onClickCapture={() => {
                         if (level === 0 && hasUserSelected) { handleReset(); return; }
                         if (canSelect) handleWordClick(level, option.word);
@@ -581,10 +577,6 @@ export function BranchDiagram({
     }
     return levels;
   }, [unlockedLevel, maxDepth]);
-
-  // Render-phase tracker: attach the intro-highlight id to the FIRST
-  // flagged-word button encountered in this render. Resets each render.
-  let introIdAttached = false;
 
   return (
     <div className={cn("relative", className)}>
@@ -747,8 +739,6 @@ export function BranchDiagram({
           </Button>
         </div>
       }
-
-      <FlagIntroHighlight targetId={introHighlightId} open={showFlagIntro} onClose={closeFlagIntro} />
     </div>);
 
 }
