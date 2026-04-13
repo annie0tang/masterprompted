@@ -91,7 +91,17 @@ const Landing = () => {
                   <p className="text-white/80 text-sm">
                     {t('landing.features.simulator.description')}
                   </p>
-                  <div className="flex justify-center">
+                  <div className="relative flex justify-center">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate("/modules");
+                      }}
+                      className="absolute left-0 top-1/2 -translate-y-1/2 px-4 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-heading font-semibold transition-all duration-300"
+                    >
+                      Select Learning
+                    </button>
                     <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-300">
                       <ArrowRight className="h-5 w-5 text-black transition-all duration-300" />
                     </div>
