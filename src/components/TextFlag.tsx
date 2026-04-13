@@ -15,7 +15,6 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 import RichText from "@/components/RichText.tsx";
-import FlagIntroHighlight, { useFlagIntroHighlight } from "@/components/FlagIntroHighlight";
 
 const textFlagVariants = cva(
   "inline cursor-pointer",
@@ -126,10 +125,6 @@ export default function TextFlag({
   const { t } = useLanguage();
   const { registerFactor, deregisterFactor } = useEvaluation();
 
-  // Intro FeatureHighlight — shown once per browser (localStorage),
-  // on the first flag (TextFlag or NWP flagged word) to become visible.
-  const { id: introId, show: showIntroHighlight, close: handleCloseIntroHighlight } = useFlagIntroHighlight();
-
   // Build the list of pages from either explanations array or single explanation
   const pages: ExplanationEntry[] = explanations && explanations.length > 0
     ? explanations
@@ -161,11 +156,10 @@ export default function TextFlag({
   const underlineColor = severityUnderline[sev];
 
   return (
-    <>
     <HoverCard open={hoverCardOpen} onOpenChange={setHoverCardOpen}>
       <HoverCardTrigger asChild>
         <span
-          id={introId}
+          data-flag-intro=""
           className={cn(textFlagVariants({ severity, noUnderline }), "inline whitespace-normal", className)}
           onClick={(e) => {
             e.stopPropagation();
@@ -233,8 +227,5 @@ export default function TextFlag({
         </div>
       </HoverCardContent>
     </HoverCard>
-
-    <FlagIntroHighlight targetId={introId} open={showIntroHighlight} onClose={handleCloseIntroHighlight} />
-    </>
   );
 }

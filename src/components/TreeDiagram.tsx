@@ -18,7 +18,6 @@ import {
   type PredictionNode } from
 "@/data/predictionTreeData";
 import { isFlaggedWord, getFlaggedConfig, FACTOR_META } from "@/data/flaggedWords";
-import FlagIntroHighlight, { useFlagIntroHighlight } from "@/components/FlagIntroHighlight";
 
 /**
  * TreeDiagram - Shows all possible sentence branches,
@@ -42,9 +41,6 @@ export function TreeDiagram({
   const maxDepth = useMemo(() => getMaxDepth(), []);
   const defaultPathWords = useMemo(() => getDefaultPath(), []);
   const allLeafPaths = useMemo(() => getAllLeafPaths(), []);
-
-  // First-visible-flag intro highlight (shared with TextFlag / BranchDiagram)
-  const { id: introHighlightId, show: showFlagIntro, close: closeFlagIntro } = useFlagIntroHighlight();
 
   // Intro animation disabled - start interactive immediately
   const [isIntroAnimating, setIsIntroAnimating] = useState(false);
@@ -293,10 +289,6 @@ export function TreeDiagram({
     return computePathY(hypotheticalPath, currentLevel, selections, currentLevel, adjustedCenterY);
   };
 
-  // Render-phase tracker: attach the intro-highlight id to the FIRST
-  // flagged-word button rendered in this pass. Resets each render.
-  let introIdAttached = false;
-
   return (
     <div className={cn("relative", className)}>
       <div className={cn(
@@ -519,7 +511,7 @@ export function TreeDiagram({
                                   style={{ overflow: 'visible' }}>
                                   <HoverCard>
                                     <HoverCardTrigger asChild>
-                                      <div className="flex items-center justify-center gap-1 h-full cursor-help">
+                                      <div data-flag-intro="" className="flex items-center justify-center gap-1 h-full cursor-help">
                                         <FlagIcon className={cn("h-3 w-3 flex-shrink-0", flagIconColor)} />
                                         <span className={cn("text-[12px] font-semibold", flagTextColor)}>{word}</span>
                                       </div>
@@ -599,7 +591,7 @@ export function TreeDiagram({
                                 <HoverCard openDelay={100} closeDelay={200}>
                                   <HoverCardTrigger asChild>
                                     <button
-                                      id={!introIdAttached ? (introIdAttached = true, introHighlightId) : undefined}
+                                      data-flag-intro=""
                                       onClickCapture={() => handleWordClick(currentLevel, opt.word)}
                                       disabled={isAnimating}
                                       className={cn(
@@ -732,8 +724,6 @@ export function TreeDiagram({
           </Button>
         </div>
       }
-
-      <FlagIntroHighlight targetId={introHighlightId} open={showFlagIntro} onClose={closeFlagIntro} />
     </div>);
 
 }

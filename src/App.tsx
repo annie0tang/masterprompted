@@ -40,6 +40,7 @@ import Takeaways from "./pages/NextWordPredictionTakeaways";
 import NotFound from "./pages/NotFound";
 import DesignSystem from "./pages/DesignSystem";
 import DesignSystemFab from "./components/DesignSystemFab";
+import FlagIntroHighlight from "./components/FlagIntroHighlight";
 const queryClient = new QueryClient();
 
 const App = () =>
@@ -50,6 +51,7 @@ const App = () =>
           <Sonner />
           <BrowserRouter>
             {/* <DesignSystemFab /> */}
+            <FlagIntroHighlight />
             <Routes>
               {/* NAV BAR */}
               <Route path="/" element={<Landing />} />
