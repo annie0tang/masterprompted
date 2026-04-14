@@ -78,6 +78,7 @@ const LEARNING_UNITS = [
 export default function Modules() {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const { completed } = useModuleProgress();
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const spacerIndex = LEARNING_UNITS.length; // index of the blank card
@@ -150,12 +151,17 @@ export default function Modules() {
                         }`}
                         onClick={() => navigate(unit.route)}
                       >
-                        <div className="aspect-[4/3] bg-muted/30 flex items-center justify-center p-6">
+                        <div className="aspect-[4/3] bg-muted/30 flex items-center justify-center p-6 relative">
                           <img
                             src={unit.image}
                             alt={t(`modules.units.${unit.key}.title`)}
                             className="w-full h-full object-contain"
                           />
+                          {completed[unit.key] && (
+                            <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-brand-secondary-500 flex items-center justify-center shadow-sm">
+                              <Check className="h-3.5 w-3.5 text-white" />
+                            </div>
+                          )}
                         </div>
                         <div className="p-4 flex-1 flex flex-col">
                           <div className="flex items-center justify-between mb-1">
