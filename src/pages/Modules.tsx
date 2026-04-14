@@ -5,6 +5,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Check } from "lucide-react";
 import {
   type CarouselApi,
   Carousel,
@@ -14,6 +15,7 @@ import {
   CarouselNext,
 } from "@/components/ui/carousel";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useModuleProgress } from "@/hooks/useModuleProgress";
 import { ArrowRight } from "lucide-react";
 
 import starImage from "@/assets/star.png";
