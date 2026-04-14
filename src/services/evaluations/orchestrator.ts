@@ -98,8 +98,7 @@ export async function runAllEvaluations(
             const name = (s.origin || s.source).replace(/\|/g, '-');
             const url = s.source.replace(/\|/g, '-');
             // Replace all occurrences of [N] with the enriched format
-            explanation = explanation.replaceAll(
-              `[${num}]`,
+            explanation = explanation.split(`[${num}]`).join(
               `[${num}|||${name}|||${url}]`
             );
           }
