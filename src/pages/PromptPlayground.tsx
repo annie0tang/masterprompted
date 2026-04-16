@@ -175,7 +175,7 @@ const PromptPlayground = () => {
           const versions = [...thread.versions];
           versions[versionIndex] = { ...versions[versionIndex], answer: "", searchStatus: "searching", webSearchSources: [] };
           const evaluations = [...(thread.evaluations || [])];
-          evaluations[versionIndex] = { loading: true, error: false, data: null };
+          evaluations[versionIndex] = { loading: false, error: false, data: null };
           copy[threadIndex] = { ...thread, versions, evaluations, showEvaluation: false };
           return copy;
         });
@@ -270,6 +270,16 @@ const PromptPlayground = () => {
 
           // Run evaluations on the final answer
           if (answer) {
+            // Set loading state now that the stream is complete
+            setThreads(prev => {
+              const copy = [...prev];
+              const thread = copy[threadIndex];
+              if (!thread?.evaluations) return prev;
+              const evaluations = [...thread.evaluations];
+              evaluations[versionIndex] = { loading: true, error: false, data: null };
+              copy[threadIndex] = { ...thread, evaluations };
+              return copy;
+            });
             try {
               await runAllEvaluations(answer, (partialResult) => {
                 setThreads(prev => {
@@ -401,7 +411,7 @@ const PromptPlayground = () => {
           versions[versionIndex] = { ...versions[versionIndex], answer: "" };
 
           const evaluations = [...(thread.evaluations || [])];
-          evaluations[versionIndex] = { loading: true, error: false, data: null };
+          evaluations[versionIndex] = { loading: false, error: false, data: null };
 
           copy[threadIndex] = { ...thread, versions, evaluations, showEvaluation: false };
           return copy;
@@ -482,6 +492,16 @@ const PromptPlayground = () => {
         // Trigger all evaluation pipelines with progressive updates.
         // Phase 1 (fallacy + claim_match) enables the toggle immediately.
         // Phase 2 (web_search) streams in results as they arrive.
+        // Set loading state now that the stream is complete
+        setThreads(prev => {
+          const copy = [...prev];
+          const thread = copy[threadIndex];
+          if (!thread?.evaluations) return prev;
+          const evaluations = [...thread.evaluations];
+          evaluations[versionIndex] = { loading: true, error: false, data: null };
+          copy[threadIndex] = { ...thread, evaluations };
+          return copy;
+        });
         try {
           await runAllEvaluations(accumulatedAnswer, (partialResult) => {
             setThreads(prev => {
