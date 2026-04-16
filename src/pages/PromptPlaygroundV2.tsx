@@ -15,7 +15,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
-import { Plus, X, ChevronUp, ChevronDown } from "lucide-react";
+import { Plus, X } from "lucide-react";
+import Chatbox from "@/components/ChatBoxPromptPlayground";
 const NO_CHANGE_VALUE = "no-change";
 // const NETLIFY_CHAT_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
 //   ? "/api/chat"
@@ -89,7 +90,6 @@ const PromptPlaygroundV2 = () => {
   /* ------------------------------------------------------------------ */
   type LearningMode = "none" | "prompt-construction" | "system-parameters" | "multiple-sources" | "few-shot";
   const [learningMode, setLearningMode] = useState<LearningMode>("none");
-  const [bottomBarOpen, setBottomBarOpen] = useState(true);
 
   // System Parameters mode
   const [sysPromptText, setSysPromptText] = useState("");
@@ -816,107 +816,87 @@ const PromptPlaygroundV2 = () => {
                 </Select>
               </div>
 
-              <PromptControls {...{
-                parameters,
-                onParameterChange: handleParameterChange,
-                onReset: handleReset,
-                onOptimize: handleOptimizeSubmit,
-                onRegenerate: handleRegenerate,
-                showRegenerate,
-                onUndo: handleUndo,
-                chatValue: editingText,
-                onChatChange: handleInputChange,
-                onChatSubmit: handleChatSubmit,
-                chatSubmitButtonId: "prompt-playground-submit",
-                disableSend,
-                disableOptimize,
-                enableBias,
-                enableSpecificity,
-                enableContext,
-                enableStyle,
-                chatAnimationKey: optimizePulse,
-                waitingforOptimization,
-                files: uploadedFiles,
-                onUploadFiles: handleUploadFiles,
-                onRemoveFile: handleRemoveFile
-              }} />
-            </div>
-          </div>
-          <div className="flex-1 px-6 py-4 overflow-auto">
-            <ChatBody
-              threads={threads}
-              uploadedFiles={uploadedFiles}
-              onPrevVersion={handlePrevVersion}
-              onNextVersion={handleNextVersion}
-              onToggleThreadDiff={handleThreadDiffToggle}
-              onToggleThreadEvaluation={handleThreadEvaluationToggle}
-              onRequestControlPanelHelp={() => setShowControlPanelPopover(true)}
-            />
-          </div>
-        </div>
-      </main>
+              {/* ── Prompt Controls (none / prompt-construction) ── */}
+              {(learningMode === "none" || learningMode === "prompt-construction") && (
+                <PromptControls {...{
+                  parameters,
+                  onParameterChange: handleParameterChange,
+                  onReset: handleReset,
+                  onOptimize: handleOptimizeSubmit,
+                  onRegenerate: handleRegenerate,
+                  showRegenerate,
+                  onUndo: handleUndo,
+                  chatValue: editingText,
+                  onChatChange: handleInputChange,
+                  onChatSubmit: handleChatSubmit,
+                  chatSubmitButtonId: "prompt-playground-submit",
+                  disableSend,
+                  disableOptimize,
+                  enableBias,
+                  enableSpecificity,
+                  enableContext,
+                  enableStyle,
+                  chatAnimationKey: optimizePulse,
+                  waitingforOptimization,
+                  files: uploadedFiles,
+                  onUploadFiles: handleUploadFiles,
+                  onRemoveFile: handleRemoveFile
+                }} />
+              )}
 
-      {/* ── Floating bottom panel for learning-mode controls ── */}
-      {learningMode !== "none" && learningMode !== "prompt-construction" && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30">
-          <div className="bg-surface-200 border border-border rounded-lg shadow-lg overflow-hidden [&_*]:!font-heading [&_textarea]:!font-['Manrope']"
-               style={{ width: learningMode === "few-shot" ? 'min(900px, calc(100vw - 3rem))' : 'min(600px, calc(100vw - 3rem))' }}>
-            {/* Header / toggle */}
-            <button
-              type="button"
-              onClick={() => setBottomBarOpen((v) => !v)}
-              className="w-full flex items-center justify-between px-4 py-2.5 text-sm font-semibold text-foreground hover:bg-muted/30 transition-colors"
-            >
-              <span>
-                {learningMode === "system-parameters" && "System Parameters"}
-                {learningMode === "multiple-sources" && "Context Pipeline"}
-                {learningMode === "few-shot" && "Few-shot Examples"}
-              </span>
-              {bottomBarOpen ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronUp className="h-4 w-4 text-muted-foreground" />}
-            </button>
-
-            {bottomBarOpen && (
-              <div className="px-4 pb-4 max-h-[50vh] overflow-y-auto">
-
-                {/* ── System Parameters ── */}
-                {learningMode === "system-parameters" && (
-                  <div className="space-y-3">
-                    <div>
-                      <label className="text-xs font-semibold text-foreground mb-1 block">System Prompt</label>
-                      <Textarea
-                        placeholder="You are a helpful journalist assistant..."
-                        value={sysPromptText}
-                        onChange={(e) => setSysPromptText(e.target.value)}
-                        className="text-sm min-h-[80px] max-h-[25vh] resize-y !font-['Manrope']"
-                      />
+              {/* ── System Parameters controls ── */}
+              {learningMode === "system-parameters" && (
+                <div className="px-4 pb-4 pt-2 flex-1 flex flex-col gap-3 [&_*]:!font-heading [&_textarea]:!font-['Manrope']">
+                  <div>
+                    <label className="text-xs font-semibold text-foreground mb-1 block">System Prompt</label>
+                    <Textarea
+                      placeholder="You are a helpful journalist assistant..."
+                      value={sysPromptText}
+                      onChange={(e) => setSysPromptText(e.target.value)}
+                      className="text-sm min-h-[80px] resize-y !font-['Manrope']"
+                    />
+                  </div>
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-xs font-semibold text-foreground">Temperature</label>
+                      <span className="text-xs text-muted-foreground tabular-nums">{temperature.toFixed(1)}</span>
                     </div>
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <label className="text-xs font-semibold text-foreground">Temperature</label>
-                        <span className="text-xs text-muted-foreground tabular-nums">{temperature.toFixed(1)}</span>
-                      </div>
-                      <Slider
-                        value={[temperature]}
-                        onValueChange={([v]) => setTemperature(v)}
-                        min={0}
-                        max={1}
-                        step={0.1}
-                        className="w-full"
-                      />
-                      <div className="flex justify-between text-[10px] text-muted-foreground mt-1">
-                        <span>Stable</span>
-                        <span>Random</span>
-                      </div>
+                    <Slider
+                      value={[temperature]}
+                      onValueChange={([v]) => setTemperature(v)}
+                      min={0}
+                      max={1}
+                      step={0.1}
+                      className="w-full"
+                    />
+                    <div className="flex justify-between text-[10px] text-muted-foreground mt-1">
+                      <span>Stable</span>
+                      <span>Random</span>
                     </div>
                   </div>
-                )}
 
-                {/* ── Context Pipeline ── */}
-                {learningMode === "multiple-sources" && (
-                  <div className="space-y-2">
-                    <p className="text-[11px] text-muted-foreground">
-                      Build a RAG-style context by adding blocks. Each enabled block is assembled into the system prompt.
-                    </p>
+                  <Chatbox
+                    value={editingText}
+                    onChange={handleInputChange}
+                    onSubmit={handleChatSubmit}
+                    submitButtonId="prompt-playground-submit"
+                    disableSend={disableSend}
+                    animationKey={optimizePulse}
+                    files={uploadedFiles}
+                    onUploadFiles={handleUploadFiles}
+                    onRemoveFile={handleRemoveFile}
+                    className="z-50 w-full flex-auto min-h-0"
+                  />
+                </div>
+              )}
+
+              {/* ── Context Pipeline controls ── */}
+              {learningMode === "multiple-sources" && (
+                <div className="px-4 pb-4 pt-2 flex-1 flex flex-col gap-2 [&_*]:!font-heading [&_textarea]:!font-['Manrope']">
+                  <p className="text-[11px] text-muted-foreground">
+                    Build a RAG-style context by adding blocks. Each enabled block is assembled into the system prompt.
+                  </p>
+                  <div className="flex-1 overflow-y-auto space-y-2 pr-1">
                     {contextBlocks.map((block) => {
                       const typeColors: Record<ContextBlock["type"], string> = {
                         instruction: "border-blue-300 bg-blue-50/50",
@@ -966,69 +946,103 @@ const PromptPlaygroundV2 = () => {
                             }
                             value={block.content}
                             onChange={(e) => updateContextBlock(block.id, "content", e.target.value)}
-                            className="text-xs min-h-[50px] max-h-[15vh] resize-y !font-['Manrope']"
+                            className="text-xs min-h-[50px] resize-y !font-['Manrope']"
                           />
                         </div>
                       );
                     })}
-                    <div className="flex gap-1.5 pt-1">
-                      <Button type="button" variant="outline" size="sm" className="flex-1 text-[10px] gap-1 px-1" onClick={() => addContextBlock("instruction")}>
-                        <Plus className="h-3 w-3" /> Instruction
-                      </Button>
-                      <Button type="button" variant="outline" size="sm" className="flex-1 text-[10px] gap-1 px-1" onClick={() => addContextBlock("knowledge")}>
-                        <Plus className="h-3 w-3" /> Knowledge
-                      </Button>
-                      <Button type="button" variant="outline" size="sm" className="flex-1 text-[10px] gap-1 px-1" onClick={() => addContextBlock("persona")}>
-                        <Plus className="h-3 w-3" /> Persona
-                      </Button>
-                    </div>
                   </div>
-                )}
+                  <div className="flex gap-1.5">
+                    <Button type="button" variant="outline" size="sm" className="flex-1 text-[10px] gap-1 px-1" onClick={() => addContextBlock("instruction")}>
+                      <Plus className="h-3 w-3" /> Instruction
+                    </Button>
+                    <Button type="button" variant="outline" size="sm" className="flex-1 text-[10px] gap-1 px-1" onClick={() => addContextBlock("knowledge")}>
+                      <Plus className="h-3 w-3" /> Knowledge
+                    </Button>
+                    <Button type="button" variant="outline" size="sm" className="flex-1 text-[10px] gap-1 px-1" onClick={() => addContextBlock("persona")}>
+                      <Plus className="h-3 w-3" /> Persona
+                    </Button>
+                  </div>
 
-                {/* ── Few-shot Examples ── */}
-                {learningMode === "few-shot" && (
-                  <div>
-                    <p className="text-[11px] text-muted-foreground mb-2">
-                      Provide input/output pairs to guide the model's style and format.
-                    </p>
-                    <div className="flex gap-2 overflow-x-auto pb-2">
-                      {fewShotExamples.map((ex, idx) => (
-                        <div key={idx} className="rounded-lg border border-border p-2 space-y-1.5 relative w-56 flex-shrink-0">
-                          {fewShotExamples.length > 1 && (
-                            <button type="button" onClick={() => removeFewShotExample(idx)} className="absolute top-1.5 right-1.5 text-muted-foreground hover:text-foreground">
-                              <X className="h-3 w-3" />
-                            </button>
-                          )}
-                          <span className="text-[10px] text-muted-foreground font-semibold">Example {idx + 1}</span>
-                          <Textarea
-                            placeholder="Input..."
-                            value={ex.input}
-                            onChange={(e) => updateFewShotExample(idx, "input", e.target.value)}
-                            className="text-xs min-h-[40px] max-h-[12vh] resize-y !font-['Manrope']"
-                          />
-                          <Textarea
-                            placeholder="Expected output..."
-                            value={ex.output}
-                            onChange={(e) => updateFewShotExample(idx, "output", e.target.value)}
-                            className="text-xs min-h-[40px] max-h-[12vh] resize-y !font-['Manrope']"
-                          />
-                        </div>
-                      ))}
-                      <button
-                        type="button"
-                        onClick={addFewShotExample}
-                        className="rounded-lg border-2 border-dashed border-border hover:border-foreground/30 p-2 w-14 flex-shrink-0 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
-                      >
-                        <Plus className="h-5 w-5" />
-                      </button>
-                    </div>
+                  <Chatbox
+                    value={editingText}
+                    onChange={handleInputChange}
+                    onSubmit={handleChatSubmit}
+                    submitButtonId="prompt-playground-submit"
+                    disableSend={disableSend}
+                    animationKey={optimizePulse}
+                    files={uploadedFiles}
+                    onUploadFiles={handleUploadFiles}
+                    onRemoveFile={handleRemoveFile}
+                    className="z-50 w-full flex-auto min-h-0"
+                  />
+                </div>
+              )}
+
+              {/* ── Few-shot Examples controls ── */}
+              {learningMode === "few-shot" && (
+                <div className="px-4 pb-4 pt-2 flex-1 flex flex-col gap-2 [&_*]:!font-heading [&_textarea]:!font-['Manrope']">
+                  <p className="text-[11px] text-muted-foreground">
+                    Provide input/output pairs to guide the model's style and format.
+                  </p>
+                  <div className="flex-1 overflow-y-auto space-y-2 pr-1">
+                    {fewShotExamples.map((ex, idx) => (
+                      <div key={idx} className="rounded-lg border border-border p-2 space-y-1.5 relative">
+                        {fewShotExamples.length > 1 && (
+                          <button type="button" onClick={() => removeFewShotExample(idx)} className="absolute top-1.5 right-1.5 text-muted-foreground hover:text-foreground">
+                            <X className="h-3 w-3" />
+                          </button>
+                        )}
+                        <span className="text-[10px] text-muted-foreground font-semibold">Example {idx + 1}</span>
+                        <Textarea
+                          placeholder="Input..."
+                          value={ex.input}
+                          onChange={(e) => updateFewShotExample(idx, "input", e.target.value)}
+                          className="text-xs min-h-[40px] resize-y !font-['Manrope']"
+                        />
+                        <Textarea
+                          placeholder="Expected output..."
+                          value={ex.output}
+                          onChange={(e) => updateFewShotExample(idx, "output", e.target.value)}
+                          className="text-xs min-h-[40px] resize-y !font-['Manrope']"
+                        />
+                      </div>
+                    ))}
                   </div>
-                )}
-              </div>
-            )}
+                  <Button type="button" variant="outline" size="sm" className="w-full text-xs gap-1" onClick={addFewShotExample}>
+                    <Plus className="h-3 w-3" /> Add example
+                  </Button>
+
+                  <Chatbox
+                    value={editingText}
+                    onChange={handleInputChange}
+                    onSubmit={handleChatSubmit}
+                    submitButtonId="prompt-playground-submit"
+                    disableSend={disableSend}
+                    animationKey={optimizePulse}
+                    files={uploadedFiles}
+                    onUploadFiles={handleUploadFiles}
+                    onRemoveFile={handleRemoveFile}
+                    className="z-50 w-full flex-auto min-h-0"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="flex-1 px-6 py-4 overflow-auto">
+            <ChatBody
+              threads={threads}
+              uploadedFiles={uploadedFiles}
+              onPrevVersion={handlePrevVersion}
+              onNextVersion={handleNextVersion}
+              onToggleThreadDiff={handleThreadDiffToggle}
+              onToggleThreadEvaluation={handleThreadEvaluationToggle}
+              onRequestControlPanelHelp={() => setShowControlPanelPopover(true)}
+            />
           </div>
         </div>
-      )}
+      </main>
+
 
       {summarizationProgress.isActive && (
         <Dialog open={true}>
