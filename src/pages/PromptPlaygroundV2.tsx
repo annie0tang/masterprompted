@@ -120,6 +120,7 @@ const PromptPlaygroundV2 = () => {
   const removeContextBlock = (id: string) => setContextBlocks((prev) => prev.filter((b) => b.id !== id));
   const updateContextBlock = (id: string, field: keyof ContextBlock, value: string | boolean) =>
     setContextBlocks((prev) => prev.map((b) => (b.id === id ? { ...b, [field]: value } : b)));
+  type FewShotExample = { input: string; output: string };
   const [fewShotExamples, setFewShotExamples] = useState<FewShotExample[]>([{ input: "", output: "" }]);
 
   const addFewShotExample = () => setFewShotExamples((prev) => [...prev, { input: "", output: "" }]);
