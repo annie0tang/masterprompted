@@ -1,11 +1,11 @@
 // src/pages/PromptPlaygroundV2.tsx
 
 import Header from "@/components/Header";
-import PromptControls from "@/components/PromptControlsPromptPlayground";
+import PromptControls from "@/components/PromptControlsPromptPlaygroundV2";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { PopoverSeries } from "@/components/PopoverSeries";
 import { useLanguage } from '@/contexts/LanguageContext';
-import ChatBody from "@/components/ChatBody";
+import ChatBody from "@/components/ChatBodyV2";
 import { SSEContentParser } from "@/lib/sseStream";
 import { runAllEvaluations } from "@/services/evaluations";
 import type { EvaluationResult } from "@/services/evaluations/types";
@@ -19,7 +19,7 @@ import { Plus, X } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import Chatbox from "@/components/ChatBoxPromptPlayground";
+import Chatbox from "@/components/ChatBoxPromptPlaygroundV2";
 const NO_CHANGE_VALUE = "no-change";
 // const NETLIFY_CHAT_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
 //   ? "/api/chat"
