@@ -472,19 +472,18 @@ export default function LLMTrainingFewShot() {
                         <Button
                           variant="outline"
                           size="lg"
-                          onClick={() => navigate("/module/llm-training/supervised")}
+                          onClick={() => navigate("/module/llm-training")}
                           className="px-10 font-heading font-semibold border-brand-tertiary-500 text-brand-tertiary-500 hover:bg-brand-tertiary-500/10"
                         >
                           <ArrowLeft className="!h-5 !w-5 -ml-2" />
-                          Previous (Supervised Learning)
                         </Button>
                         <Button
                           variant="outline"
                           size="lg"
-                          onClick={() => navigate("/module/llm-training/takeaways")}
+                          onClick={() => navigate("/module/llm-training/supervised")}
                           className="px-10 font-heading font-semibold border-brand-tertiary-500 text-brand-tertiary-500 hover:bg-brand-tertiary-500/10"
                         >
-                          Takeaways
+                          Next (Supervised Learning)
                           <ArrowRight className="-mr-2 !h-6 !w-6" />
                         </Button>
                       </div>

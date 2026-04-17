@@ -72,7 +72,7 @@ export default function LLMTrainingTakeaways() {
             <Button
               variant="outline"
               size="icon"
-              onClick={() => navigate("/module/llm-training/few-shot")}
+              onClick={() => navigate("/module/llm-training/supervised")}
               className="h-12 w-12 rounded-full"
             >
               <ArrowLeft className="!h-6 !w-6" />
@@ -123,7 +123,7 @@ export default function LLMTrainingTakeaways() {
         </div>
       </main>
       <ModuleNavigation
-        previousRoute="/module/llm-training/few-shot"
+        previousRoute="/module/llm-training/supervised"
         nextRoute="/playground"
       />
     </div>
