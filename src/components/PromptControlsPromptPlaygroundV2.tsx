@@ -242,7 +242,7 @@ export default function PromptControls({
                 {/* Parameters area */}
                 <div className="flex-initial flex flex-col justify-end min-h-0 overflow-y-auto">
                     <div className="flex items-center gap-1.5 mt-2 mb-1">
-                        <h3 className="font-bold text-foreground text-lg">{t('components.promptControls.title')}</h3>
+                        <h3 className="font-bold text-foreground text-lg">Prompt Construction</h3>
                         <Popover open={titlePopoverOpen} onOpenChange={setTitlePopoverOpen}>
                             <PopoverTrigger asChild onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                                 <Info className="w-4 h-4 cursor-pointer text-muted-foreground hover:text-foreground transition-colors" />

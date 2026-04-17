@@ -884,9 +884,9 @@ const PromptPlaygroundV2 = () => {
                   {/* Few-shot examples */}
                   {fewShotExamples.length > 0 && (
                     <div className="px-4 pb-2 [&_*]:!font-heading [&_textarea]:!font-['Manrope']">
-                      <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5 block">
+                      <h3 className="font-bold text-foreground text-lg mb-1.5">
                         Examples ({fewShotExamples.length})
-                      </label>
+                      </h3>
                       <div className="space-y-2 max-h-[140px] overflow-y-auto">
                         {fewShotExamples.map((ex, idx) => (
                           <div key={idx} className="rounded-lg border border-border p-2 space-y-1.5 relative">
@@ -938,7 +938,7 @@ const PromptPlaygroundV2 = () => {
 
                   {/* System Prompt */}
                   <div>
-                    <label className="text-xs font-semibold text-foreground mb-1.5 block">System Prompt</label>
+                    <h3 className="font-bold text-foreground text-lg mb-1.5">System Prompt</h3>
                     <Textarea
                       placeholder="You are a helpful journalist assistant..."
                       value={sysPromptText}
@@ -949,9 +949,7 @@ const PromptPlaygroundV2 = () => {
 
                   {/* Context injection buttons */}
                   <div>
-                    <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5 block">
-                      Add to system prompt
-                    </label>
+                    <h3 className="font-bold text-foreground text-lg mb-1.5">Context</h3>
                     <div className="flex gap-1.5">
                       <Button type="button" variant="outline" size="sm" className="flex-1 text-[10px] gap-1 px-1 border-blue-300 text-blue-700 hover:bg-blue-50" onClick={() => injectContextBlock("instruction")}>
                         {hasBlock("instruction") ? <RefreshCcw className="h-3 w-3" /> : <Plus className="h-3 w-3" />} Instruction
@@ -969,7 +967,7 @@ const PromptPlaygroundV2 = () => {
 
                   {/* Temperature — guided simulator style */}
                   <div>
-                    <label className="text-xs font-semibold text-foreground mb-2 block">Temperature</label>
+                    <h3 className="font-bold text-foreground text-lg mb-2">Temperature</h3>
                     <div className="relative">
                       <div className="relative h-10 flex items-center">
                         {/* Track background */}
