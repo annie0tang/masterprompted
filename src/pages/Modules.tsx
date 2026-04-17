@@ -5,7 +5,8 @@ import Breadcrumb from "@/components/Breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Check } from "lucide-react";
+import { Check, LayoutGrid, GalleryHorizontalEnd } from "lucide-react";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   type CarouselApi,
   Carousel,
@@ -80,6 +81,7 @@ export default function Modules() {
   const { t } = useLanguage();
   const { completed } = useModuleProgress();
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [viewMode, setViewMode] = useState<"carousel" | "grid">("carousel");
 
   const spacerIndex = LEARNING_UNITS.length; // index of the blank card
 
@@ -106,16 +108,79 @@ export default function Modules() {
         <Breadcrumb />
         <div className="max-w-5xl mx-auto mt-8">
           {/* Page header */}
-          <div className="mb-8">
-            <h1 className="text-h2 font-heading text-foreground mb-2">
-              {t('modules.title')}
-            </h1>
-            <p className="text-muted-foreground text-body-1">
-              {t('modules.subtitle')}
-            </p>
+          <div className="mb-8 flex items-end justify-between">
+            <div>
+              <h1 className="text-h2 font-heading text-foreground mb-2">
+                {t('modules.title')}
+              </h1>
+              <p className="text-muted-foreground text-body-1">
+                {t('modules.subtitle')}
+              </p>
+            </div>
+            <ToggleGroup
+              type="single"
+              value={viewMode}
+              onValueChange={(v) => v && setViewMode(v as typeof viewMode)}
+              className="flex-shrink-0"
+            >
+              <ToggleGroupItem value="carousel" className="px-2" aria-label="Carousel view">
+                <GalleryHorizontalEnd className="h-4 w-4" />
+              </ToggleGroupItem>
+              <ToggleGroupItem value="grid" className="px-2" aria-label="Grid view">
+                <LayoutGrid className="h-4 w-4" />
+              </ToggleGroupItem>
+            </ToggleGroup>
           </div>
 
-          {/* Learning units carousel */}
+          {/* Grid view */}
+          {viewMode === "grid" && (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-5 mb-8">
+              {LEARNING_UNITS.map((unit) => (
+                <Card
+                  key={unit.key}
+                  className="group border border-border hover:border-emerald-500 transition-all rounded-xl bg-background overflow-hidden flex flex-col cursor-pointer"
+                  onClick={() => navigate(unit.route)}
+                >
+                  <div className="aspect-[4/3] bg-muted/30 flex items-center justify-center p-6 relative">
+                    <img
+                      src={unit.image}
+                      alt={t(`modules.units.${unit.key}.title`)}
+                      className="w-full h-full object-contain"
+                    />
+                    {completed[unit.key] && (
+                      <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-brand-secondary-500 flex items-center justify-center shadow-sm">
+                        <Check className="h-3.5 w-3.5 text-white" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-4 flex-1 flex flex-col">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs text-muted-foreground font-heading">
+                        {unit.number === 0
+                          ? t('modules.introLabel')
+                          : `${t('modules.unitLabel')} ${unit.number}`}
+                      </span>
+                      <Badge
+                        variant="outline"
+                        className={`text-[10px] px-1.5 py-0.5 h-auto font-medium whitespace-nowrap ${LEVEL_CONFIG[unit.level].className}`}
+                      >
+                        {LEVEL_CONFIG[unit.level].label}
+                      </Badge>
+                    </div>
+                    <h2 className="font-heading font-semibold text-foreground text-sm leading-tight mb-1">
+                      {t(`modules.units.${unit.key}.title`)}
+                    </h2>
+                    <p className="text-xs text-muted-foreground leading-snug mb-3 line-clamp-2 flex-1">
+                      {t(`modules.units.${unit.key}.description`)}
+                    </p>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          )}
+
+          {/* Carousel view */}
+          {viewMode === "carousel" && (
           <div className="px-12 mb-8">
             <Carousel
               opts={{
@@ -206,6 +271,7 @@ export default function Modules() {
               </div>
             )}
           </div>
+          )}
         </div>
       </main>
     </div>
