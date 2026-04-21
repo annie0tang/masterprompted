@@ -820,8 +820,6 @@ export default function MultipleSourcesExercise() {
                                       </div>
                                     ))}
                                   </div>
-                                  {/* Horizontal merge line */}
-                                  <div className="absolute left-[8%] right-[8%] top-6 h-px bg-muted-foreground/30" />
                                   {/* Vertical line down from merge to output */}
                                   <div className="absolute left-1/2 top-6 h-6 w-px bg-muted-foreground/30 -translate-x-1/2" />
                                   <div className="absolute left-1/2 bottom-0 -translate-x-1/2">
