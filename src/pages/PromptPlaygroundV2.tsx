@@ -19,6 +19,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Separator } from "@/components/ui/separator";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import Chatbox from "@/components/ChatBoxPromptPlaygroundV2";
+import FeatureHighlight from "@/components/FeatureHighlight";
 const NO_CHANGE_VALUE = "no-change";
 // const NETLIFY_CHAT_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
 //   ? "/api/chat"
@@ -92,6 +93,45 @@ const PromptPlaygroundV2 = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const fromGuidedSimulator = searchParams.get("from") === "gs";
+
+  /* ── GS tutorial (disaster case study) ── */
+  const [tutorialStep, setTutorialStep] = useState(fromGuidedSimulator ? 1 : 0);
+
+  const DISASTER_SYSTEM_PROMPT = `You are a diversity-aware summarization assistant for journalists.
+
+[INSTRUCTION]
+Summarize ALL diverse viewpoints from the provided documents as attributed bullet points. Each bullet must cite its source. Do NOT merge minority views into a consensus — preserve every distinct perspective.
+[/INSTRUCTION]
+
+[PERSONA]
+You are a senior news editor at a public broadcaster. Your summaries must be fair, balanced, and verifiable.
+[/PERSONA]`;
+
+  const DISASTER_USER_PROMPT = "Summarize the diverse viewpoints from these disaster-response reports as attributed bullet points.";
+
+  const advanceTutorial = () => {
+    const next = tutorialStep + 1;
+    if (next === 2) {
+      setControlTab("system");
+      setSysPromptText(DISASTER_SYSTEM_PROMPT);
+    }
+    if (next === 4) {
+      setControlTab("user");
+      setEditingText(DISASTER_USER_PROMPT);
+      setDisableSend(false);
+    }
+    setTutorialStep(next);
+  };
+
+  const resetTutorial = () => {
+    setSysPromptText("");
+    setEditingText("");
+    setDisableSend(true);
+    setThreads([]);
+    setControlTab("user");
+    setTutorialStep(0);
+  };
+
   const [threads, setThreads] = useState<Thread[]>([]);
   const [parameters, setParameters] = useState<Parameters>({ specificity: "", style: "", context: "", bias: "" });
   const [disableSend, setDisableSend] = useState(true);
@@ -876,7 +916,7 @@ const PromptPlaygroundV2 = () => {
             <div className="w-full px-2 md:px-0 md:w-[264px] pt-4 pb-4 2xl:pt-0 2xl:pb-0 2xl:bg-card 2xl:border 2xl:border-border 2xl:rounded-lg 2xl:shadow-sm 2xl:overflow-hidden 2xl:w-72 flex flex-col">
 
               {/* ── User / System tabs ── */}
-              <div className="px-4 pt-3 pb-1 [&_*]:!font-heading">
+              <div className="px-4 pt-3 pb-1 [&_*]:!font-heading" data-feature="tab-toggle">
                 <ToggleGroup
                   type="single"
                   value={controlTab}
@@ -963,7 +1003,7 @@ const PromptPlaygroundV2 = () => {
                 <div className="flex-1 flex flex-col overflow-y-auto px-4 pb-4 pt-2 gap-3 [&_*]:!font-heading [&_textarea]:!font-['Manrope']">
 
                   {/* System Prompt */}
-                  <div>
+                  <div data-feature="system-prompt">
                     <div className="flex items-center gap-1.5 mb-1.5">
                       <h3 className="font-bold text-foreground text-lg">System Prompt</h3>
                       <InfoPopover>
@@ -982,7 +1022,7 @@ const PromptPlaygroundV2 = () => {
                   </div>
 
                   {/* Context injection buttons */}
-                  <div>
+                  <div data-feature="context-buttons">
                     <div className="flex items-center gap-1.5 mb-1.5">
                       <span className="font-semibold text-foreground text-sm">Context</span>
                       <InfoPopover>
@@ -1080,30 +1120,89 @@ const PromptPlaygroundV2 = () => {
         </div>
       </main>
 
-      {/* Guided simulator navigation — shown when arriving from the GS flow */}
-      {fromGuidedSimulator && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30">
-          <div className="flex items-center gap-3 bg-card/95 backdrop-blur-sm border border-border rounded-full px-4 py-2 shadow-lg">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate("/module/multiple-sources/try-it")}
-              className="h-9 w-9 rounded-full hover:bg-muted"
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-            <div className="w-px h-5 bg-border" />
-            <Button
-              variant="ghost"
-              onClick={() => navigate("/module/multiple-sources/takeaways")}
-              className="rounded-full px-4 h-9 text-sm font-heading font-semibold hover:bg-muted gap-1.5"
-            >
-              Continue to Takeaways
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </div>
+      {/* Guided simulator navigation — GS-style green outlined buttons */}
+      {fromGuidedSimulator && tutorialStep === 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => navigate("/module/multiple-sources/exercise")}
+            className="h-12 w-12 border-brand-tertiary-500 text-brand-tertiary-500 hover:bg-brand-tertiary-500/10"
+          >
+            <ArrowLeft className="!h-6 !w-6" />
+          </Button>
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={() => navigate("/module/multiple-sources/takeaways")}
+            className="px-10 font-heading font-semibold border-brand-tertiary-500 text-brand-tertiary-500 hover:bg-brand-tertiary-500/10"
+          >
+            Continue to Takeaways
+            <ArrowRight className="-mr-2 !h-6 !w-6" />
+          </Button>
         </div>
       )}
+
+      {/* ── GS Tutorial: multi-step FeatureHighlights ── */}
+      <FeatureHighlight
+        target='[data-feature="tab-toggle"]'
+        open={tutorialStep === 1}
+        onClose={advanceTutorial}
+        side="right"
+        sideOffset={24}
+        closeLabel="Next"
+      >
+        <p className="font-semibold mb-1">Welcome to the Prompt Playground</p>
+        <p>Let's walk through a real journalism scenario: <strong>summarizing diverse disaster-response reports</strong>. First, we'll set up the system prompt. Click <strong>Next</strong> to switch to the System tab.</p>
+      </FeatureHighlight>
+
+      <FeatureHighlight
+        target='[data-feature="system-prompt"]'
+        open={tutorialStep === 2}
+        onClose={advanceTutorial}
+        side="right"
+        sideOffset={24}
+        closeLabel="Next"
+      >
+        <p className="font-semibold mb-1">System Prompt</p>
+        <p>We've filled in a system prompt with <strong>diversity summarization instructions</strong> and a <strong>journalist persona</strong>. This tells the LLM to preserve all viewpoints and attribute each claim to its source — essential for fair disaster reporting.</p>
+      </FeatureHighlight>
+
+      <FeatureHighlight
+        target='[data-feature="context-buttons"]'
+        open={tutorialStep === 3}
+        onClose={advanceTutorial}
+        side="right"
+        sideOffset={24}
+        closeLabel="Next"
+      >
+        <p className="font-semibold mb-1">Context Blocks</p>
+        <p>Use these buttons to add structured content to the system prompt. For this scenario, we've already added an <strong>Instruction</strong> block (summarization rules) and a <strong>Persona</strong> block (journalist role). You can also add <strong>Knowledge</strong> to paste in source documents directly.</p>
+      </FeatureHighlight>
+
+      <FeatureHighlight
+        target="#prompt-controls-chatbox"
+        open={tutorialStep === 4}
+        onClose={advanceTutorial}
+        side="right"
+        sideOffset={24}
+        closeLabel="Next"
+      >
+        <p className="font-semibold mb-1">Your Prompt</p>
+        <p>We've switched back to the User tab and entered a prompt asking for <strong>diverse, attributed bullet points</strong> from disaster-response reports. You can also use the <strong>paperclip</strong> to upload PDFs of your source documents, just like the EU AI Act exercise.</p>
+      </FeatureHighlight>
+
+      <FeatureHighlight
+        target="#prompt-playground-submit"
+        open={tutorialStep === 5}
+        onClose={() => { resetTutorial(); setTutorialStep(0); }}
+        side="left"
+        sideOffset={24}
+        closeLabel="Start experimenting"
+      >
+        <p className="font-semibold mb-1">Ready to go!</p>
+        <p>Hit <strong>Send</strong> to submit your prompt. The LLM will produce a diversity summary with source attribution. When you're done, use the navigation buttons below to continue to the takeaways. Click <strong>Start experimenting</strong> to reset and try your own scenario.</p>
+      </FeatureHighlight>
 
       {summarizationProgress.isActive && (
         <Dialog open={true}>
