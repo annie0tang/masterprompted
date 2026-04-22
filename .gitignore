@@ -37,6 +37,7 @@ lerna-debug.log*
 *.sln
 *.sw?
 .eslintcache
+.claude/
 
 # Personal Testing
 rag_testen.html
