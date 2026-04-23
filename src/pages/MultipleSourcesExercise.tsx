@@ -695,7 +695,7 @@ export default function MultipleSourcesExercise() {
                     {/* HOW IT WORKS VIEW                             */}
                     {/* ============================================ */}
                     {topView === "how-it-works" && (
-                      <div className="bg-background rounded-xl p-8 flex-1 flex flex-col border border-brand-tertiary-500/20">
+                      <div className="bg-background rounded-xl p-8 flex-1 flex flex-col">
 
                         {/* Prompt – always visible */}
                         <div className="mb-6 ml-auto max-w-[80%] bg-muted p-5 rounded-[20px]">
@@ -850,26 +850,6 @@ export default function MultipleSourcesExercise() {
                                       </div>
                                     ))}
                                   </div>
-                                  {/* Horizontal merge line connecting all columns */}
-                                  <div className="absolute left-[8%] right-[8%] top-6 h-0.5 bg-brand-tertiary-500/40" />
-                                  {/* Vertical line down from merge point */}
-                                  <div className="absolute left-1/2 top-6 h-5 w-0.5 bg-brand-tertiary-500/40 -translate-x-1/2" />
-                                  <div className="absolute left-1/2 bottom-0 -translate-x-1/2">
-                                    <ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" />
-                                  </div>
-                                </div>
-
-                                {/* Merged step */}
-                                <div className="rounded-lg border-2 border-brand-tertiary-500/30 bg-brand-tertiary-500/10 p-3 text-center">
-                                  <p className="text-[9px] font-heading font-semibold text-brand-tertiary-500 uppercase tracking-wider mb-1">Merged</p>
-                                  <p className="text-[11px] text-foreground leading-relaxed">
-                                    All embeddings combined into a single context — source boundaries are lost
-                                  </p>
-                                </div>
-
-                                {/* Arrow: merged → output */}
-                                <div className="flex justify-center">
-                                  <ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" />
                                 </div>
 
                                 {/* Output */}
