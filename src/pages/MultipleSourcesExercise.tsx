@@ -837,8 +837,9 @@ export default function MultipleSourcesExercise() {
                                   </div>
                                 </div>
 
-                                {/* Converging arrows — embeddings to output */}
-                                <div className="relative h-12">
+                                {/* Converging arrows — embeddings merge into one */}
+                                <div className="relative" style={{ height: 48 }}>
+                                  {/* Per-column arrows down from embeddings */}
                                   <div
                                     className="grid gap-3 absolute inset-x-0 top-0 px-3"
                                     style={{ gridTemplateColumns: `repeat(${diagramSelectedDocs.length + 1}, minmax(0, 1fr))` }}
@@ -849,8 +850,26 @@ export default function MultipleSourcesExercise() {
                                       </div>
                                     ))}
                                   </div>
-                                  {/* Vertical line down from merge to output */}
-                                  <div className="absolute left-1/2 top-6 h-6 w-0.5 bg-brand-tertiary-500/40 -translate-x-1/2" />
+                                  {/* Horizontal merge line connecting all columns */}
+                                  <div className="absolute left-[8%] right-[8%] top-6 h-0.5 bg-brand-tertiary-500/40" />
+                                  {/* Vertical line down from merge point */}
+                                  <div className="absolute left-1/2 top-6 h-5 w-0.5 bg-brand-tertiary-500/40 -translate-x-1/2" />
+                                  <div className="absolute left-1/2 bottom-0 -translate-x-1/2">
+                                    <ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" />
+                                  </div>
+                                </div>
+
+                                {/* Merged step */}
+                                <div className="rounded-lg border-2 border-brand-tertiary-500/30 bg-brand-tertiary-500/10 p-3 text-center">
+                                  <p className="text-[9px] font-heading font-semibold text-brand-tertiary-500 uppercase tracking-wider mb-1">Merged</p>
+                                  <p className="text-[11px] text-foreground leading-relaxed">
+                                    All embeddings combined into a single context — source boundaries are lost
+                                  </p>
+                                </div>
+
+                                {/* Arrow: merged → output */}
+                                <div className="flex justify-center">
+                                  <ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" />
                                 </div>
 
                                 {/* Output */}
