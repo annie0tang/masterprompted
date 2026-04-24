@@ -742,19 +742,19 @@ export default function MultipleSourcesExercise() {
                             </div>
                           </div>
 
-                          {/* Arrow */}
-                          <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" /></div>
-
-                          {/* Row 2: Vector Embedding — process rectangle (error-prone) */}
-                          <div className="rounded border-2 border-amber-400 bg-amber-50 p-4 text-center">
-                            <p className="text-sm font-heading font-bold text-foreground">Vector embedding</p>
-                            <p className="text-xs text-amber-700 mt-1">⚠ Error-prone: semantic drift</p>
-                            {diagramSelectedDocs.length > 1 && (
-                              <p className="text-[10px] text-amber-600 mt-0.5">
-                                {diagramSelectedDocs.length} documents × embedding = {diagramSelectedDocs.length}× chance of meaning loss
-                              </p>
-                            )}
-                          </div>
+                          {/* Arrow + Row 2: Vector Embedding — only shown when documents are present */}
+                          {diagramSelectedDocs.length > 0 && (<>
+                            <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" /></div>
+                            <div className="rounded border-2 border-amber-400 bg-amber-50 p-4 text-center">
+                              <p className="text-sm font-heading font-bold text-foreground">Vector embedding</p>
+                              <p className="text-xs text-amber-700 mt-1">⚠ Error-prone: semantic drift</p>
+                              {diagramSelectedDocs.length > 1 && (
+                                <p className="text-[10px] text-amber-600 mt-0.5">
+                                  {diagramSelectedDocs.length} documents × embedding = {diagramSelectedDocs.length}× chance of meaning loss
+                                </p>
+                              )}
+                            </div>
+                          </>)}
 
                           {/* Arrow */}
                           <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" /></div>
