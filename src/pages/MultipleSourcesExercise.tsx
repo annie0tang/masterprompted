@@ -713,24 +713,30 @@ export default function MultipleSourcesExercise() {
                             className={cn("rounded-lg p-3 transition-colors", isDragOver ? "bg-brand-tertiary-500/10" : "")}
                           >
                             <div className="flex gap-3">
-                              {/* Query block */}
-                              <div className="rounded-lg border-2 border-blue-300 bg-blue-50 p-3 w-32 flex-shrink-0">
-                                <p className="text-[9px] font-heading font-semibold text-blue-600 uppercase tracking-wider mb-1">Query</p>
-                                <p className="text-[11px] text-foreground leading-relaxed">
-                                  Who holds the most responsibility?
-                                </p>
+                              {/* Query block — parallelogram (data/IO) */}
+                              <div className="border-2 border-blue-300 bg-blue-50 w-32 flex-shrink-0 overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
+                                <div className="p-3" style={{ transform: 'skewX(10deg)' }}>
+                                  <p className="text-[9px] font-heading font-semibold text-blue-600 uppercase tracking-wider mb-1">Query</p>
+                                  <p className="text-[11px] text-foreground leading-relaxed">
+                                    Who holds the most responsibility?
+                                  </p>
+                                </div>
                               </div>
-                              {/* Document blocks */}
+                              {/* Document blocks — parallelograms (data/IO) */}
                               {diagramSelectedDocs.map((doc) => (
-                                <div key={doc.id} className="rounded-lg border-2 border-border bg-muted/30 p-3 flex-1 min-w-0 relative">
-                                  <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-1">Document</p>
-                                  <button type="button" onClick={() => removeDiagramDoc(doc.id)} className="absolute top-1.5 right-1.5 h-4 w-4 rounded-full bg-muted hover:bg-muted-foreground/20 flex items-center justify-center text-muted-foreground text-[10px] leading-none" aria-label="Remove">×</button>
-                                  <p className="text-xs font-semibold text-foreground pr-4 line-clamp-1">{doc.title}</p>
+                                <div key={doc.id} className="border-2 border-border bg-muted/30 flex-1 min-w-0 overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
+                                  <div className="p-3" style={{ transform: 'skewX(10deg)' }}>
+                                    <div className="flex items-start justify-between gap-1">
+                                      <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-1">Document</p>
+                                      <button type="button" onClick={() => removeDiagramDoc(doc.id)} className="h-4 w-4 rounded-full bg-muted hover:bg-muted-foreground/20 flex items-center justify-center text-muted-foreground text-[10px] leading-none flex-shrink-0" aria-label="Remove">×</button>
+                                    </div>
+                                    <p className="text-xs font-semibold text-foreground line-clamp-1">{doc.title}</p>
+                                  </div>
                                 </div>
                               ))}
                               {diagramSelectedDocs.length === 0 && (
-                                <div className="rounded-lg border-2 border-dashed border-border bg-muted/10 p-3 flex-1 flex items-center justify-center">
-                                  <p className="text-[11px] text-muted-foreground italic">Drag documents here</p>
+                                <div className="border-2 border-dashed border-border bg-muted/10 flex-1 flex items-center justify-center overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px', minHeight: '56px' }}>
+                                  <p className="text-[11px] text-muted-foreground italic" style={{ transform: 'skewX(10deg)' }}>Drag documents here</p>
                                 </div>
                               )}
                             </div>
@@ -739,8 +745,8 @@ export default function MultipleSourcesExercise() {
                           {/* Arrow */}
                           <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" /></div>
 
-                          {/* Row 2: Vector Embedding — error-prone */}
-                          <div className="rounded-xl border-2 border-amber-400 bg-amber-50 p-4 text-center">
+                          {/* Row 2: Vector Embedding — process rectangle (error-prone) */}
+                          <div className="rounded border-2 border-amber-400 bg-amber-50 p-4 text-center">
                             <p className="text-sm font-heading font-bold text-foreground">Vector embedding</p>
                             <p className="text-xs text-amber-700 mt-1">⚠ Error-prone: semantic drift</p>
                             {diagramSelectedDocs.length > 1 && (
@@ -753,13 +759,17 @@ export default function MultipleSourcesExercise() {
                           {/* Arrow */}
                           <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" /></div>
 
-                          {/* Row 3: Query vector + Vector store */}
+                          {/* Row 3: Query vector (parallelogram) + Vector store (cylinder) */}
                           <div className="grid grid-cols-2 gap-3">
-                            <div className="rounded-lg border-2 border-border bg-muted/20 p-3 text-center">
-                              <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-1">Query vector</p>
-                              <p className="text-[10px] text-muted-foreground font-mono">[0.12, -0.45, 0.78, …]</p>
+                            {/* Query vector — parallelogram (data) */}
+                            <div className="border-2 border-border bg-muted/20 overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
+                              <div className="p-3 text-center" style={{ transform: 'skewX(10deg)' }}>
+                                <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-1">Query vector</p>
+                                <p className="text-[10px] text-muted-foreground font-mono">[0.12, -0.45, 0.78, …]</p>
+                              </div>
                             </div>
-                            <div className="rounded-lg border-2 border-border bg-muted/20 p-3 text-center">
+                            {/* Vector store — cylinder (database/storage) */}
+                            <div className="border-2 border-border bg-muted/20 p-3 text-center flex flex-col items-center justify-center" style={{ borderRadius: '8px 8px 8px 8px / 40px 40px 40px 40px', minHeight: '64px' }}>
                               <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-1">Vector store</p>
                               <p className="text-[10px] text-muted-foreground font-mono">
                                 {diagramSelectedDocs.length === 0 ? "Empty" : `${diagramSelectedDocs.length} document${diagramSelectedDocs.length > 1 ? "s" : ""} indexed`}
@@ -770,8 +780,8 @@ export default function MultipleSourcesExercise() {
                           {/* Arrow */}
                           <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" /></div>
 
-                          {/* Row 4: Retrieval */}
-                          <div className="rounded-lg border-2 border-border bg-muted/20 p-3 text-center">
+                          {/* Row 4: Retrieval — process rectangle */}
+                          <div className="rounded border-2 border-border bg-muted/20 p-3 text-center">
                             <p className="text-sm font-heading font-semibold text-foreground">Retrieval</p>
                             <p className="text-[10px] text-muted-foreground mt-0.5">
                               {diagramSelectedDocs.length === 0
@@ -783,27 +793,29 @@ export default function MultipleSourcesExercise() {
                           {/* Arrow */}
                           <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" /></div>
 
-                          {/* Row 5: Snippets */}
+                          {/* Row 5: Snippets — parallelograms (data/IO) */}
                           {diagramSelectedDocs.length > 0 ? (
                             <div className="grid gap-3" style={{ gridTemplateColumns: `repeat(${Math.min(diagramSelectedDocs.length, 3)}, minmax(0, 1fr))` }}>
                               {diagramSelectedDocs.map((doc, i) => (
-                                <div key={doc.id} className="rounded-lg border-2 border-border bg-white p-2.5 max-h-[80px] overflow-y-auto">
-                                  <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-1">Snippet {i + 1}</p>
-                                  <p className="text-[11px] text-foreground leading-relaxed italic">{LLM_EXTRACTIONS[doc.id] || "…"}</p>
+                                <div key={doc.id} className="border-2 border-border bg-white max-h-[80px] overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
+                                  <div className="p-2.5 overflow-y-auto max-h-[80px]" style={{ transform: 'skewX(10deg)' }}>
+                                    <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-1">Snippet {i + 1}</p>
+                                    <p className="text-[11px] text-foreground leading-relaxed italic">{LLM_EXTRACTIONS[doc.id] || "…"}</p>
+                                  </div>
                                 </div>
                               ))}
                             </div>
                           ) : (
-                            <div className="rounded-lg border-2 border-dashed border-border bg-white p-3 text-center">
-                              <p className="text-[11px] text-muted-foreground italic">No snippets — nothing was retrieved</p>
+                            <div className="border-2 border-dashed border-border bg-white p-3 text-center overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
+                              <p className="text-[11px] text-muted-foreground italic" style={{ transform: 'skewX(10deg)' }}>No snippets — nothing was retrieved</p>
                             </div>
                           )}
 
                           {/* Arrow */}
                           <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" /></div>
 
-                          {/* Row 6: Prompt assembly — error-prone */}
-                          <div className="rounded-xl border-2 border-amber-400 bg-amber-50 p-4 text-center">
+                          {/* Row 6: Prompt assembly — process rectangle (error-prone) */}
+                          <div className="rounded border-2 border-amber-400 bg-amber-50 p-4 text-center">
                             <p className="text-sm font-heading font-bold text-foreground">Prompt assembly</p>
                             <p className="text-xs text-amber-700 mt-1">⚠ Error-prone: context conflicts</p>
                             {diagramSelectedDocs.length > 1 && (
@@ -819,38 +831,44 @@ export default function MultipleSourcesExercise() {
                           {/* Arrow */}
                           <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" /></div>
 
-                          {/* Row 7: LLM generation */}
-                          <div className="rounded-lg border-2 border-border bg-muted/20 p-3 text-center">
+                          {/* Row 7: LLM generation — process rectangle */}
+                          <div className="rounded border-2 border-border bg-muted/20 p-3 text-center">
                             <p className="text-sm font-heading font-semibold text-foreground">LLM generation</p>
                           </div>
 
                           {/* Arrow */}
                           <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" /></div>
 
-                          {/* Row 8: Output */}
+                          {/* Row 8: Output — parallelogram (data/IO) */}
                           {(() => {
                             const key = Array.from(diagramDocs).sort().join(",");
                             const merged = LLM_MERGED_OUTPUTS[key];
                             if (diagramSelectedDocs.length === 0) {
                               return (
-                                <div className="rounded-lg border-2 border-brand-tertiary-500/40 bg-white p-4">
-                                  <p className="text-[9px] font-heading font-semibold text-brand-tertiary-500 uppercase tracking-wider mb-1">Output</p>
-                                  <p className="text-sm text-foreground leading-relaxed">With no source documents, the LLM answers entirely from training data. Claims can't be verified and the model may hallucinate.</p>
+                                <div className="border-2 border-brand-tertiary-500/40 bg-white overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
+                                  <div className="p-4" style={{ transform: 'skewX(10deg)' }}>
+                                    <p className="text-[9px] font-heading font-semibold text-brand-tertiary-500 uppercase tracking-wider mb-1">Output</p>
+                                    <p className="text-sm text-foreground leading-relaxed">With no source documents, the LLM answers entirely from training data. Claims can't be verified and the model may hallucinate.</p>
+                                  </div>
                                 </div>
                               );
                             }
                             if (!merged) {
                               return (
-                                <div className="rounded-lg border-2 border-brand-tertiary-500/40 bg-white p-4">
-                                  <p className="text-[9px] font-heading font-semibold text-brand-tertiary-500 uppercase tracking-wider mb-1">Output</p>
-                                  <p className="text-sm text-muted-foreground italic">Select a valid document combination to see the output.</p>
+                                <div className="border-2 border-brand-tertiary-500/40 bg-white overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
+                                  <div className="p-4" style={{ transform: 'skewX(10deg)' }}>
+                                    <p className="text-[9px] font-heading font-semibold text-brand-tertiary-500 uppercase tracking-wider mb-1">Output</p>
+                                    <p className="text-sm text-muted-foreground italic">Select a valid document combination to see the output.</p>
+                                  </div>
                                 </div>
                               );
                             }
                             return (
-                              <div className="rounded-lg border-2 border-brand-tertiary-500/40 bg-white p-4">
-                                <p className="text-[9px] font-heading font-semibold text-brand-tertiary-500 uppercase tracking-wider mb-1">Output</p>
-                                <p className="text-sm text-foreground leading-relaxed">{merged.text}</p>
+                              <div className="border-2 border-brand-tertiary-500/40 bg-white overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
+                                <div className="p-4" style={{ transform: 'skewX(10deg)' }}>
+                                  <p className="text-[9px] font-heading font-semibold text-brand-tertiary-500 uppercase tracking-wider mb-1">Output</p>
+                                  <p className="text-sm text-foreground leading-relaxed">{merged.text}</p>
+                                </div>
                               </div>
                             );
                           })()}
