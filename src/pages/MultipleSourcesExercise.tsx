@@ -8,7 +8,8 @@ import TextFlag from "@/components/TextFlag";
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { ArrowLeft, ArrowRight, File, Paperclip, ChevronDown, ChevronUp, Bot, Database, FileText, ArrowDown, Lock, Eye, Layers, Info, AlertTriangle } from "lucide-react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { ArrowLeft, ArrowRight, File, Paperclip, ChevronDown, ChevronUp, Bot, Database, FileText, ArrowDown, Lock, Eye, Layers, Info, AlertTriangle, ZoomIn } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */
@@ -73,59 +74,58 @@ function HallucinationRiskBadge({ children }: { children: React.ReactNode }) {
 /* ------------------------------------------------------------------ */
 /*  3D vector-space diagram — shown on hover/click inside embedding    */
 /* ------------------------------------------------------------------ */
-function VectorSpaceGraph() {
+function VectorSpaceSVG({ showLabels = true, idSuffix = "" }: { showLabels?: boolean; idSuffix?: string }) {
   const f = "'Barlow Semi Condensed', sans-serif";
+  const axisId = `axisEnd${idSuffix}`;
+  const queryId = `queryEnd${idSuffix}`;
   return (
-    <div className="rounded border border-border/40 p-3 my-3">
-      <svg viewBox="0 0 280 180" className="w-full" role="img" aria-label="3D vector space with semantic clusters">
-        <defs>
-          <marker id="axisEnd" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,1 L5,3 L0,5" fill="none" stroke="#149870" strokeWidth="0.8" />
-          </marker>
-          <marker id="queryEnd" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
-            <path d="M0,1 L6,3.5 L0,6" fill="none" stroke="#149870" strokeWidth="1" />
-          </marker>
-        </defs>
+    <svg viewBox="0 0 280 180" className="w-full h-full" role="img" aria-label="3D vector space with semantic clusters">
+      <defs>
+        <marker id={axisId} markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,1 L5,3 L0,5" fill="none" stroke="#149870" strokeWidth="0.8" />
+        </marker>
+        <marker id={queryId} markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+          <path d="M0,1 L6,3.5 L0,6" fill="none" stroke="#149870" strokeWidth="1" />
+        </marker>
+      </defs>
 
-        {/* Axes */}
-        <line x1="60" y1="150" x2="60" y2="18" stroke="#149870" strokeWidth="0.5" strokeOpacity="0.35" markerEnd="url(#axisEnd)" />
-        <line x1="60" y1="150" x2="260" y2="150" stroke="#149870" strokeWidth="0.5" strokeOpacity="0.35" markerEnd="url(#axisEnd)" />
-        <line x1="60" y1="150" x2="22" y2="172" stroke="#149870" strokeWidth="0.5" strokeOpacity="0.35" markerEnd="url(#axisEnd)" />
+      {/* Axes */}
+      <line x1="60" y1="150" x2="60" y2="18" stroke="#149870" strokeWidth="0.5" strokeOpacity="0.35" markerEnd={`url(#${axisId})`} />
+      <line x1="60" y1="150" x2="260" y2="150" stroke="#149870" strokeWidth="0.5" strokeOpacity="0.35" markerEnd={`url(#${axisId})`} />
+      <line x1="60" y1="150" x2="22" y2="172" stroke="#149870" strokeWidth="0.5" strokeOpacity="0.35" markerEnd={`url(#${axisId})`} />
 
+      {showLabels && <>
         <text x="55" y="14" fontSize="8" fontFamily={f} fontWeight="500" fill="#149870" opacity="0.5" textAnchor="end">z</text>
         <text x="264" y="148" fontSize="8" fontFamily={f} fontWeight="500" fill="#149870" opacity="0.5">x</text>
         <text x="16" y="178" fontSize="8" fontFamily={f} fontWeight="500" fill="#149870" opacity="0.5">y</text>
+      </>}
 
-        {/* Ethics cluster */}
-        <circle cx="100" cy="52" r="2.5" fill="#149870" opacity="0.6" />
-        <text x="106" y="55" fontSize="8" fontFamily={f} fontWeight="500" fill="#0A4D3A" opacity="0.75">ethics</text>
-        <circle cx="120" cy="64" r="2" fill="#149870" opacity="0.4" />
-        <text x="126" y="67" fontSize="8" fontFamily={f} fontWeight="400" fill="#0A4D3A" opacity="0.55">duty</text>
-        <circle cx="106" cy="74" r="1.5" fill="#149870" opacity="0.25" />
-        <text x="112" y="77" fontSize="7" fontFamily={f} fontWeight="400" fill="#0A4D3A" opacity="0.4">fairness</text>
+      {/* Ethics cluster */}
+      <circle cx="100" cy="52" r="2.5" fill="#149870" opacity="0.6" />
+      {showLabels && <text x="106" y="55" fontSize="8" fontFamily={f} fontWeight="500" fill="#0A4D3A" opacity="0.75">ethics</text>}
+      <circle cx="120" cy="64" r="2" fill="#149870" opacity="0.4" />
+      {showLabels && <text x="126" y="67" fontSize="8" fontFamily={f} fontWeight="400" fill="#0A4D3A" opacity="0.55">duty</text>}
+      <circle cx="106" cy="74" r="1.5" fill="#149870" opacity="0.25" />
+      {showLabels && <text x="112" y="77" fontSize="7" fontFamily={f} fontWeight="400" fill="#0A4D3A" opacity="0.4">fairness</text>}
 
-        {/* AI / tech cluster */}
-        <circle cx="200" cy="76" r="2.5" fill="#149870" opacity="0.6" />
-        <text x="206" y="79" fontSize="8" fontFamily={f} fontWeight="500" fill="#0A4D3A" opacity="0.75">AI</text>
-        <circle cx="222" cy="88" r="2" fill="#149870" opacity="0.4" />
-        <text x="228" y="91" fontSize="8" fontFamily={f} fontWeight="400" fill="#0A4D3A" opacity="0.55">model</text>
-        <circle cx="208" cy="98" r="1.5" fill="#149870" opacity="0.25" />
-        <text x="214" y="101" fontSize="7" fontFamily={f} fontWeight="400" fill="#0A4D3A" opacity="0.4">training</text>
+      {/* AI / tech cluster */}
+      <circle cx="200" cy="76" r="2.5" fill="#149870" opacity="0.6" />
+      {showLabels && <text x="206" y="79" fontSize="8" fontFamily={f} fontWeight="500" fill="#0A4D3A" opacity="0.75">AI</text>}
+      <circle cx="222" cy="88" r="2" fill="#149870" opacity="0.4" />
+      {showLabels && <text x="228" y="91" fontSize="8" fontFamily={f} fontWeight="400" fill="#0A4D3A" opacity="0.55">model</text>}
+      <circle cx="208" cy="98" r="1.5" fill="#149870" opacity="0.25" />
+      {showLabels && <text x="214" y="101" fontSize="7" fontFamily={f} fontWeight="400" fill="#0A4D3A" opacity="0.4">training</text>}
 
-        {/* Journalism cluster */}
-        <circle cx="148" cy="124" r="2.5" fill="#149870" opacity="0.6" />
-        <text x="154" y="127" fontSize="8" fontFamily={f} fontWeight="500" fill="#0A4D3A" opacity="0.75">news</text>
-        <circle cx="178" cy="132" r="2" fill="#149870" opacity="0.4" />
-        <text x="184" y="135" fontSize="8" fontFamily={f} fontWeight="400" fill="#0A4D3A" opacity="0.55">media</text>
+      {/* Journalism cluster */}
+      <circle cx="148" cy="124" r="2.5" fill="#149870" opacity="0.6" />
+      {showLabels && <text x="154" y="127" fontSize="8" fontFamily={f} fontWeight="500" fill="#0A4D3A" opacity="0.75">news</text>}
+      <circle cx="178" cy="132" r="2" fill="#149870" opacity="0.4" />
+      {showLabels && <text x="184" y="135" fontSize="8" fontFamily={f} fontWeight="400" fill="#0A4D3A" opacity="0.55">media</text>}
 
-        {/* Query vector */}
-        <line x1="60" y1="150" x2="103" y2="68" stroke="#149870" strokeWidth="1.2" markerEnd="url(#queryEnd)" />
-        <text x="70" y="110" fontSize="8" fontFamily={f} fontWeight="600" fill="#149870" opacity="0.85">query vector</text>
-      </svg>
-      <p className="text-[10px] font-heading text-muted-foreground text-center mt-1">
-        Similar meanings cluster together. The query vector points toward the nearest match.
-      </p>
-    </div>
+      {/* Query vector */}
+      <line x1="60" y1="150" x2="103" y2="68" stroke="#149870" strokeWidth="1.2" markerEnd={`url(#${queryId})`} />
+      {showLabels && <text x="70" y="110" fontSize="8" fontFamily={f} fontWeight="600" fill="#149870" opacity="0.85">query vector</text>}
+    </svg>
   );
 }
 
@@ -621,7 +621,6 @@ export default function MultipleSourcesExercise() {
   const [diagramDocs, setDiagramDocs] = useState<Set<string>>(new Set());
   /* Drag-and-drop visual state for the LLM diagram drop zone */
   const [isDragOver, setIsDragOver] = useState(false);
-  const [showEmbeddingGraph, setShowEmbeddingGraph] = useState(false);
 
   const toggle = (id: string) => {
     setSelected((prev) => {
@@ -946,18 +945,10 @@ export default function MultipleSourcesExercise() {
                                   </InfoPopover>
                                 </div>
                               </div>
-                              <button
-                                type="button"
-                                onClick={() => setShowEmbeddingGraph(!showEmbeddingGraph)}
-                                className="text-[11px] text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors my-1"
-                              >
-                                {showEmbeddingGraph ? "Hide vector space diagram" : "Show vector space diagram"}
-                              </button>
-                              {showEmbeddingGraph && <VectorSpaceGraph />}
                               <div className="grid grid-cols-2 gap-3 mt-3">
-                                {/* Query vector — parallelogram (data) */}
-                                <div className="border-2 border-border bg-white overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
-                                  <div className="p-3 text-center" style={{ transform: 'skewX(10deg)' }}>
+                                {/* Query vector — parallelogram (data) with mini vector graph */}
+                                <div className="border-2 border-border bg-white overflow-hidden relative" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
+                                  <div className="p-3" style={{ transform: 'skewX(10deg)' }}>
                                     <div className="flex items-center justify-center gap-1 mb-1">
                                       <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider">Query vector</p>
                                       <InfoPopover>
@@ -965,7 +956,36 @@ export default function MultipleSourcesExercise() {
                                         <p>The query reduced to a numerical fingerprint of its meaning — used to find the closest document chunks in the vector store.</p>
                                       </InfoPopover>
                                     </div>
-                                    <p className="text-[10px] text-muted-foreground font-mono">[0.12, -0.45, 0.78, …]</p>
+                                    <Dialog>
+                                      <div className="relative h-16 w-full">
+                                        <VectorSpaceSVG showLabels={false} idSuffix="-mini" />
+                                        <DialogTrigger asChild>
+                                          <button
+                                            type="button"
+                                            aria-label="Expand vector space diagram"
+                                            className="absolute top-0 right-0 p-1 rounded hover:bg-muted/60 transition-colors text-muted-foreground hover:text-foreground"
+                                          >
+                                            <ZoomIn className="h-3.5 w-3.5" />
+                                          </button>
+                                        </DialogTrigger>
+                                      </div>
+                                      <DialogContent className="max-w-2xl">
+                                        <div className="space-y-3 pt-2">
+                                          <div>
+                                            <p className="text-sm font-heading font-bold text-foreground">Vector space</p>
+                                            <p className="text-xs text-muted-foreground mt-0.5">
+                                              The query and documents are placed in a high-dimensional space where similar meanings cluster together.
+                                            </p>
+                                          </div>
+                                          <div className="rounded border border-border/40 p-4">
+                                            <VectorSpaceSVG idSuffix="-full" />
+                                          </div>
+                                          <p className="text-xs font-heading text-muted-foreground text-center">
+                                            The query vector points toward the nearest semantic cluster — that is where retrieval will look first.
+                                          </p>
+                                        </div>
+                                      </DialogContent>
+                                    </Dialog>
                                   </div>
                                 </div>
                                 {/* Vector store — cylinder (database/storage) */}
