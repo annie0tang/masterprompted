@@ -39,51 +39,66 @@ function InfoPopover({ children, side = "right" }: { children: React.ReactNode; 
 }
 
 /* ------------------------------------------------------------------ */
-/*  Semantic embedding graph — visual explainer for vector embedding   */
+/*  3D vector-space diagram — shown on hover/click inside embedding    */
 /* ------------------------------------------------------------------ */
-function SemanticGraph() {
+function VectorSpaceGraph() {
   return (
-    <div className="bg-white rounded-md border border-amber-200 p-2 my-3">
-      <p className="text-[10px] font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-1 text-center">
-        Embedding space (simplified)
+    <div className="bg-white rounded-md border border-amber-200 p-3">
+      <p className="text-[10px] font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-2 text-center">
+        3D vector space (simplified)
       </p>
-      <svg viewBox="0 0 320 160" className="w-full" role="img" aria-label="Semantic clusters in embedding space">
-        {/* Cluster 1 - Ethics / responsibility */}
-        <ellipse cx="70" cy="50" rx="55" ry="32" fill="#fef3c7" stroke="#f59e0b" strokeOpacity="0.4" strokeDasharray="3 3" />
-        <text x="70" y="22" fontSize="9" fontWeight="600" textAnchor="middle" fill="#92400e">ethics &amp; responsibility</text>
-        <circle cx="55" cy="45" r="3" fill="#f59e0b" />
-        <text x="62" y="48" fontSize="9" fill="#1f2937">ethics</text>
-        <circle cx="85" cy="55" r="3" fill="#f59e0b" />
-        <text x="92" y="58" fontSize="9" fill="#1f2937">duty</text>
-        <circle cx="65" cy="65" r="3" fill="#f59e0b" />
-        <text x="50" y="78" fontSize="9" fill="#1f2937">responsibility</text>
+      <svg viewBox="0 0 300 200" className="w-full" role="img" aria-label="3D vector space with XYZ axes showing semantic directions">
+        {/* Origin */}
+        {/* Z axis — vertical (up) */}
+        <line x1="80" y1="160" x2="80" y2="20" stroke="#94a3b8" strokeWidth="1.5" />
+        <polygon points="80,15 76,25 84,25" fill="#94a3b8" />
+        <text x="64" y="15" fontSize="10" fontWeight="600" fill="#475569">Z</text>
+        {/* X axis — horizontal right */}
+        <line x1="80" y1="160" x2="280" y2="160" stroke="#94a3b8" strokeWidth="1.5" />
+        <polygon points="285,160 275,156 275,164" fill="#94a3b8" />
+        <text x="284" y="154" fontSize="10" fontWeight="600" fill="#475569">X</text>
+        {/* Y axis — diagonal depth */}
+        <line x1="80" y1="160" x2="30" y2="185" stroke="#94a3b8" strokeWidth="1.5" />
+        <polygon points="26,187 36,182 32,190" fill="#94a3b8" />
+        <text x="15" y="195" fontSize="10" fontWeight="600" fill="#475569">Y</text>
 
-        {/* Cluster 2 - AI / technology */}
-        <ellipse cx="245" cy="50" rx="55" ry="32" fill="#dbeafe" stroke="#3b82f6" strokeOpacity="0.4" strokeDasharray="3 3" />
-        <text x="245" y="22" fontSize="9" fontWeight="600" textAnchor="middle" fill="#1e40af">AI &amp; technology</text>
-        <circle cx="225" cy="45" r="3" fill="#3b82f6" />
-        <text x="232" y="48" fontSize="9" fill="#1f2937">AI</text>
-        <circle cx="260" cy="50" r="3" fill="#3b82f6" />
-        <text x="267" y="53" fontSize="9" fill="#1f2937">model</text>
-        <circle cx="240" cy="65" r="3" fill="#3b82f6" />
-        <text x="247" y="68" fontSize="9" fill="#1f2937">training</text>
+        {/* Cluster: Ethics (upper-left area) */}
+        <ellipse cx="120" cy="60" rx="40" ry="24" fill="#fef3c7" fillOpacity="0.6" stroke="#f59e0b" strokeOpacity="0.4" strokeDasharray="3 3" />
+        <circle cx="108" cy="55" r="3.5" fill="#f59e0b" />
+        <text x="114" y="58" fontSize="8" fill="#92400e">ethics</text>
+        <circle cx="130" cy="65" r="3.5" fill="#f59e0b" />
+        <text x="136" y="68" fontSize="8" fill="#92400e">duty</text>
+        <circle cx="115" cy="75" r="3" fill="#f59e0b" fillOpacity="0.5" />
+        <text x="121" y="78" fontSize="7" fill="#92400e" opacity="0.7">fairness</text>
 
-        {/* Cluster 3 - Journalism / media */}
-        <ellipse cx="160" cy="125" rx="65" ry="28" fill="#dcfce7" stroke="#22c55e" strokeOpacity="0.4" strokeDasharray="3 3" />
-        <text x="160" y="155" fontSize="9" fontWeight="600" textAnchor="middle" fill="#15803d">journalism &amp; media</text>
-        <circle cx="130" cy="120" r="3" fill="#22c55e" />
-        <text x="137" y="123" fontSize="9" fill="#1f2937">news</text>
-        <circle cx="170" cy="115" r="3" fill="#22c55e" />
-        <text x="177" y="118" fontSize="9" fill="#1f2937">reporting</text>
-        <circle cx="160" cy="135" r="3" fill="#22c55e" />
-        <text x="167" y="138" fontSize="9" fill="#1f2937">media</text>
+        {/* Cluster: AI / tech (right area) */}
+        <ellipse cx="230" cy="90" rx="42" ry="24" fill="#dbeafe" fillOpacity="0.6" stroke="#3b82f6" strokeOpacity="0.4" strokeDasharray="3 3" />
+        <circle cx="218" cy="85" r="3.5" fill="#3b82f6" />
+        <text x="224" y="88" fontSize="8" fill="#1e40af">AI</text>
+        <circle cx="245" cy="95" r="3.5" fill="#3b82f6" />
+        <text x="251" y="98" fontSize="8" fill="#1e40af">model</text>
+        <circle cx="222" cy="100" r="3" fill="#3b82f6" fillOpacity="0.5" />
+        <text x="228" y="103" fontSize="7" fill="#1e40af" opacity="0.7">training</text>
 
-        {/* Query point - shown closer to ethics cluster */}
-        <circle cx="105" cy="80" r="4" fill="#0ea5e9" stroke="#0369a1" strokeWidth="1" />
-        <text x="112" y="83" fontSize="9" fontWeight="600" fill="#0369a1">your query</text>
+        {/* Cluster: Journalism (lower-center) */}
+        <ellipse cx="170" cy="140" rx="42" ry="18" fill="#dcfce7" fillOpacity="0.6" stroke="#22c55e" strokeOpacity="0.4" strokeDasharray="3 3" />
+        <circle cx="155" cy="136" r="3.5" fill="#22c55e" />
+        <text x="161" y="139" fontSize="8" fill="#15803d">news</text>
+        <circle cx="185" cy="142" r="3.5" fill="#22c55e" />
+        <text x="191" y="145" fontSize="8" fill="#15803d">media</text>
+
+        {/* Query vector — arrow from origin toward ethics cluster */}
+        <line x1="80" y1="160" x2="112" y2="78" stroke="#0ea5e9" strokeWidth="2" markerEnd="url(#arrowQ)" />
+        <defs>
+          <marker id="arrowQ" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#0ea5e9" />
+          </marker>
+        </defs>
+        <text x="92" y="112" fontSize="8" fontWeight="700" fill="#0369a1">query</text>
+        <text x="92" y="122" fontSize="8" fontWeight="700" fill="#0369a1">vector</text>
       </svg>
       <p className="text-[10px] text-muted-foreground italic text-center mt-1">
-        Words with similar meaning cluster together. Retrieval finds snippets nearest to the query.
+        Each axis captures a dimension of meaning. The query vector points toward the most semantically similar cluster.
       </p>
     </div>
   );
@@ -525,6 +540,7 @@ export default function MultipleSourcesExercise() {
   const [diagramDocs, setDiagramDocs] = useState<Set<string>>(new Set());
   /* Drag-and-drop visual state for the LLM diagram drop zone */
   const [isDragOver, setIsDragOver] = useState(false);
+  const [showEmbeddingGraph, setShowEmbeddingGraph] = useState(false);
 
   const toggle = (id: string) => {
     setSelected((prev) => {
@@ -774,17 +790,29 @@ export default function MultipleSourcesExercise() {
                     {topView === "how-it-works" && (
                       <div className="bg-background rounded-xl p-8 flex-1 flex flex-col min-h-0" style={{ maxHeight: 'calc(100vh - 180px)' }}>
 
-                        {/* Prompt – always visible */}
-                        <div className="mb-6 ml-auto max-w-[80%] bg-muted p-5 rounded-[20px] flex-shrink-0">
-                          <p className="text-foreground leading-relaxed font-medium">
-                            Who holds the most responsibility to uphold AI ethics?
-                          </p>
-                        </div>
-
                         {/* ── RAG pipeline block diagram (scrollable) ── */}
                         <div className="flex-1 min-h-0 overflow-y-auto space-y-3 pr-2">
 
-                          {/* Row 1: Query + Documents */}
+                          {/* Row 0: Query — full-width prompt banner */}
+                          <div className="border-2 border-blue-300 bg-blue-50 overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
+                            <div className="px-5 py-4" style={{ transform: 'skewX(10deg)' }}>
+                              <div className="flex items-center gap-1.5 mb-1.5">
+                                <p className="text-[10px] font-heading font-semibold text-blue-600 uppercase tracking-wider">Query (prompt)</p>
+                                <InfoPopover>
+                                  <p className="font-semibold">Query</p>
+                                  <p>The user's question — what they want the LLM to answer. This is the starting point of the pipeline.</p>
+                                </InfoPopover>
+                              </div>
+                              <p className="text-base font-medium text-foreground leading-relaxed">
+                                Who holds the most responsibility to uphold AI ethics?
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Arrow */}
+                          <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" /></div>
+
+                          {/* Row 1: Documents */}
                           <div
                             onDragOver={handleDropZoneDragOver}
                             onDragLeave={handleDropZoneDragLeave}
@@ -792,21 +820,6 @@ export default function MultipleSourcesExercise() {
                             className={cn("rounded-lg p-3 transition-colors", isDragOver ? "bg-brand-tertiary-500/10" : "")}
                           >
                             <div className="flex gap-3">
-                              {/* Query block — parallelogram (data/IO) */}
-                              <div className="border-2 border-blue-300 bg-blue-50 w-32 flex-shrink-0 overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
-                                <div className="p-3" style={{ transform: 'skewX(10deg)' }}>
-                                  <div className="flex items-center justify-between gap-1 mb-1">
-                                    <p className="text-[9px] font-heading font-semibold text-blue-600 uppercase tracking-wider">Query</p>
-                                    <InfoPopover>
-                                      <p className="font-semibold">Query</p>
-                                      <p>The user's question — what they want the LLM to answer.</p>
-                                    </InfoPopover>
-                                  </div>
-                                  <p className="text-[11px] text-foreground leading-relaxed">
-                                    Who holds the most responsibility?
-                                  </p>
-                                </div>
-                              </div>
                               {/* Document blocks — parallelograms (data/IO) */}
                               {diagramSelectedDocs.map((doc) => (
                                 <div key={doc.id} className="border-2 border-border bg-muted/30 flex-1 min-w-0 overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
@@ -853,8 +866,15 @@ export default function MultipleSourcesExercise() {
                                   </p>
                                 )}
                               </div>
-                              <SemanticGraph />
-                              <div className="grid grid-cols-2 gap-3">
+                              <button
+                                type="button"
+                                onClick={() => setShowEmbeddingGraph(!showEmbeddingGraph)}
+                                className="text-[11px] text-amber-700 hover:text-amber-900 underline underline-offset-2 transition-colors my-1"
+                              >
+                                {showEmbeddingGraph ? "Hide vector space diagram" : "Show vector space diagram"}
+                              </button>
+                              {showEmbeddingGraph && <VectorSpaceGraph />}
+                              <div className="grid grid-cols-2 gap-3 mt-3">
                                 {/* Query vector — parallelogram (data) */}
                                 <div className="border-2 border-amber-300 bg-white overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
                                   <div className="p-3 text-center" style={{ transform: 'skewX(10deg)' }}>
