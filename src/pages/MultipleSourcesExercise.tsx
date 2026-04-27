@@ -74,57 +74,88 @@ function HallucinationRiskBadge({ children }: { children: React.ReactNode }) {
 /* ------------------------------------------------------------------ */
 /*  3D vector-space diagram — shown on hover/click inside embedding    */
 /* ------------------------------------------------------------------ */
-function VectorSpaceSVG({ showLabels = true, idSuffix = "" }: { showLabels?: boolean; idSuffix?: string }) {
+function VectorSpaceSVG({ compact = false, idSuffix = "" }: { compact?: boolean; idSuffix?: string }) {
   const f = "'Barlow Semi Condensed', sans-serif";
   const axisId = `axisEnd${idSuffix}`;
   const queryId = `queryEnd${idSuffix}`;
+  const g = "#149870";
+
+  if (compact) {
+    return (
+      <svg viewBox="0 0 100 80" className="w-full h-full" role="img" aria-label="Vector space">
+        <defs>
+          <marker id={`${axisId}-c`} markerWidth="4" markerHeight="4" refX="3" refY="2" orient="auto">
+            <path d="M0,0.5 L3,2 L0,3.5" fill="none" stroke={g} strokeWidth="0.6" />
+          </marker>
+          <marker id={`${queryId}-c`} markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+            <path d="M0,0.5 L4,2.5 L0,4.5" fill="none" stroke={g} strokeWidth="0.8" />
+          </marker>
+        </defs>
+        {/* Axes */}
+        <line x1="20" y1="65" x2="20" y2="8" stroke={g} strokeWidth="0.5" strokeOpacity="0.3" markerEnd={`url(#${axisId}-c)`} />
+        <line x1="20" y1="65" x2="92" y2="65" stroke={g} strokeWidth="0.5" strokeOpacity="0.3" markerEnd={`url(#${axisId}-c)`} />
+        <line x1="20" y1="65" x2="8" y2="74" stroke={g} strokeWidth="0.5" strokeOpacity="0.3" markerEnd={`url(#${axisId}-c)`} />
+        {/* Points */}
+        <circle cx="38" cy="24" r="2" fill={g} opacity="0.5" />
+        <circle cx="45" cy="30" r="1.5" fill={g} opacity="0.35" />
+        <circle cx="34" cy="34" r="1.5" fill={g} opacity="0.35" />
+        <circle cx="70" cy="38" r="2" fill={g} opacity="0.5" />
+        <circle cx="78" cy="44" r="1.5" fill={g} opacity="0.35" />
+        <circle cx="55" cy="54" r="2" fill={g} opacity="0.5" />
+        <circle cx="64" cy="58" r="1.5" fill={g} opacity="0.35" />
+        {/* Query arrow pointing to a specific point */}
+        <line x1="20" y1="65" x2="36" y2="26" stroke={g} strokeWidth="1" markerEnd={`url(#${queryId}-c)`} />
+        <circle cx="38" cy="24" r="3.5" fill="none" stroke={g} strokeWidth="0.6" strokeOpacity="0.5" />
+      </svg>
+    );
+  }
+
   return (
     <svg viewBox="0 0 280 180" className="w-full h-full" role="img" aria-label="3D vector space with semantic clusters">
       <defs>
         <marker id={axisId} markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-          <path d="M0,1 L5,3 L0,5" fill="none" stroke="#149870" strokeWidth="0.8" />
+          <path d="M0,1 L5,3 L0,5" fill="none" stroke={g} strokeWidth="0.8" />
         </marker>
         <marker id={queryId} markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
-          <path d="M0,1 L6,3.5 L0,6" fill="none" stroke="#149870" strokeWidth="1" />
+          <path d="M0,1 L6,3.5 L0,6" fill="none" stroke={g} strokeWidth="1" />
         </marker>
       </defs>
 
       {/* Axes */}
-      <line x1="60" y1="150" x2="60" y2="18" stroke="#149870" strokeWidth="0.5" strokeOpacity="0.35" markerEnd={`url(#${axisId})`} />
-      <line x1="60" y1="150" x2="260" y2="150" stroke="#149870" strokeWidth="0.5" strokeOpacity="0.35" markerEnd={`url(#${axisId})`} />
-      <line x1="60" y1="150" x2="22" y2="172" stroke="#149870" strokeWidth="0.5" strokeOpacity="0.35" markerEnd={`url(#${axisId})`} />
+      <line x1="60" y1="150" x2="60" y2="18" stroke={g} strokeWidth="0.5" strokeOpacity="0.35" markerEnd={`url(#${axisId})`} />
+      <line x1="60" y1="150" x2="260" y2="150" stroke={g} strokeWidth="0.5" strokeOpacity="0.35" markerEnd={`url(#${axisId})`} />
+      <line x1="60" y1="150" x2="22" y2="172" stroke={g} strokeWidth="0.5" strokeOpacity="0.35" markerEnd={`url(#${axisId})`} />
 
-      {showLabels && <>
-        <text x="55" y="14" fontSize="8" fontFamily={f} fontWeight="500" fill="#149870" opacity="0.5" textAnchor="end">z</text>
-        <text x="264" y="148" fontSize="8" fontFamily={f} fontWeight="500" fill="#149870" opacity="0.5">x</text>
-        <text x="16" y="178" fontSize="8" fontFamily={f} fontWeight="500" fill="#149870" opacity="0.5">y</text>
-      </>}
+      <text x="55" y="14" fontSize="9" fontFamily={f} fontWeight="500" fill={g} opacity="0.5" textAnchor="end">z</text>
+      <text x="264" y="148" fontSize="9" fontFamily={f} fontWeight="500" fill={g} opacity="0.5">x</text>
+      <text x="16" y="178" fontSize="9" fontFamily={f} fontWeight="500" fill={g} opacity="0.5">y</text>
 
       {/* Ethics cluster */}
-      <circle cx="100" cy="52" r="2.5" fill="#149870" opacity="0.6" />
-      {showLabels && <text x="106" y="55" fontSize="8" fontFamily={f} fontWeight="500" fill="#0A4D3A" opacity="0.75">ethics</text>}
-      <circle cx="120" cy="64" r="2" fill="#149870" opacity="0.4" />
-      {showLabels && <text x="126" y="67" fontSize="8" fontFamily={f} fontWeight="400" fill="#0A4D3A" opacity="0.55">duty</text>}
-      <circle cx="106" cy="74" r="1.5" fill="#149870" opacity="0.25" />
-      {showLabels && <text x="112" y="77" fontSize="7" fontFamily={f} fontWeight="400" fill="#0A4D3A" opacity="0.4">fairness</text>}
+      <circle cx="100" cy="52" r="2.5" fill={g} opacity="0.5" />
+      <text x="106" y="55" fontSize="9" fontFamily={f} fontWeight="500" fill={g} opacity="0.7">ethics</text>
+      <circle cx="120" cy="64" r="2" fill={g} opacity="0.35" />
+      <text x="126" y="67" fontSize="9" fontFamily={f} fontWeight="500" fill={g} opacity="0.7">duty</text>
+      <circle cx="106" cy="74" r="2" fill={g} opacity="0.35" />
+      <text x="112" y="77" fontSize="9" fontFamily={f} fontWeight="500" fill={g} opacity="0.7">fairness</text>
 
       {/* AI / tech cluster */}
-      <circle cx="200" cy="76" r="2.5" fill="#149870" opacity="0.6" />
-      {showLabels && <text x="206" y="79" fontSize="8" fontFamily={f} fontWeight="500" fill="#0A4D3A" opacity="0.75">AI</text>}
-      <circle cx="222" cy="88" r="2" fill="#149870" opacity="0.4" />
-      {showLabels && <text x="228" y="91" fontSize="8" fontFamily={f} fontWeight="400" fill="#0A4D3A" opacity="0.55">model</text>}
-      <circle cx="208" cy="98" r="1.5" fill="#149870" opacity="0.25" />
-      {showLabels && <text x="214" y="101" fontSize="7" fontFamily={f} fontWeight="400" fill="#0A4D3A" opacity="0.4">training</text>}
+      <circle cx="200" cy="76" r="2.5" fill={g} opacity="0.5" />
+      <text x="206" y="79" fontSize="9" fontFamily={f} fontWeight="500" fill={g} opacity="0.7">AI</text>
+      <circle cx="222" cy="88" r="2" fill={g} opacity="0.35" />
+      <text x="228" y="91" fontSize="9" fontFamily={f} fontWeight="500" fill={g} opacity="0.7">model</text>
+      <circle cx="208" cy="98" r="2" fill={g} opacity="0.35" />
+      <text x="214" y="101" fontSize="9" fontFamily={f} fontWeight="500" fill={g} opacity="0.7">training</text>
 
       {/* Journalism cluster */}
-      <circle cx="148" cy="124" r="2.5" fill="#149870" opacity="0.6" />
-      {showLabels && <text x="154" y="127" fontSize="8" fontFamily={f} fontWeight="500" fill="#0A4D3A" opacity="0.75">news</text>}
-      <circle cx="178" cy="132" r="2" fill="#149870" opacity="0.4" />
-      {showLabels && <text x="184" y="135" fontSize="8" fontFamily={f} fontWeight="400" fill="#0A4D3A" opacity="0.55">media</text>}
+      <circle cx="148" cy="124" r="2.5" fill={g} opacity="0.5" />
+      <text x="154" y="127" fontSize="9" fontFamily={f} fontWeight="500" fill={g} opacity="0.7">news</text>
+      <circle cx="178" cy="132" r="2" fill={g} opacity="0.35" />
+      <text x="184" y="135" fontSize="9" fontFamily={f} fontWeight="500" fill={g} opacity="0.7">media</text>
 
-      {/* Query vector */}
-      <line x1="60" y1="150" x2="103" y2="68" stroke="#149870" strokeWidth="1.2" markerEnd={`url(#${queryId})`} />
-      {showLabels && <text x="70" y="110" fontSize="8" fontFamily={f} fontWeight="600" fill="#149870" opacity="0.85">query vector</text>}
+      {/* Query vector — arrow pointing to the nearest point, with ring highlight */}
+      <line x1="60" y1="150" x2="98" y2="54" stroke={g} strokeWidth="1.2" markerEnd={`url(#${queryId})`} />
+      <circle cx="100" cy="52" r="6" fill="none" stroke={g} strokeWidth="0.8" strokeOpacity="0.4" strokeDasharray="2 2" />
+      <text x="70" y="108" fontSize="9" fontFamily={f} fontWeight="600" fill={g} opacity="0.8">query vector</text>
     </svg>
   );
 }
@@ -857,9 +888,11 @@ export default function MultipleSourcesExercise() {
                           <Button variant="outline" size="lg" onClick={() => navigate("/module/multiple-sources")} className="rounded-md border-brand-tertiary-500 text-brand-tertiary-500 hover:bg-brand-tertiary-500/10">
                             <ArrowLeft className="!h-5 !w-5" />
                           </Button>
+                          {/* Uncomment to restore PP v2 flow:
                           <Button variant="outline" size="lg" onClick={() => navigate("/playground-v2?from=ms")} className="px-10 font-heading font-semibold border-brand-tertiary-500 text-brand-tertiary-500 hover:bg-brand-tertiary-500/10">
                             Try it in the Prompt Playground <ArrowRight className="-mr-2 !h-6 !w-6" />
                           </Button>
+                          */}
                         </div>
                       </div>
                     )}
@@ -873,19 +906,21 @@ export default function MultipleSourcesExercise() {
                         {/* ── RAG pipeline block diagram (scrollable) ── */}
                         <div className="flex-1 min-h-0 overflow-y-auto space-y-3 px-4 py-2">
 
-                          {/* Row 0: Query — full-width prompt banner */}
-                          <div className="border-2 border-blue-300 bg-blue-50 overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
-                            <div className="px-5 py-4" style={{ transform: 'skewX(10deg)' }}>
-                              <div className="flex items-center gap-1.5 mb-1.5">
-                                <p className="text-[10px] font-heading font-semibold text-blue-600 uppercase tracking-wider">Query (prompt)</p>
-                                <InfoPopover>
-                                  <p className="font-semibold">Query</p>
-                                  <p>The user's question — what they want the LLM to answer. This is the starting point of the pipeline.</p>
-                                </InfoPopover>
+                          {/* Row 0: Query — content-sized prompt banner */}
+                          <div className="flex justify-center">
+                            <div className="border-2 border-blue-300 bg-blue-50 overflow-hidden max-w-full" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
+                              <div className="px-5 py-4" style={{ transform: 'skewX(10deg)' }}>
+                                <div className="flex items-center gap-1.5 mb-1.5">
+                                  <p className="text-[10px] font-heading font-semibold text-blue-600 uppercase tracking-wider">Query (prompt)</p>
+                                  <InfoPopover>
+                                    <p className="font-semibold">Query</p>
+                                    <p>The user's question — what they want the LLM to answer. This is the starting point of the pipeline.</p>
+                                  </InfoPopover>
+                                </div>
+                                <p className="text-base font-medium text-foreground leading-relaxed">
+                                  Who holds the most responsibility to uphold AI ethics?
+                                </p>
                               </div>
-                              <p className="text-base font-medium text-foreground leading-relaxed">
-                                Who holds the most responsibility to uphold AI ethics?
-                              </p>
                             </div>
                           </div>
 
@@ -899,12 +934,12 @@ export default function MultipleSourcesExercise() {
                             onDrop={handleDropZoneDrop}
                             className={cn("rounded-lg p-3 transition-colors", isDragOver ? "bg-brand-tertiary-500/10" : "")}
                           >
-                            <div className="flex gap-3">
+                            <div className="flex flex-wrap justify-center gap-3">
                               {/* Document blocks — parallelograms (data/IO) */}
                               {diagramSelectedDocs.map((doc) => (
-                                <div key={doc.id} className="border-2 border-border bg-muted/30 flex-1 min-w-0 overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
+                                <div key={doc.id} className="border-2 border-border bg-muted/30 overflow-hidden max-w-[260px]" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
                                   <div className="p-3" style={{ transform: 'skewX(10deg)' }}>
-                                    <div className="flex items-start justify-between gap-1">
+                                    <div className="flex items-start justify-between gap-2">
                                       <div className="flex items-center gap-1 mb-1">
                                         <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider">Document</p>
                                         <InfoPopover>
@@ -919,8 +954,8 @@ export default function MultipleSourcesExercise() {
                                 </div>
                               ))}
                               {diagramSelectedDocs.length === 0 && (
-                                <div className="border-2 border-dashed border-border bg-muted/10 flex-1 flex items-center justify-center overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px', minHeight: '56px' }}>
-                                  <p className="text-[11px] text-muted-foreground italic" style={{ transform: 'skewX(10deg)' }}>Drag documents here</p>
+                                <div className="border-2 border-dashed border-border bg-muted/10 flex items-center justify-center overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px', minHeight: '56px', minWidth: '180px' }}>
+                                  <p className="text-[11px] text-muted-foreground italic px-4" style={{ transform: 'skewX(10deg)' }}>Drag documents here</p>
                                 </div>
                               )}
                             </div>
@@ -929,77 +964,79 @@ export default function MultipleSourcesExercise() {
                           {/* Vector Embedding block — only shown when documents are present */}
                           {diagramSelectedDocs.length > 0 && (<>
                             <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" /></div>
-                            <div className="relative rounded border-2 border-border bg-muted/20 p-4">
-                              <HallucinationRiskBadge>
-                                <p>Nuance and domain-specific phrasing can drift during translation into vectors, so the wrong snippets may be retrieved.</p>
-                                {diagramSelectedDocs.length > 1 && (
-                                  <p>{diagramSelectedDocs.length} documents × embedding = {diagramSelectedDocs.length}× chance of meaning loss.</p>
-                                )}
-                              </HallucinationRiskBadge>
-                              <div className="text-center mb-3">
-                                <div className="flex items-center justify-center gap-1.5">
-                                  <p className="text-sm font-heading font-bold text-foreground">Vector embedding</p>
-                                  <InfoPopover>
-                                    <p className="font-semibold">Vector embedding</p>
-                                    <p>Each document and the query are converted into numerical vectors that capture meaning. Similar meanings end up near each other in this space.</p>
-                                  </InfoPopover>
-                                </div>
-                              </div>
-                              <div className="grid grid-cols-2 gap-3 mt-3">
-                                {/* Query vector — parallelogram (data) with mini vector graph */}
-                                <div className="border-2 border-border bg-white overflow-hidden relative" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
-                                  <div className="p-3" style={{ transform: 'skewX(10deg)' }}>
-                                    <div className="flex items-center justify-center gap-1 mb-1">
-                                      <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider">Query vector</p>
-                                      <InfoPopover>
-                                        <p className="font-semibold">Query vector</p>
-                                        <p>The query reduced to a numerical fingerprint of its meaning — used to find the closest document chunks in the vector store.</p>
-                                      </InfoPopover>
-                                    </div>
-                                    <Dialog>
-                                      <div className="relative h-16 w-full">
-                                        <VectorSpaceSVG showLabels={false} idSuffix="-mini" />
-                                        <DialogTrigger asChild>
-                                          <button
-                                            type="button"
-                                            aria-label="Expand vector space diagram"
-                                            className="absolute top-0 right-0 p-1 rounded hover:bg-muted/60 transition-colors text-muted-foreground hover:text-foreground"
-                                          >
-                                            <ZoomIn className="h-3.5 w-3.5" />
-                                          </button>
-                                        </DialogTrigger>
-                                      </div>
-                                      <DialogContent className="max-w-2xl">
-                                        <div className="space-y-3 pt-2">
-                                          <div>
-                                            <p className="text-sm font-heading font-bold text-foreground">Vector space</p>
-                                            <p className="text-xs text-muted-foreground mt-0.5">
-                                              The query and documents are placed in a high-dimensional space where similar meanings cluster together.
-                                            </p>
-                                          </div>
-                                          <div className="rounded border border-border/40 p-4">
-                                            <VectorSpaceSVG idSuffix="-full" />
-                                          </div>
-                                          <p className="text-xs font-heading text-muted-foreground text-center">
-                                            The query vector points toward the nearest semantic cluster — that is where retrieval will look first.
-                                          </p>
-                                        </div>
-                                      </DialogContent>
-                                    </Dialog>
-                                  </div>
-                                </div>
-                                {/* Vector store — cylinder (database/storage) */}
-                                <div className="border-2 border-border bg-white p-3 text-center flex flex-col items-center justify-center" style={{ borderRadius: '8px 8px 8px 8px / 40px 40px 40px 40px', minHeight: '64px' }}>
-                                  <div className="flex items-center justify-center gap-1 mb-1">
-                                    <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider">Vector store</p>
+                            <div className="flex justify-center">
+                              <div className="relative rounded border-2 border-border bg-muted/20 p-4 max-w-full">
+                                <HallucinationRiskBadge>
+                                  <p>Nuance and domain-specific phrasing can drift during translation into vectors, so the wrong snippets may be retrieved.</p>
+                                  {diagramSelectedDocs.length > 1 && (
+                                    <p>{diagramSelectedDocs.length} documents × embedding = {diagramSelectedDocs.length}× chance of meaning loss.</p>
+                                  )}
+                                </HallucinationRiskBadge>
+                                <div className="text-center mb-3">
+                                  <div className="flex items-center justify-center gap-1.5">
+                                    <p className="text-sm font-heading font-bold text-foreground">Vector embedding</p>
                                     <InfoPopover>
-                                      <p className="font-semibold">Vector store</p>
-                                      <p>A database of pre-computed document vectors. Retrieval performs a similarity search against it to find relevant snippets.</p>
+                                      <p className="font-semibold">Vector embedding</p>
+                                      <p>Each document and the query are converted into numerical vectors that capture meaning. Similar meanings end up near each other in this space.</p>
                                     </InfoPopover>
                                   </div>
-                                  <p className="text-[10px] text-muted-foreground font-mono">
-                                    {`${diagramSelectedDocs.length} document${diagramSelectedDocs.length > 1 ? "s" : ""} indexed`}
-                                  </p>
+                                </div>
+                                <div className="flex flex-wrap justify-center items-stretch gap-3 mt-3">
+                                  {/* Query vector — parallelogram (data) with mini vector graph */}
+                                  <div className="border-2 border-border bg-white overflow-hidden relative w-[180px]" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
+                                    <div className="p-3" style={{ transform: 'skewX(10deg)' }}>
+                                      <div className="flex items-center justify-center gap-1 mb-1">
+                                        <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider">Query vector</p>
+                                        <InfoPopover>
+                                          <p className="font-semibold">Query vector</p>
+                                          <p>The query reduced to a numerical fingerprint of its meaning — used to find the closest document chunks in the vector store.</p>
+                                        </InfoPopover>
+                                      </div>
+                                      <Dialog>
+                                        <div className="relative h-16 w-full">
+                                          <VectorSpaceSVG compact idSuffix="-mini" />
+                                          <DialogTrigger asChild>
+                                            <button
+                                              type="button"
+                                              aria-label="Expand vector space diagram"
+                                              className="absolute top-0 right-0 p-1 rounded hover:bg-muted/60 transition-colors text-muted-foreground hover:text-foreground"
+                                            >
+                                              <ZoomIn className="h-3.5 w-3.5" />
+                                            </button>
+                                          </DialogTrigger>
+                                        </div>
+                                        <DialogContent className="max-w-2xl">
+                                          <div className="space-y-3 pt-2">
+                                            <div>
+                                              <p className="text-sm font-heading font-bold text-foreground">Vector space</p>
+                                              <p className="text-xs text-muted-foreground mt-0.5">
+                                                The query and documents are placed in a high-dimensional space where similar meanings cluster together.
+                                              </p>
+                                            </div>
+                                            <div className="rounded border border-border/40 p-4">
+                                              <VectorSpaceSVG idSuffix="-full" />
+                                            </div>
+                                            <p className="text-xs font-heading text-muted-foreground text-center">
+                                              The query vector points toward the nearest semantic cluster — that is where retrieval will look first.
+                                            </p>
+                                          </div>
+                                        </DialogContent>
+                                      </Dialog>
+                                    </div>
+                                  </div>
+                                  {/* Vector store — cylinder (database/storage) */}
+                                  <div className="border-2 border-border bg-white px-5 py-3 text-center flex flex-col items-center justify-center" style={{ borderRadius: '8px 8px 8px 8px / 40px 40px 40px 40px', minHeight: '64px' }}>
+                                    <div className="flex items-center justify-center gap-1 mb-1">
+                                      <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider">Vector store</p>
+                                      <InfoPopover>
+                                        <p className="font-semibold">Vector store</p>
+                                        <p>A database of pre-computed document vectors. Retrieval performs a similarity search against it to find relevant snippets.</p>
+                                      </InfoPopover>
+                                    </div>
+                                    <p className="text-[10px] text-muted-foreground font-mono whitespace-nowrap">
+                                      {`${diagramSelectedDocs.length} document${diagramSelectedDocs.length > 1 ? "s" : ""} indexed`}
+                                    </p>
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -1011,33 +1048,35 @@ export default function MultipleSourcesExercise() {
                             <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" /></div>
 
                             {/* Row 4: Retrieval — process rectangle containing snippet output */}
-                            <div className="rounded border-2 border-border bg-muted/20 p-3">
-                              <div className="text-center mb-3">
-                                <div className="flex items-center justify-center gap-1.5">
-                                  <p className="text-sm font-heading font-semibold text-foreground">Retrieval</p>
-                                  <InfoPopover>
-                                    <p className="font-semibold">Retrieval</p>
-                                    <p>Searches the vector store for snippets whose meaning is closest to the query. The LLM then sees only these excerpts — never the full source.</p>
-                                    <p className="opacity-90">⚠ Hallucination risk: missing context outside the retrieved snippet can lead to misleading conclusions.</p>
-                                  </InfoPopover>
-                                </div>
-                                <p className="text-[10px] text-muted-foreground mt-0.5">
-                                  {`Matched against ${diagramSelectedDocs.length} document${diagramSelectedDocs.length > 1 ? "s" : ""} → top snippet${diagramSelectedDocs.length > 1 ? "s" : ""}`}
-                                </p>
-                              </div>
-                              <div className="grid gap-3" style={{ gridTemplateColumns: `repeat(${Math.min(diagramSelectedDocs.length, 3)}, minmax(0, 1fr))` }}>
-                                {diagramSelectedDocs.map((doc, i) => (
-                                  <div key={doc.id} className="rounded border-2 border-border bg-white p-2.5 max-h-[80px] overflow-y-auto">
-                                    <div className="flex items-center justify-between gap-1 mb-1">
-                                      <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider">Snippet {i + 1}</p>
-                                      <InfoPopover>
-                                        <p className="font-semibold">Snippet</p>
-                                        <p>An extract pulled from the source document. The LLM only sees this excerpt, so any context outside it is lost.</p>
-                                      </InfoPopover>
-                                    </div>
-                                    <p className="text-[11px] text-foreground leading-relaxed italic">{LLM_EXTRACTIONS[doc.id] || "…"}</p>
+                            <div className="flex justify-center">
+                              <div className="rounded border-2 border-border bg-muted/20 p-3 max-w-full">
+                                <div className="text-center mb-3">
+                                  <div className="flex items-center justify-center gap-1.5">
+                                    <p className="text-sm font-heading font-semibold text-foreground">Retrieval</p>
+                                    <InfoPopover>
+                                      <p className="font-semibold">Retrieval</p>
+                                      <p>Searches the vector store for snippets whose meaning is closest to the query. The LLM then sees only these excerpts — never the full source.</p>
+                                      <p className="opacity-90">⚠ Hallucination risk: missing context outside the retrieved snippet can lead to misleading conclusions.</p>
+                                    </InfoPopover>
                                   </div>
-                                ))}
+                                  <p className="text-[10px] text-muted-foreground mt-0.5">
+                                    {`Matched against ${diagramSelectedDocs.length} document${diagramSelectedDocs.length > 1 ? "s" : ""} → top snippet${diagramSelectedDocs.length > 1 ? "s" : ""}`}
+                                  </p>
+                                </div>
+                                <div className="flex flex-wrap justify-center items-stretch gap-3">
+                                  {diagramSelectedDocs.map((doc, i) => (
+                                    <div key={doc.id} className="rounded border-2 border-border bg-white p-2.5 max-h-[80px] w-[220px] overflow-y-auto">
+                                      <div className="flex items-center justify-between gap-1 mb-1">
+                                        <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider">Snippet {i + 1}</p>
+                                        <InfoPopover>
+                                          <p className="font-semibold">Snippet</p>
+                                          <p>An extract pulled from the source document. The LLM only sees this excerpt, so any context outside it is lost.</p>
+                                        </InfoPopover>
+                                      </div>
+                                      <p className="text-[11px] text-foreground leading-relaxed italic">{LLM_EXTRACTIONS[doc.id] || "…"}</p>
+                                    </div>
+                                  ))}
+                                </div>
                               </div>
                             </div>
                           </>)}
@@ -1046,22 +1085,24 @@ export default function MultipleSourcesExercise() {
                           <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" /></div>
 
                           {/* Row 6: Prompt assembly + LLM generation — combined process rectangle */}
-                          <div className="relative rounded border-2 border-border bg-muted/20 p-4 text-center">
-                            <HallucinationRiskBadge>
-                              <p>Conflicting sources can confuse the model, and when context is thin it falls back on training data — producing fluent but unverifiable claims.</p>
-                              {diagramSelectedDocs.length > 1 && (
-                                <p>{diagramSelectedDocs.length} snippets + query merged — the more sources, the higher the chance of conflict.</p>
-                              )}
-                              {diagramSelectedDocs.length === 0 && (
-                                <p>Query with no context — the LLM relies on training data alone, which can be outdated or wrong.</p>
-                              )}
-                            </HallucinationRiskBadge>
-                            <div className="flex items-center justify-center gap-1.5">
-                              <p className="text-sm font-heading font-bold text-foreground">Prompt assembly &amp; LLM generation</p>
-                              <InfoPopover>
-                                <p className="font-semibold">Prompt assembly &amp; LLM generation</p>
-                                <p>Snippets and the query are merged into one prompt and sent to the LLM, which generates a response token-by-token.</p>
-                              </InfoPopover>
+                          <div className="flex justify-center">
+                            <div className="relative rounded border-2 border-border bg-muted/20 px-5 py-4 text-center">
+                              <HallucinationRiskBadge>
+                                <p>Conflicting sources can confuse the model, and when context is thin it falls back on training data — producing fluent but unverifiable claims.</p>
+                                {diagramSelectedDocs.length > 1 && (
+                                  <p>{diagramSelectedDocs.length} snippets + query merged — the more sources, the higher the chance of conflict.</p>
+                                )}
+                                {diagramSelectedDocs.length === 0 && (
+                                  <p>Query with no context — the LLM relies on training data alone, which can be outdated or wrong.</p>
+                                )}
+                              </HallucinationRiskBadge>
+                              <div className="flex items-center justify-center gap-1.5">
+                                <p className="text-sm font-heading font-bold text-foreground whitespace-nowrap">Prompt assembly &amp; LLM generation</p>
+                                <InfoPopover>
+                                  <p className="font-semibold">Prompt assembly &amp; LLM generation</p>
+                                  <p>Snippets and the query are merged into one prompt and sent to the LLM, which generates a response token-by-token.</p>
+                                </InfoPopover>
+                              </div>
                             </div>
                           </div>
 
@@ -1083,8 +1124,8 @@ export default function MultipleSourcesExercise() {
                             );
                             if (diagramSelectedDocs.length === 0) {
                               return (
-                                <div className="border-2 border-brand-tertiary-500/40 bg-white overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
-                                  <div className="p-4" style={{ transform: 'skewX(10deg)' }}>
+                                <div className="flex justify-center">
+                                  <div className="rounded border-2 border-brand-tertiary-500/40 bg-white p-4 max-w-[600px]">
                                     {outputHeader}
                                     <p className="text-sm text-foreground leading-relaxed">With no source documents, the LLM answers entirely from training data. Claims can't be verified and the model may hallucinate.</p>
                                   </div>
@@ -1093,8 +1134,8 @@ export default function MultipleSourcesExercise() {
                             }
                             if (!merged) {
                               return (
-                                <div className="border-2 border-brand-tertiary-500/40 bg-white overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
-                                  <div className="p-4" style={{ transform: 'skewX(10deg)' }}>
+                                <div className="flex justify-center">
+                                  <div className="rounded border-2 border-brand-tertiary-500/40 bg-white p-4 max-w-[600px]">
                                     {outputHeader}
                                     <p className="text-sm text-muted-foreground italic">Select a valid document combination to see the output.</p>
                                   </div>
@@ -1102,11 +1143,13 @@ export default function MultipleSourcesExercise() {
                               );
                             }
                             return (
-                              <div className="rounded border-2 border-brand-tertiary-500/40 bg-white p-4">
-                                {outputHeader}
-                                <p className="text-sm text-foreground leading-relaxed">
-                                  {renderFlaggedResponse(merged.text, MERGED_OUTPUT_FLAGS[key] || [])}
-                                </p>
+                              <div className="flex justify-center">
+                                <div className="rounded border-2 border-brand-tertiary-500/40 bg-white p-4 max-w-[600px]">
+                                  {outputHeader}
+                                  <p className="text-sm text-foreground leading-relaxed">
+                                    {renderFlaggedResponse(merged.text, MERGED_OUTPUT_FLAGS[key] || [])}
+                                  </p>
+                                </div>
                               </div>
                             );
                           })()}
@@ -1116,9 +1159,11 @@ export default function MultipleSourcesExercise() {
                           <Button variant="outline" size="lg" onClick={() => navigate("/module/multiple-sources")} className="rounded-md border-brand-tertiary-500 text-brand-tertiary-500 hover:bg-brand-tertiary-500/10">
                             <ArrowLeft className="!h-5 !w-5" />
                           </Button>
+                          {/* Uncomment to restore PP v2 flow:
                           <Button variant="outline" size="lg" onClick={() => navigate("/playground-v2?from=ms")} className="px-10 font-heading font-semibold border-brand-tertiary-500 text-brand-tertiary-500 hover:bg-brand-tertiary-500/10">
                             Try it in the Prompt Playground <ArrowRight className="-mr-2 !h-6 !w-6" />
                           </Button>
+                          */}
                         </div>
                       </div>
                     )}
