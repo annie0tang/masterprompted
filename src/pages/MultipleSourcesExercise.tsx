@@ -782,27 +782,24 @@ export default function MultipleSourcesExercise() {
                             {/* Arrow */}
                             <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" /></div>
 
-                            {/* Row 4: Retrieval — process rectangle */}
-                            <div className="rounded border-2 border-border bg-muted/20 p-3 text-center">
-                              <p className="text-sm font-heading font-semibold text-foreground">Retrieval</p>
-                              <p className="text-[10px] text-muted-foreground mt-0.5">
-                                {`Matching query against ${diagramSelectedDocs.length} document${diagramSelectedDocs.length > 1 ? "s" : ""}`}
-                              </p>
-                            </div>
-
-                            {/* Arrow */}
-                            <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" /></div>
-
-                            {/* Row 5: Snippets — parallelograms (data/IO) */}
-                            <div className="grid gap-3" style={{ gridTemplateColumns: `repeat(${Math.min(diagramSelectedDocs.length, 3)}, minmax(0, 1fr))` }}>
-                              {diagramSelectedDocs.map((doc, i) => (
-                                <div key={doc.id} className="border-2 border-border bg-white max-h-[80px] overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
-                                  <div className="p-2.5 overflow-y-auto max-h-[80px]" style={{ transform: 'skewX(10deg)' }}>
-                                    <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-1">Snippet {i + 1}</p>
-                                    <p className="text-[11px] text-foreground leading-relaxed italic">{LLM_EXTRACTIONS[doc.id] || "…"}</p>
+                            {/* Row 4: Retrieval — process rectangle containing snippet output */}
+                            <div className="rounded border-2 border-border bg-muted/20 p-3">
+                              <div className="text-center mb-3">
+                                <p className="text-sm font-heading font-semibold text-foreground">Retrieval</p>
+                                <p className="text-[10px] text-muted-foreground mt-0.5">
+                                  {`Matched against ${diagramSelectedDocs.length} document${diagramSelectedDocs.length > 1 ? "s" : ""} → top snippet${diagramSelectedDocs.length > 1 ? "s" : ""}`}
+                                </p>
+                              </div>
+                              <div className="grid gap-3" style={{ gridTemplateColumns: `repeat(${Math.min(diagramSelectedDocs.length, 3)}, minmax(0, 1fr))` }}>
+                                {diagramSelectedDocs.map((doc, i) => (
+                                  <div key={doc.id} className="border-2 border-border bg-white max-h-[80px] overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
+                                    <div className="p-2.5 overflow-y-auto max-h-[80px]" style={{ transform: 'skewX(10deg)' }}>
+                                      <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-1">Snippet {i + 1}</p>
+                                      <p className="text-[11px] text-foreground leading-relaxed italic">{LLM_EXTRACTIONS[doc.id] || "…"}</p>
+                                    </div>
                                   </div>
-                                </div>
-                              ))}
+                                ))}
+                              </div>
                             </div>
                           </>)}
 
