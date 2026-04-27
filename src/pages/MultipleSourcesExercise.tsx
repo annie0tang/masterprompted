@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -7,8 +7,87 @@ import EvaluationPanel from "@/components/EvaluationPanel";
 import TextFlag from "@/components/TextFlag";
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { ArrowLeft, ArrowRight, File, Paperclip, ChevronDown, ChevronUp, Bot, Database, FileText, ArrowDown, Lock, Eye, Layers } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { ArrowLeft, ArrowRight, File, Paperclip, ChevronDown, ChevronUp, Bot, Database, FileText, ArrowDown, Lock, Eye, Layers, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+/* ------------------------------------------------------------------ */
+/*  InfoPopover — small hover/click info icon                          */
+/* ------------------------------------------------------------------ */
+function InfoPopover({ children, side = "right" }: { children: React.ReactNode; side?: "top" | "right" | "bottom" | "left" }) {
+  const [open, setOpen] = useState(false);
+  const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const enter = () => { if (timeout.current) clearTimeout(timeout.current); setOpen(true); };
+  const leave = () => { timeout.current = setTimeout(() => setOpen(false), 150); };
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild onMouseEnter={enter} onMouseLeave={leave}>
+        <button type="button" aria-label="More info" className="inline-flex items-center justify-center">
+          <Info className="w-3.5 h-3.5 cursor-pointer text-muted-foreground hover:text-foreground transition-colors" />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent
+        side={side}
+        className="max-w-xs bg-emerald-600 text-white rounded-xl shadow-lg px-4 py-3 text-xs font-medium border-none leading-relaxed z-[100] space-y-2"
+        onMouseEnter={enter}
+        onMouseLeave={leave}
+      >
+        {children}
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Semantic embedding graph — visual explainer for vector embedding   */
+/* ------------------------------------------------------------------ */
+function SemanticGraph() {
+  return (
+    <div className="bg-white rounded-md border border-amber-200 p-2 my-3">
+      <p className="text-[10px] font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-1 text-center">
+        Embedding space (simplified)
+      </p>
+      <svg viewBox="0 0 320 160" className="w-full" role="img" aria-label="Semantic clusters in embedding space">
+        {/* Cluster 1 - Ethics / responsibility */}
+        <ellipse cx="70" cy="50" rx="55" ry="32" fill="#fef3c7" stroke="#f59e0b" strokeOpacity="0.4" strokeDasharray="3 3" />
+        <text x="70" y="22" fontSize="9" fontWeight="600" textAnchor="middle" fill="#92400e">ethics &amp; responsibility</text>
+        <circle cx="55" cy="45" r="3" fill="#f59e0b" />
+        <text x="62" y="48" fontSize="9" fill="#1f2937">ethics</text>
+        <circle cx="85" cy="55" r="3" fill="#f59e0b" />
+        <text x="92" y="58" fontSize="9" fill="#1f2937">duty</text>
+        <circle cx="65" cy="65" r="3" fill="#f59e0b" />
+        <text x="50" y="78" fontSize="9" fill="#1f2937">responsibility</text>
+
+        {/* Cluster 2 - AI / technology */}
+        <ellipse cx="245" cy="50" rx="55" ry="32" fill="#dbeafe" stroke="#3b82f6" strokeOpacity="0.4" strokeDasharray="3 3" />
+        <text x="245" y="22" fontSize="9" fontWeight="600" textAnchor="middle" fill="#1e40af">AI &amp; technology</text>
+        <circle cx="225" cy="45" r="3" fill="#3b82f6" />
+        <text x="232" y="48" fontSize="9" fill="#1f2937">AI</text>
+        <circle cx="260" cy="50" r="3" fill="#3b82f6" />
+        <text x="267" y="53" fontSize="9" fill="#1f2937">model</text>
+        <circle cx="240" cy="65" r="3" fill="#3b82f6" />
+        <text x="247" y="68" fontSize="9" fill="#1f2937">training</text>
+
+        {/* Cluster 3 - Journalism / media */}
+        <ellipse cx="160" cy="125" rx="65" ry="28" fill="#dcfce7" stroke="#22c55e" strokeOpacity="0.4" strokeDasharray="3 3" />
+        <text x="160" y="155" fontSize="9" fontWeight="600" textAnchor="middle" fill="#15803d">journalism &amp; media</text>
+        <circle cx="130" cy="120" r="3" fill="#22c55e" />
+        <text x="137" y="123" fontSize="9" fill="#1f2937">news</text>
+        <circle cx="170" cy="115" r="3" fill="#22c55e" />
+        <text x="177" y="118" fontSize="9" fill="#1f2937">reporting</text>
+        <circle cx="160" cy="135" r="3" fill="#22c55e" />
+        <text x="167" y="138" fontSize="9" fill="#1f2937">media</text>
+
+        {/* Query point - shown closer to ethics cluster */}
+        <circle cx="105" cy="80" r="4" fill="#0ea5e9" stroke="#0369a1" strokeWidth="1" />
+        <text x="112" y="83" fontSize="9" fontWeight="600" fill="#0369a1">your query</text>
+      </svg>
+      <p className="text-[10px] text-muted-foreground italic text-center mt-1">
+        Words with similar meaning cluster together. Retrieval finds snippets nearest to the query.
+      </p>
+    </div>
+  );
+}
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -693,17 +772,17 @@ export default function MultipleSourcesExercise() {
                     {/* HOW IT WORKS VIEW                             */}
                     {/* ============================================ */}
                     {topView === "how-it-works" && (
-                      <div className="bg-background rounded-xl p-8 flex-1 flex flex-col">
+                      <div className="bg-background rounded-xl p-8 flex-1 flex flex-col min-h-0" style={{ maxHeight: 'calc(100vh - 180px)' }}>
 
                         {/* Prompt – always visible */}
-                        <div className="mb-6 ml-auto max-w-[80%] bg-muted p-5 rounded-[20px]">
+                        <div className="mb-6 ml-auto max-w-[80%] bg-muted p-5 rounded-[20px] flex-shrink-0">
                           <p className="text-foreground leading-relaxed font-medium">
                             Who holds the most responsibility to uphold AI ethics?
                           </p>
                         </div>
 
-                        {/* ── RAG pipeline block diagram ── */}
-                        <div className="flex-1 space-y-3">
+                        {/* ── RAG pipeline block diagram (scrollable) ── */}
+                        <div className="flex-1 min-h-0 overflow-y-auto space-y-3 pr-2">
 
                           {/* Row 1: Query + Documents */}
                           <div
@@ -716,7 +795,13 @@ export default function MultipleSourcesExercise() {
                               {/* Query block — parallelogram (data/IO) */}
                               <div className="border-2 border-blue-300 bg-blue-50 w-32 flex-shrink-0 overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
                                 <div className="p-3" style={{ transform: 'skewX(10deg)' }}>
-                                  <p className="text-[9px] font-heading font-semibold text-blue-600 uppercase tracking-wider mb-1">Query</p>
+                                  <div className="flex items-center justify-between gap-1 mb-1">
+                                    <p className="text-[9px] font-heading font-semibold text-blue-600 uppercase tracking-wider">Query</p>
+                                    <InfoPopover>
+                                      <p className="font-semibold">Query</p>
+                                      <p>The user's question — what they want the LLM to answer.</p>
+                                    </InfoPopover>
+                                  </div>
                                   <p className="text-[11px] text-foreground leading-relaxed">
                                     Who holds the most responsibility?
                                   </p>
@@ -727,7 +812,13 @@ export default function MultipleSourcesExercise() {
                                 <div key={doc.id} className="border-2 border-border bg-muted/30 flex-1 min-w-0 overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
                                   <div className="p-3" style={{ transform: 'skewX(10deg)' }}>
                                     <div className="flex items-start justify-between gap-1">
-                                      <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-1">Document</p>
+                                      <div className="flex items-center gap-1 mb-1">
+                                        <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider">Document</p>
+                                        <InfoPopover>
+                                          <p className="font-semibold">Document</p>
+                                          <p>Source material the LLM can ground its answer in. Without documents, the model falls back on its training data alone.</p>
+                                        </InfoPopover>
+                                      </div>
                                       <button type="button" onClick={() => removeDiagramDoc(doc.id)} className="h-4 w-4 rounded-full bg-muted hover:bg-muted-foreground/20 flex items-center justify-center text-muted-foreground text-[10px] leading-none flex-shrink-0" aria-label="Remove">×</button>
                                     </div>
                                     <p className="text-xs font-semibold text-foreground line-clamp-1">{doc.title}</p>
@@ -742,50 +833,74 @@ export default function MultipleSourcesExercise() {
                             </div>
                           </div>
 
-                          {/* Arrow + Row 2: Vector Embedding — only shown when documents are present */}
+                          {/* Vector Embedding block — only shown when documents are present */}
                           {diagramSelectedDocs.length > 0 && (<>
                             <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" /></div>
-                            <div className="rounded border-2 border-amber-400 bg-amber-50 p-4 text-center">
-                              <p className="text-sm font-heading font-bold text-foreground">Vector embedding</p>
-                              <p className="text-xs text-amber-700 mt-1">⚠ Error-prone: semantic drift</p>
-                              {diagramSelectedDocs.length > 1 && (
-                                <p className="text-[10px] text-amber-600 mt-0.5">
-                                  {diagramSelectedDocs.length} documents × embedding = {diagramSelectedDocs.length}× chance of meaning loss
-                                </p>
-                              )}
+                            <div className="rounded border-2 border-amber-400 bg-amber-50 p-4">
+                              <div className="text-center mb-3">
+                                <div className="flex items-center justify-center gap-1.5">
+                                  <p className="text-sm font-heading font-bold text-foreground">Vector embedding</p>
+                                  <InfoPopover>
+                                    <p className="font-semibold">Vector embedding</p>
+                                    <p>Each document and the query are converted into numerical vectors that capture meaning. Similar meanings end up near each other in this space.</p>
+                                    <p className="opacity-90">⚠ Hallucination risk: nuance and domain-specific phrasing can drift during translation, so retrieval may pull the wrong snippets.</p>
+                                  </InfoPopover>
+                                </div>
+                                <p className="text-xs text-amber-700 mt-1">⚠ Error-prone: semantic drift</p>
+                                {diagramSelectedDocs.length > 1 && (
+                                  <p className="text-[10px] text-amber-600 mt-0.5">
+                                    {diagramSelectedDocs.length} documents × embedding = {diagramSelectedDocs.length}× chance of meaning loss
+                                  </p>
+                                )}
+                              </div>
+                              <SemanticGraph />
+                              <div className="grid grid-cols-2 gap-3">
+                                {/* Query vector — parallelogram (data) */}
+                                <div className="border-2 border-amber-300 bg-white overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
+                                  <div className="p-3 text-center" style={{ transform: 'skewX(10deg)' }}>
+                                    <div className="flex items-center justify-center gap-1 mb-1">
+                                      <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider">Query vector</p>
+                                      <InfoPopover>
+                                        <p className="font-semibold">Query vector</p>
+                                        <p>The query reduced to a numerical fingerprint of its meaning — used to find the closest document chunks in the vector store.</p>
+                                      </InfoPopover>
+                                    </div>
+                                    <p className="text-[10px] text-muted-foreground font-mono">[0.12, -0.45, 0.78, …]</p>
+                                  </div>
+                                </div>
+                                {/* Vector store — cylinder (database/storage) */}
+                                <div className="border-2 border-amber-300 bg-white p-3 text-center flex flex-col items-center justify-center" style={{ borderRadius: '8px 8px 8px 8px / 40px 40px 40px 40px', minHeight: '64px' }}>
+                                  <div className="flex items-center justify-center gap-1 mb-1">
+                                    <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider">Vector store</p>
+                                    <InfoPopover>
+                                      <p className="font-semibold">Vector store</p>
+                                      <p>A database of pre-computed document vectors. Retrieval performs a similarity search against it to find relevant snippets.</p>
+                                    </InfoPopover>
+                                  </div>
+                                  <p className="text-[10px] text-muted-foreground font-mono">
+                                    {`${diagramSelectedDocs.length} document${diagramSelectedDocs.length > 1 ? "s" : ""} indexed`}
+                                  </p>
+                                </div>
+                              </div>
                             </div>
                           </>)}
 
-                          {/* Rows 3–5 only shown when documents are present */}
+                          {/* Retrieval — only shown when documents are present */}
                           {diagramSelectedDocs.length > 0 && (<>
-                            {/* Arrow */}
-                            <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" /></div>
-
-                            {/* Row 3: Query vector (parallelogram) + Vector store (cylinder) */}
-                            <div className="grid grid-cols-2 gap-3">
-                              {/* Query vector — parallelogram (data) */}
-                              <div className="border-2 border-border bg-muted/20 overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
-                                <div className="p-3 text-center" style={{ transform: 'skewX(10deg)' }}>
-                                  <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-1">Query vector</p>
-                                  <p className="text-[10px] text-muted-foreground font-mono">[0.12, -0.45, 0.78, …]</p>
-                                </div>
-                              </div>
-                              {/* Vector store — cylinder (database/storage) */}
-                              <div className="border-2 border-border bg-muted/20 p-3 text-center flex flex-col items-center justify-center" style={{ borderRadius: '8px 8px 8px 8px / 40px 40px 40px 40px', minHeight: '64px' }}>
-                                <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-1">Vector store</p>
-                                <p className="text-[10px] text-muted-foreground font-mono">
-                                  {`${diagramSelectedDocs.length} document${diagramSelectedDocs.length > 1 ? "s" : ""} indexed`}
-                                </p>
-                              </div>
-                            </div>
-
                             {/* Arrow */}
                             <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" /></div>
 
                             {/* Row 4: Retrieval — process rectangle containing snippet output */}
                             <div className="rounded border-2 border-border bg-muted/20 p-3">
                               <div className="text-center mb-3">
-                                <p className="text-sm font-heading font-semibold text-foreground">Retrieval</p>
+                                <div className="flex items-center justify-center gap-1.5">
+                                  <p className="text-sm font-heading font-semibold text-foreground">Retrieval</p>
+                                  <InfoPopover>
+                                    <p className="font-semibold">Retrieval</p>
+                                    <p>Searches the vector store for snippets whose meaning is closest to the query. The LLM then sees only these excerpts — never the full source.</p>
+                                    <p className="opacity-90">⚠ Hallucination risk: missing context outside the retrieved snippet can lead to misleading conclusions.</p>
+                                  </InfoPopover>
+                                </div>
                                 <p className="text-[10px] text-muted-foreground mt-0.5">
                                   {`Matched against ${diagramSelectedDocs.length} document${diagramSelectedDocs.length > 1 ? "s" : ""} → top snippet${diagramSelectedDocs.length > 1 ? "s" : ""}`}
                                 </p>
@@ -794,7 +909,13 @@ export default function MultipleSourcesExercise() {
                                 {diagramSelectedDocs.map((doc, i) => (
                                   <div key={doc.id} className="border-2 border-border bg-white max-h-[80px] overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
                                     <div className="p-2.5 overflow-y-auto max-h-[80px]" style={{ transform: 'skewX(10deg)' }}>
-                                      <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-1">Snippet {i + 1}</p>
+                                      <div className="flex items-center justify-between gap-1 mb-1">
+                                        <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider">Snippet {i + 1}</p>
+                                        <InfoPopover>
+                                          <p className="font-semibold">Snippet</p>
+                                          <p>An extract pulled from the source document. The LLM only sees this excerpt, so any context outside it is lost.</p>
+                                        </InfoPopover>
+                                      </div>
                                       <p className="text-[11px] text-foreground leading-relaxed italic">{LLM_EXTRACTIONS[doc.id] || "…"}</p>
                                     </div>
                                   </div>
@@ -808,7 +929,14 @@ export default function MultipleSourcesExercise() {
 
                           {/* Row 6: Prompt assembly + LLM generation — combined process rectangle */}
                           <div className="rounded border-2 border-amber-400 bg-amber-50 p-4 text-center">
-                            <p className="text-sm font-heading font-bold text-foreground">Prompt assembly &amp; LLM generation</p>
+                            <div className="flex items-center justify-center gap-1.5">
+                              <p className="text-sm font-heading font-bold text-foreground">Prompt assembly &amp; LLM generation</p>
+                              <InfoPopover>
+                                <p className="font-semibold">Prompt assembly &amp; LLM generation</p>
+                                <p>Snippets and the query are merged into one prompt and sent to the LLM, which generates a response token-by-token.</p>
+                                <p className="opacity-90">⚠ Hallucination risk: conflicting sources can confuse the model, and when context is thin it falls back on training data — producing fluent but unverifiable claims.</p>
+                              </InfoPopover>
+                            </div>
                             <p className="text-xs text-amber-700 mt-1">⚠ Error-prone: context conflicts</p>
                             {diagramSelectedDocs.length > 1 && (
                               <p className="text-[10px] text-amber-600 mt-0.5">
@@ -827,11 +955,20 @@ export default function MultipleSourcesExercise() {
                           {(() => {
                             const key = Array.from(diagramDocs).sort().join(",");
                             const merged = LLM_MERGED_OUTPUTS[key];
+                            const outputHeader = (
+                              <div className="flex items-center gap-1 mb-1">
+                                <p className="text-[9px] font-heading font-semibold text-brand-tertiary-500 uppercase tracking-wider">Output</p>
+                                <InfoPopover>
+                                  <p className="font-semibold">Output</p>
+                                  <p>The LLM's response, ideally grounded in the retrieved snippets. Always cross-check claims against the source — the model can sound confident even when wrong.</p>
+                                </InfoPopover>
+                              </div>
+                            );
                             if (diagramSelectedDocs.length === 0) {
                               return (
                                 <div className="border-2 border-brand-tertiary-500/40 bg-white overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
                                   <div className="p-4" style={{ transform: 'skewX(10deg)' }}>
-                                    <p className="text-[9px] font-heading font-semibold text-brand-tertiary-500 uppercase tracking-wider mb-1">Output</p>
+                                    {outputHeader}
                                     <p className="text-sm text-foreground leading-relaxed">With no source documents, the LLM answers entirely from training data. Claims can't be verified and the model may hallucinate.</p>
                                   </div>
                                 </div>
@@ -841,7 +978,7 @@ export default function MultipleSourcesExercise() {
                               return (
                                 <div className="border-2 border-brand-tertiary-500/40 bg-white overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
                                   <div className="p-4" style={{ transform: 'skewX(10deg)' }}>
-                                    <p className="text-[9px] font-heading font-semibold text-brand-tertiary-500 uppercase tracking-wider mb-1">Output</p>
+                                    {outputHeader}
                                     <p className="text-sm text-muted-foreground italic">Select a valid document combination to see the output.</p>
                                   </div>
                                 </div>
@@ -850,7 +987,7 @@ export default function MultipleSourcesExercise() {
                             return (
                               <div className="border-2 border-brand-tertiary-500/40 bg-white overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
                                 <div className="p-4" style={{ transform: 'skewX(10deg)' }}>
-                                  <p className="text-[9px] font-heading font-semibold text-brand-tertiary-500 uppercase tracking-wider mb-1">Output</p>
+                                  {outputHeader}
                                   <p className="text-sm text-foreground leading-relaxed">{merged.text}</p>
                                 </div>
                               </div>
@@ -858,7 +995,7 @@ export default function MultipleSourcesExercise() {
                           })()}
                         </div>
                         {/* Navigation */}
-                        <div className="mt-8 flex items-center gap-3">
+                        <div className="mt-6 flex items-center gap-3 flex-shrink-0">
                           <Button variant="outline" size="lg" onClick={() => navigate("/module/multiple-sources")} className="rounded-md border-brand-tertiary-500 text-brand-tertiary-500 hover:bg-brand-tertiary-500/10">
                             <ArrowLeft className="!h-5 !w-5" />
                           </Button>
