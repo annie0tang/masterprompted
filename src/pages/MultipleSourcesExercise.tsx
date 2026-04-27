@@ -742,43 +742,40 @@ export default function MultipleSourcesExercise() {
                             </div>
                           </div>
 
-                          {/* Arrow + Row 2: Vector Embedding — only shown when documents are present */}
+                          {/* Vector Embedding block — only shown when documents are present */}
                           {diagramSelectedDocs.length > 0 && (<>
                             <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" /></div>
-                            <div className="rounded border-2 border-amber-400 bg-amber-50 p-4 text-center">
-                              <p className="text-sm font-heading font-bold text-foreground">Vector embedding</p>
-                              <p className="text-xs text-amber-700 mt-1">⚠ Error-prone: semantic drift</p>
-                              {diagramSelectedDocs.length > 1 && (
-                                <p className="text-[10px] text-amber-600 mt-0.5">
-                                  {diagramSelectedDocs.length} documents × embedding = {diagramSelectedDocs.length}× chance of meaning loss
-                                </p>
-                              )}
+                            <div className="rounded border-2 border-amber-400 bg-amber-50 p-4">
+                              <div className="text-center mb-3">
+                                <p className="text-sm font-heading font-bold text-foreground">Vector embedding</p>
+                                <p className="text-xs text-amber-700 mt-1">⚠ Error-prone: semantic drift</p>
+                                {diagramSelectedDocs.length > 1 && (
+                                  <p className="text-[10px] text-amber-600 mt-0.5">
+                                    {diagramSelectedDocs.length} documents × embedding = {diagramSelectedDocs.length}× chance of meaning loss
+                                  </p>
+                                )}
+                              </div>
+                              <div className="grid grid-cols-2 gap-3">
+                                {/* Query vector — parallelogram (data) */}
+                                <div className="border-2 border-amber-300 bg-white overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
+                                  <div className="p-3 text-center" style={{ transform: 'skewX(10deg)' }}>
+                                    <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-1">Query vector</p>
+                                    <p className="text-[10px] text-muted-foreground font-mono">[0.12, -0.45, 0.78, …]</p>
+                                  </div>
+                                </div>
+                                {/* Vector store — cylinder (database/storage) */}
+                                <div className="border-2 border-amber-300 bg-white p-3 text-center flex flex-col items-center justify-center" style={{ borderRadius: '8px 8px 8px 8px / 40px 40px 40px 40px', minHeight: '64px' }}>
+                                  <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-1">Vector store</p>
+                                  <p className="text-[10px] text-muted-foreground font-mono">
+                                    {`${diagramSelectedDocs.length} document${diagramSelectedDocs.length > 1 ? "s" : ""} indexed`}
+                                  </p>
+                                </div>
+                              </div>
                             </div>
                           </>)}
 
-                          {/* Rows 3–5 only shown when documents are present */}
+                          {/* Retrieval — only shown when documents are present */}
                           {diagramSelectedDocs.length > 0 && (<>
-                            {/* Arrow */}
-                            <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" /></div>
-
-                            {/* Row 3: Query vector (parallelogram) + Vector store (cylinder) */}
-                            <div className="grid grid-cols-2 gap-3">
-                              {/* Query vector — parallelogram (data) */}
-                              <div className="border-2 border-border bg-muted/20 overflow-hidden" style={{ transform: 'skewX(-10deg)', borderRadius: '4px' }}>
-                                <div className="p-3 text-center" style={{ transform: 'skewX(10deg)' }}>
-                                  <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-1">Query vector</p>
-                                  <p className="text-[10px] text-muted-foreground font-mono">[0.12, -0.45, 0.78, …]</p>
-                                </div>
-                              </div>
-                              {/* Vector store — cylinder (database/storage) */}
-                              <div className="border-2 border-border bg-muted/20 p-3 text-center flex flex-col items-center justify-center" style={{ borderRadius: '8px 8px 8px 8px / 40px 40px 40px 40px', minHeight: '64px' }}>
-                                <p className="text-[9px] font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-1">Vector store</p>
-                                <p className="text-[10px] text-muted-foreground font-mono">
-                                  {`${diagramSelectedDocs.length} document${diagramSelectedDocs.length > 1 ? "s" : ""} indexed`}
-                                </p>
-                              </div>
-                            </div>
-
                             {/* Arrow */}
                             <div className="flex justify-center"><ArrowDown className="h-5 w-5 text-brand-tertiary-500/50" /></div>
 
