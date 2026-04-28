@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Mail } from "lucide-react";
+import { Mail, ExternalLink } from "lucide-react";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, { message: "Name is required" }).max(100),
@@ -142,7 +142,7 @@ const Contact = () => {
                 />
 
                 <Button type="submit" className="w-full md:w-auto">
-                  Send Message
+                  Send Message <ExternalLink/>
                 </Button>
               </form>
             </Form>
