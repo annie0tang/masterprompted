@@ -41,11 +41,6 @@ const NextWordPredictionIntro = () => {
                 </span>
               </div>
 
-              {/* Main heading */}
-              <h1 className="text-h2 font-heading text-foreground mb-3">
-                {t('nextWord.intro.title')}
-              </h1>
-
               {/* Description */}
               <p className="text-muted-foreground text-body-1 leading-relaxed mb-8">
                 {t('nextWord.intro.description')}
