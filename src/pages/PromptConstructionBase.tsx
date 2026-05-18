@@ -55,11 +55,6 @@ export default function PromptConstruction() {
                 </Button>
               </div>
 
-              {/* Main heading */}
-              <h1 className="text-h2 font-heading text-foreground mb-3">
-                {t('promptConstructionModule.intro.title')}
-              </h1>
-
               {/* Description */}
               <p className="text-muted-foreground text-body-1 leading-relaxed mb-8 flex-grow">
                 {t('promptConstructionModule.intro.description')}
